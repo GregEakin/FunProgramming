@@ -11,40 +11,47 @@ namespace FunProgLib.tree
 
     public class UnbalancedSet<T> where T : IComparable
     {
-        private static readonly UnbalancedSet<T> Empty = new UnbalancedSet<T> { left = Empty, right = Empty };
+        private static readonly UnbalancedSet<T> EmptyTree = new UnbalancedSet<T>(EmptyTree, default(T), EmptyTree);
 
-        public static UnbalancedSet<T> E
+        public static UnbalancedSet<T> Empty
         {
             get
             {
-                return Empty;
+                return EmptyTree;
             }
         }
 
-        private T elem;
+        private readonly T element;
 
-        private UnbalancedSet<T> left;
+        private readonly UnbalancedSet<T> left;
 
-        private UnbalancedSet<T> right;
+        private readonly UnbalancedSet<T> right;
 
-        public bool Member(T that)
+        private UnbalancedSet(UnbalancedSet<T> left, T element, UnbalancedSet<T> right)
         {
-            if (this == Empty)
+            this.left = left;
+            this.element = element;
+            this.right = right;
+        }
+
+        public bool Member(T value)
+        {
+            if (this == EmptyTree)
             {
                 return false;
             }
 
-            if (that.CompareTo(elem) < 0) return this.left.Member(that);
-            else if (that.CompareTo(this.elem) > 0) return this.right.Member(that);
+            if (value.CompareTo(this.element) < 0) return this.left.Member(value);
+            else if (value.CompareTo(this.element) > 0) return this.right.Member(value);
             else return true;
         }
 
-        public UnbalancedSet<T> Insert(T that)
+        public UnbalancedSet<T> Insert(T value)
         {
-            if (ReferenceEquals(this, Empty)) return new UnbalancedSet<T> { left = Empty, elem = that, right = Empty };
+            if (this == EmptyTree) return new UnbalancedSet<T>(EmptyTree, value, EmptyTree);
 
-            if (that.CompareTo(elem) < 0) return new UnbalancedSet<T> { left = this.left.Insert(that), elem = this.elem, right = this.right };
-            else if (that.CompareTo(this.elem) > 0) return new UnbalancedSet<T> { left = this.left, elem = this.elem, right = this.right.Insert(that) };
+            if (value.CompareTo(this.element) < 0) return new UnbalancedSet<T>(this.left.Insert(value), this.element, this.right);
+            else if (value.CompareTo(this.element) > 0) return new UnbalancedSet<T>(this.left, this.element, this.right.Insert(value));
             else return this;
         }
 
@@ -55,19 +62,19 @@ namespace FunProgLib.tree
 
         private static string DumpTree(UnbalancedSet<T> tree)
         {
-            if (ReferenceEquals(tree, Empty)) return "\u2205";
+            if (tree == EmptyTree) return "\u2205";
 
             var results = new StringBuilder();
 
-            if (!ReferenceEquals(tree.left, Empty))
+            if (tree.left != EmptyTree)
             {
                 results.Append(tree.left);
             }
 
-            results.Append(tree.elem);
+            results.Append(tree.element);
             results.Append(", ");
 
-            if (!ReferenceEquals(tree.right, Empty))
+            if (tree != EmptyTree)
             {
                 results.Append(tree.right);
             }

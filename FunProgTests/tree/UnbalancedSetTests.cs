@@ -18,14 +18,14 @@ namespace FunProgTests.tree
         [TestMethod]
         public void EmptyTest()
         {
-            var tree = UnbalancedSet<string>.E;
+            var tree = UnbalancedSet<string>.Empty;
             Assert.AreEqual("∅", tree.ToString());
         }
 
         [TestMethod]
-        public void Test1()
+        public void SingleElement()
         {
-            var tree = UnbalancedSet<string>.E;
+            var tree = UnbalancedSet<string>.Empty;
             tree = tree.Insert("a");
             Assert.AreEqual("a, ", tree.ToString());
         }
@@ -33,14 +33,14 @@ namespace FunProgTests.tree
         [TestMethod]
         public void DumpTreeTest()
         {
-            var tree = new[] { "how", "now", "brown", "cow" }.Aggregate(UnbalancedSet<string>.E, (current, word) => current.Insert(word));
+            var tree = new[] { "how", "now", "brown", "cow" }.Aggregate(UnbalancedSet<string>.Empty, (current, word) => current.Insert(word));
             Assert.AreEqual("brown, cow, how, now, ", tree.ToString());
         }
 
         [TestMethod]
         public void ElementTest()
         {
-            var tree = new[] { "how", "now", "brown", "cow" }.Aggregate(UnbalancedSet<string>.E, (current, word) => current.Insert(word));
+            var tree = new[] { "how", "now", "brown", "cow" }.Aggregate(UnbalancedSet<string>.Empty, (current, word) => current.Insert(word));
             Assert.IsTrue(tree.Member("how"));
             Assert.IsFalse(tree.Member("wow"));
         }
