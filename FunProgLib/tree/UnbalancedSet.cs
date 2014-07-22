@@ -7,12 +7,13 @@
 namespace FunProgLib.tree
 {
     using System;
+    using System.Text;
 
-    public class UnbalancedSet<K, T> where K : IComparable
+    public class UnbalancedSet<T> where T : IComparable
     {
-        private static readonly UnbalancedSet<K, T> Empty = new UnbalancedSet<K, T> { left = Empty, right = Empty };
+        private static readonly UnbalancedSet<T> Empty = new UnbalancedSet<T> { left = Empty, right = Empty };
 
-        public static UnbalancedSet<K, T> E
+        public static UnbalancedSet<T> E
         {
             get
             {
@@ -20,13 +21,13 @@ namespace FunProgLib.tree
             }
         }
 
-        private K elem;
+        private T elem;
 
-        private UnbalancedSet<K, T> left;
+        private UnbalancedSet<T> left;
 
-        private UnbalancedSet<K, T> right;
+        private UnbalancedSet<T> right;
 
-        public bool Member(K that)
+        public bool Member(T that)
         {
             if (this == Empty)
             {
@@ -38,13 +39,40 @@ namespace FunProgLib.tree
             else return true;
         }
 
-        public UnbalancedSet<K, T> Insert(K that)
+        public UnbalancedSet<T> Insert(T that)
         {
-            if (ReferenceEquals(this, Empty)) return new UnbalancedSet<K, T> { left = Empty, elem = that, right = Empty };
+            if (ReferenceEquals(this, Empty)) return new UnbalancedSet<T> { left = Empty, elem = that, right = Empty };
 
-            if (that.CompareTo(elem) < 0) return new UnbalancedSet<K, T> { left = this.left.Insert(that), elem = this.elem, right = this.right };
-            else if (that.CompareTo(this.elem) > 0) return new UnbalancedSet<K, T> { left = this.left, elem = this.elem, right = this.right.Insert(that) };
+            if (that.CompareTo(elem) < 0) return new UnbalancedSet<T> { left = this.left.Insert(that), elem = this.elem, right = this.right };
+            else if (that.CompareTo(this.elem) > 0) return new UnbalancedSet<T> { left = this.left, elem = this.elem, right = this.right.Insert(that) };
             else return this;
+        }
+
+        public override string ToString()
+        {
+            return DumpTree(this);
+        }
+
+        private static string DumpTree(UnbalancedSet<T> tree)
+        {
+            if (ReferenceEquals(tree, Empty)) return "\u2205";
+
+            var results = new StringBuilder();
+
+            if (!ReferenceEquals(tree.left, Empty))
+            {
+                results.Append(tree.left);
+            }
+
+            results.Append(tree.elem);
+            results.Append(", ");
+
+            if (!ReferenceEquals(tree.right, Empty))
+            {
+                results.Append(tree.right);
+            }
+
+            return results.ToString();
         }
     }
 }
