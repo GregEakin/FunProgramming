@@ -74,7 +74,7 @@ namespace FunProgLib.tree
             results.Append(tree.element);
             results.Append(", ");
 
-            if (tree != EmptyTree)
+            if (tree.right != EmptyTree)
             {
                 results.Append(tree.right);
             }
