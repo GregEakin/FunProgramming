@@ -7,6 +7,7 @@
 namespace FunProgLib.tree
 {
     using System;
+    using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.Linq;
     using System.Text;
@@ -48,7 +49,7 @@ namespace FunProgLib.tree
                 get { return root; }
             }
 
-            public ReadOnlyCollection<Node> List
+            public IEnumerable<Node> List
             {
                 get { return list; }
             }
@@ -76,7 +77,7 @@ namespace FunProgLib.tree
             return list == EmptyList;
         }
 
-        private static ReadOnlyCollection<Node> Concatenate(Node element, ReadOnlyCollection<Node> list)
+        private static ReadOnlyCollection<Node> Concatenate(Node element, IEnumerable<Node> list)
         {
             var x = list.ToList();
             x.Insert(0, element);
@@ -86,7 +87,7 @@ namespace FunProgLib.tree
         private static Node Link(Node t1, Node t2)
         {
             if (t1.Root.CompareTo(t2.Root) <= 0) return new Node(t1.Rank + 1, t1.Root, Concatenate(t2, t1.List));
-            else return new Node(t1.Rank + 1, t2.Root, Concatenate(t1, t2.List));
+            return new Node(t1.Rank + 1, t2.Root, Concatenate(t1, t2.List));
         }
 
         private static ReadOnlyCollection<Node> InsertTree(Node t, ReadOnlyCollection<Node> ts)
@@ -133,7 +134,7 @@ namespace FunProgLib.tree
             var t = list[0];
             var ts = list.Skip(1).ToList().AsReadOnly();
             var prime = RemoveMinTree(ts);
-            if (t.Root.CompareTo(prime.Node.Root) <= 0) return new Stuff() { Node = t, List = ts };
+            if (t.Root.CompareTo(prime.Node.Root) <= 0) return new Stuff { Node = t, List = ts };
             return new Stuff { Node = prime.Node, List = Concatenate(t, prime.List) };
         }
 

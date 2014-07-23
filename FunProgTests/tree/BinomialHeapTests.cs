@@ -16,6 +16,16 @@ namespace FunProgTests.tree
     public class BinomialHeapTests
     {
         [TestMethod]
+        public void EmptyTest()
+        {
+            var t = BinomialHeap<string>.Empty;
+            Assert.IsTrue(BinomialHeap<string>.IsEmapty(t));
+
+            var t1 = BinomialHeap<string>.Insert("C", t);
+            Assert.IsFalse(BinomialHeap<string>.IsEmapty(t1));
+        }
+
+        [TestMethod]
         public void Test1()
         {
             var t = BinomialHeap<string>.Empty;
