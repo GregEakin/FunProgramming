@@ -41,6 +41,7 @@
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="tree\IOrdered.cs" />
+    <Compile Include="tree\LeftistHeap.cs" />
     <Compile Include="tree\UnbalancedSet.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
