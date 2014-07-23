@@ -90,7 +90,7 @@ namespace FunProgLib.tree
             return new Node(t1.Rank + 1, t2.Root, Concatenate(t1, t2.List));
         }
 
-        private static ReadOnlyCollection<Node> InsertTree(Node t, ReadOnlyCollection<Node> ts)
+        private static ReadOnlyCollection<Node> InsertTree(Node t, IReadOnlyList<Node> ts)
         {
             if (ts.Count == 0) return new ReadOnlyCollection<Node>(new[] { t });
             var tp = ts[0];
@@ -127,7 +127,7 @@ namespace FunProgLib.tree
             public ReadOnlyCollection<Node> List { get; set; }
         }
 
-        private static Stuff RemoveMinTree(ReadOnlyCollection<Node> list)
+        private static Stuff RemoveMinTree(IReadOnlyList<Node> list)
         {
             if (list.Count == 0) throw new Exception("Empty");
             if (list.Count == 1) return new Stuff { Node = list[0], List = EmptyList };
