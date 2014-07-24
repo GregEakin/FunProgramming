@@ -7,7 +7,6 @@
 namespace FunProgLib.tree
 {
     using System;
-    using System.Text;
 
     public static class RedBlackSet<T> where T : IComparable
     {
@@ -49,31 +48,6 @@ namespace FunProgLib.tree
             public Tree Tree2
             {
                 get { return this.tree2; }
-            }
-
-            public override string ToString()
-            {
-                var results = new StringBuilder();
-                results.Append('(');
-                results.Append(color);
-                results.Append(": ");
-
-                if (this.tree1 != Empty)
-                {
-                    results.Append(this.tree1);
-                    results.Append(' ');
-                }
-
-                results.Append(this.elem);
-
-                if (this.tree2 != Empty)
-                {
-                    results.Append(' ');
-                    results.Append(this.tree2);
-                }
-
-                results.Append(')');
-                return results.ToString();
             }
         }
 

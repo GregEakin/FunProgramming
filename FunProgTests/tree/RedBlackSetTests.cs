@@ -8,6 +8,7 @@ namespace FunProgTests.tree
 {
     using System;
     using System.Linq;
+    using System.Text;
 
     using FunProgLib.tree;
 
@@ -19,7 +20,39 @@ namespace FunProgTests.tree
         private static string DumpSet<T>(RedBlackSet<T>.Tree s) where T : IComparable
         {
             if (s == RedBlackSet<T>.EmptyTree) return "\u2205";
-            return s.ToString();
+            return DumpTree<T>(s);
+        }
+
+        private static string DumpTree<T>(RedBlackSet<T>.Tree s) where T : IComparable
+        {
+            var results = new StringBuilder();
+            results.Append('(');
+            results.Append(s.Color);
+            results.Append(": ");
+
+            if (s.Tree1 != RedBlackSet<T>.EmptyTree)
+            {
+                results.Append(DumpTree(s.Tree1));
+                results.Append(' ');
+            }
+
+            results.Append(s.Elem);
+
+            if (s.Tree2 != RedBlackSet<T>.EmptyTree)
+            {
+                results.Append(' ');
+                results.Append(DumpTree(s.Tree2));
+            }
+
+            results.Append(')');
+            return results.ToString();
+        }
+
+        [TestMethod]
+        public void EmptyTest()
+        {
+            var t = RedBlackSet<string>.EmptyTree;
+            Assert.AreEqual("∅", DumpSet(t));
         }
 
         [TestMethod]
