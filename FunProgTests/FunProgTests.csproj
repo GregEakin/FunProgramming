@@ -52,6 +52,7 @@
   <ItemGroup>
     <Compile Include="tree\BinomialHeapTests.cs" />
     <Compile Include="tree\LeftistHeapTests.cs" />
+    <Compile Include="tree\RedBlackSetTests.cs" />
     <Compile Include="tree\UnbalancedSetTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

@@ -43,6 +43,7 @@
     <Compile Include="tree\BinomialHeap.cs" />
     <Compile Include="tree\IOrdered.cs" />
     <Compile Include="tree\LeftistHeap.cs" />
+    <Compile Include="tree\RedBlackSet.cs" />
     <Compile Include="tree\UnbalancedSet.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
