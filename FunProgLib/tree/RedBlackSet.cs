@@ -139,11 +139,5 @@ namespace FunProgLib.tree
             if (s.Elem.CompareTo(x) < 0) return Balance(s.Color, s.Tree1, s.Elem, Ins(x, s.Tree2));
             return s;
         }
-
-        public static string DumpString(Tree s)
-        {
-            if (s == Empty) return "\u2205";
-            return s.ToString();
-        }
     }
 }
