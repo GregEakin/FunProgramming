@@ -48,10 +48,7 @@ namespace FunProgLib.tree
 
         public static ReadOnlyCollection<Node> Empty
         {
-            get
-            {
-                return EmptyList;
-            }
+            get { return EmptyList; }
         }
 
         public static bool IsEmapty(ReadOnlyCollection<Node> list)
@@ -102,22 +99,38 @@ namespace FunProgLib.tree
             return InsertTree(Link(t1, t2), Merge(tsp1, tsp2));
         }
 
-        private class Stuff
+        private class TreeParts
         {
-            public Node Node { get; set; }
+            private readonly Node node;
 
-            public ReadOnlyCollection<Node> List { get; set; }
+            private readonly ReadOnlyCollection<Node> list;
+
+            public TreeParts(Node node, ReadOnlyCollection<Node> list)
+            {
+                this.node = node;
+                this.list = list;
+            }
+
+            public Node Node
+            {
+                get { return this.node; }
+            }
+
+            public ReadOnlyCollection<Node> List
+            {
+                get { return this.list; }
+            }
         }
 
-        private static Stuff RemoveMinTree(IReadOnlyList<Node> list)
+        private static TreeParts RemoveMinTree(IReadOnlyList<Node> list)
         {
             if (list.Count == 0) throw new Exception("Empty");
-            if (list.Count == 1) return new Stuff { Node = list[0], List = EmptyList };
+            if (list.Count == 1) return new TreeParts(list[0], EmptyList);
             var t = list[0];
             var ts = list.Skip(1).ToList().AsReadOnly();
             var prime = RemoveMinTree(ts);
-            if (t.Root.CompareTo(prime.Node.Root) <= 0) return new Stuff { Node = t, List = ts };
-            return new Stuff { Node = prime.Node, List = Concatenate(t, prime.List) };
+            if (t.Root.CompareTo(prime.Node.Root) <= 0) return new TreeParts(t, ts);
+            return new TreeParts(prime.Node, Concatenate(t, prime.List));
         }
 
         public static T FindMin(ReadOnlyCollection<Node> ts)
