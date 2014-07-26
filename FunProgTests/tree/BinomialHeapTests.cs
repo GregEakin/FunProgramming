@@ -75,9 +75,9 @@ namespace FunProgTests.tree
         public void Test2()
         {
             var t = BinomialHeap<string>.Empty;
-            const string Words = "what's in a name that which we call a rose by any other name would smell as sweet";
-            t = Words.Split(null).Aggregate(t, (current, word) => BinomialHeap<string>.Insert(word, current));
-            Assert.AreEqual("[[as, [sweet]][a, [a, [call, [that, [which]][we]][in, [what's]][name]][name, [smell, [would]][other]][any, [by]][rose]]]", DumpHeap(t));
+            const string Words = "What's in a name? That which we call a rose by any other name would smell as sweet";
+            t = Words.Split().Aggregate(t, (current, word) => BinomialHeap<string>.Insert(word, current));
+            Assert.AreEqual("[[as, [sweet]][a, [a, [call, [That, [which]][we]][in, [What's]][name?]][name, [smell, [would]][other]][any, [by]][rose]]]", DumpHeap(t));
         }
 
         [TestMethod]

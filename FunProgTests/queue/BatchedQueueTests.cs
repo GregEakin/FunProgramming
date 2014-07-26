@@ -30,9 +30,9 @@ namespace FunProgTests.queue
         public void PushPopTest()
         {
             const string Data = "One Two Three One Three";
-            var queue = Data.Split(null).Aggregate(BatchedQueue<string>.Empty, BatchedQueue<string>.Snoc);
+            var queue = Data.Split().Aggregate(BatchedQueue<string>.Empty, BatchedQueue<string>.Snoc);
 
-            foreach (var expected in Data.Split(null))
+            foreach (var expected in Data.Split())
             {
                 var actual = BatchedQueue<string>.Head(queue);
                 Assert.AreEqual(expected, actual);

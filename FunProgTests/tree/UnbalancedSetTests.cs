@@ -70,9 +70,9 @@ namespace FunProgTests.tree
         {
             const string Data = "How now, brown cow?";
             var tree = Data.Split().Aggregate(UnbalancedSet<string>.Empty, UnbalancedSet<string>.Insert);
-            Assert.IsTrue(UnbalancedSet<string>.Member(tree, "How"));
+            foreach (var word in Data.Split())
+                Assert.IsTrue(UnbalancedSet<string>.Member(tree, word));
             Assert.IsFalse(UnbalancedSet<string>.Member(tree, "wow"));
         }
-
     }
 }

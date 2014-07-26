@@ -69,7 +69,7 @@ namespace FunProgTests.tree
         public void BlanceTest1()
         {
             const string Data = "z y x";
-            var t = Data.Split(null).Aggregate(RedBlackSet<string>.EmptyTree, (current, word) => RedBlackSet<string>.Insert(word, current));
+            var t = Data.Split().Aggregate(RedBlackSet<string>.EmptyTree, (current, word) => RedBlackSet<string>.Insert(word, current));
             Assert.AreEqual("(B: (B: x) y (B: z))", DumpSet(t));
         }
 
@@ -77,7 +77,7 @@ namespace FunProgTests.tree
         public void BlanceTest2()
         {
             const string Data = "z x y";
-            var t = Data.Split(null).Aggregate(RedBlackSet<string>.EmptyTree, (current, word) => RedBlackSet<string>.Insert(word, current));
+            var t = Data.Split().Aggregate(RedBlackSet<string>.EmptyTree, (current, word) => RedBlackSet<string>.Insert(word, current));
             Assert.AreEqual("(B: (B: x) y (B: z))", DumpSet(t));
         }
 
@@ -85,7 +85,7 @@ namespace FunProgTests.tree
         public void BlanceTest3()
         {
             const string Data = "x z y";
-            var t = Data.Split(null).Aggregate(RedBlackSet<string>.EmptyTree, (current, word) => RedBlackSet<string>.Insert(word, current));
+            var t = Data.Split().Aggregate(RedBlackSet<string>.EmptyTree, (current, word) => RedBlackSet<string>.Insert(word, current));
             Assert.AreEqual("(B: (B: x) y (B: z))", DumpSet(t));
         }
 
@@ -93,7 +93,7 @@ namespace FunProgTests.tree
         public void BlanceTest4()
         {
             const string Data = "x y z";
-            var t = Data.Split(null).Aggregate(RedBlackSet<string>.EmptyTree, (current, word) => RedBlackSet<string>.Insert(word, current));
+            var t = Data.Split().Aggregate(RedBlackSet<string>.EmptyTree, (current, word) => RedBlackSet<string>.Insert(word, current));
             Assert.AreEqual("(B: (B: x) y (B: z))", DumpSet(t));
         }
 
@@ -101,7 +101,7 @@ namespace FunProgTests.tree
         public void BlanceTest5()
         {
             const string Data = "y x z";
-            var t = Data.Split(null).Aggregate(RedBlackSet<string>.EmptyTree, (current, word) => RedBlackSet<string>.Insert(word, current));
+            var t = Data.Split().Aggregate(RedBlackSet<string>.EmptyTree, (current, word) => RedBlackSet<string>.Insert(word, current));
             Assert.AreEqual("(B: (R: x) y (R: z))", DumpSet(t));
         }
 
@@ -109,7 +109,7 @@ namespace FunProgTests.tree
         public void BlanceTest6()
         {
             const string Data = "y z x";
-            var t = Data.Split(null).Aggregate(RedBlackSet<string>.EmptyTree, (current, word) => RedBlackSet<string>.Insert(word, current));
+            var t = Data.Split().Aggregate(RedBlackSet<string>.EmptyTree, (current, word) => RedBlackSet<string>.Insert(word, current));
             Assert.AreEqual("(B: (R: x) y (R: z))", DumpSet(t));
         }
     }
