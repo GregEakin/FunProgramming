@@ -10,20 +10,9 @@ namespace FunProgLib.tree
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.Linq;
-    using System.Text;
 
     public static class BinomialHeap<T> where T : IComparable
     {
-        private static readonly ReadOnlyCollection<Node> EmptyList = new ReadOnlyCollection<Node>(new Node[0]);
-
-        public static ReadOnlyCollection<Node> Empty
-        {
-            get
-            {
-                return EmptyList;
-            }
-        }
-
         public class Node
         {
             private readonly int rank;
@@ -53,22 +42,15 @@ namespace FunProgLib.tree
             {
                 get { return list; }
             }
+        }
 
-            public override string ToString()
+        private static readonly ReadOnlyCollection<Node> EmptyList = new ReadOnlyCollection<Node>(new Node[0]);
+
+        public static ReadOnlyCollection<Node> Empty
+        {
+            get
             {
-                var result = new StringBuilder();
-                result.Append("[");
-                result.Append(root);
-                if (list.Count > 0)
-                {
-                    result.Append(", ");
-                    foreach (var node in list)
-                    {
-                        result.Append(node);
-                    }
-                }
-                result.Append("]");
-                return result.ToString();
+                return EmptyList;
             }
         }
 
@@ -149,23 +131,6 @@ namespace FunProgLib.tree
             var t = RemoveMinTree(ts);
             var x = t.Node.List.Reverse().ToList().AsReadOnly();
             return Merge(x, t.List);
-        }
-
-        public static string DumpString(ReadOnlyCollection<Node> list)
-        {
-            var result = new StringBuilder();
-            result.Append("[");
-            if (list.Count > 0)
-            {
-                foreach (var node in list)
-                {
-                    result.Append(node);
-                }
-                result.Append(", ");
-            }
-            result.Remove(result.Length - 2, 2);
-            result.Append("]");
-            return result.ToString();
         }
     }
 }

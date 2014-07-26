@@ -6,7 +6,10 @@
 // AUTHOR:		Greg Eakin
 namespace FunProgTests.tree
 {
+    using System;
+    using System.Collections.ObjectModel;
     using System.Linq;
+    using System.Text;
 
     using FunProgLib.tree;
 
@@ -15,6 +18,40 @@ namespace FunProgTests.tree
     [TestClass]
     public class BinomialHeapTests
     {
+        private static string DumpNode<T>(BinomialHeap<T>.Node node) where T : IComparable
+        {
+            var result = new StringBuilder();
+            result.Append("[");
+            result.Append(node.Root);
+            if (node.List.Any())
+            {
+                result.Append(", ");
+                foreach (var node1 in node.List)
+                {
+                    result.Append(DumpNode(node1));
+                }
+            }
+            result.Append("]");
+            return result.ToString();
+        }
+
+        private static string DumpHeap<T>(ReadOnlyCollection<BinomialHeap<T>.Node> list) where T : IComparable
+        {
+            var result = new StringBuilder();
+            result.Append("[");
+            if (list.Count > 0)
+            {
+                foreach (var node in list)
+                {
+                    result.Append(DumpNode(node));
+                }
+                result.Append(", ");
+            }
+            result.Remove(result.Length - 2, 2);
+            result.Append("]");
+            return result.ToString();
+        }
+
         [TestMethod]
         public void EmptyTest()
         {
@@ -31,16 +68,16 @@ namespace FunProgTests.tree
             var t = BinomialHeap<string>.Empty;
             var x1 = BinomialHeap<string>.Insert("C", t);
             var x2 = BinomialHeap<string>.Insert("B", x1);
-            Assert.AreEqual("[[B, [C]]]", BinomialHeap<string>.DumpString(x2));
+            Assert.AreEqual("[[B, [C]]]", DumpHeap(x2));
         }
 
         [TestMethod]
         public void Test2()
         {
             var t = BinomialHeap<string>.Empty;
-            var words = "what's in a name that which we call a rose by any other name would smell as sweet";
-            t = words.Split(null).Aggregate(t, (current, word) => BinomialHeap<string>.Insert(word, current));
-            Assert.AreEqual("[[as, [sweet]][a, [a, [call, [that, [which]][we]][in, [what's]][name]][name, [smell, [would]][other]][any, [by]][rose]]]", BinomialHeap<string>.DumpString(t));
+            const string Words = "what's in a name that which we call a rose by any other name would smell as sweet";
+            t = Words.Split(null).Aggregate(t, (current, word) => BinomialHeap<string>.Insert(word, current));
+            Assert.AreEqual("[[as, [sweet]][a, [a, [call, [that, [which]][we]][in, [what's]][name]][name, [smell, [would]][other]][any, [by]][rose]]]", DumpHeap(t));
         }
 
         [TestMethod]
@@ -51,7 +88,7 @@ namespace FunProgTests.tree
             var t2 = BinomialHeap<int>.Insert(3, t1);
             var t3 = BinomialHeap<int>.Insert(6, t2);
             var t4 = BinomialHeap<int>.DeleteMin(t3);
-            Assert.AreEqual("[[5, [6]]]", BinomialHeap<int>.DumpString(t4));
+            Assert.AreEqual("[[5, [6]]]", DumpHeap(t4));
             Assert.AreEqual(5, BinomialHeap<int>.FindMin(t4));
 
             Assert.AreEqual(3, BinomialHeap<int>.FindMin(t3));
