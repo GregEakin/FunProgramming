@@ -45,19 +45,12 @@ namespace FunProgLib.tree
 
         public static Tree Empty
         {
-            get
-            {
-                return EmptyTree;
-            }
+            get { return EmptyTree; }
         }
 
         public static bool Member(Tree tree, T value)
         {
-            if (tree == EmptyTree)
-            {
-                return false;
-            }
-
+            if (tree == EmptyTree) return false;
             if (value.CompareTo(tree.Element) < 0) return Member(tree.Left, value);
             if (value.CompareTo(tree.Element) > 0) return Member(tree.Right, value);
             return true;

@@ -73,27 +73,19 @@ namespace FunProgLib.tree
                 if (tree1 != Empty && tree1.Color == Color.R)
                 {
                     if (tree1.Tree1 != Empty && tree1.Tree1.Color == Color.R)
-                    {
                         return new Tree(Color.R, new Tree(Color.B, tree1.Tree1.Tree1, tree1.Tree1.Elem, tree1.Tree1.Tree2), tree1.Elem, new Tree(Color.B, tree1.Tree2, x, tree2));
-                    }
 
                     if (tree1.Tree2 != Empty && tree1.Tree2.Color == Color.R)
-                    {
                         return new Tree(Color.R, new Tree(Color.B, tree1.Tree1, tree1.Elem, tree1.Tree2.Tree1), tree1.Tree2.Elem, new Tree(Color.B, tree1.Tree2.Tree2, x, tree2));
-                    }
                 }
 
                 if (tree2 != Empty && tree2.Color == Color.R)
                 {
                     if (tree2.Tree1 != Empty && tree2.Tree1.Color == Color.R)
-                    {
                         return new Tree(Color.R, new Tree(Color.B, tree1, x, tree2.Tree1.Tree1), tree2.Tree1.Elem, new Tree(Color.B, tree2.Tree1.Tree2, tree2.Elem, tree2.Tree2));
-                    }
 
                     if (tree2.Tree2 != Empty && tree2.Tree2.Color == Color.R)
-                    {
                         return new Tree(Color.R, new Tree(Color.B, tree1, x, tree2.Tree1), tree2.Elem, new Tree(Color.B, tree2.Tree2.Tree2, tree2.Tree2.Elem, tree2.Tree2.Tree2));
-                    }
                 }
             }
 
