@@ -7,113 +7,95 @@
 namespace FunProgLib.tree
 {
     using System;
-    using System.Text;
 
-    public class LeftistHeap
+    public static class LeftistHeap
     {
-        private static readonly LeftistHeap EmptyTree = new LeftistHeap(0, 0, EmptyTree, EmptyTree);
-
-        public static LeftistHeap Empty
+        public class Node
         {
-            get
+            private readonly int rank;
+
+            private readonly int min;
+
+            private readonly Node heap1;
+
+            private readonly Node heap2;
+
+            public Node(int rank, int min, Node heap1, Node heap2)
             {
-                return EmptyTree;
+                this.rank = rank;
+                this.min = min;
+                this.heap1 = heap1;
+                this.heap2 = heap2;
+            }
+
+            public int Rank
+            {
+                get { return this.rank; }
+            }
+
+            public int Min
+            {
+                get { return this.min; }
+            }
+
+            public Node Heap1
+            {
+                get { return this.heap1; }
+            }
+
+            public Node Heap2
+            {
+                get { return this.heap2; }
             }
         }
 
-        private readonly int rank;
+        private static readonly Node EmptyTree = new Node(0, 0, EmptyTree, EmptyTree);
 
-        private readonly int min;
-
-        private readonly LeftistHeap heap1;
-
-        private readonly LeftistHeap heap2;
-
-        private LeftistHeap(int rank, int min, LeftistHeap heap1, LeftistHeap heap2)
+        public static Node Empty
         {
-            this.rank = rank;
-            this.min = min;
-            this.heap1 = heap1;
-            this.heap2 = heap2;
+            get { return EmptyTree; }
         }
 
-        public int Rank()
+        public static int Rank(Node node)
         {
-            if (this == EmptyTree) return 0;
-            return this.rank;
+            if (node == EmptyTree) return 0;
+            return node.Rank;
         }
 
-        private static LeftistHeap MakeT(int x, LeftistHeap a, LeftistHeap b)
+        private static Node MakeT(int x, Node a, Node b)
         {
-            if (a.rank >= b.rank) return new LeftistHeap(b.rank + 1, x, a, b);
-            return new LeftistHeap(a.rank + 1, x, b, a);
+            if (a.Rank >= b.Rank) return new Node(b.Rank + 1, x, a, b);
+            return new Node(a.Rank + 1, x, b, a);
         }
 
-        public bool IsEmapty
+        public static bool IsEmpty(Node node)
         {
-            get
-            {
-                return this == EmptyTree;
-            }
+            return node == EmptyTree;
         }
 
-        private LeftistHeap Merge(LeftistHeap heap)
+        private static Node Merge(Node heap1, Node heap2)
         {
-            if (heap == EmptyTree) return this;
-            if (this == EmptyTree) return heap;
-            if (this.min <= heap.min) return MakeT(this.min, this.heap1, this.heap2.Merge(heap));
-            return MakeT(heap.min, heap.heap1, this.Merge(heap.heap2));
+            if (heap2 == EmptyTree) return heap1;
+            if (heap1 == EmptyTree) return heap2;
+            if (heap1.Min <= heap2.Min) return MakeT(heap1.Min, heap1.Heap1, Merge(heap1.Heap2, heap2));
+            return MakeT(heap2.Min, heap2.Heap1, Merge(heap1, heap2.Heap2));
         }
 
-        public LeftistHeap Insert(int x)
+        public static Node Insert(Node node, int x)
         {
-            return new LeftistHeap(1, x, EmptyTree, EmptyTree).Merge(this);
+            return Merge(new Node(1, x, EmptyTree, EmptyTree), node);
         }
 
-        public int FindMin()
+        public static int FindMin(Node node)
         {
-            if (this == EmptyTree)
-                throw new Exception("Empty");
-
-            return this.min;
+            if (node == EmptyTree) throw new Exception("Empty");
+            return node.Min;
         }
 
-        public LeftistHeap DeleteMin()
+        public static Node DeleteMin(Node node)
         {
-            if (this == EmptyTree)
-                throw new Exception("Empty");
-
-            return this.heap1.Merge(this.heap2);
-        }
-
-        public override string ToString()
-        {
-            return DumpTree(this);
-        }
-
-        private static string DumpTree(LeftistHeap tree)
-        {
-            if (tree == EmptyTree) return "\u2205";
-
-            var results = new StringBuilder();
-
-            if (tree.heap1 != EmptyTree)
-            {
-                results.Append(tree.heap1);
-            }
-
-            results.Append(tree.min);
-            //results.Append(" [");
-            //results.Append(tree.rank);
-            //results.Append("]");
-            results.Append(", ");
-
-            if (tree.heap2 != EmptyTree)
-            {
-                results.Append(tree.heap2);
-            }
-
-            return results.ToString();
+            if (node == EmptyTree) throw new Exception("Empty");
+            return Merge(node.Heap1, node.Heap2);
         }
     }
 }
