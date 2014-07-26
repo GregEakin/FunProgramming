@@ -6,7 +6,9 @@
 // AUTHOR:		Greg Eakin
 namespace FunProgTests.tree
 {
+    using System;
     using System.Linq;
+    using System.Text;
 
     using FunProgLib.tree;
 
@@ -15,34 +17,61 @@ namespace FunProgTests.tree
     [TestClass]
     public class UnbalancedSetTests
     {
+        private static string DumpTree<T>(UnbalancedSet<T>.Tree tree) where T : IComparable
+        {
+            if (tree == UnbalancedSet<T>.Empty) return "\u2205";
+
+            var results = new StringBuilder();
+
+            results.Append('[');
+            if (tree.Left != UnbalancedSet<T>.Empty)
+            {
+                results.Append(DumpTree(tree.Left));
+                results.Append(",");
+            }
+
+            results.Append(tree.Element);
+
+            if (tree.Right != UnbalancedSet<T>.Empty)
+            {
+                results.Append(",");
+                results.Append(DumpTree(tree.Right));
+            }
+            results.Append(']');
+
+            return results.ToString();
+        }
+
         [TestMethod]
         public void EmptyTest()
         {
             var tree = UnbalancedSet<string>.Empty;
-            Assert.AreEqual("∅", tree.ToString());
+            Assert.AreEqual("∅", DumpTree(tree));
         }
 
         [TestMethod]
         public void SingleElement()
         {
             var tree = UnbalancedSet<string>.Empty;
-            tree = tree.Insert("a");
-            Assert.AreEqual("a, ", tree.ToString());
+            tree = UnbalancedSet<string>.Insert(tree, "a");
+            Assert.AreEqual("[a]", DumpTree(tree));
         }
 
         [TestMethod]
         public void DumpTreeTest()
         {
-            var tree = new[] { "how", "now", "brown", "cow" }.Aggregate(UnbalancedSet<string>.Empty, (current, word) => current.Insert(word));
-            Assert.AreEqual("brown, cow, how, now, ", tree.ToString());
+            const string Data = "How now, brown cow?";
+            var tree = Data.Split().Aggregate(UnbalancedSet<string>.Empty, UnbalancedSet<string>.Insert);
+            Assert.AreEqual("[[brown,[cow?]],How,[now,]]", DumpTree(tree));
         }
 
         [TestMethod]
         public void ElementTest()
         {
-            var tree = new[] { "how", "now", "brown", "cow" }.Aggregate(UnbalancedSet<string>.Empty, (current, word) => current.Insert(word));
-            Assert.IsTrue(tree.Member("how"));
-            Assert.IsFalse(tree.Member("wow"));
+            const string Data = "How now, brown cow?";
+            var tree = Data.Split().Aggregate(UnbalancedSet<string>.Empty, UnbalancedSet<string>.Insert);
+            Assert.IsTrue(UnbalancedSet<string>.Member(tree, "How"));
+            Assert.IsFalse(UnbalancedSet<string>.Member(tree, "wow"));
         }
 
     }

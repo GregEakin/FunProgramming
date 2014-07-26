@@ -7,13 +7,43 @@
 namespace FunProgLib.tree
 {
     using System;
-    using System.Text;
 
-    public class UnbalancedSet<T> where T : IComparable
+    public static class UnbalancedSet<T> where T : IComparable
     {
-        private static readonly UnbalancedSet<T> EmptyTree = new UnbalancedSet<T>(EmptyTree, default(T), EmptyTree);
+        public class Tree
+        {
+            private readonly Tree left;
 
-        public static UnbalancedSet<T> Empty
+            private readonly T element;
+
+            private readonly Tree right;
+
+            public Tree(Tree left, T element, Tree right)
+            {
+                this.left = left;
+                this.element = element;
+                this.right = right;
+            }
+
+            public Tree Left
+            {
+                get { return this.left; }
+            }
+
+            public T Element
+            {
+                get { return this.element; }
+            }
+
+            public Tree Right
+            {
+                get { return this.right; }
+            }
+        }
+
+        private static readonly Tree EmptyTree = new Tree(EmptyTree, default(T), EmptyTree);
+
+        public static Tree Empty
         {
             get
             {
@@ -21,65 +51,24 @@ namespace FunProgLib.tree
             }
         }
 
-        private readonly T element;
-
-        private readonly UnbalancedSet<T> left;
-
-        private readonly UnbalancedSet<T> right;
-
-        private UnbalancedSet(UnbalancedSet<T> left, T element, UnbalancedSet<T> right)
+        public static bool Member(Tree tree, T value)
         {
-            this.left = left;
-            this.element = element;
-            this.right = right;
-        }
-
-        public bool Member(T value)
-        {
-            if (this == EmptyTree)
+            if (tree == EmptyTree)
             {
                 return false;
             }
 
-            if (value.CompareTo(this.element) < 0) return this.left.Member(value);
-            else if (value.CompareTo(this.element) > 0) return this.right.Member(value);
-            else return true;
+            if (value.CompareTo(tree.Element) < 0) return Member(tree.Left, value);
+            if (value.CompareTo(tree.Element) > 0) return Member(tree.Right, value);
+            return true;
         }
 
-        public UnbalancedSet<T> Insert(T value)
+        public static Tree Insert(Tree tree, T value)
         {
-            if (this == EmptyTree) return new UnbalancedSet<T>(EmptyTree, value, EmptyTree);
-
-            if (value.CompareTo(this.element) < 0) return new UnbalancedSet<T>(this.left.Insert(value), this.element, this.right);
-            else if (value.CompareTo(this.element) > 0) return new UnbalancedSet<T>(this.left, this.element, this.right.Insert(value));
-            else return this;
-        }
-
-        public override string ToString()
-        {
-            return DumpTree(this);
-        }
-
-        private static string DumpTree(UnbalancedSet<T> tree)
-        {
-            if (tree == EmptyTree) return "\u2205";
-
-            var results = new StringBuilder();
-
-            if (tree.left != EmptyTree)
-            {
-                results.Append(tree.left);
-            }
-
-            results.Append(tree.element);
-            results.Append(", ");
-
-            if (tree.right != EmptyTree)
-            {
-                results.Append(tree.right);
-            }
-
-            return results.ToString();
+            if (tree == EmptyTree) return new Tree(EmptyTree, value, EmptyTree);
+            if (value.CompareTo(tree.Element) < 0) return new Tree(Insert(tree.Left, value), tree.Element, tree.Right);
+            if (value.CompareTo(tree.Element) > 0) return new Tree(tree.Left, tree.Element, Insert(tree.Right, value));
+            return tree;
         }
     }
 }
