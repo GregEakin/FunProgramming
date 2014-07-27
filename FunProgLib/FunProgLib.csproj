@@ -41,6 +41,8 @@
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="queue\BatchedQueue.cs" />
+    <Compile Include="queue\IDeque.cs" />
+    <Compile Include="queue\IQueue.cs" />
     <Compile Include="sort\BottomUpMergeSort.cs" />
     <Compile Include="tree\BinomialHeap.cs" />
     <Compile Include="tree\IOrdered.cs" />
