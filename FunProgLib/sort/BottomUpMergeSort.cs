@@ -15,19 +15,19 @@ namespace FunProgLib.sort
     {
         public class Sortable
         {
-            private readonly int count;
+            private readonly int size;
 
             private readonly /*susp*/ ReadOnlyCollection<ReadOnlyCollection<T>> segs;
 
-            public Sortable(int count, ReadOnlyCollection<ReadOnlyCollection<T>> segs)
+            public Sortable(int size, ReadOnlyCollection<ReadOnlyCollection<T>> segs)
             {
-                this.count = count;
+                this.size = size;
                 this.segs = segs;
             }
 
-            public int Count
+            public int Size
             {
-                get { return count; }
+                get { return this.size; }
             }
 
             public ReadOnlyCollection<ReadOnlyCollection<T>> Segs
@@ -84,7 +84,7 @@ namespace FunProgLib.sort
         public static Sortable Add(Sortable segs, T x)
         {
             var xs = new ReadOnlyCollection<T>(new[] { x });
-            return new Sortable(segs.Count + 1, /* $ */ AddSeg(xs, /* force */ segs.Segs, segs.Count));
+            return new Sortable(segs.Size + 1, /* $ */ AddSeg(xs, /* force */ segs.Segs, segs.Size));
         }
 
         private static ReadOnlyCollection<T> MrgAll(ReadOnlyCollection<T> xs, IReadOnlyList<ReadOnlyCollection<T>> ys)
