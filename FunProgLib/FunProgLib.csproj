@@ -44,6 +44,7 @@
     <Compile Include="queue\BatchedQueue.cs" />
     <Compile Include="queue\IDeque.cs" />
     <Compile Include="queue\IQueue.cs" />
+    <Compile Include="queue\PhysicistsQueue.cs" />
     <Compile Include="sort\BottomUpMergeSort.cs" />
     <Compile Include="tree\BinomialHeap.cs" />
     <Compile Include="tree\IOrdered.cs" />
