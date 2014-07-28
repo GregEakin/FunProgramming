@@ -8,7 +8,7 @@ namespace FunProgLib.queue
 {
     using System;
 
-    public class BankersQueue<T>
+    public static class BankersQueue<T>
     {
         public class Queue
         {
@@ -18,27 +18,27 @@ namespace FunProgLib.queue
             // alpha stream
         }
 
-        Queue Empty
+        public static Queue Empty
         {
             get { throw new NotImplementedException(); }
         }
 
-        bool IsEmpty(Queue queue)
+        public static bool IsEmpty(Queue queue)
         {
             throw new NotImplementedException();
         }
 
-        private Queue Snoc(Queue queue, T element)
+        public static Queue Snoc(Queue queue, T element)
         {
             throw new NotImplementedException();
         }
 
-        T Head(Queue queue)
+        public static T Head(Queue queue)
         {
             throw new NotImplementedException();
         }
 
-        Queue Tail(Queue queue)
+        public static Queue Tail(Queue queue)
         {
             throw new NotImplementedException();
         }
