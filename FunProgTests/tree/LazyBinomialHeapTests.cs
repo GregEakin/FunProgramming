@@ -23,7 +23,7 @@ namespace FunProgTests.tree
             var result = new StringBuilder();
             result.Append("[");
             result.Append(tree.Root);
-            if (tree.List != List<LazyBinomialHeap<T>.Tree>.Empty)
+            if (tree.List != LinkList<LazyBinomialHeap<T>.Tree>.Empty)
             {
                 result.Append(", ");
                 foreach (var node1 in tree.List)
@@ -35,11 +35,11 @@ namespace FunProgTests.tree
             return result.ToString();
         }
 
-        private static string DumpHeap<T>(Lazy<List<LazyBinomialHeap<T>.Tree>.ListStructure> list) where T : IComparable
+        private static string DumpHeap<T>(Lazy<LinkList<LazyBinomialHeap<T>.Tree>.ListStructure> list) where T : IComparable
         {
             var result = new StringBuilder();
             result.Append("[");
-            if (list.Value != List<LazyBinomialHeap<T>.Tree>.Empty)
+            if (list.Value != LinkList<LazyBinomialHeap<T>.Tree>.Empty)
             {
                 foreach (var node in list.Value)
                 {

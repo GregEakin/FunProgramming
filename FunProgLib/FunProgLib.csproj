@@ -39,7 +39,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="persistence\List.cs" />
+    <Compile Include="persistence\LinkList.cs" />
     <Compile Include="persistence\IStack.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="queue\BankersQueue.cs" />

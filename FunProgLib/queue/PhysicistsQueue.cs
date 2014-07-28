@@ -14,13 +14,13 @@ namespace FunProgLib.queue
     {
         public class Queue
         {
-            private readonly List<T>.ListStructure w;
+            private readonly LinkList<T>.ListStructure w;
             private readonly int lenf;
-            private readonly Lazy<List<T>.ListStructure> f;
+            private readonly Lazy<LinkList<T>.ListStructure> f;
             private readonly int lenr;
-            private readonly List<T>.ListStructure r;
+            private readonly LinkList<T>.ListStructure r;
 
-            public Queue(List<T>.ListStructure w, int lenf, Lazy<List<T>.ListStructure> f, int lenr, List<T>.ListStructure r)
+            public Queue(LinkList<T>.ListStructure w, int lenf, Lazy<LinkList<T>.ListStructure> f, int lenr, LinkList<T>.ListStructure r)
             {
                 this.w = w;
                 this.lenf = lenf;
@@ -29,16 +29,16 @@ namespace FunProgLib.queue
                 this.r = r;
             }
 
-            public List<T>.ListStructure W { get { return this.w; } }
+            public LinkList<T>.ListStructure W { get { return this.w; } }
             public int Lenf { get { return this.lenf; } }
-            public Lazy<List<T>.ListStructure> F { get { return this.f; } }
+            public Lazy<LinkList<T>.ListStructure> F { get { return this.f; } }
             public int Lenr { get { return this.lenr; } }
-            public List<T>.ListStructure R { get { return this.r; } }
+            public LinkList<T>.ListStructure R { get { return this.r; } }
         }
 
-        private static readonly List<T>.ListStructure EmptyList = null;
+        private static readonly LinkList<T>.ListStructure EmptyList = null;
 
-        private static readonly Queue EmptyQueue = new Queue(EmptyList, 0, new Lazy<List<T>.ListStructure>(() => EmptyList), 0, EmptyList);
+        private static readonly Queue EmptyQueue = new Queue(EmptyList, 0, new Lazy<LinkList<T>.ListStructure>(() => EmptyList), 0, EmptyList);
 
         public static Queue Empty
         {
@@ -50,21 +50,21 @@ namespace FunProgLib.queue
             return queue.Lenf == 0;
         }
 
-        private static Queue CheckW(List<T>.ListStructure w, int lenf, Lazy<List<T>.ListStructure> f, int lenr, List<T>.ListStructure r)
+        private static Queue CheckW(LinkList<T>.ListStructure w, int lenf, Lazy<LinkList<T>.ListStructure> f, int lenr, LinkList<T>.ListStructure r)
         {
             if (w == EmptyList) return new Queue(f.Value, lenf, f, lenr, r);
             return new Queue(w, lenf, f, lenr, r);
         }
 
-        private static Queue Check(List<T>.ListStructure w, int lenf, Lazy<List<T>.ListStructure> f, int lenr, List<T>.ListStructure r)
+        private static Queue Check(LinkList<T>.ListStructure w, int lenf, Lazy<LinkList<T>.ListStructure> f, int lenr, LinkList<T>.ListStructure r)
         {
             if (lenr <= lenf) return CheckW(w, lenf, f, lenr, r);
-            return CheckW(f.Value, lenf + lenr, new Lazy<List<T>.ListStructure>(() => List<T>.Cat(f.Value, List<T>.Reverse(r))), 0, EmptyList);
+            return CheckW(f.Value, lenf + lenr, new Lazy<LinkList<T>.ListStructure>(() => LinkList<T>.Cat(f.Value, LinkList<T>.Reverse(r))), 0, EmptyList);
         }
 
         public static Queue Snoc(Queue queue, T element)
         {
-            return Check(queue.W, queue.Lenf, queue.F, queue.Lenr + 1, List<T>.Cons(queue.R, element));
+            return Check(queue.W, queue.Lenf, queue.F, queue.Lenr + 1, LinkList<T>.Cons(queue.R, element));
         }
 
         public static T Head(Queue queue)
@@ -76,7 +76,7 @@ namespace FunProgLib.queue
         public static Queue Tail(Queue queue)
         {
             if (queue.W == EmptyList) throw new Exception("Empty");
-            return Check(queue.W.Next, queue.Lenf - 1, new Lazy<List<T>.ListStructure>(() => queue.F.Value.Next), queue.Lenr, queue.R);
+            return Check(queue.W.Next, queue.Lenf - 1, new Lazy<LinkList<T>.ListStructure>(() => queue.F.Value.Next), queue.Lenr, queue.R);
         }
     }
 }

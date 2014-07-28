@@ -10,7 +10,7 @@ namespace FunProgLib.persistence
     using System.Collections;
     using System.Collections.Generic;
 
-    public static class List<T> // : Stack<T>
+    public static class LinkList<T> // : Stack<T>
     {
         public sealed class ListStructure : IEnumerable<T>
         {
@@ -126,7 +126,7 @@ namespace FunProgLib.persistence
         public static ListStructure Reverse(ListStructure list)
         {
             if (list == Empty) return Empty;
-            // return list.Aggregate(List<T>.Empty, List<T>.Cons);
+            // return list.Aggregate(LinkList<T>.Empty, LinkList<T>.Cons);
             var result = Empty;
             foreach (var element in list)
             {

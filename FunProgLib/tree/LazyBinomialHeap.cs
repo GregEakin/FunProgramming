@@ -18,9 +18,9 @@ namespace FunProgLib.tree
 
             private readonly T root;
 
-            private readonly List<Tree>.ListStructure list;
+            private readonly LinkList<Tree>.ListStructure list;
 
-            public Tree(int rank, T x, List<Tree>.ListStructure list)
+            public Tree(int rank, T x, LinkList<Tree>.ListStructure list)
             {
                 this.rank = rank;
                 this.root = x;
@@ -37,68 +37,68 @@ namespace FunProgLib.tree
                 get { return root; }
             }
 
-            public List<Tree>.ListStructure List
+            public LinkList<Tree>.ListStructure List
             {
                 get { return list; }
             }
         }
 
-        // type Heap = Lazy<List<Tree>.ListStructure /* susp */
+        // type Heap = Lazy<LinkList<Tree>.ListStructure /* susp */
 
-        private static readonly List<Tree>.ListStructure EmptyList = List<Tree>.Empty;
+        private static readonly LinkList<Tree>.ListStructure EmptyList = LinkList<Tree>.Empty;
 
-        private static readonly Lazy<List<Tree>.ListStructure> EmptyHeap = /* $ */ new Lazy<List<Tree>.ListStructure>(() => EmptyList);
+        private static readonly Lazy<LinkList<Tree>.ListStructure> EmptyHeap = /* $ */ new Lazy<LinkList<Tree>.ListStructure>(() => EmptyList);
 
-        public static Lazy<List<Tree>.ListStructure> Empty
+        public static Lazy<LinkList<Tree>.ListStructure> Empty
         {
             get { return EmptyHeap; }
         }
 
-        public static bool IsEmapty(/* $ */ Lazy<List<Tree>.ListStructure> heap)
+        public static bool IsEmapty(/* $ */ Lazy<LinkList<Tree>.ListStructure> heap)
         {
             return heap.Value == EmptyList;
         }
 
         private static Tree Link(Tree t1, Tree t2)
         {
-            if (t1.Root.CompareTo(t2.Root) <= 0) return new Tree(t1.Rank + 1, t1.Root, List<Tree>.Cons(t1.List, t2));
-            return new Tree(t1.Rank + 1, t2.Root, List<Tree>.Cons(t2.List, t1));
+            if (t1.Root.CompareTo(t2.Root) <= 0) return new Tree(t1.Rank + 1, t1.Root, LinkList<Tree>.Cons(t1.List, t2));
+            return new Tree(t1.Rank + 1, t2.Root, LinkList<Tree>.Cons(t2.List, t1));
         }
 
-        private static List<Tree>.ListStructure InsTree(Tree t, List<Tree>.ListStructure ts)
+        private static LinkList<Tree>.ListStructure InsTree(Tree t, LinkList<Tree>.ListStructure ts)
         {
-            if (ts == EmptyList) return List<Tree>.Cons(EmptyList, t);
-            if (t.Rank < ts.Element.Rank) return List<Tree>.Cons(ts, t);
+            if (ts == EmptyList) return LinkList<Tree>.Cons(EmptyList, t);
+            if (t.Rank < ts.Element.Rank) return LinkList<Tree>.Cons(ts, t);
             return InsTree(Link(t, ts.Element), ts.Next);
         }
 
-        private static List<Tree>.ListStructure Mrg(List<Tree>.ListStructure ts1, List<Tree>.ListStructure ts2)
+        private static LinkList<Tree>.ListStructure Mrg(LinkList<Tree>.ListStructure ts1, LinkList<Tree>.ListStructure ts2)
         {
             if (ts2 == EmptyList) return ts1;
             if (ts1 == EmptyList) return ts2;
 
-            if (ts1.Element.Rank < ts2.Element.Rank) return List<Tree>.Cons(Mrg(ts1.Next, ts2), ts1.Element);
-            if (ts2.Element.Rank < ts1.Element.Rank) return List<Tree>.Cons(Mrg(ts1, ts2.Next), ts2.Element);
+            if (ts1.Element.Rank < ts2.Element.Rank) return LinkList<Tree>.Cons(Mrg(ts1.Next, ts2), ts1.Element);
+            if (ts2.Element.Rank < ts1.Element.Rank) return LinkList<Tree>.Cons(Mrg(ts1, ts2.Next), ts2.Element);
             return InsTree(Link(ts1.Element, ts2.Element), Mrg(ts1.Next, ts2.Next));
         }
 
-        public static /* lazy */ Lazy<List<Tree>.ListStructure> Insert(T x, /* $ */ Lazy<List<Tree>.ListStructure> ts)
+        public static /* lazy */ Lazy<LinkList<Tree>.ListStructure> Insert(T x, /* $ */ Lazy<LinkList<Tree>.ListStructure> ts)
         {
-            return /* $ */ new Lazy<List<Tree>.ListStructure>(() => InsTree(new Tree(0, x, EmptyList), ts.Value));
+            return /* $ */ new Lazy<LinkList<Tree>.ListStructure>(() => InsTree(new Tree(0, x, EmptyList), ts.Value));
         }
 
-        public static /* lazy */ Lazy<List<Tree>.ListStructure> Merge(/* $ */ Lazy<List<Tree>.ListStructure> ts1, /* $ */ Lazy<List<Tree>.ListStructure> ts2)
+        public static /* lazy */ Lazy<LinkList<Tree>.ListStructure> Merge(/* $ */ Lazy<LinkList<Tree>.ListStructure> ts1, /* $ */ Lazy<LinkList<Tree>.ListStructure> ts2)
         {
-            return /* $ */ new Lazy<List<Tree>.ListStructure>(() => Mrg(ts1.Value, ts2.Value));
+            return /* $ */ new Lazy<LinkList<Tree>.ListStructure>(() => Mrg(ts1.Value, ts2.Value));
         }
 
         private class TreeParts
         {
             private readonly Tree tree;
 
-            private readonly List<Tree>.ListStructure list;
+            private readonly LinkList<Tree>.ListStructure list;
 
-            public TreeParts(Tree tree, List<Tree>.ListStructure list)
+            public TreeParts(Tree tree, LinkList<Tree>.ListStructure list)
             {
                 this.tree = tree;
                 this.list = list;
@@ -109,33 +109,33 @@ namespace FunProgLib.tree
                 get { return this.tree; }
             }
 
-            public List<Tree>.ListStructure List
+            public LinkList<Tree>.ListStructure List
             {
                 get { return this.list; }
             }
         }
 
-        private static TreeParts RemoveMinTree(List<Tree>.ListStructure list)
+        private static TreeParts RemoveMinTree(LinkList<Tree>.ListStructure list)
         {
             if (list == EmptyList) throw new Exception("Empty");
             if (list.Next == EmptyList) return new TreeParts(list.Element, EmptyList);
             var prime = RemoveMinTree(list.Next);
             if (list.Element.Root.CompareTo(prime.Tree.Root) <= 0) return new TreeParts(list.Element, list.Next);
-            return new TreeParts(prime.Tree, List<Tree>.Cons(prime.List, list.Element));
+            return new TreeParts(prime.Tree, LinkList<Tree>.Cons(prime.List, list.Element));
         }
 
-        public static T FindMin(/* $ */ Lazy<List<Tree>.ListStructure> ts)
+        public static T FindMin(/* $ */ Lazy<LinkList<Tree>.ListStructure> ts)
         {
             var t = RemoveMinTree(ts.Value);
             return t.Tree.Root;
 
         }
 
-        public static /* lazy */ Lazy<List<Tree>.ListStructure> DeleteMin(/* $ */ Lazy<List<Tree>.ListStructure> ts)
+        public static /* lazy */ Lazy<LinkList<Tree>.ListStructure> DeleteMin(/* $ */ Lazy<LinkList<Tree>.ListStructure> ts)
         {
             var t = RemoveMinTree(ts.Value);
-            var x = List<Tree>.Reverse(t.Tree.List);
-            return /* $ */ new Lazy<List<Tree>.ListStructure>(() => Mrg(x, t.List));
+            var x = LinkList<Tree>.Reverse(t.Tree.List);
+            return /* $ */ new Lazy<LinkList<Tree>.ListStructure>(() => Mrg(x, t.List));
         }
     }
 }
