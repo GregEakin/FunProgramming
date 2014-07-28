@@ -55,6 +55,7 @@
     <Compile Include="tree\IOrdered.cs" />
     <Compile Include="tree\ISet.cs" />
     <Compile Include="tree\LeftistHeap.cs" />
+    <Compile Include="tree\ParingHeap.cs" />
     <Compile Include="tree\RedBlackSet.cs" />
     <Compile Include="tree\SplayHeap.cs" />
     <Compile Include="tree\UnbalancedSet.cs" />

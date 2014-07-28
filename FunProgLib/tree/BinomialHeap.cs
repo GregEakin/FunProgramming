@@ -21,10 +21,10 @@ namespace FunProgLib.tree
 
             private readonly ReadOnlyCollection<Node> list;
 
-            public Node(int rank, T x, ReadOnlyCollection<Node> list)
+            public Node(int rank, T root, ReadOnlyCollection<Node> list)
             {
                 this.rank = rank;
-                this.root = x;
+                this.root = root;
                 this.list = list;
             }
 
