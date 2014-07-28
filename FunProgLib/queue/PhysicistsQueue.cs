@@ -16,7 +16,7 @@ namespace FunProgLib.queue
         {
             private readonly List<T>.ListStructure w;
             private readonly int lenf;
-            private readonly /*susp*/ Lazy<List<T>.ListStructure> f;
+            private readonly Lazy<List<T>.ListStructure> f;
             private readonly int lenr;
             private readonly List<T>.ListStructure r;
 
