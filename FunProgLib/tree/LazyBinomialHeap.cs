@@ -84,12 +84,12 @@ namespace FunProgLib.tree
 
         public static /* lazy */ Lazy<List<Tree>.ListStructure> Insert(T x, /* $ */ Lazy<List<Tree>.ListStructure> ts)
         {
-            return new Lazy<List<Tree>.ListStructure>(() => InsTree(new Tree(0, x, EmptyList), ts.Value));
+            return /* $ */ new Lazy<List<Tree>.ListStructure>(() => InsTree(new Tree(0, x, EmptyList), ts.Value));
         }
 
         public static /* lazy */ Lazy<List<Tree>.ListStructure> Merge(/* $ */ Lazy<List<Tree>.ListStructure> ts1, /* $ */ Lazy<List<Tree>.ListStructure> ts2)
         {
-            return new Lazy<List<Tree>.ListStructure>(() => Mrg(ts1.Value, ts2.Value));
+            return /* $ */ new Lazy<List<Tree>.ListStructure>(() => Mrg(ts1.Value, ts2.Value));
         }
 
         private class TreeParts
@@ -131,7 +131,7 @@ namespace FunProgLib.tree
 
         }
 
-        public static Lazy<List<Tree>.ListStructure> DeleteMin(/* $ */ Lazy<List<Tree>.ListStructure> ts)
+        public static /* lazy */ Lazy<List<Tree>.ListStructure> DeleteMin(/* $ */ Lazy<List<Tree>.ListStructure> ts)
         {
             var t = RemoveMinTree(ts.Value);
             var x = List<Tree>.Reverse(t.Tree.List);
