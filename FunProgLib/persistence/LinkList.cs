@@ -95,7 +95,7 @@ namespace FunProgLib.persistence
             return list == EmptyList;
         }
 
-        public static List Cons(List list, T element)
+        public static List Cons(T element, List list)
         {
             return new List(list, element);
         }
@@ -130,7 +130,7 @@ namespace FunProgLib.persistence
             var result = Empty;
             foreach (var element in list)
             {
-                result = Cons(result, element);
+                result = Cons(element, result);
             }
             return result;
         }

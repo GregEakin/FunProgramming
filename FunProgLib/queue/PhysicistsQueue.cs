@@ -64,7 +64,7 @@ namespace FunProgLib.queue
 
         public static Queue Snoc(Queue queue, T element)
         {
-            return Check(queue.W, queue.Lenf, queue.F, queue.Lenr + 1, LinkList<T>.Cons(queue.R, element));
+            return Check(queue.W, queue.Lenf, queue.F, queue.Lenr + 1, LinkList<T>.Cons(element, queue.R));
         }
 
         public static T Head(Queue queue)

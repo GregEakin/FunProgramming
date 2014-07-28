@@ -54,8 +54,8 @@ namespace FunProgLib.tree
             if (h2 == EmptyHeap) return h1;
             if (h1 == EmptyHeap) return h2;
 
-            if (h1.Root.CompareTo(h2.Root) <= 0) return new Heap(h1.Root, LinkList<Heap>.Cons(h1.List, h2));
-            return new Heap(h2.Root, LinkList<Heap>.Cons(h2.List, h1));
+            if (h1.Root.CompareTo(h2.Root) <= 0) return new Heap(h1.Root, LinkList<Heap>.Cons(h2, h1.List));
+            return new Heap(h2.Root, LinkList<Heap>.Cons(h1, h2.List));
         }
 
         public static Heap Insert(T x, Heap h)

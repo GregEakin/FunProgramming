@@ -61,14 +61,14 @@ namespace FunProgLib.tree
 
         private static Tree Link(Tree t1, Tree t2)
         {
-            if (t1.Root.CompareTo(t2.Root) <= 0) return new Tree(t1.Rank + 1, t1.Root, LinkList<Tree>.Cons(t1.List, t2));
-            return new Tree(t1.Rank + 1, t2.Root, LinkList<Tree>.Cons(t2.List, t1));
+            if (t1.Root.CompareTo(t2.Root) <= 0) return new Tree(t1.Rank + 1, t1.Root, LinkList<Tree>.Cons(t2, t1.List));
+            return new Tree(t1.Rank + 1, t2.Root, LinkList<Tree>.Cons(t1, t2.List));
         }
 
         private static LinkList<Tree>.List InsTree(Tree t, LinkList<Tree>.List ts)
         {
-            if (ts == EmptyList) return LinkList<Tree>.Cons(EmptyList, t);
-            if (t.Rank < ts.Element.Rank) return LinkList<Tree>.Cons(ts, t);
+            if (ts == EmptyList) return LinkList<Tree>.Cons(t, EmptyList);
+            if (t.Rank < ts.Element.Rank) return LinkList<Tree>.Cons(t, ts);
             return InsTree(Link(t, ts.Element), ts.Next);
         }
 
@@ -77,8 +77,8 @@ namespace FunProgLib.tree
             if (ts2 == EmptyList) return ts1;
             if (ts1 == EmptyList) return ts2;
 
-            if (ts1.Element.Rank < ts2.Element.Rank) return LinkList<Tree>.Cons(Mrg(ts1.Next, ts2), ts1.Element);
-            if (ts2.Element.Rank < ts1.Element.Rank) return LinkList<Tree>.Cons(Mrg(ts1, ts2.Next), ts2.Element);
+            if (ts1.Element.Rank < ts2.Element.Rank) return LinkList<Tree>.Cons(ts1.Element, Mrg(ts1.Next, ts2));
+            if (ts2.Element.Rank < ts1.Element.Rank) return LinkList<Tree>.Cons(ts2.Element, Mrg(ts1, ts2.Next));
             return InsTree(Link(ts1.Element, ts2.Element), Mrg(ts1.Next, ts2.Next));
         }
 
@@ -121,7 +121,7 @@ namespace FunProgLib.tree
             if (list.Next == EmptyList) return new TreeParts(list.Element, EmptyList);
             var prime = RemoveMinTree(list.Next);
             if (list.Element.Root.CompareTo(prime.Tree.Root) <= 0) return new TreeParts(list.Element, list.Next);
-            return new TreeParts(prime.Tree, LinkList<Tree>.Cons(prime.List, list.Element));
+            return new TreeParts(prime.Tree, LinkList<Tree>.Cons(list.Element, prime.List));
         }
 
         public static T FindMin(/* $ */ Lazy<LinkList<Tree>.List> ts)

@@ -22,7 +22,7 @@ namespace FunProgTests.persistence
         {
             var list = LinkList<string>.Empty;
             Assert.IsTrue(LinkList<string>.IsEmpty(list));
-            list = LinkList<string>.Cons(list, "A");
+            list = LinkList<string>.Cons("A", list);
             Assert.IsFalse(LinkList<string>.IsEmpty(list));
         }
 
@@ -46,7 +46,7 @@ namespace FunProgTests.persistence
         public void EnumeratorTest()
         {
             const string Data = "a b c";
-            var list = Data.Split().Aggregate(LinkList<string>.Empty, LinkList<string>.Cons);
+            var list = Data.Split().Aggregate(LinkList<string>.Empty, (current, word) => LinkList<string>.Cons(word, current));
             CollectionAssert.AreEqual(new[] { "c", "b", "a" }, list.ToList());
         }
 
@@ -54,7 +54,7 @@ namespace FunProgTests.persistence
         public void ReverseListTest()
         {
             const string Data = "How now, brown cow?";
-            var data = Data.Split().Aggregate(LinkList<string>.Empty, LinkList<string>.Cons);
+            var data = Data.Split().Aggregate(LinkList<string>.Empty, (current, word) => LinkList<string>.Cons(word, current));
             var list = LinkList<string>.Reverse(data);
             Console.WriteLine(list.ToReadableString());
             CollectionAssert.AreEqual(new[] { "How", "now,", "brown", "cow?" }, list.ToList());
@@ -78,7 +78,7 @@ namespace FunProgTests.persistence
         public void CatLeftEmptyTest()
         {
             const string Data = "How now, brown cow?";
-            var data = Data.Split().Aggregate(LinkList<string>.Empty, LinkList<string>.Cons);
+            var data = Data.Split().Aggregate(LinkList<string>.Empty, (current, word) => LinkList<string>.Cons(word, current));
 
             var list = LinkList<string>.Cat(LinkList<string>.Empty, data);
             CollectionAssert.AreEqual(new[] { "cow?", "brown", "now,", "How" }, list.ToList());
@@ -88,7 +88,7 @@ namespace FunProgTests.persistence
         public void CatRightEmptyTest()
         {
             const string Data = "How now, brown cow?";
-            var data = Data.Split().Aggregate(LinkList<string>.Empty, LinkList<string>.Cons);
+            var data = Data.Split().Aggregate(LinkList<string>.Empty, (current, word) => LinkList<string>.Cons(word, current));
 
             var list = LinkList<string>.Cat(data, LinkList<string>.Empty);
             CollectionAssert.AreEqual(new[] { "cow?", "brown", "now,", "How" }, list.ToList());
@@ -98,10 +98,10 @@ namespace FunProgTests.persistence
         public void CatTest()
         {
             const string Data1 = "How now,";
-            var data1 = Data1.Split().Aggregate(LinkList<string>.Empty, LinkList<string>.Cons);
+            var data1 = Data1.Split().Aggregate(LinkList<string>.Empty, (current, word) => LinkList<string>.Cons(word, current));
 
             const string Data2 = "brown cow?";
-            var data2 = Data2.Split().Aggregate(LinkList<string>.Empty, LinkList<string>.Cons);
+            var data2 = Data2.Split().Aggregate(LinkList<string>.Empty, (current, word) => LinkList<string>.Cons(word, current));
 
             var list = LinkList<string>.Cat(data1, data2);
             CollectionAssert.AreEqual(new[] { "now,", "How", "cow?", "brown" }, list.ToList());

@@ -49,19 +49,19 @@ namespace FunProgLib.sort
         {
             if (xs == null) return ys;
             if (ys == null) return xs;
-            if (xs.Element.CompareTo(ys.Element) <= 0) return LinkList<T>.Cons(Mrg(xs.Next, ys), xs.Element);
-            return LinkList<T>.Cons(Mrg(xs, ys.Next), ys.Element);
+            if (xs.Element.CompareTo(ys.Element) <= 0) return LinkList<T>.Cons(xs.Element, Mrg(xs.Next, ys));
+            return LinkList<T>.Cons(ys.Element, Mrg(xs, ys.Next));
         }
 
         private static Func<LinkList<LinkList<T>.List>.List> AddSeg(LinkList<T>.List seg, LinkList<LinkList<T>.List>.List segs, int size)
         {
-            if (size % 2 == 0) return () => LinkList<LinkList<T>.List>.Cons(segs, seg);
+            if (size % 2 == 0) return () => LinkList<LinkList<T>.List>.Cons(seg, segs);
             return AddSeg(Mrg(seg, segs.Element), segs.Next, size / 2);
         }
 
         public static Sortable Add(Sortable segs, T x)
         {
-            var xs = LinkList<T>.Cons(LinkList<T>.Empty, x);
+            var xs = LinkList<T>.Cons(x, LinkList<T>.Empty);
             return new Sortable(segs.Size + 1, /* $ */ new Lazy<LinkList<LinkList<T>.List>.List>(AddSeg(xs, /* force */ segs.Segs.Value, segs.Size)));
         }
 
