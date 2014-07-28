@@ -49,7 +49,10 @@
     <Compile Include="queue\PhysicistsQueue.cs" />
     <Compile Include="sort\BottomUpMergeSort.cs" />
     <Compile Include="tree\BinomialHeap.cs" />
+    <Compile Include="tree\IFiniteMap.cs" />
+    <Compile Include="tree\IHeap.cs" />
     <Compile Include="tree\IOrdered.cs" />
+    <Compile Include="tree\ISet.cs" />
     <Compile Include="tree\LeftistHeap.cs" />
     <Compile Include="tree\RedBlackSet.cs" />
     <Compile Include="tree\SplayHeap.cs" />

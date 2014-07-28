@@ -8,7 +8,7 @@ namespace FunProgLib.tree
 {
     using System;
 
-    public static class UnbalancedSet<T> where T : IComparable
+    public static class UnbalancedSet<T> where T : IComparable // ISet
     {
         public class Tree
         {
@@ -41,7 +41,7 @@ namespace FunProgLib.tree
             }
         }
 
-        private static readonly Tree EmptyTree = new Tree(EmptyTree, default(T), EmptyTree);
+        private static readonly Tree EmptyTree = null;
 
         public static Tree Empty
         {
