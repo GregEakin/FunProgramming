@@ -83,7 +83,7 @@ namespace FunProgLib.tree
             return InsertTree(new Node(0, x, EmptyList), ts);
         }
 
-        private static ReadOnlyCollection<Node> Merge(ReadOnlyCollection<Node> ts1, ReadOnlyCollection<Node> ts2)
+        public static ReadOnlyCollection<Node> Merge(ReadOnlyCollection<Node> ts1, ReadOnlyCollection<Node> ts2)
         {
             if (ts2.Count == 0) return ts1;
             if (ts1.Count == 0) return ts2;

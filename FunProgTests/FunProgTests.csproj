@@ -55,6 +55,7 @@
     <Compile Include="queue\BatchedQueueTests.cs" />
     <Compile Include="queue\PhysicistQueueTests.cs" />
     <Compile Include="sort\BottomUpMergeSortTests.cs" />
+    <Compile Include="tree\LazyBinomialHeapTests.cs" />
     <Compile Include="tree\BinomialHeapTests.cs" />
     <Compile Include="tree\LeftistHeapTests.cs" />
     <Compile Include="tree\RedBlackSetTests.cs" />

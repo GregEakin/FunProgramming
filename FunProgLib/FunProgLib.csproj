@@ -48,6 +48,7 @@
     <Compile Include="queue\IQueue.cs" />
     <Compile Include="queue\PhysicistsQueue.cs" />
     <Compile Include="sort\BottomUpMergeSort.cs" />
+    <Compile Include="tree\LazyBinomialHeap.cs" />
     <Compile Include="tree\BinomialHeap.cs" />
     <Compile Include="tree\IFiniteMap.cs" />
     <Compile Include="tree\IHeap.cs" />
