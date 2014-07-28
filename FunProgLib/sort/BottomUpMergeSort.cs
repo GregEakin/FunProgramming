@@ -15,9 +15,9 @@ namespace FunProgLib.sort
         {
             private readonly int size;
 
-            private readonly /*susp*/ Lazy<LinkList<LinkList<T>.ListStructure>.ListStructure> segs;
+            private readonly /*susp*/ Lazy<LinkList<LinkList<T>.List>.List> segs;
 
-            public Sortable(int size, Lazy<LinkList<LinkList<T>.ListStructure>.ListStructure> segs)
+            public Sortable(int size, Lazy<LinkList<LinkList<T>.List>.List> segs)
             {
                 this.size = size;
                 this.segs = segs;
@@ -28,24 +28,24 @@ namespace FunProgLib.sort
                 get { return this.size; }
             }
 
-            public Lazy<LinkList<LinkList<T>.ListStructure>.ListStructure> Segs
+            public Lazy<LinkList<LinkList<T>.List>.List> Segs
             {
                 get { return segs; }
             }
         }
 
-        private static readonly LinkList<T>.ListStructure EmptyList = null;
+        private static readonly LinkList<T>.List EmptyList = null;
 
-        private static readonly LinkList<LinkList<T>.ListStructure>.ListStructure EmptyListList = null;
+        private static readonly LinkList<LinkList<T>.List>.List EmptyListList = null;
 
-        private static readonly Sortable EmptySortable = new Sortable(0, /* $ */ new Lazy<LinkList<LinkList<T>.ListStructure>.ListStructure>(() => EmptyListList));
+        private static readonly Sortable EmptySortable = new Sortable(0, /* $ */ new Lazy<LinkList<LinkList<T>.List>.List>(() => EmptyListList));
 
         public static Sortable Empty
         {
             get { return EmptySortable; }
         }
 
-        private static LinkList<T>.ListStructure Mrg(LinkList<T>.ListStructure xs, LinkList<T>.ListStructure ys)
+        private static LinkList<T>.List Mrg(LinkList<T>.List xs, LinkList<T>.List ys)
         {
             if (xs == null) return ys;
             if (ys == null) return xs;
@@ -53,25 +53,25 @@ namespace FunProgLib.sort
             return LinkList<T>.Cons(Mrg(xs, ys.Next), ys.Element);
         }
 
-        private static Func<LinkList<LinkList<T>.ListStructure>.ListStructure> AddSeg(LinkList<T>.ListStructure seg, LinkList<LinkList<T>.ListStructure>.ListStructure segs, int size)
+        private static Func<LinkList<LinkList<T>.List>.List> AddSeg(LinkList<T>.List seg, LinkList<LinkList<T>.List>.List segs, int size)
         {
-            if (size % 2 == 0) return () => LinkList<LinkList<T>.ListStructure>.Cons(segs, seg);
+            if (size % 2 == 0) return () => LinkList<LinkList<T>.List>.Cons(segs, seg);
             return AddSeg(Mrg(seg, segs.Element), segs.Next, size / 2);
         }
 
         public static Sortable Add(Sortable segs, T x)
         {
             var xs = LinkList<T>.Cons(LinkList<T>.Empty, x);
-            return new Sortable(segs.Size + 1, /* $ */ new Lazy<LinkList<LinkList<T>.ListStructure>.ListStructure>(AddSeg(xs, /* force */ segs.Segs.Value, segs.Size)));
+            return new Sortable(segs.Size + 1, /* $ */ new Lazy<LinkList<LinkList<T>.List>.List>(AddSeg(xs, /* force */ segs.Segs.Value, segs.Size)));
         }
 
-        private static LinkList<T>.ListStructure MrgAll(LinkList<T>.ListStructure xs, LinkList<LinkList<T>.ListStructure>.ListStructure ys)
+        private static LinkList<T>.List MrgAll(LinkList<T>.List xs, LinkList<LinkList<T>.List>.List ys)
         {
             if (ys == null) return xs;
             return MrgAll(Mrg(xs, ys.Element), ys.Next);
         }
 
-        public static LinkList<T>.ListStructure Sort(Sortable segs)
+        public static LinkList<T>.List Sort(Sortable segs)
         {
             return MrgAll(EmptyList, /* force */ segs.Segs.Value);
         }

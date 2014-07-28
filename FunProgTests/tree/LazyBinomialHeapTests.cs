@@ -35,7 +35,7 @@ namespace FunProgTests.tree
             return result.ToString();
         }
 
-        private static string DumpHeap<T>(Lazy<LinkList<LazyBinomialHeap<T>.Tree>.ListStructure> list) where T : IComparable
+        private static string DumpHeap<T>(Lazy<LinkList<LazyBinomialHeap<T>.Tree>.List> list) where T : IComparable
         {
             var result = new StringBuilder();
             result.Append("[");

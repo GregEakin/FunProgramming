@@ -12,13 +12,13 @@ namespace FunProgLib.persistence
 
     public static class LinkList<T> // : Stack<T>
     {
-        public sealed class ListStructure : IEnumerable<T>
+        public sealed class List : IEnumerable<T>
         {
             private readonly T element;
 
-            private readonly ListStructure next;
+            private readonly List next;
 
-            public ListStructure(ListStructure next, T element)
+            public List(List next, T element)
             {
                 this.element = element;
                 this.next = next;
@@ -29,7 +29,7 @@ namespace FunProgLib.persistence
                 get { return this.element; }
             }
 
-            public ListStructure Next
+            public List Next
             {
                 get { return this.next; }
             }
@@ -46,12 +46,12 @@ namespace FunProgLib.persistence
 
             private sealed class ListEnum : IEnumerator<T>
             {
-                private readonly ListStructure start;
-                private ListStructure list;
+                private readonly List start;
+                private List list;
 
-                public ListEnum(ListStructure list)
+                public ListEnum(List list)
                 {
-                    this.start = new ListStructure(list, default(T));
+                    this.start = new List(list, default(T));
                     this.list = this.start;
                 }
 
@@ -83,24 +83,24 @@ namespace FunProgLib.persistence
             }
         }
 
-        private static readonly ListStructure EmptyList = null;
+        private static readonly List EmptyList = null;
 
-        public static ListStructure Empty
+        public static List Empty
         {
             get { return EmptyList; }
         }
 
-        public static bool IsEmpty(ListStructure list)
+        public static bool IsEmpty(List list)
         {
             return list == EmptyList;
         }
 
-        public static ListStructure Cons(ListStructure list, T element)
+        public static List Cons(List list, T element)
         {
-            return new ListStructure(list, element);
+            return new List(list, element);
         }
 
-        public static T Head(ListStructure list)
+        public static T Head(List list)
         {
             if (list == EmptyList)
                 throw new Exception("Empty");
@@ -108,7 +108,7 @@ namespace FunProgLib.persistence
             return list.Element;
         }
 
-        public static ListStructure Tail(ListStructure list)
+        public static List Tail(List list)
         {
             if (list == EmptyList)
                 throw new Exception("Empty");
@@ -116,14 +116,14 @@ namespace FunProgLib.persistence
             return list.Next;
         }
 
-        public static ListStructure Cat(ListStructure list1, ListStructure list2)
+        public static List Cat(List list1, List list2)
         {
             if (list1 == Empty) return list2;
             if (list2 == Empty) return list1;
-            return new ListStructure(Cat(list1.Next, list2), list1.Element);
+            return new List(Cat(list1.Next, list2), list1.Element);
         }
 
-        public static ListStructure Reverse(ListStructure list)
+        public static List Reverse(List list)
         {
             if (list == Empty) return Empty;
             // return list.Aggregate(LinkList<T>.Empty, LinkList<T>.Cons);

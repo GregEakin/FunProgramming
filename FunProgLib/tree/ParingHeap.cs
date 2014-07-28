@@ -16,9 +16,9 @@ namespace FunProgLib.tree
         {
             private readonly T root;
 
-            private readonly LinkList<Heap>.ListStructure list;
+            private readonly LinkList<Heap>.List list;
 
-            public Heap(T root, LinkList<Heap>.ListStructure list)
+            public Heap(T root, LinkList<Heap>.List list)
             {
                 this.root = root;
                 this.list = list;
@@ -29,13 +29,13 @@ namespace FunProgLib.tree
                 get { return root; }
             }
 
-            public LinkList<Heap>.ListStructure List
+            public LinkList<Heap>.List List
             {
                 get { return list; }
             }
         }
 
-        private static readonly LinkList<Heap>.ListStructure EmptyList = null;
+        private static readonly LinkList<Heap>.List EmptyList = null;
 
         private static readonly Heap EmptyHeap = null;
 
@@ -63,7 +63,7 @@ namespace FunProgLib.tree
             return Merge(new Heap(x, EmptyList), h);
         }
 
-        private static Heap MergePairs(LinkList<Heap>.ListStructure hs)
+        private static Heap MergePairs(LinkList<Heap>.List hs)
         {
             if (hs == EmptyList) return EmptyHeap;
             if (hs.Next == EmptyList) return hs.Element;
