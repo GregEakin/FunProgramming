@@ -40,11 +40,11 @@ namespace FunProgLib.sort
 
         private static readonly ReadOnlyCollection<ReadOnlyCollection<T>> EmptyListList = new ReadOnlyCollection<ReadOnlyCollection<T>>(new[] { EmptyList });
 
-        private static readonly Sortable EmptySortable = new Sortable(0, EmptyListList);
+        private static readonly Sortable EmptySortable = new Sortable(0, /* $ */ EmptyListList);
 
         public static Sortable Empty
         {
-            get { return /* $ */ EmptySortable; }
+            get { return EmptySortable; }
         }
 
         private static ReadOnlyCollection<T> Mrg(ReadOnlyCollection<T> xs, ReadOnlyCollection<T> ys)
