@@ -48,16 +48,16 @@
     <Compile Include="queue\IQueue.cs" />
     <Compile Include="queue\PhysicistsQueue.cs" />
     <Compile Include="sort\BottomUpMergeSort.cs" />
-    <Compile Include="tree\LazyBinomialHeap.cs" />
-    <Compile Include="tree\BinomialHeap.cs" />
+    <Compile Include="heap\LazyBinomialHeap.cs" />
+    <Compile Include="heap\BinomialHeap.cs" />
     <Compile Include="tree\IFiniteMap.cs" />
-    <Compile Include="tree\IHeap.cs" />
+    <Compile Include="heap\IHeap.cs" />
     <Compile Include="tree\IOrdered.cs" />
     <Compile Include="tree\ISet.cs" />
-    <Compile Include="tree\LeftistHeap.cs" />
-    <Compile Include="tree\ParingHeap.cs" />
+    <Compile Include="heap\LeftistHeap.cs" />
+    <Compile Include="heap\ParingHeap.cs" />
     <Compile Include="tree\RedBlackSet.cs" />
-    <Compile Include="tree\SplayHeap.cs" />
+    <Compile Include="heap\SplayHeap.cs" />
     <Compile Include="tree\UnbalancedSet.cs" />
     <Compile Include="Utilities\StringUtilities.cs" />
   </ItemGroup>

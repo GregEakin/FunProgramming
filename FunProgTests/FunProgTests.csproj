@@ -56,10 +56,10 @@
     <Compile Include="queue\BatchedQueueTests.cs" />
     <Compile Include="queue\PhysicistQueueTests.cs" />
     <Compile Include="sort\BottomUpMergeSortTests.cs" />
-    <Compile Include="tree\ParingHeapTests.cs" />
-    <Compile Include="tree\LazyBinomialHeapTests.cs" />
-    <Compile Include="tree\BinomialHeapTests.cs" />
-    <Compile Include="tree\LeftistHeapTests.cs" />
+    <Compile Include="heap\ParingHeapTests.cs" />
+    <Compile Include="heap\LazyBinomialHeapTests.cs" />
+    <Compile Include="heap\BinomialHeapTests.cs" />
+    <Compile Include="heap\LeftistHeapTests.cs" />
     <Compile Include="tree\RedBlackSetTests.cs" />
     <Compile Include="tree\UnbalancedSetTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

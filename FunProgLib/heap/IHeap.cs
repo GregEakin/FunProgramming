@@ -4,7 +4,7 @@
 // SUBSYSTEM:	FunPrograming
 // FILE:		IHeap.cs
 // AUTHOR:		Greg Eakin
-namespace FunProgLib.tree
+namespace FunProgLib.heap
 {
     using System;
 

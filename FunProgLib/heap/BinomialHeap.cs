@@ -4,7 +4,7 @@
 // SUBSYSTEM:	FunPrograming
 // FILE:		BinomialHeap.cs
 // AUTHOR:		Greg Eakin
-namespace FunProgLib.tree
+namespace FunProgLib.heap
 {
     using System;
     using System.Collections.Generic;

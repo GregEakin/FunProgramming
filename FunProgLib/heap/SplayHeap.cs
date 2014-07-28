@@ -4,22 +4,22 @@
 // SUBSYSTEM:	FunPrograming
 // FILE:		SplayHeap.cs
 // AUTHOR:		Greg Eakin
-namespace FunProgLib.tree
+namespace FunProgLib.heap
 {
     public class SplayHeap
     {
         public void Partition()
         { }
-        
+
         public void Insert()
         { }
-        
+
         public void Merge()
         { }
-        
+
         public void FindMin()
         { }
-        
+
         public void DeleteMin()
         { }
     }

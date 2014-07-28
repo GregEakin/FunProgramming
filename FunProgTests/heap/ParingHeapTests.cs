@@ -4,15 +4,13 @@
 // SUBSYSTEM:	FunPrograming
 // FILE:		ParingHeapTests.cs
 // AUTHOR:		Greg Eakin
-namespace FunProgTests.tree
+namespace FunProgTests.heap
 {
     using System;
     using System.Linq;
     using System.Text;
-
+    using FunProgLib.heap;
     using FunProgLib.persistence;
-    using FunProgLib.tree;
-
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     [TestClass]

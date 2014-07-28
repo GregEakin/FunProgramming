@@ -4,13 +4,13 @@
 // SUBSYSTEM:	FunPrograming
 // FILE:		LeftistHeapTests.cs
 // AUTHOR:		Greg Eakin
-namespace FunProgTests.tree
+namespace FunProgTests.heap
 {
     using System;
     using System.Linq;
     using System.Text;
 
-    using FunProgLib.tree;
+    using FunProgLib.heap;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 

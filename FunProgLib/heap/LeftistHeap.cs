@@ -4,7 +4,7 @@
 // SUBSYSTEM:	FunPrograming, page 20
 // FILE:		LeftistHeap.cs
 // AUTHOR:		Greg Eakin
-namespace FunProgLib.tree
+namespace FunProgLib.heap
 {
     using System;
 
