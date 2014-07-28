@@ -17,9 +17,9 @@ namespace FunProgLib.sort
         {
             private readonly int size;
 
-            private readonly /*susp*/ ReadOnlyCollection<ReadOnlyCollection<T>> segs;
+            private readonly /*susp*/ IEnumerable<ReadOnlyCollection<T>> segs;
 
-            public Sortable(int size, ReadOnlyCollection<ReadOnlyCollection<T>> segs)
+            public Sortable(int size, IEnumerable<ReadOnlyCollection<T>> segs)
             {
                 this.size = size;
                 this.segs = segs;
@@ -30,7 +30,7 @@ namespace FunProgLib.sort
                 get { return this.size; }
             }
 
-            public ReadOnlyCollection<ReadOnlyCollection<T>> Segs
+            public IEnumerable<ReadOnlyCollection<T>> Segs
             {
                 get { return segs; }
             }
@@ -38,25 +38,13 @@ namespace FunProgLib.sort
 
         private static readonly ReadOnlyCollection<T> EmptyList = new ReadOnlyCollection<T>(new T[0]);
 
-        private static readonly ReadOnlyCollection<ReadOnlyCollection<T>> EmptyListList = new ReadOnlyCollection<ReadOnlyCollection<T>>(new[] { EmptyList });
+        private static readonly IEnumerable<ReadOnlyCollection<T>> EmptyListList = new ReadOnlyCollection<ReadOnlyCollection<T>>(new[] { EmptyList });
 
         private static readonly Sortable EmptySortable = new Sortable(0, /* $ */ EmptyListList);
 
         public static Sortable Empty
         {
             get { return EmptySortable; }
-        }
-
-        private static ReadOnlyCollection<T> Mrg(ReadOnlyCollection<T> xs, ReadOnlyCollection<T> ys)
-        {
-            if (xs.Count == 0) return ys;
-            if (ys.Count == 0) return xs;
-            var x = xs[0];
-            var xsp = xs.Skip(1).ToList().AsReadOnly();
-            var y = ys[0];
-            var ysp = ys.Skip(1).ToList().AsReadOnly();
-            if (x.CompareTo(y) <= 0) return Concatenate(x, Mrg(xsp, ys));
-            return Concatenate(y, Mrg(xs, ysp));
         }
 
         private static ReadOnlyCollection<T> Concatenate(T element, IEnumerable<T> list)
@@ -66,17 +54,31 @@ namespace FunProgLib.sort
             return x.AsReadOnly();
         }
 
-        private static ReadOnlyCollection<ReadOnlyCollection<T>> Concatenate(ReadOnlyCollection<T> element, IEnumerable<ReadOnlyCollection<T>> list)
+        private static ReadOnlyCollection<T> Mrg(ReadOnlyCollection<T> xs, ReadOnlyCollection<T> ys)
         {
-            var x = list.ToList();
-            x.Insert(0, element);
-            return x.AsReadOnly();
+            if (!xs.Any()) return ys;
+            if (!ys.Any()) return xs;
+            var x = xs.First();
+            var xsp = xs.Skip(1).ToList().AsReadOnly();
+            var y = ys.First();
+            var ysp = ys.Skip(1).ToList().AsReadOnly();
+            if (x.CompareTo(y) <= 0) return Concatenate(x, Mrg(xsp, ys));
+            return Concatenate(y, Mrg(xs, ysp));
         }
 
-        private static ReadOnlyCollection<ReadOnlyCollection<T>> AddSeg(ReadOnlyCollection<T> seg, IReadOnlyList<ReadOnlyCollection<T>> segs, int size)
+        private static IEnumerable<ReadOnlyCollection<T>> Concatenate(ReadOnlyCollection<T> element, IEnumerable<ReadOnlyCollection<T>> list)
+        {
+            yield return element;
+            foreach (var item in list)
+            {
+                yield return item;
+            }
+        }
+
+        private static IEnumerable<ReadOnlyCollection<T>> AddSeg(ReadOnlyCollection<T> seg, IEnumerable<ReadOnlyCollection<T>> segs, int size)
         {
             if (size % 2 == 0) return Concatenate(seg, segs);
-            var head = segs[0];
+            var head = segs.First();
             var tail = segs.Skip(1).ToList().AsReadOnly();
             return AddSeg(Mrg(seg, head), tail, size / 2);
         }
@@ -87,10 +89,10 @@ namespace FunProgLib.sort
             return new Sortable(segs.Size + 1, /* $ */ AddSeg(xs, /* force */ segs.Segs, segs.Size));
         }
 
-        private static ReadOnlyCollection<T> MrgAll(ReadOnlyCollection<T> xs, IReadOnlyList<ReadOnlyCollection<T>> ys)
+        private static ReadOnlyCollection<T> MrgAll(ReadOnlyCollection<T> xs, IEnumerable<ReadOnlyCollection<T>> ys)
         {
-            if (ys.Count == 0) return xs;
-            var seg = ys[0];
+            if (!ys.Any()) return xs;
+            var seg = ys.First();
             var segs = ys.Skip(1).ToList().AsReadOnly();
             return MrgAll(Mrg(xs, seg), segs);
         }
