@@ -7,9 +7,7 @@
 namespace FunProgLib.sort
 {
     using System;
-    using System.Collections.Generic;
-    using System.Collections.ObjectModel;
-    using System.Linq;
+    using FunProgLib.persistence;
 
     public static class BottomUpMergeSort<T> where T : IComparable
     {
@@ -17,9 +15,9 @@ namespace FunProgLib.sort
         {
             private readonly int size;
 
-            private readonly /*susp*/ Lazy<IEnumerable<ReadOnlyCollection<T>>> segs;
+            private readonly /*susp*/ Lazy<List<List<T>.ListStructure>.ListStructure> segs;
 
-            public Sortable(int size, Lazy<IEnumerable<ReadOnlyCollection<T>>> segs)
+            public Sortable(int size, Lazy<List<List<T>.ListStructure>.ListStructure> segs)
             {
                 this.size = size;
                 this.segs = segs;
@@ -30,72 +28,50 @@ namespace FunProgLib.sort
                 get { return this.size; }
             }
 
-            public Lazy<IEnumerable<ReadOnlyCollection<T>>> Segs
+            public Lazy<List<List<T>.ListStructure>.ListStructure> Segs
             {
                 get { return segs; }
             }
         }
 
-        private static readonly ReadOnlyCollection<T> EmptyList = new ReadOnlyCollection<T>(new T[0]);
+        private static readonly List<T>.ListStructure EmptyList = null;
 
-        private static readonly IEnumerable<ReadOnlyCollection<T>> EmptyListList = new ReadOnlyCollection<ReadOnlyCollection<T>>(new ReadOnlyCollection<T>[0]);
+        private static readonly List<List<T>.ListStructure>.ListStructure EmptyListList = null;
 
-        private static readonly Sortable EmptySortable = new Sortable(0, /* $ */ new Lazy<IEnumerable<ReadOnlyCollection<T>>>(() => EmptyListList));
+        private static readonly Sortable EmptySortable = new Sortable(0, /* $ */ new Lazy<List<List<T>.ListStructure>.ListStructure>(() => EmptyListList));
 
         public static Sortable Empty
         {
             get { return EmptySortable; }
         }
 
-        private static ReadOnlyCollection<T> Concatenate(T element, IEnumerable<T> list)
+        private static List<T>.ListStructure Mrg(List<T>.ListStructure xs, List<T>.ListStructure ys)
         {
-            var x = list.ToList();
-            x.Insert(0, element);
-            return x.AsReadOnly();
+            if (xs == null) return ys;
+            if (ys == null) return xs;
+            if (xs.Element.CompareTo(ys.Element) <= 0) return List<T>.Cons(Mrg(xs.Next, ys), xs.Element);
+            return List<T>.Cons(Mrg(xs, ys.Next), ys.Element);
         }
 
-        private static ReadOnlyCollection<T> Mrg(ReadOnlyCollection<T> xs, ReadOnlyCollection<T> ys)
+        private static Func<List<List<T>.ListStructure>.ListStructure> AddSeg(List<T>.ListStructure seg, List<List<T>.ListStructure>.ListStructure segs, int size)
         {
-            if (!xs.Any()) return ys;
-            if (!ys.Any()) return xs;
-            var x = xs.First();
-            var xsp = xs.Skip(1).ToList().AsReadOnly();
-            var y = ys.First();
-            var ysp = ys.Skip(1).ToList().AsReadOnly();
-            if (x.CompareTo(y) <= 0) return Concatenate(x, Mrg(xsp, ys));
-            return Concatenate(y, Mrg(xs, ysp));
-        }
-
-        private static IEnumerable<ReadOnlyCollection<T>> Concatenate(ReadOnlyCollection<T> seg, IEnumerable<ReadOnlyCollection<T>> segs)
-        {
-            var x = segs.ToList();
-            x.Insert(0, seg);
-            return x.AsReadOnly();
-        }
-
-        private static Func<IEnumerable<ReadOnlyCollection<T>>> AddSeg(ReadOnlyCollection<T> seg, IEnumerable<ReadOnlyCollection<T>> segs, int size)
-        {
-            if (size % 2 == 0) return () => Concatenate(seg, segs);
-            var head = segs.First();
-            var tail = segs.Skip(1).ToList().AsReadOnly();
-            return AddSeg(Mrg(seg, head), tail, size / 2);
+            if (size % 2 == 0) return () => List<List<T>.ListStructure>.Cons(segs, seg);
+            return AddSeg(Mrg(seg, segs.Element), segs.Next, size / 2);
         }
 
         public static Sortable Add(Sortable segs, T x)
         {
-            var xs = new ReadOnlyCollection<T>(new[] { x });
-            return new Sortable(segs.Size + 1, /* $ */ new Lazy<IEnumerable<ReadOnlyCollection<T>>>(AddSeg(xs, /* force */ segs.Segs.Value, segs.Size)));
+            var xs = List<T>.Cons(List<T>.Empty, x);
+            return new Sortable(segs.Size + 1, /* $ */ new Lazy<List<List<T>.ListStructure>.ListStructure>(AddSeg(xs, /* force */ segs.Segs.Value, segs.Size)));
         }
 
-        private static ReadOnlyCollection<T> MrgAll(ReadOnlyCollection<T> xs, IEnumerable<ReadOnlyCollection<T>> ys)
+        private static List<T>.ListStructure MrgAll(List<T>.ListStructure xs, List<List<T>.ListStructure>.ListStructure ys)
         {
-            if (!ys.Any()) return xs;
-            var seg = ys.First();
-            var segs = ys.Skip(1).ToList().AsReadOnly();
-            return MrgAll(Mrg(xs, seg), segs);
+            if (ys == null) return xs;
+            return MrgAll(Mrg(xs, ys.Element), ys.Next);
         }
 
-        public static ReadOnlyCollection<T> Sort(Sortable segs)
+        public static List<T>.ListStructure Sort(Sortable segs)
         {
             return MrgAll(EmptyList, /* force */ segs.Segs.Value);
         }

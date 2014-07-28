@@ -20,8 +20,7 @@ namespace FunProgTests.sort
         {
             var list = BottomUpMergeSort<string>.Empty;
             Assert.IsFalse(list.Segs.IsValueCreated);
-            var value = list.Segs.Value;
-            Assert.AreEqual(0, value.Count());
+            Assert.IsNull(list.Segs.Value);
             Assert.IsTrue(list.Segs.IsValueCreated);
         }
 
@@ -31,7 +30,7 @@ namespace FunProgTests.sort
             const string Data = "How now, jack brown cow? zed";
             var list = Data.Split().Aggregate(BottomUpMergeSort<string>.Empty, BottomUpMergeSort<string>.Add);
             var xs = BottomUpMergeSort<string>.Sort(list);
-            CollectionAssert.AreEqual(new[] { "brown", "cow?", "How", "jack", "now,", "zed" }, xs);
+            CollectionAssert.AreEqual(new[] { "brown", "cow?", "How", "jack", "now,", "zed" }, xs.ToList());
         }
 
         [TestMethod]
@@ -40,6 +39,8 @@ namespace FunProgTests.sort
             const string Data = "How now, jack brown cow? zed";
             var list = Data.Split().Aggregate(BottomUpMergeSort<string>.Empty, BottomUpMergeSort<string>.Add);
             Assert.IsFalse(list.Segs.IsValueCreated);
+            var xs = BottomUpMergeSort<string>.Sort(list);
+            Assert.IsTrue(list.Segs.IsValueCreated);
         }
     }
 }
