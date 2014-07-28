@@ -17,9 +17,9 @@ namespace FunProgLib.sort
         {
             private readonly int size;
 
-            private readonly /*susp*/ IEnumerable<ReadOnlyCollection<T>> segs;
+            private readonly /*susp*/ Lazy<IEnumerable<ReadOnlyCollection<T>>> segs;
 
-            public Sortable(int size, IEnumerable<ReadOnlyCollection<T>> segs)
+            public Sortable(int size, Lazy<IEnumerable<ReadOnlyCollection<T>>> segs)
             {
                 this.size = size;
                 this.segs = segs;
@@ -30,7 +30,7 @@ namespace FunProgLib.sort
                 get { return this.size; }
             }
 
-            public IEnumerable<ReadOnlyCollection<T>> Segs
+            public Lazy<IEnumerable<ReadOnlyCollection<T>>> Segs
             {
                 get { return segs; }
             }
@@ -38,9 +38,9 @@ namespace FunProgLib.sort
 
         private static readonly ReadOnlyCollection<T> EmptyList = new ReadOnlyCollection<T>(new T[0]);
 
-        private static readonly IEnumerable<ReadOnlyCollection<T>> EmptyListList = new ReadOnlyCollection<ReadOnlyCollection<T>>(new[] { EmptyList });
+        private static readonly IEnumerable<ReadOnlyCollection<T>> EmptyListList = new ReadOnlyCollection<ReadOnlyCollection<T>>(new ReadOnlyCollection<T>[0]);
 
-        private static readonly Sortable EmptySortable = new Sortable(0, /* $ */ EmptyListList);
+        private static readonly Sortable EmptySortable = new Sortable(0, /* $ */ new Lazy<IEnumerable<ReadOnlyCollection<T>>>(() => EmptyListList));
 
         public static Sortable Empty
         {
@@ -66,18 +66,16 @@ namespace FunProgLib.sort
             return Concatenate(y, Mrg(xs, ysp));
         }
 
-        private static IEnumerable<ReadOnlyCollection<T>> Concatenate(ReadOnlyCollection<T> element, IEnumerable<ReadOnlyCollection<T>> list)
+        private static IEnumerable<ReadOnlyCollection<T>> Concatenate(ReadOnlyCollection<T> seg, IEnumerable<ReadOnlyCollection<T>> segs)
         {
-            yield return element;
-            foreach (var item in list)
-            {
-                yield return item;
-            }
+            var x = segs.ToList();
+            x.Insert(0, seg);
+            return x.AsReadOnly();
         }
 
-        private static IEnumerable<ReadOnlyCollection<T>> AddSeg(ReadOnlyCollection<T> seg, IEnumerable<ReadOnlyCollection<T>> segs, int size)
+        private static Func<IEnumerable<ReadOnlyCollection<T>>> AddSeg(ReadOnlyCollection<T> seg, IEnumerable<ReadOnlyCollection<T>> segs, int size)
         {
-            if (size % 2 == 0) return Concatenate(seg, segs);
+            if (size % 2 == 0) return () => Concatenate(seg, segs);
             var head = segs.First();
             var tail = segs.Skip(1).ToList().AsReadOnly();
             return AddSeg(Mrg(seg, head), tail, size / 2);
@@ -86,7 +84,7 @@ namespace FunProgLib.sort
         public static Sortable Add(Sortable segs, T x)
         {
             var xs = new ReadOnlyCollection<T>(new[] { x });
-            return new Sortable(segs.Size + 1, /* $ */ AddSeg(xs, /* force */ segs.Segs, segs.Size));
+            return new Sortable(segs.Size + 1, /* $ */ new Lazy<IEnumerable<ReadOnlyCollection<T>>>(AddSeg(xs, /* force */ segs.Segs.Value, segs.Size)));
         }
 
         private static ReadOnlyCollection<T> MrgAll(ReadOnlyCollection<T> xs, IEnumerable<ReadOnlyCollection<T>> ys)
@@ -99,7 +97,7 @@ namespace FunProgLib.sort
 
         public static ReadOnlyCollection<T> Sort(Sortable segs)
         {
-            return MrgAll(EmptyList, /* force */ segs.Segs);
+            return MrgAll(EmptyList, /* force */ segs.Segs.Value);
         }
     }
 }
