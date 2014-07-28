@@ -26,12 +26,12 @@ namespace FunProgLib.persistence
 
             public T Element
             {
-                get { return element; }
+                get { return this.element; }
             }
 
             public ListStructure Next
             {
-                get { return next; }
+                get { return this.next; }
             }
 
             public IEnumerator<T> GetEnumerator()
@@ -52,29 +52,29 @@ namespace FunProgLib.persistence
                 public ListEnum(ListStructure list)
                 {
                     this.start = new ListStructure(list, default(T));
-                    this.list = start;
+                    this.list = this.start;
                 }
 
                 public bool MoveNext()
                 {
-                    if (list == EmptyList) return false;
-                    list = list.Next;
-                    return list != EmptyList;
+                    if (this.list == EmptyList) return false;
+                    this.list = this.list.Next;
+                    return this.list != EmptyList;
                 }
 
                 public void Reset()
                 {
-                    list = start;
+                    this.list = this.start;
                 }
 
                 object IEnumerator.Current
                 {
-                    get { return list.element; }
+                    get { return this.list.element; }
                 }
 
                 public T Current
                 {
-                    get { return list.element; }
+                    get { return this.list.element; }
                 }
 
                 public void Dispose()
@@ -114,6 +114,25 @@ namespace FunProgLib.persistence
                 throw new Exception("Empty");
 
             return list.Next;
+        }
+
+        public static ListStructure Cat(ListStructure list1, ListStructure list2)
+        {
+            if (list1 == Empty) return list2;
+            if (list2 == Empty) return list1;
+            return new ListStructure(Cat(list1.Next, list2), list1.Element);
+        }
+
+        public static ListStructure Reverse(ListStructure list)
+        {
+            if (list == Empty) return Empty;
+            // return list.Aggregate(List<T>.Empty, List<T>.Cons);
+            var result = Empty;
+            foreach (var element in list)
+            {
+                result = Cons(result, element);
+            }
+            return result;
         }
     }
 }
