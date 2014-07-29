@@ -8,7 +8,6 @@ namespace FunProgLib.heap
 {
     using System;
 
-
     public static class LazyParingHeap<T> where T : IComparable
     {
         public class Heap
@@ -58,8 +57,8 @@ namespace FunProgLib.heap
 
         public static Heap Merge(Heap h1, Heap h2)
         {
-            if (h2 == EmptyHeap) return h1;
-            if (h1 == EmptyHeap) return h2;
+            if (IsEmpty(h2)) return h1;
+            if (IsEmpty(h1)) return h2;
 
             if (h1.Root.CompareTo(h2.Root) <= 0) return Link(h1, h2);
             return Link(h2, h1);
@@ -78,13 +77,13 @@ namespace FunProgLib.heap
 
         public static T FindMin(Heap h)
         {
-            if (h == EmptyHeap) throw new Exception("Empty");
+            if (IsEmpty(h)) throw new Exception("Empty");
             return h.Root;
         }
 
         public static Heap DeleteMin(Heap h)
         {
-            if (h == EmptyHeap) throw new Exception("Empty");
+            if (IsEmpty(h)) throw new Exception("Empty");
             return Merge(h.List, h.List2.Value);
         }
     }
