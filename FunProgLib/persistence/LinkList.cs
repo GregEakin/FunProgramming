@@ -18,7 +18,7 @@ namespace FunProgLib.persistence
 
             private readonly List next;
 
-            public List(List next, T element)
+            public List(T element, List next)
             {
                 this.element = element;
                 this.next = next;
@@ -51,7 +51,7 @@ namespace FunProgLib.persistence
 
                 public ListEnum(List list)
                 {
-                    this.start = new List(list, default(T));
+                    this.start = new List(default(T), list);
                     this.list = this.start;
                 }
 
@@ -97,7 +97,7 @@ namespace FunProgLib.persistence
 
         public static List Cons(T element, List list)
         {
-            return new List(list, element);
+            return new List(element, list);
         }
 
         public static T Head(List list)
@@ -120,7 +120,7 @@ namespace FunProgLib.persistence
         {
             if (list1 == Empty) return list2;
             if (list2 == Empty) return list1;
-            return new List(Cat(list1.Next, list2), list1.Element);
+            return new List(list1.Element, Cat(list1.Next, list2));
         }
 
         public static List Reverse1(List list)
@@ -165,7 +165,7 @@ namespace FunProgLib.persistence
         private static List Rev(List listIn, List listOut)
         {
             if (IsEmpty(listIn)) return listOut;
-            var next = new List(listOut, Head(listIn));
+            var next = new List(Head(listIn), listOut);
             return Rev(Tail(listIn), next);
         }
     }
