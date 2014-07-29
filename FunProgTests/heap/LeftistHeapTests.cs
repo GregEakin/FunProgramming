@@ -17,26 +17,26 @@ namespace FunProgTests.heap
     [TestClass]
     public class LeftistHeapTests
     {
-        private static string DumpTree(LeftistHeap.Node tree)
+        private static string DumpHeap<T>(LeftistHeap<T>.Heap heap) where T : IComparable
         {
-            if (tree == LeftistHeap.Empty) return "\u2205";
+            if (heap == LeftistHeap<T>.Empty) return "\u2205";
 
             var results = new StringBuilder();
 
-            if (tree.Heap1 != LeftistHeap.Empty)
+            if (heap.A != LeftistHeap<T>.Empty)
             {
-                results.Append(DumpTree(tree.Heap1));
+                results.Append(DumpHeap(heap.A));
             }
 
-            results.Append(tree.Min);
+            results.Append(heap.X);
             //results.Append(" [");
-            //results.Append(tree.rank);
+            //results.Append(heap.r);
             //results.Append("]");
             results.Append(", ");
 
-            if (tree.Heap2 != LeftistHeap.Empty)
+            if (heap.B != LeftistHeap<T>.Empty)
             {
-                results.Append(DumpTree(tree.Heap2));
+                results.Append(DumpHeap(heap.B));
             }
 
             return results.ToString();
@@ -45,131 +45,116 @@ namespace FunProgTests.heap
         [TestMethod]
         public void EmptyTest()
         {
-            var tree = LeftistHeap.Empty;
-            Assert.AreEqual("∅", DumpTree(tree));
+            var heap = LeftistHeap<int>.Empty;
+            Assert.AreEqual("∅", DumpHeap(heap));
         }
 
         [TestMethod]
         public void EmptyIsEmptyTest()
         {
-            var tree = LeftistHeap.Empty;
-            Assert.IsTrue(LeftistHeap.IsEmpty(tree));
-        }
-
-        [TestMethod]
-        public void EmptyRankTest()
-        {
-            var tree = LeftistHeap.Empty;
-            Assert.AreEqual(0, LeftistHeap.Rank(tree));
+            var heap = LeftistHeap<int>.Empty;
+            Assert.IsTrue(LeftistHeap<int>.IsEmpty(heap));
         }
 
         [TestMethod]
         [ExpectedException(typeof(Exception))]
         public void EmptyMinTest()
         {
-            var tree = LeftistHeap.Empty;
-            var x = LeftistHeap.FindMin(tree);
+            var heap = LeftistHeap<int>.Empty;
+            var x = LeftistHeap<int>.FindMin(heap);
         }
 
         [TestMethod]
         [ExpectedException(typeof(Exception))]
         public void EmptyDeleteMinTest()
         {
-            var tree = LeftistHeap.Empty;
-            tree = LeftistHeap.DeleteMin(tree);
+            var heap = LeftistHeap<int>.Empty;
+            heap = LeftistHeap<int>.DeleteMin(heap);
         }
 
         [TestMethod]
         public void SingleElement()
         {
-            var tree = LeftistHeap.Empty;
-            tree = LeftistHeap.Insert(tree, 2);
-            Assert.AreEqual("2, ", DumpTree(tree));
+            var heap = LeftistHeap<int>.Empty;
+            heap = LeftistHeap<int>.Insert(2, heap);
+            Assert.AreEqual("2, ", DumpHeap(heap));
         }
 
         [TestMethod]
         public void SingleIsEmptyTest()
         {
-            var tree = LeftistHeap.Empty;
-            tree = LeftistHeap.Insert(tree, 2);
-            Assert.IsFalse(LeftistHeap.IsEmpty(tree));
-        }
-
-        [TestMethod]
-        public void SingleRankTest()
-        {
-            var tree = LeftistHeap.Empty;
-            tree = LeftistHeap.Insert(tree, 2);
-            Assert.AreEqual(1, LeftistHeap.Rank(tree));
+            var heap = LeftistHeap<int>.Empty;
+            heap = LeftistHeap<int>.Insert(2, heap);
+            Assert.IsFalse(LeftistHeap<int>.IsEmpty(heap));
         }
 
         [TestMethod]
         public void SingleMinTest()
         {
-            var tree = LeftistHeap.Empty;
-            tree = LeftistHeap.Insert(tree, 2);
-            var x = LeftistHeap.FindMin(tree);
+            var heap = LeftistHeap<int>.Empty;
+            heap = LeftistHeap<int>.Insert(2, heap);
+            var x = LeftistHeap<int>.FindMin(heap);
             Assert.AreEqual(2, x);
         }
 
         [TestMethod]
         public void SingleDeleteMinTest()
         {
-            var tree = LeftistHeap.Empty;
-            tree = LeftistHeap.Insert(tree, 2);
-            tree = LeftistHeap.DeleteMin(tree);
-            Assert.IsTrue(LeftistHeap.IsEmpty(tree));
+            var heap = LeftistHeap<int>.Empty;
+            heap = LeftistHeap<int>.Insert(2, heap);
+            heap = LeftistHeap<int>.DeleteMin(heap);
+            Assert.IsTrue(LeftistHeap<int>.IsEmpty(heap));
         }
 
         [TestMethod]
         public void DumpTreeTest()
         {
-            var tree = new[] { 3, 2, 5, 1 }.Aggregate(LeftistHeap.Empty, LeftistHeap.Insert);
-            Assert.AreEqual("3, 2, 5, 1, ", DumpTree(tree));
+            var heap = new[] { 3, 2, 5, 1 }.Aggregate(LeftistHeap<int>.Empty, (h, x) => LeftistHeap<int>.Insert(x, h));
+            Assert.AreEqual("3, 2, 5, 1, ", DumpHeap(heap));
         }
 
         [TestMethod]
         public void InsertFourTest()
         {
-            var tree = new[] { 3, 2, 5, 1 }.Aggregate(LeftistHeap.Empty, LeftistHeap.Insert);
-            tree = LeftistHeap.Insert(tree, 4);
-            Assert.AreEqual("3, 2, 5, 1, 4, ", DumpTree(tree));
-            Assert.AreEqual(1, LeftistHeap.FindMin(tree));
+            var heap = new[] { 3, 2, 5, 1 }.Aggregate(LeftistHeap<int>.Empty, (h, x) => LeftistHeap<int>.Insert(x, h));
+            heap = LeftistHeap<int>.Insert(4, heap);
+            Assert.AreEqual("3, 2, 5, 1, 4, ", DumpHeap(heap));
+            Assert.AreEqual(1, LeftistHeap<int>.FindMin(heap));
         }
 
         [TestMethod]
         public void InsertZeroTest()
         {
-            var tree = new[] { 3, 2, 5, 1 }.Aggregate(LeftistHeap.Empty, LeftistHeap.Insert);
-            tree = LeftistHeap.Insert(tree, 0);
-            Assert.AreEqual("3, 2, 5, 1, 0, ", DumpTree(tree));
-            Assert.AreEqual(0, LeftistHeap.FindMin(tree));
+            var heap = new[] { 3, 2, 5, 1 }.Aggregate(LeftistHeap<int>.Empty, (h, x) => LeftistHeap<int>.Insert(x, h));
+            heap = LeftistHeap<int>.Insert(0, heap);
+            Assert.AreEqual("3, 2, 5, 1, 0, ", DumpHeap(heap));
+            Assert.AreEqual(0, LeftistHeap<int>.FindMin(heap));
         }
 
         [TestMethod]
         public void MinTreeTest()
         {
-            var tree = new[] { 3, 2, 5, 1 }.Aggregate(LeftistHeap.Empty, LeftistHeap.Insert);
-            Assert.AreEqual(1, LeftistHeap.FindMin(tree));
+            var heap = new[] { 3, 2, 5, 1 }.Aggregate(LeftistHeap<int>.Empty, (h, x) => LeftistHeap<int>.Insert(x, h));
+            Assert.AreEqual(1, LeftistHeap<int>.FindMin(heap));
         }
 
         [TestMethod]
         public void DelMinTest()
         {
-            var tree = new[] { 3, 2, 5, 1 }.Aggregate(LeftistHeap.Empty, LeftistHeap.Insert);
-            tree = LeftistHeap.DeleteMin(tree);
-            Assert.AreEqual("3, 2, 5, ", DumpTree(tree));
-            Assert.AreEqual(2, LeftistHeap.FindMin(tree));
+            var heap = new[] { 3, 2, 5, 1 }.Aggregate(LeftistHeap<int>.Empty, (h, x) => LeftistHeap<int>.Insert(x, h));
+            heap = LeftistHeap<int>.DeleteMin(heap);
+            Assert.AreEqual("3, 2, 5, ", DumpHeap(heap));
+            Assert.AreEqual(2, LeftistHeap<int>.FindMin(heap));
         }
 
         [TestMethod]
         public void DelSecondMinTest()
         {
-            var tree = new[] { 3, 2, 5, 1 }.Aggregate(LeftistHeap.Empty, LeftistHeap.Insert);
-            tree = LeftistHeap.DeleteMin(tree);
-            tree = LeftistHeap.DeleteMin(tree);
-            Assert.AreEqual("5, 3, ", DumpTree(tree));
-            Assert.AreEqual(3, LeftistHeap.FindMin(tree));
+            var heap = new[] { 3, 2, 5, 1 }.Aggregate(LeftistHeap<int>.Empty, (h, x) => LeftistHeap<int>.Insert(x, h));
+            heap = LeftistHeap<int>.DeleteMin(heap);
+            heap = LeftistHeap<int>.DeleteMin(heap);
+            Assert.AreEqual("5, 3, ", DumpHeap(heap));
+            Assert.AreEqual(3, LeftistHeap<int>.FindMin(heap));
         }
     }
 }

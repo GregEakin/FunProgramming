@@ -16,7 +16,7 @@ namespace FunProgLib.heap
         // bool IsEmpty(Heap heap)
 
         // Heap Insert(Heap heap, T value)
-        // Heap Merge(Heap heap1, Heap heap2)
+        // Heap Merge(Heap a, Heap b)
 
         // T FindMin(Heap heap)
         // Heap DeleteMin(Heap heap)

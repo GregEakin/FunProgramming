@@ -8,94 +8,94 @@ namespace FunProgLib.heap
 {
     using System;
 
-    public static class LeftistHeap
+    public static class LeftistHeap<T> where T : IComparable
     {
-        public class Node
+        public class Heap
         {
-            private readonly int rank;
+            private readonly int r;
 
-            private readonly int min;
+            private readonly T x;
 
-            private readonly Node heap1;
+            private readonly Heap a;
 
-            private readonly Node heap2;
+            private readonly Heap b;
 
-            public Node(int rank, int min, Node heap1, Node heap2)
+            public Heap(int r, T x, Heap a, Heap b)
             {
-                this.rank = rank;
-                this.min = min;
-                this.heap1 = heap1;
-                this.heap2 = heap2;
+                this.r = r;
+                this.x = x;
+                this.a = a;
+                this.b = b;
             }
 
-            public int Rank
+            public int R
             {
-                get { return this.rank; }
+                get { return this.r; }
             }
 
-            public int Min
+            public T X
             {
-                get { return this.min; }
+                get { return this.x; }
             }
 
-            public Node Heap1
+            public Heap A
             {
-                get { return this.heap1; }
+                get { return this.a; }
             }
 
-            public Node Heap2
+            public Heap B
             {
-                get { return this.heap2; }
+                get { return this.b; }
             }
         }
 
-        private static readonly Node EmptyTree = new Node(0, 0, EmptyTree, EmptyTree);
+        private static readonly Heap EmptyTree = null;
 
-        public static Node Empty
+        public static Heap Empty
         {
             get { return EmptyTree; }
         }
 
-        public static int Rank(Node node)
+        private static int Rank(Heap h)
         {
-            if (node == EmptyTree) return 0;
-            return node.Rank;
+            if (h == EmptyTree) return 0;
+            return h.R;
         }
 
-        private static Node MakeT(int x, Node a, Node b)
+        private static Heap MakeT(T x, Heap a, Heap b)
         {
-            if (a.Rank >= b.Rank) return new Node(b.Rank + 1, x, a, b);
-            return new Node(a.Rank + 1, x, b, a);
+            if (Rank(a) >= Rank(b)) return new Heap(Rank(b) + 1, x, a, b);
+            return new Heap(Rank(a) + 1, x, b, a);
         }
 
-        public static bool IsEmpty(Node node)
+        public static bool IsEmpty(Heap h)
         {
-            return node == EmptyTree;
+            return h == EmptyTree;
         }
 
-        private static Node Merge(Node heap1, Node heap2)
+        public static Heap Merge(Heap h1, Heap h2)
         {
-            if (heap2 == EmptyTree) return heap1;
-            if (heap1 == EmptyTree) return heap2;
-            if (heap1.Min <= heap2.Min) return MakeT(heap1.Min, heap1.Heap1, Merge(heap1.Heap2, heap2));
-            return MakeT(heap2.Min, heap2.Heap1, Merge(heap1, heap2.Heap2));
+            if (h2 == EmptyTree) return h1;
+            if (h1 == EmptyTree) return h2;
+            if (h1.X.CompareTo(h2.X) <= 0) return MakeT(h1.X, h1.A, Merge(h1.B, h2));
+            return MakeT(h2.X, h2.A, Merge(h1, h2.B));
         }
 
-        public static Node Insert(Node node, int x)
+        public static Heap Insert(T x, Heap h)
         {
-            return Merge(new Node(1, x, EmptyTree, EmptyTree), node);
+            return Merge(new Heap(1, x, EmptyTree, EmptyTree), h);
         }
 
-        public static int FindMin(Node node)
+        public static T FindMin(Heap h)
         {
-            if (node == EmptyTree) throw new Exception("Empty");
-            return node.Min;
+            if (h == EmptyTree) throw new Exception("Empty");
+            return h.X;
         }
 
-        public static Node DeleteMin(Node node)
+        public static Heap DeleteMin(Heap h)
         {
-            if (node == EmptyTree) throw new Exception("Empty");
-            return Merge(node.Heap1, node.Heap2);
+            if (h == EmptyTree) throw new Exception("Empty");
+            return Merge(h.A, h.B);
         }
     }
 }
