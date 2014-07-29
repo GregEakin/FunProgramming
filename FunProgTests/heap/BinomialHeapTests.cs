@@ -7,43 +7,43 @@
 namespace FunProgTests.heap
 {
     using System;
-    using System.Collections.ObjectModel;
     using System.Linq;
     using System.Text;
 
     using FunProgLib.heap;
+    using FunProgLib.persistence;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     [TestClass]
     public class BinomialHeapTests
     {
-        private static string DumpNode<T>(BinomialHeap<T>.Node node) where T : IComparable
+        private static string DumpTree<T>(BinomialHeap<T>.Tree tree) where T : IComparable
         {
             var result = new StringBuilder();
             result.Append("[");
-            result.Append(node.Root);
-            if (node.List.Any())
+            result.Append(tree.Root);
+            if (tree.List != LinkList<BinomialHeap<T>.Tree>.Empty)
             {
                 result.Append(", ");
-                foreach (var node1 in node.List)
+                foreach (var node1 in tree.List)
                 {
-                    result.Append(DumpNode(node1));
+                    result.Append(DumpTree(node1));
                 }
             }
             result.Append("]");
             return result.ToString();
         }
 
-        private static string DumpHeap<T>(ReadOnlyCollection<BinomialHeap<T>.Node> list) where T : IComparable
+        private static string DumpHeap<T>(LinkList<BinomialHeap<T>.Tree>.List list) where T : IComparable
         {
             var result = new StringBuilder();
             result.Append("[");
-            if (list.Count > 0)
+            if (list != LinkList<BinomialHeap<T>.Tree>.Empty)
             {
                 foreach (var node in list)
                 {
-                    result.Append(DumpNode(node));
+                    result.Append(DumpTree(node));
                 }
                 result.Append(", ");
             }

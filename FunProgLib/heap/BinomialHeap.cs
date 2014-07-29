@@ -7,21 +7,20 @@
 namespace FunProgLib.heap
 {
     using System;
-    using System.Collections.Generic;
-    using System.Collections.ObjectModel;
-    using System.Linq;
+
+    using FunProgLib.persistence;
 
     public static class BinomialHeap<T> where T : IComparable
     {
-        public class Node
+        public class Tree
         {
             private readonly int rank;
 
             private readonly T root;
 
-            private readonly ReadOnlyCollection<Node> list;
+            private readonly LinkList<Tree>.List list;
 
-            public Node(int rank, T root, ReadOnlyCollection<Node> list)
+            public Tree(int rank, T root, LinkList<Tree>.List list)
             {
                 this.rank = rank;
                 this.root = root;
@@ -38,111 +37,94 @@ namespace FunProgLib.heap
                 get { return root; }
             }
 
-            public IEnumerable<Node> List
+            public LinkList<Tree>.List List
             {
                 get { return list; }
             }
         }
 
-        private static readonly ReadOnlyCollection<Node> EmptyList = new ReadOnlyCollection<Node>(new Node[0]);
+        private static readonly LinkList<Tree>.List EmptyList = null; // new LinkList<Tree>.List(EmptyList, null);
 
-        public static ReadOnlyCollection<Node> Empty
+        public static LinkList<Tree>.List Empty
         {
             get { return EmptyList; }
         }
 
-        public static bool IsEmapty(ReadOnlyCollection<Node> list)
+        public static bool IsEmapty(LinkList<Tree>.List list)
         {
             return list == EmptyList;
         }
 
-        private static ReadOnlyCollection<Node> Concatenate(Node element, IEnumerable<Node> list)
+        private static Tree Link(Tree t1, Tree t2)
         {
-            var x = list.ToList();
-            x.Insert(0, element);
-            return x.AsReadOnly();
+            if (t1.Root.CompareTo(t2.Root) <= 0) return new Tree(t1.Rank + 1, t1.Root, LinkList<Tree>.Cons(t2, t1.List));
+            return new Tree(t1.Rank + 1, t2.Root, LinkList<Tree>.Cons(t1, t2.List));
         }
 
-        private static Node Link(Node t1, Node t2)
+        private static LinkList<Tree>.List InsertTree(Tree t, LinkList<Tree>.List ts)
         {
-            if (t1.Root.CompareTo(t2.Root) <= 0) return new Node(t1.Rank + 1, t1.Root, Concatenate(t2, t1.List));
-            return new Node(t1.Rank + 1, t2.Root, Concatenate(t1, t2.List));
+            if (ts == EmptyList) return new LinkList<Tree>.List(EmptyList, t);
+            if (t.Rank < ts.Element.Rank) return LinkList<Tree>.Cons(t, ts);
+            return InsertTree(Link(t, ts.Element), ts.Next);
         }
 
-        private static ReadOnlyCollection<Node> InsertTree(Node t, IReadOnlyList<Node> ts)
+        public static LinkList<Tree>.List Insert(T x, LinkList<Tree>.List ts)
         {
-            if (ts.Count == 0) return new ReadOnlyCollection<Node>(new[] { t });
-            var tp = ts[0];
-            var tsp = ts.Skip(1).ToList().AsReadOnly();
-            if (t.Rank < tp.Rank) return Concatenate(t, ts);
-            return InsertTree(Link(t, tp), tsp);
+            return InsertTree(new Tree(0, x, EmptyList), ts);
         }
 
-        public static ReadOnlyCollection<Node> Insert(T x, ReadOnlyCollection<Node> ts)
+        public static LinkList<Tree>.List Merge(LinkList<Tree>.List ts1, LinkList<Tree>.List ts2)
         {
-            return InsertTree(new Node(0, x, EmptyList), ts);
-        }
+            if (ts2 == EmptyList) return ts1;
+            if (ts1 == EmptyList) return ts2;
 
-        public static ReadOnlyCollection<Node> Merge(ReadOnlyCollection<Node> ts1, ReadOnlyCollection<Node> ts2)
-        {
-            if (ts2.Count == 0) return ts1;
-            if (ts1.Count == 0) return ts2;
-
-            var t1 = ts1[0];
-            var tsp1 = ts1.Skip(1).ToList().AsReadOnly();
-
-            var t2 = ts2[0];
-            var tsp2 = ts2.Skip(1).ToList().AsReadOnly();
-
-            if (t1.Rank < t2.Rank) return Concatenate(t1, Merge(tsp1, ts2));
-            if (t2.Rank < t1.Rank) return Concatenate(t2, Merge(ts1, tsp2));
-            return InsertTree(Link(t1, t2), Merge(tsp1, tsp2));
+            if (ts1.Element.Rank < ts2.Element.Rank) return LinkList<Tree>.Cons(ts1.Element, Merge(ts1.Next, ts2));
+            if (ts2.Element.Rank < ts1.Element.Rank) return LinkList<Tree>.Cons(ts2.Element, Merge(ts1, ts2.Next));
+            return InsertTree(Link(ts1.Element, ts2.Element), Merge(ts1.Next, ts2.Next));
         }
 
         private class TreeParts
         {
-            private readonly Node node;
+            private readonly Tree tree;
 
-            private readonly ReadOnlyCollection<Node> list;
+            private readonly LinkList<Tree>.List list;
 
-            public TreeParts(Node node, ReadOnlyCollection<Node> list)
+            public TreeParts(Tree tree, LinkList<Tree>.List list)
             {
-                this.node = node;
+                this.tree = tree;
                 this.list = list;
             }
 
-            public Node Node
+            public Tree Tree
             {
-                get { return this.node; }
+                get { return this.tree; }
             }
 
-            public ReadOnlyCollection<Node> List
+            public LinkList<Tree>.List List
             {
                 get { return this.list; }
             }
         }
 
-        private static TreeParts RemoveMinTree(IReadOnlyList<Node> list)
+        private static TreeParts RemoveMinTree(LinkList<Tree>.List list)
         {
-            if (list.Count == 0) throw new Exception("Empty");
-            if (list.Count == 1) return new TreeParts(list[0], EmptyList);
-            var t = list[0];
-            var ts = list.Skip(1).ToList().AsReadOnly();
-            var prime = RemoveMinTree(ts);
-            if (t.Root.CompareTo(prime.Node.Root) <= 0) return new TreeParts(t, ts);
-            return new TreeParts(prime.Node, Concatenate(t, prime.List));
+            if (list == EmptyList) throw new Exception("Empty");
+            if (list.Next == EmptyList) return new TreeParts(list.Element, EmptyList);
+            var prime = RemoveMinTree(list.Next);
+            if (list.Element.Root.CompareTo(prime.Tree.Root) <= 0) return new TreeParts(list.Element, list.Next);
+            return new TreeParts(prime.Tree, LinkList<Tree>.Cons(list.Element, prime.List));
         }
 
-        public static T FindMin(ReadOnlyCollection<Node> ts)
+        public static T FindMin(LinkList<Tree>.List ts)
         {
             var t = RemoveMinTree(ts);
-            return t.Node.Root;
+            return t.Tree.Root;
         }
 
-        public static ReadOnlyCollection<Node> DeleteMin(ReadOnlyCollection<Node> ts)
+        public static LinkList<Tree>.List DeleteMin(LinkList<Tree>.List ts)
         {
             var t = RemoveMinTree(ts);
-            var x = t.Node.List.Reverse().ToList().AsReadOnly();
+            var x = LinkList<Tree>.Reverse(t.Tree.List);
             return Merge(x, t.List);
         }
     }
