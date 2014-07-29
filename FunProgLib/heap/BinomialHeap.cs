@@ -63,7 +63,7 @@ namespace FunProgLib.heap
 
         private static LinkList<Tree>.List InsertTree(Tree t, LinkList<Tree>.List ts)
         {
-            if (ts == EmptyList) return new LinkList<Tree>.List(EmptyList, t);
+            if (ts == EmptyList) return new LinkList<Tree>.List(t, EmptyList);
             if (t.Rank < ts.Element.Rank) return LinkList<Tree>.Cons(t, ts);
             return InsertTree(Link(t, ts.Element), ts.Next);
         }

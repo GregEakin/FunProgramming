@@ -10,7 +10,6 @@ namespace FunProgTests.persistence
     using System.Linq;
 
     using FunProgLib.persistence;
-    using FunProgLib.Utilities;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -51,20 +50,27 @@ namespace FunProgTests.persistence
         }
 
         [TestMethod]
+        public void ReverseEmptyListTest()
+        {
+            var list = LinkList<string>.Reverse(LinkList<string>.Empty);
+            Assert.IsTrue(LinkList<string>.IsEmpty(list));
+        }
+
+        [TestMethod]
+        public void ReverseSingleListTest()
+        {
+            var list = LinkList<String>.Cons("Wow", LinkList<string>.Empty);
+            var reverse = LinkList<string>.Reverse(list);
+            Assert.AreSame(list, reverse);
+        }
+
+        [TestMethod]
         public void ReverseListTest()
         {
             const string Data = "How now, brown cow?";
             var data = Data.Split().Aggregate(LinkList<string>.Empty, (current, word) => LinkList<string>.Cons(word, current));
             var list = LinkList<string>.Reverse(data);
-            Console.WriteLine(list.ToReadableString());
             CollectionAssert.AreEqual(new[] { "How", "now,", "brown", "cow?" }, list.ToList());
-        }
-
-        [TestMethod]
-        public void ReverseEmptyListTest()
-        {
-            var list = LinkList<string>.Reverse(LinkList<string>.Empty);
-            Assert.IsTrue(LinkList<string>.IsEmpty(list));
         }
 
         [TestMethod]
@@ -81,7 +87,7 @@ namespace FunProgTests.persistence
             var data = Data.Split().Aggregate(LinkList<string>.Empty, (current, word) => LinkList<string>.Cons(word, current));
 
             var list = LinkList<string>.Cat(LinkList<string>.Empty, data);
-            CollectionAssert.AreEqual(new[] { "cow?", "brown", "now,", "How" }, list.ToList());
+            Assert.AreSame(data, list);
         }
 
         [TestMethod]
@@ -91,7 +97,7 @@ namespace FunProgTests.persistence
             var data = Data.Split().Aggregate(LinkList<string>.Empty, (current, word) => LinkList<string>.Cons(word, current));
 
             var list = LinkList<string>.Cat(data, LinkList<string>.Empty);
-            CollectionAssert.AreEqual(new[] { "cow?", "brown", "now,", "How" }, list.ToList());
+            Assert.AreSame(data, list);
         }
 
         [TestMethod]

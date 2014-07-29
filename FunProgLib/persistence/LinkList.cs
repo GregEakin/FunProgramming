@@ -138,7 +138,6 @@ namespace FunProgLib.persistence
             return result;
         }
 
-
         public static List Reverse2(List list)
         {
             if (IsEmpty(list)) return Empty;
