@@ -59,7 +59,7 @@ namespace FunProgLib.sort
             return AddSeg(Mrg(seg, segs.Element), segs.Next, size / 2);
         }
 
-        public static Sortable Add(Sortable segs, T x)
+        public static Sortable Add(T x, Sortable segs)
         {
             var xs = LinkList<T>.Cons(x, LinkList<T>.Empty);
             return new Sortable(segs.Size + 1, /* $ */ new Lazy<LinkList<LinkList<T>.List>.List>(AddSeg(xs, /* force */ segs.Segs.Value, segs.Size)));
