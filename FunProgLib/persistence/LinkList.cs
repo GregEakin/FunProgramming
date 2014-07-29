@@ -126,12 +126,14 @@ namespace FunProgLib.persistence
         public static List Reverse(List list)
         {
             if (list == Empty) return Empty;
-            // return list.Aggregate(LinkList<T>.Empty, LinkList<T>.Cons);
+
+            // return list.Aggregate(Empty, (current, element) => Cons(element, current));
             var result = Empty;
             foreach (var element in list)
             {
                 result = Cons(element, result);
             }
+
             return result;
         }
     }
