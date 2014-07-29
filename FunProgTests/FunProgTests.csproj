@@ -54,6 +54,7 @@
     <Compile Include="lamda\ListOfFuncs.cs" />
     <Compile Include="persistence\ListTests.cs" />
     <Compile Include="queue\BankersQueueTests.cs" />
+    <Compile Include="queue\RealTimeQueueTests.cs" />
     <Compile Include="queue\BatchedQueueTests.cs" />
     <Compile Include="queue\PhysicistQueueTests.cs" />
     <Compile Include="sort\BottomUpMergeSortTests.cs" />
