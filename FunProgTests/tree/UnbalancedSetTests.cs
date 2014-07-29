@@ -24,18 +24,18 @@ namespace FunProgTests.tree
             var results = new StringBuilder();
 
             results.Append('[');
-            if (tree.Left != UnbalancedSet<T>.Empty)
+            if (tree.A != UnbalancedSet<T>.Empty)
             {
-                results.Append(DumpTree(tree.Left));
+                results.Append(DumpTree(tree.A));
                 results.Append(",");
             }
 
-            results.Append(tree.Element);
+            results.Append(tree.Y);
 
-            if (tree.Right != UnbalancedSet<T>.Empty)
+            if (tree.B != UnbalancedSet<T>.Empty)
             {
                 results.Append(",");
-                results.Append(DumpTree(tree.Right));
+                results.Append(DumpTree(tree.B));
             }
             results.Append(']');
 
@@ -53,7 +53,7 @@ namespace FunProgTests.tree
         public void SingleElement()
         {
             var tree = UnbalancedSet<string>.Empty;
-            tree = UnbalancedSet<string>.Insert(tree, "a");
+            tree = UnbalancedSet<string>.Insert("a", tree);
             Assert.AreEqual("[a]", DumpTree(tree));
         }
 
@@ -61,7 +61,7 @@ namespace FunProgTests.tree
         public void DumpTreeTest()
         {
             const string Data = "How now, brown cow?";
-            var tree = Data.Split().Aggregate(UnbalancedSet<string>.Empty, UnbalancedSet<string>.Insert);
+            var tree = Data.Split().Aggregate(UnbalancedSet<string>.Empty, (current, word) => UnbalancedSet<string>.Insert(word, current));
             Assert.AreEqual("[[brown,[cow?]],How,[now,]]", DumpTree(tree));
         }
 
@@ -69,10 +69,10 @@ namespace FunProgTests.tree
         public void ElementTest()
         {
             const string Data = "How now, brown cow?";
-            var tree = Data.Split().Aggregate(UnbalancedSet<string>.Empty, UnbalancedSet<string>.Insert);
+            var tree = Data.Split().Aggregate(UnbalancedSet<string>.Empty, (current, word) => UnbalancedSet<string>.Insert(word, current));
             foreach (var word in Data.Split())
-                Assert.IsTrue(UnbalancedSet<string>.Member(tree, word));
-            Assert.IsFalse(UnbalancedSet<string>.Member(tree, "wow"));
+                Assert.IsTrue(UnbalancedSet<string>.Member(word, tree));
+            Assert.IsFalse(UnbalancedSet<string>.Member("wow", tree));
         }
     }
 }

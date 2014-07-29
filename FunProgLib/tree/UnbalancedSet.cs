@@ -12,34 +12,34 @@ namespace FunProgLib.tree
     {
         public class Tree
         {
-            private readonly Tree left;
+            private readonly Tree a;
+            private readonly T y;
+            private readonly Tree b;
 
-            private readonly T element;
-
-            private readonly Tree right;
-
-            public Tree(Tree left, T element, Tree right)
+            public Tree(Tree a, T y, Tree b)
             {
-                this.left = left;
-                this.element = element;
-                this.right = right;
+                this.a = a;
+                this.y = y;
+                this.b = b;
             }
 
-            public Tree Left
+            public Tree A
             {
-                get { return this.left; }
+                get { return this.a; }
             }
 
-            public T Element
+            public T Y
             {
-                get { return this.element; }
+                get { return this.y; }
             }
 
-            public Tree Right
+            public Tree B
             {
-                get { return this.right; }
+                get { return this.b; }
             }
         }
+
+        // type Set = Tree
 
         private static readonly Tree EmptyTree = null;
 
@@ -48,20 +48,20 @@ namespace FunProgLib.tree
             get { return EmptyTree; }
         }
 
-        public static bool Member(Tree tree, T value)
+        public static bool Member(T x, Tree s)
         {
-            if (tree == EmptyTree) return false;
-            if (value.CompareTo(tree.Element) < 0) return Member(tree.Left, value);
-            if (value.CompareTo(tree.Element) > 0) return Member(tree.Right, value);
+            if (s == EmptyTree) return false;
+            if (x.CompareTo(s.Y) < 0) return Member(x, s.A);
+            if (s.Y.CompareTo(x) < 0) return Member(x, s.B);
             return true;
         }
 
-        public static Tree Insert(Tree tree, T value)
+        public static Tree Insert(T x, Tree s)
         {
-            if (tree == EmptyTree) return new Tree(EmptyTree, value, EmptyTree);
-            if (value.CompareTo(tree.Element) < 0) return new Tree(Insert(tree.Left, value), tree.Element, tree.Right);
-            if (value.CompareTo(tree.Element) > 0) return new Tree(tree.Left, tree.Element, Insert(tree.Right, value));
-            return tree;
+            if (s == EmptyTree) return new Tree(EmptyTree, x, EmptyTree);
+            if (x.CompareTo(s.Y) < 0) return new Tree(Insert(x, s.A), s.Y, s.B);
+            if (s.Y.CompareTo(x) < 0) return new Tree(s.A, s.Y, Insert(x, s.B));
+            return s;
         }
     }
 }
