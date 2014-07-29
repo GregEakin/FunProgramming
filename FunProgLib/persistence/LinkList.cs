@@ -123,9 +123,10 @@ namespace FunProgLib.persistence
             return new List(Cat(list1.Next, list2), list1.Element);
         }
 
-        public static List Reverse(List list)
+        public static List Reverse1(List list)
         {
             if (list == Empty) return Empty;
+            if (list.Next == Empty) return list;
 
             // return list.Aggregate(Empty, (current, element) => Cons(element, current));
             var result = Empty;
@@ -135,6 +136,37 @@ namespace FunProgLib.persistence
             }
 
             return result;
+        }
+
+
+        // a -> b -> c -> null
+        public static List Reverse2(List list)
+        {
+            if (list == Empty) return Empty;
+            if (list.Next == Empty) return list;
+
+            var result = Empty;
+            while (!IsEmpty(list))
+            {
+                result = Cons(Head(list), result);
+                list = Tail(list);
+            }
+
+            return result;
+        }
+
+        public static List Reverse(List list)
+        {
+            if (list == Empty) return Empty;
+            if (list.Next == Empty) return list;
+            return Rev(list, Empty);
+        }
+
+        private static List Rev(List listIn, List listOut)
+        {
+            if (IsEmpty(listIn)) return listOut;
+            var next = new List(listOut, Head(listIn));
+            return Rev(Tail(listIn), next);
         }
     }
 }
