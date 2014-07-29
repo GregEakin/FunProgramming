@@ -156,5 +156,15 @@ namespace FunProgTests.heap
             Assert.AreEqual("5, 3, ", DumpHeap(heap));
             Assert.AreEqual(3, LeftistHeap<int>.FindMin(heap));
         }
+
+        [TestMethod]
+        public void MergeTest()
+        {
+            var heap1 = new[] { "How", "now," }.Aggregate(LeftistHeap<string>.Empty, (h, x) => LeftistHeap<string>.Insert(x, h));
+            var heap2 = new[] { "brown", "cow?" }.Aggregate(LeftistHeap<string>.Empty, (h, x) => LeftistHeap<string>.Insert(x, h));
+            var heap = LeftistHeap<string>.Merge(heap1, heap2);
+            Assert.AreEqual("cow?, brown, now,, How, ", DumpHeap(heap));
+            Assert.AreEqual("brown", LeftistHeap<string>.FindMin(heap));
+        }
     }
 }
