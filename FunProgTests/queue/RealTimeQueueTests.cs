@@ -15,7 +15,6 @@ namespace FunProgTests.queue
     [TestClass]
     public class RealTimeQueueTests
     {
-        [Ignore]
         [TestMethod]
         public void EmptyTest()
         {
@@ -27,7 +26,6 @@ namespace FunProgTests.queue
             Assert.IsTrue(RealTimeQueue<string>.IsEmpty(queue));
         }
 
-        [Ignore]
         [TestMethod]
         public void PushPopTest()
         {
@@ -40,6 +38,8 @@ namespace FunProgTests.queue
                 Assert.AreEqual(expected, actual);
                 queue = RealTimeQueue<string>.Tail(queue);
             }
+
+            Assert.IsTrue(RealTimeQueue<string>.IsEmpty(queue));
         }
     }
 }
