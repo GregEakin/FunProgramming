@@ -13,7 +13,6 @@ namespace FunProgLib.streams
         public class StreamCell
         {
             private readonly T element;
-
             private readonly Lazy<StreamCell> next;
 
             public StreamCell(T element, Lazy<StreamCell> next)
@@ -23,7 +22,6 @@ namespace FunProgLib.streams
             }
 
             public T Element { get { return element; } }
-
             public Lazy<StreamCell> Next { get { return next; } }
         }
 
@@ -34,21 +32,21 @@ namespace FunProgLib.streams
 
         public static Lazy<StreamCell> Cat(Lazy<StreamCell> s1, Lazy<StreamCell> s2)
         {
-            if (s1 == null) return s2;
+            if (s1 == null || s1.Value == null) return s2;
             return new Lazy<StreamCell>(() => new StreamCell(s1.Value.Element, Cat(s1.Value.Next, s2)));
         }
 
         public static Lazy<StreamCell> Take(int n, Lazy<StreamCell> s)
         {
             if (n == 0) return null;
-            if (s == null) return null;
+            if (s == null || s.Value == null) return null;
             return new Lazy<StreamCell>(() => new StreamCell(s.Value.Element, Take(n - 1, s.Value.Next)));
         }
 
         private static StreamCell DropPrime(int n, Lazy<StreamCell> s)
         {
             if (n == 0) return s.Value;
-            if (s == null) return null;
+            if (s == null || s.Value == null) return null;
             return DropPrime(n - 1, s.Value.Next);
         }
 
@@ -59,7 +57,7 @@ namespace FunProgLib.streams
 
         private static StreamCell ReversePrime(Lazy<StreamCell> s, Lazy<StreamCell> r)
         {
-            if (s == null) return r.Value;
+            if (s == null || s.Value == null) return r.Value;
             return ReversePrime(s.Value.Next, new Lazy<StreamCell>(() => new StreamCell(s.Value.Element, r)));
         }
 
