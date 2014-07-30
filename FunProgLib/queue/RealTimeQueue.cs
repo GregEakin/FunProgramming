@@ -42,18 +42,18 @@ namespace FunProgLib.queue
 
         public static bool IsEmpty(Queue queue)
         {
-            return queue == null || queue.F == null || queue.F.Value == null;
+            return queue.F.Value == null;
         }
 
         private static Lazy<Stream<T>.StreamCell> Rotate(Lazy<Stream<T>.StreamCell> f, LinkList<T>.List r, Lazy<Stream<T>.StreamCell> s)
         {
-            if (f == null || f.Value == null) return Stream<T>.Cons(r.Element, s);
+            if (f.Value == null) return Stream<T>.Cons(r.Element, s);
             return Stream<T>.Cons(f.Value.Element, Rotate(f.Value.Next, r.Next, Stream<T>.Cons(r.Element, s)));
         }
 
         private static Queue Exec(Lazy<Stream<T>.StreamCell> f, LinkList<T>.List r, Lazy<Stream<T>.StreamCell> s)
         {
-            if (s != null && s.Value != null) return new Queue(f, r, s.Value.Next);
+            if (s.Value != null) return new Queue(f, r, s.Value.Next);
             var fp = Rotate(f, r, EmptyCell);
             return new Queue(fp, EmptyList, fp);
         }

@@ -38,6 +38,8 @@ namespace FunProgTests.queue
                 Assert.AreEqual(expected, actual);
                 queue = PhysicistsQueue<string>.Tail(queue);
             }
+
+            Assert.IsTrue(PhysicistsQueue<string>.IsEmpty(queue));
         }
     }
 }

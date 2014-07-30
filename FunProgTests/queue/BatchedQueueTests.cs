@@ -38,6 +38,8 @@ namespace FunProgTests.queue
                 Assert.AreEqual(expected, actual);
                 queue = BatchedQueue<string>.Tail(queue);
             }
+
+            Assert.IsTrue(BatchedQueue<string>.IsEmpty(queue));
         }
     }
 }
