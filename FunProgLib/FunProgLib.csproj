@@ -52,6 +52,7 @@
     <Compile Include="sort\BottomUpMergeSort.cs" />
     <Compile Include="heap\LazyBinomialHeap.cs" />
     <Compile Include="heap\BinomialHeap.cs" />
+    <Compile Include="streams\Stream.cs" />
     <Compile Include="tree\IFiniteMap.cs" />
     <Compile Include="heap\IHeap.cs" />
     <Compile Include="tree\IOrdered.cs" />

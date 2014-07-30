@@ -62,6 +62,7 @@
     <Compile Include="heap\LazyBinomialHeapTests.cs" />
     <Compile Include="heap\BinomialHeapTests.cs" />
     <Compile Include="heap\LeftistHeapTests.cs" />
+    <Compile Include="streams\StreamTests.cs" />
     <Compile Include="tree\RedBlackSetTests.cs" />
     <Compile Include="tree\UnbalancedSetTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

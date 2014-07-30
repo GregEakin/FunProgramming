@@ -133,9 +133,13 @@ namespace FunProgLib.heap
 
         public static /* lazy */ Lazy<LinkList<Tree>.List> DeleteMin(/* $ */ Lazy<LinkList<Tree>.List> ts)
         {
-            var t = RemoveMinTree(ts.Value);
-            var x = LinkList<Tree>.Reverse(t.Tree.List);
-            return /* $ */ new Lazy<LinkList<Tree>.List>(() => Mrg(x, t.List));
+            return /* $ */ new Lazy<LinkList<Tree>.List>(
+                () =>
+                {
+                    var t = RemoveMinTree(ts.Value);
+                    var x = LinkList<Tree>.Reverse(t.Tree.List);
+                    return Mrg(x, t.List);
+                });
         }
     }
 }
