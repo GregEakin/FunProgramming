@@ -50,6 +50,7 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="heap\SplayHeapTests.cs" />
     <Compile Include="heap\LazyParingHeapTests.cs" />
     <Compile Include="lamda\ListOfFuncs.cs" />
     <Compile Include="persistence\ListTests.cs" />

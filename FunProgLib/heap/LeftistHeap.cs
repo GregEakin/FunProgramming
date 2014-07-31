@@ -49,16 +49,16 @@ namespace FunProgLib.heap
             }
         }
 
-        private static readonly Heap EmptyTree = null;
+        private static readonly Heap EmptyHeap = null;
 
         public static Heap Empty
         {
-            get { return EmptyTree; }
+            get { return EmptyHeap; }
         }
 
         private static int Rank(Heap h)
         {
-            if (h == EmptyTree) return 0;
+            if (h == EmptyHeap) return 0;
             return h.R;
         }
 
@@ -70,31 +70,31 @@ namespace FunProgLib.heap
 
         public static bool IsEmpty(Heap h)
         {
-            return h == EmptyTree;
+            return h == EmptyHeap;
         }
 
         public static Heap Merge(Heap h1, Heap h2)
         {
-            if (h2 == EmptyTree) return h1;
-            if (h1 == EmptyTree) return h2;
+            if (h2 == EmptyHeap) return h1;
+            if (h1 == EmptyHeap) return h2;
             if (h1.X.CompareTo(h2.X) <= 0) return MakeT(h1.X, h1.A, Merge(h1.B, h2));
             return MakeT(h2.X, h2.A, Merge(h1, h2.B));
         }
 
         public static Heap Insert(T x, Heap h)
         {
-            return Merge(new Heap(1, x, EmptyTree, EmptyTree), h);
+            return Merge(new Heap(1, x, EmptyHeap, EmptyHeap), h);
         }
 
         public static T FindMin(Heap h)
         {
-            if (h == EmptyTree) throw new Exception("Empty");
+            if (h == EmptyHeap) throw new Exception("Empty");
             return h.X;
         }
 
         public static Heap DeleteMin(Heap h)
         {
-            if (h == EmptyTree) throw new Exception("Empty");
+            if (h == EmptyHeap) throw new Exception("Empty");
             return Merge(h.A, h.B);
         }
     }
