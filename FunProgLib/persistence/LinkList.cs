@@ -102,17 +102,13 @@ namespace FunProgLib.persistence
 
         public static T Head(List list)
         {
-            if (IsEmpty(list))
-                throw new Exception("Empty");
-
+            if (IsEmpty(list)) throw new Exception("Empty");
             return list.Element;
         }
 
         public static List Tail(List list)
         {
-            if (IsEmpty(list))
-                throw new Exception("Empty");
-
+            if (IsEmpty(list)) throw new Exception("Empty");
             return list.Next;
         }
 
@@ -121,36 +117,6 @@ namespace FunProgLib.persistence
             if (IsEmpty(list1)) return list2;
             if (IsEmpty(list2)) return list1;
             return new List(list1.Element, Cat(list1.Next, list2));
-        }
-
-        public static List Reverse1(List list)
-        {
-            if (IsEmpty(list)) return Empty;
-            if (IsEmpty(list.Next)) return list;
-
-            // return list.Aggregate(Empty, (current, element) => Cons(element, current));
-            var result = Empty;
-            foreach (var element in list)
-            {
-                result = Cons(element, result);
-            }
-
-            return result;
-        }
-
-        public static List Reverse2(List list)
-        {
-            if (IsEmpty(list)) return Empty;
-            if (IsEmpty(list.Next)) return list;
-
-            var result = Empty;
-            while (!IsEmpty(list))
-            {
-                result = Cons(Head(list), result);
-                list = Tail(list);
-            }
-
-            return result;
         }
 
         public static List Reverse(List list)

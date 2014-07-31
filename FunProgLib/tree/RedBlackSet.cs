@@ -51,7 +51,7 @@ namespace FunProgLib.tree
             }
         }
 
-        private static readonly Tree Empty = null; // new Tree(Color.B, Empty, default(T), Empty);
+        private static readonly Tree Empty = null;
 
         public static Tree EmptyTree
         {

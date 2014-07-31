@@ -13,11 +13,8 @@ namespace FunProgLib.heap
         public class Heap
         {
             private readonly int r;
-
             private readonly T x;
-
             private readonly Heap a;
-
             private readonly Heap b;
 
             public Heap(int r, T x, Heap a, Heap b)
