@@ -19,6 +19,9 @@ namespace FunProgTests.binary
         private static readonly LinkList<string>.List Zero = null;
         private static readonly LinkList<string>.List One = Dense.Inc(Zero);
         private static readonly LinkList<string>.List Two = Dense.Inc(One);
+        private static readonly LinkList<string>.List Three = Dense.Inc(Two);
+        private static readonly LinkList<string>.List Five = Dense.Add(Two, Three);
+        private static readonly LinkList<string>.List Fifteen = Dense.Add(Five, Dense.Add(Five, Five));
 
         private static string DumpNat(LinkList<string>.List number)
         {
@@ -56,29 +59,36 @@ namespace FunProgTests.binary
         [TestMethod]
         public void FiveTest()
         {
-            var three = Dense.Inc(Two);
-            var five = Dense.Add(Two, three);
-            Assert.AreEqual("101", DumpNat(five));
+            Assert.AreEqual("101", DumpNat(Five));
+        }
+
+        [TestMethod]
+        public void FifteenTest()
+        {
+            Assert.AreEqual("1111", DumpNat(Fifteen));
+        }
+
+        [TestMethod]
+        public void SixteenTest()
+        {
+            var sixteen = Dense.Inc(Fifteen);
+            Assert.AreEqual("10000", DumpNat(sixteen));
         }
 
         [TestMethod]
         public void FourTest()
         {
-            var three = Dense.Inc(Two);
-            var five = Dense.Add(Two, three);
-            var four = Dense.Dec(five);
+            var four = Dense.Dec(Five);
             Assert.AreEqual("100", DumpNat(four));
         }
 
         [TestMethod]
         public void ThreeTest()
         {
-            var three = Dense.Inc(Two);
-            var five = Dense.Add(Two, three);
-            var four = Dense.Dec(five);
-            var three2 = Dense.Dec(four);
+            var four = Dense.Dec(Five);
+            var three = Dense.Dec(four);
+            Assert.AreEqual("11", DumpNat(Three));
             Assert.AreEqual("11", DumpNat(three));
-            Assert.AreEqual("11", DumpNat(three2));
         }
     }
 }
