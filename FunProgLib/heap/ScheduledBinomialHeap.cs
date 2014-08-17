@@ -93,7 +93,7 @@ namespace FunProgLib.heap
 
         private static readonly Schedule EmptySchedule = new Schedule(null);
 
-        private static readonly Lazy<Stream<Digit>.StreamCell> EmptyStream = new Lazy<Stream<Digit>.StreamCell>(() => null);
+        public static readonly Lazy<Stream<Digit>.StreamCell> EmptyStream = new Lazy<Stream<Digit>.StreamCell>(() => null);
 
         private static readonly Heap EmptyHeap = new Heap(EmptyStream, EmptySchedule);
 

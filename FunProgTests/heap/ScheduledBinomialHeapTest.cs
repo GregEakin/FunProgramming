@@ -40,16 +40,12 @@ namespace FunProgTests.heap
 
         private static string DumpDigitStream<T>(Lazy<Stream<ScheduledBinomialHeap<T>.Digit>.StreamCell> stream) where T : IComparable
         {
+            if (stream == ScheduledBinomialHeap<T>.EmptyStream) return string.Empty;
+            if (!stream.IsValueCreated) return " -$- ";
+            if (stream.Value == null) return string.Empty;
             var result = new StringBuilder();
-            var x = stream.Value;
-            if (x == null) return string.Empty;
-            if (!stream.IsValueCreated) result.Append(" -$- ");
-            else
-            {
-                result.Append(DumpTree(stream.Value.Element.One));
-                result.Append(DumpDigitStream(stream.Value.Next));
-            }
-
+            result.Append(DumpTree(stream.Value.Element.One));
+            result.Append(DumpDigitStream(stream.Value.Next));
             return result.ToString();
         }
 
@@ -57,15 +53,12 @@ namespace FunProgTests.heap
         {
             var result = new StringBuilder();
             result.Append("[");
-            // digit stream
             if (heap.DigitStream != null)
             {
                 result.Append(DumpDigitStream<T>(heap.DigitStream));
                 result.Append(", ");
             }
             result.Remove(result.Length - 2, 2);
-
-            // schedule
             result.Append("]");
             return result.ToString();
         }
@@ -109,7 +102,10 @@ namespace FunProgTests.heap
         {
             const string Words = "What's in a name? That which we call a rose by any other name would smell as sweet.";
             var t = Words.Split().Aggregate(ScheduledBinomialHeap<string>.Empty, (current, word) => ScheduledBinomialHeap<string>.Insert(word, current));
-            Assert.AreEqual("[[as, [sweet.]][a, [a, [call, [That, [which]], [we]], [in, [What's]], [name?]], [name, [smell, [would]], [other]], [any, [by]], [rose]]]", DumpHeap(t));
+            Assert.AreEqual("[[as, [sweet.]] -$- ]", DumpHeap(t));
+
+            var x = ScheduledBinomialHeap<string>.Merge(t, ScheduledBinomialHeap<string>.Empty);
+            Assert.AreEqual("[[as, [sweet.]][a, [a, [call, [That, [which]], [we]], [in, [What's]], [name?]], [name, [smell, [would]], [other]], [any, [by]], [rose]]]", DumpHeap(x));
         }
 
         [TestMethod]
@@ -133,11 +129,14 @@ namespace FunProgTests.heap
             var t1 = ScheduledBinomialHeap<int>.Insert(5, t);
             var t2 = ScheduledBinomialHeap<int>.Insert(3, t1);
             var t3 = ScheduledBinomialHeap<int>.Insert(6, t2);
+
             //var t4 = ScheduledBinomialHeap<int>.DeleteMin(t3);
             //Assert.AreEqual("[[5, [6]]]", DumpHeap(t4));
             //Assert.AreEqual(5, ScheduledBinomialHeap<int>.FindMin(t4));
 
+            Console.WriteLine(DumpHeap(t3));
             Assert.AreEqual(3, ScheduledBinomialHeap<int>.FindMin(t3));
+            Console.WriteLine(DumpHeap(t3));
         }
     }
 }
