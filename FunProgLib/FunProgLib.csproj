@@ -40,6 +40,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="heap\LazyParingHeap.cs" />
+    <Compile Include="heap\ScheduledBinomialHeap.cs" />
     <Compile Include="persistence\LinkList.cs" />
     <Compile Include="persistence\IStack.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
