@@ -40,6 +40,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="binary\Dense.cs" />
+    <Compile Include="binary\SparseByWeight.cs" />
     <Compile Include="heap\LazyParingHeap.cs" />
     <Compile Include="heap\ScheduledBinomialHeap.cs" />
     <Compile Include="persistence\LinkList.cs" />

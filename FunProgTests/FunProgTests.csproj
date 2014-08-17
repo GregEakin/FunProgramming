@@ -51,6 +51,7 @@
   </Choose>
   <ItemGroup>
     <Compile Include="binary\DenseTest.cs" />
+    <Compile Include="binary\SparseByWeightTests.cs" />
     <Compile Include="ephemeral\DictionaryTests.cs" />
     <Compile Include="ephemeral\MultiReaderMap.cs" />
     <Compile Include="heap\ScheduledBinomialHeapTest.cs" />
