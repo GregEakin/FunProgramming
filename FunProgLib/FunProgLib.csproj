@@ -39,6 +39,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="binary\Dense.cs" />
     <Compile Include="heap\LazyParingHeap.cs" />
     <Compile Include="heap\ScheduledBinomialHeap.cs" />
     <Compile Include="persistence\LinkList.cs" />
