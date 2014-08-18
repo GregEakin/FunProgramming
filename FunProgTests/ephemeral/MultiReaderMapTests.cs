@@ -37,7 +37,7 @@ namespace FunProgTests.ephemeral
         private readonly Action<object> writeAction = (object obj) =>
         {
             var map = (MultiReaderMapTests)obj;
-            for (var i = 0; i < 100; i++)
+            for (var i = 0; i < 200; i++)
             {
                 var word = map.NextWord();
                 lock (map)
@@ -55,7 +55,7 @@ namespace FunProgTests.ephemeral
         {
             var map = (MultiReaderMapTests)obj;
             var count = 0;
-            for (var i = 0; i < 1000; i++)
+            for (var i = 0; i < 100; i++)
             {
                 var word = map.NextWord();
                 if (RedBlackSet<string>.Member(word, map.set)) count++;
@@ -72,7 +72,7 @@ namespace FunProgTests.ephemeral
             var map = new MultiReaderMapTests();
 
             var taskList = new List<Task>();
-            for (var i = 0; i < 100; i++)
+            for (var i = 0; i < 10; i++)
             {
                 taskList.Add(Task.Factory.StartNew(writeAction, map));
                 taskList.Add(Task.Factory.StartNew(readAction, map));

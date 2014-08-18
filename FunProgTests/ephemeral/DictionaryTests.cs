@@ -37,7 +37,7 @@ namespace FunProgTests.ephemeral
         private readonly Action<object> writeAction = (object obj) =>
         {
             var map = (DictionaryTests)obj;
-            for (var i = 0; i < 3000; i++)
+            for (var i = 0; i < 300; i++)
             {
                 lock (map)
                 {
@@ -56,7 +56,7 @@ namespace FunProgTests.ephemeral
         private readonly Action<object> readAction = (object obj) =>
         {
             var map = (DictionaryTests)obj;
-            for (var i = 0; i < 3000; i++)
+            for (var i = 0; i < 300; i++)
             {
                 lock (map)
                 {
@@ -85,7 +85,7 @@ namespace FunProgTests.ephemeral
             var map = new DictionaryTests();
 
             var taskList = new List<Task>();
-            for (var i = 0; i < 100; i++)
+            for (var i = 0; i < 10; i++)
             {
                 taskList.Add(Task.Factory.StartNew(writeAction, map));
                 taskList.Add(Task.Factory.StartNew(readAction, map));
