@@ -140,8 +140,9 @@ namespace FunProgTests.heap
         [TestMethod]
         public void DeleteLotsOfMinsTest()
         {
-            var random = new Random();
+            var random = new Random(1000);
             var t = ScheduledBinomialHeap<int>.Empty;
+            
             for (var i = 0; i < 1000; i++)
             {
                 var j = random.Next(1000);
@@ -156,6 +157,8 @@ namespace FunProgTests.heap
                 Assert.IsTrue(min <= j);
                 min = j;
             }
+
+            Assert.IsTrue(ScheduledBinomialHeap<int>.IsEmapty(t));
         }
     }
 }
