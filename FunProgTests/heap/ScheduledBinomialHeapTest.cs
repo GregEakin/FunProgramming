@@ -160,5 +160,39 @@ namespace FunProgTests.heap
 
             Assert.IsTrue(ScheduledBinomialHeap<int>.IsEmapty(t));
         }
+
+        [TestMethod]
+        public void DeleteLotsOfMinsTest2()
+        {
+            var random = new Random(1000);
+            var t = ScheduledBinomialHeap<int>.Empty;
+
+            var min = 0;
+            for (var i = 0; i < 1000; i++)
+            {
+                var j = random.Next(1000);
+                min = Math.Min(j, min);
+                t = ScheduledBinomialHeap<int>.Insert(j, t);
+
+                j = random.Next(1000);
+                min = Math.Min(j, min);
+                t = ScheduledBinomialHeap<int>.Insert(j, t);
+
+                var k = ScheduledBinomialHeap<int>.FindMin(t);
+                t = ScheduledBinomialHeap<int>.DeleteMin(t);
+                Assert.IsTrue(min <= k);
+                min = k;
+            }
+
+            for (var i = 0; i < 1000; i++)
+            {
+                var j = ScheduledBinomialHeap<int>.FindMin(t);
+                t = ScheduledBinomialHeap<int>.DeleteMin(t);
+                Assert.IsTrue(min <= j);
+                min = j;
+            }
+
+            Assert.IsTrue(ScheduledBinomialHeap<int>.IsEmapty(t));
+        }
     }
 }

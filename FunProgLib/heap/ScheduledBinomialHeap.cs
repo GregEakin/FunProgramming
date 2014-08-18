@@ -51,7 +51,7 @@ namespace FunProgLib.heap
             }
         }
 
-        public readonly static Digit Zero = new Digit(null);
+        private readonly static Digit Zero = new Digit(null);
 
         public sealed class Schedule
         {
@@ -213,7 +213,7 @@ namespace FunProgLib.heap
             var reverse = LinkList<Tree>.Reverse(stuff.Tree.TreeList);
             var map = OneMap(reverse);
             var dspp = Mrg(map, stuff.Stream);
-            return new Heap(Normalize(dspp), null);
+            return new Heap(Normalize(dspp), EmptySchedule);
         }
     }
 }
