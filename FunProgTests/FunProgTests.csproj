@@ -63,6 +63,7 @@
     <Compile Include="queue\RealTimeQueueTests.cs" />
     <Compile Include="queue\BatchedQueueTests.cs" />
     <Compile Include="queue\PhysicistQueueTests.cs" />
+    <Compile Include="sort\ScheduledBottomUpMergeSortTests.cs" />
     <Compile Include="sort\BottomUpMergeSortTests.cs" />
     <Compile Include="heap\ParingHeapTests.cs" />
     <Compile Include="heap\LazyBinomialHeapTests.cs" />

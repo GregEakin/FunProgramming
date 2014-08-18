@@ -52,6 +52,7 @@
     <Compile Include="queue\IQueue.cs" />
     <Compile Include="queue\PhysicistsQueue.cs" />
     <Compile Include="queue\RealTimeQueue.cs" />
+    <Compile Include="sort\ScheduledBottomUpMergeSort.cs" />
     <Compile Include="sort\BottomUpMergeSort.cs" />
     <Compile Include="heap\LazyBinomialHeap.cs" />
     <Compile Include="heap\BinomialHeap.cs" />

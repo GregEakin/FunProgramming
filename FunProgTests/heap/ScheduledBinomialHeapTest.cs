@@ -119,7 +119,6 @@ namespace FunProgTests.heap
 
             var t = ScheduledBinomialHeap<string>.Merge(ts1, ts2);
             Assert.AreEqual("[[as, [sweet]][a, [a, [call, [That, [which]], [we]], [any, [by]], [rose]], [name, [smell, [would]], [other]], [in, [What's]], [name?]]]", DumpHeap(t));
-
         }
 
         [TestMethod]
