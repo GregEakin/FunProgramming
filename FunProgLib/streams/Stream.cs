@@ -10,7 +10,7 @@ namespace FunProgLib.streams
 
     public static class Stream<T>
     {
-        public class StreamCell
+        public sealed class StreamCell
         {
             private readonly T element;
             private readonly Lazy<StreamCell> next;

@@ -2,7 +2,7 @@
 // Copyright © 2014-2014. All Rights Reserved.
 // 
 // SUBSYSTEM:	FunPrograming
-// FILE:		MultiReaderMap.cs
+// FILE:		MultiReaderMapTests.cs
 // AUTHOR:		Greg Eakin
 namespace FunProgTests.ephemeral
 {
@@ -17,7 +17,7 @@ namespace FunProgTests.ephemeral
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     [TestClass]
-    public class MultiReaderMap
+    public class MultiReaderMapTests
     {
         private readonly Random random = new Random();
 
@@ -36,7 +36,7 @@ namespace FunProgTests.ephemeral
 
         private readonly Action<object> writeAction = (object obj) =>
         {
-            var map = (MultiReaderMap)obj;
+            var map = (MultiReaderMapTests)obj;
             for (var i = 0; i < 100; i++)
             {
                 var word = map.NextWord();
@@ -53,7 +53,7 @@ namespace FunProgTests.ephemeral
 
         private readonly Action<object> readAction = (object obj) =>
         {
-            var map = (MultiReaderMap)obj;
+            var map = (MultiReaderMapTests)obj;
             var count = 0;
             for (var i = 0; i < 1000; i++)
             {
@@ -69,7 +69,7 @@ namespace FunProgTests.ephemeral
         [TestMethod]
         public void Test1()
         {
-            var map = new MultiReaderMap();
+            var map = new MultiReaderMapTests();
 
             var taskList = new List<Task>();
             for (var i = 0; i < 100; i++)

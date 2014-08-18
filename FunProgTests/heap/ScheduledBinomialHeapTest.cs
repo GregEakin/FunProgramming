@@ -130,13 +130,32 @@ namespace FunProgTests.heap
             var t2 = ScheduledBinomialHeap<int>.Insert(3, t1);
             var t3 = ScheduledBinomialHeap<int>.Insert(6, t2);
 
-            //var t4 = ScheduledBinomialHeap<int>.DeleteMin(t3);
-            //Assert.AreEqual("[[5, [6]]]", DumpHeap(t4));
-            //Assert.AreEqual(5, ScheduledBinomialHeap<int>.FindMin(t4));
+            var t4 = ScheduledBinomialHeap<int>.DeleteMin(t3);
+            Assert.AreEqual("[[5, [6]]]", DumpHeap(t4));
+            Assert.AreEqual(5, ScheduledBinomialHeap<int>.FindMin(t4));
 
-            Console.WriteLine(DumpHeap(t3));
             Assert.AreEqual(3, ScheduledBinomialHeap<int>.FindMin(t3));
-            Console.WriteLine(DumpHeap(t3));
+        }
+
+        [TestMethod]
+        public void DeleteLotsOfMinsTest()
+        {
+            var random = new Random();
+            var t = ScheduledBinomialHeap<int>.Empty;
+            for (var i = 0; i < 1000; i++)
+            {
+                var j = random.Next(1000);
+                t = ScheduledBinomialHeap<int>.Insert(j, t);
+            }
+
+            var min = 0;
+            for (var i = 0; i < 1000; i++)
+            {
+                var j = ScheduledBinomialHeap<int>.FindMin(t);
+                t = ScheduledBinomialHeap<int>.DeleteMin(t);
+                Assert.IsTrue(min <= j);
+                min = j;
+            }
         }
     }
 }

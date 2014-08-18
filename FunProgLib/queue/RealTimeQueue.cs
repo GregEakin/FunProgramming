@@ -13,7 +13,7 @@ namespace FunProgLib.queue
 
     public static class RealTimeQueue<T>
     {
-        public class Queue
+        public sealed class Queue
         {
             private readonly Lazy<Stream<T>.StreamCell> f;
             private readonly LinkList<T>.List r;

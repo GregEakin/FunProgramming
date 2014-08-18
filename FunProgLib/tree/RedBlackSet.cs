@@ -12,7 +12,7 @@ namespace FunProgLib.tree
     {
         public enum Color { R, B };
 
-        public class Tree
+        public sealed class Tree
         {
             private readonly Color color;
 

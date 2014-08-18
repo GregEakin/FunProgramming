@@ -12,7 +12,7 @@ namespace FunProgLib.queue
 
     public static class BatchedQueue<T>
     {
-        public class Queue
+        public sealed class Queue
         {
             private readonly LinkList<T>.List f;
             private readonly LinkList<T>.List r;

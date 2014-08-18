@@ -12,7 +12,7 @@ namespace FunProgLib.heap
 
     public static class ParingHeap<T> where T : IComparable
     {
-        public class Heap
+        public sealed class Heap
         {
             private readonly T root;
 

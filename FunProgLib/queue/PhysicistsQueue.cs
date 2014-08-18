@@ -12,7 +12,7 @@ namespace FunProgLib.queue
 
     public static class PhysicistsQueue<T>
     {
-        public class Queue
+        public sealed class Queue
         {
             private readonly LinkList<T>.List w;
             private readonly int lenf;

@@ -11,7 +11,7 @@ namespace FunProgLib.sort
 
     public static class BottomUpMergeSort<T> where T : IComparable
     {
-        public class Sortable
+        public sealed class Sortable
         {
             private readonly int size;
 

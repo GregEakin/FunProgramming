@@ -10,7 +10,7 @@ namespace FunProgLib.heap
 
     public static class LazyParingHeap<T> where T : IComparable
     {
-        public class Heap
+        public sealed class Heap
         {
             private readonly T root;
 

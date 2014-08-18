@@ -2,7 +2,7 @@
 // Copyright © 2014-2014. All Rights Reserved.
 // 
 // SUBSYSTEM:	FunPrograming
-// FILE:		DenseTest.cs
+// FILE:		DenseTests.cs
 // AUTHOR:		Greg Eakin
 namespace FunProgTests.binary
 {
@@ -14,7 +14,7 @@ namespace FunProgTests.binary
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     [TestClass]
-    public class DenseTest
+    public class DenseTests
     {
         private static readonly LinkList<string>.List Zero = null;
         private static readonly LinkList<string>.List One = Dense.Inc(Zero);

@@ -10,7 +10,7 @@ namespace FunProgLib.tree
 
     public static class UnbalancedSet<T> where T : IComparable // ISet
     {
-        public class Tree
+        public sealed class Tree
         {
             private readonly Tree a;
             private readonly T y;

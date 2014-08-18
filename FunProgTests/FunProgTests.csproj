@@ -50,14 +50,14 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="binary\DenseTest.cs" />
+    <Compile Include="binary\DenseTests.cs" />
     <Compile Include="binary\SparseByWeightTests.cs" />
     <Compile Include="ephemeral\DictionaryTests.cs" />
-    <Compile Include="ephemeral\MultiReaderMap.cs" />
+    <Compile Include="ephemeral\MultiReaderMapTests.cs" />
     <Compile Include="heap\ScheduledBinomialHeapTest.cs" />
     <Compile Include="heap\SplayHeapTests.cs" />
     <Compile Include="heap\LazyParingHeapTests.cs" />
-    <Compile Include="lamda\ListOfFuncs.cs" />
+    <Compile Include="lamda\ListOfFuncsTests.cs" />
     <Compile Include="persistence\ListTests.cs" />
     <Compile Include="queue\BankersQueueTests.cs" />
     <Compile Include="queue\RealTimeQueueTests.cs" />

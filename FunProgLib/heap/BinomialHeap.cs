@@ -12,7 +12,7 @@ namespace FunProgLib.heap
 
     public static class BinomialHeap<T> where T : IComparable
     {
-        public class Tree
+        public sealed class Tree
         {
             private readonly int rank;
 

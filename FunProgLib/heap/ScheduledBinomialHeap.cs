@@ -13,7 +13,7 @@ namespace FunProgLib.heap
 
     public static class ScheduledBinomialHeap<T> where T : IComparable
     {
-        public class Tree
+        public sealed class Tree
         {
             private readonly T node;
 
@@ -36,7 +36,7 @@ namespace FunProgLib.heap
             }
         }
 
-        public class Digit
+        public sealed class Digit
         {
             private readonly Tree one;
 
@@ -53,7 +53,7 @@ namespace FunProgLib.heap
 
         public readonly static Digit Zero = new Digit(null);
 
-        public class Schedule
+        public sealed class Schedule
         {
             private readonly LinkList<Lazy<Stream<Digit>.StreamCell>>.List digitStreamList;
 
@@ -68,7 +68,7 @@ namespace FunProgLib.heap
             }
         }
 
-        public class Heap
+        public sealed class Heap
         {
             private readonly Lazy<Stream<Digit>.StreamCell> digitStream;
 
@@ -157,7 +157,7 @@ namespace FunProgLib.heap
             return new Heap(ds, null);
         }
 
-        private class Stuff
+        private sealed class Stuff
         {
             private readonly Lazy<Stream<Digit>.StreamCell> stream;
 
@@ -203,8 +203,8 @@ namespace FunProgLib.heap
 
         private static Lazy<Stream<Digit>.StreamCell> OneMap(LinkList<Tree>.List list)
         {
-            // return listToStream(map One(list))
-            throw new NotImplementedException();
+            if (list == null) return EmptyStream;
+            return Stream<Digit>.Cons(new Digit(list.Element), OneMap(list.Next));
         }
 
         public static Heap DeleteMin(Heap heap)

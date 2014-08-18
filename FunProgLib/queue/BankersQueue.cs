@@ -12,7 +12,7 @@ namespace FunProgLib.queue
 
     public static class BankersQueue<T>
     {
-        public class Queue
+        public sealed class Queue
         {
             private readonly int lenf;
             private readonly Lazy<Stream<T>.StreamCell> f;

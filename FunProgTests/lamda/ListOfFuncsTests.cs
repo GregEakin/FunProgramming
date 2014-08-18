@@ -2,7 +2,7 @@
 // Copyright © 2014-2014. All Rights Reserved.
 // 
 // SUBSYSTEM:	FunPrograming
-// FILE:		ListOfFuncs.cs
+// FILE:		ListOfFuncsTests.cs
 // AUTHOR:		Greg Eakin
 namespace FunProgTests.lamda
 {
@@ -14,7 +14,7 @@ namespace FunProgTests.lamda
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     [TestClass]
-    public class ListOfFuncs
+    public class ListOfFuncsTests
     {
         // return a list of funcs, where each one returns a loaded page
         static IEnumerable<Func<int>> GetEnumerable(int? page = null, int limit = 10)
