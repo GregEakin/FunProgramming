@@ -14,7 +14,7 @@ namespace FunProgTests.persistence
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     [TestClass]
-    public class ListTests
+    public class LinkListTests
     {
         [TestMethod]
         public void IsEmptyTest()

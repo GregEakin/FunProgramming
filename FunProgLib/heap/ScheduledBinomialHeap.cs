@@ -183,13 +183,12 @@ namespace FunProgLib.heap
         private static Stuff RemoveMinTree(Lazy<Stream<Digit>.StreamCell> ds)
         {
             if (ds == EmptyStream) throw new Exception("Empty");
-            if (ds.Value.Element != Zero && ds.Value.Next == EmptyStream) return new Stuff(ds.Value.Element.One, EmptyStream);
             if (ds.Value.Element == Zero)
             {
                 var stuff = RemoveMinTree(ds.Value.Next);
                 return new Stuff(stuff.Tree, Stream<Digit>.Cons(Zero, stuff.Stream));
             }
-
+            if (ds.Value.Next == EmptyStream) return new Stuff(ds.Value.Element.One, EmptyStream);
             var tp = RemoveMinTree(ds.Value.Next);
             if (ds.Value.Element.One.Node.CompareTo(tp.Tree.Node) <= 0) return new Stuff(ds.Value.Element.One, Stream<Digit>.Cons(Zero, ds.Value.Next));
             return new Stuff(tp.Tree, Stream<Digit>.Cons(new Digit(ds.Value.Element.One), tp.Stream));
