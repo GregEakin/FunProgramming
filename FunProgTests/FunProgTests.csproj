@@ -59,6 +59,7 @@
     <Compile Include="heap\LazyParingHeapTests.cs" />
     <Compile Include="lamda\ListOfFuncsTests.cs" />
     <Compile Include="persistence\BinaryRandomAccessListTests.cs" />
+    <Compile Include="persistence\SkewBinaryRandomAccessListTests.cs" />
     <Compile Include="persistence\LinkListTests.cs" />
     <Compile Include="queue\BankersQueueTests.cs" />
     <Compile Include="queue\RealTimeQueueTests.cs" />
