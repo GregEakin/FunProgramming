@@ -10,39 +10,16 @@ namespace FunProgLib.persistence
 
     public static class AltBinaryRandomAccessList<T>
     {
-        public sealed class Stuff
-        {
-            private readonly T alpha1;
-
-            private readonly T alpha2;
-
-            public Stuff(T alpha1, T alpha2)
-            {
-                this.alpha1 = alpha1;
-                this.alpha2 = alpha2;
-            }
-
-            public T Alpha1
-            {
-                get { return this.alpha1; }
-            }
-
-            public T Alpha2
-            {
-                get { return this.alpha2; }
-            }
-        }
-
         public abstract class Digit
         {
-            private readonly LinkList<Stuff>.List list;
+            private readonly LinkList<Tuple<T, T>>.List list;
 
-            protected Digit(LinkList<Stuff>.List list)
+            protected Digit(LinkList<Tuple<T, T>>.List list)
             {
                 this.list = list;
             }
 
-            public LinkList<Stuff>.List List
+            public LinkList<Tuple<T, T>>.List List
             {
                 get { return this.list; }
             }
@@ -50,7 +27,7 @@ namespace FunProgLib.persistence
 
         private sealed class Zero : Digit
         {
-            public Zero(LinkList<Stuff>.List list)
+            public Zero(LinkList<Tuple<T, T>>.List list)
                 : base(list)
             {
             }
@@ -60,7 +37,7 @@ namespace FunProgLib.persistence
         {
             private readonly T alpha;
 
-            public One(T alpha, LinkList<Stuff>.List list)
+            public One(T alpha, LinkList<Tuple<T, T>>.List list)
                 : base(list)
             {
                 this.alpha = alpha;
@@ -72,25 +49,23 @@ namespace FunProgLib.persistence
             }
         }
 
-        private static readonly Digit EmptyDigit = null;
-
         public static Digit Empty
         {
-            get { return EmptyDigit; }
+            get { return null; }
         }
 
         public static bool IsEmpty(Digit list)
         {
-            return list == EmptyDigit;
+            return list == null;
         }
 
         public static Digit Cons(T x, Digit ts)
         {
-            if (ts == EmptyDigit) return new One(x, null);
+            if (ts == null) return new One(x, null);
             var zero = ts as Zero;
             if (zero != null) return new One(x, zero.List);
             var one = ts as One;
-            if (one != null) return new Zero(LinkList<Stuff>.Cons(new Stuff(x, one.Alpha), one.List));
+            if (one != null) return new Zero(LinkList<Tuple<T, T>>.Cons(new Tuple<T, T>(x, one.Alpha), one.List));
             throw new Exception();
         }
 
@@ -109,9 +84,9 @@ namespace FunProgLib.persistence
             if (zero != null)
             {
                 // var (stuff, list) = Uncons(zero.List);
-                var stuff = LinkList<Stuff>.Head(zero.List);
-                var list = LinkList<Stuff>.Tail(zero.List);
-                return new Tuple<T, Digit>(stuff.Alpha1, new One(stuff.Alpha2, list));
+                var stuff = LinkList<Tuple<T, T>>.Head(zero.List);
+                var list = LinkList<Tuple<T, T>>.Tail(zero.List);
+                return new Tuple<T, Digit>(stuff.Item1, new One(stuff.Item2, list));
             }
 
             throw new Exception();
@@ -169,8 +144,8 @@ namespace FunProgLib.persistence
             {
                 // var fp(x,y) = i % 2 == 0 ? (f(x) y) : (x, f(y));
                 var fp = i % 2 == 0
-                    ? new Func<Stuff, Del, Stuff>((Stuff stuff, Del g) => new Stuff(g(stuff.Alpha1), stuff.Alpha2))
-                    : new Func<Stuff, Del, Stuff>((Stuff stuff, Del g) => new Stuff(stuff.Alpha1, g(stuff.Alpha2)));
+                    ? new Func<Tuple<T, T>, Del, Tuple<T, T>>((Tuple<T, T> stuff, Del g) => new Tuple<T, T>(g(stuff.Item1), stuff.Item2))
+                    : new Func<Tuple<T, T>, Del, Tuple<T, T>>((Tuple<T, T> stuff, Del g) => new Tuple<T, T>(stuff.Item1, g(stuff.Item2)));
                 //return new Zero(Fupdate(fp, i / 2, zero.List));
                 throw new NotImplementedException();
             }
