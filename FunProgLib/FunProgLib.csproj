@@ -43,11 +43,11 @@
     <Compile Include="binary\SparseByWeight.cs" />
     <Compile Include="heap\LazyParingHeap.cs" />
     <Compile Include="heap\ScheduledBinomialHeap.cs" />
-    <Compile Include="persistence\AltBinaryRandomAccessList.cs" />
-    <Compile Include="persistence\SkewBinaryRandomAccessList.cs" />
-    <Compile Include="persistence\BinaryRandomAccessList.cs" />
-    <Compile Include="persistence\LinkList.cs" />
-    <Compile Include="persistence\IStack.cs" />
+    <Compile Include="lists\AltBinaryRandomAccessList.cs" />
+    <Compile Include="lists\SkewBinaryRandomAccessList.cs" />
+    <Compile Include="lists\BinaryRandomAccessList.cs" />
+    <Compile Include="lists\LinkList.cs" />
+    <Compile Include="lists\IStack.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="queue\BankersQueue.cs" />
     <Compile Include="queue\BatchedQueue.cs" />
