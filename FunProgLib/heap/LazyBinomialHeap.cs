@@ -8,7 +8,7 @@ namespace FunProgLib.heap
 {
     using System;
 
-    using FunProgLib.persistence;
+    using FunProgLib.lists;
 
     public static class LazyBinomialHeap<T> where T : IComparable
     {

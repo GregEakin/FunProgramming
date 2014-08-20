@@ -10,7 +10,7 @@ namespace FunProgTests.heap
     using System.Linq;
     using System.Text;
     using FunProgLib.heap;
-    using FunProgLib.persistence;
+    using FunProgLib.lists;
     using FunProgLib.streams;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -141,7 +141,7 @@ namespace FunProgTests.heap
         {
             var random = new Random(1000);
             var t = ScheduledBinomialHeap<int>.Empty;
-            
+
             for (var i = 0; i < 1000; i++)
             {
                 var j = random.Next(1000);

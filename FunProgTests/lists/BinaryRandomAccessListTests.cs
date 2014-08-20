@@ -4,12 +4,12 @@
 // SUBSYSTEM:	FunPrograming
 // FILE:		BinaryRandomAccessListTests.cs
 // AUTHOR:		Greg Eakin
-namespace FunProgTests.persistence
+namespace FunProgTests.lists
 {
     using System;
     using System.Linq;
 
-    using FunProgLib.persistence;
+    using FunProgLib.lists;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 

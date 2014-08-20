@@ -8,7 +8,7 @@ namespace FunProgLib.heap
 {
     using System;
 
-    using FunProgLib.persistence;
+    using FunProgLib.lists;
     using FunProgLib.streams;
 
     public static class ScheduledBinomialHeap<T> where T : IComparable

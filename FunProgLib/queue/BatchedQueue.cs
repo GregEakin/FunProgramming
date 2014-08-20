@@ -8,7 +8,7 @@ namespace FunProgLib.queue
 {
     using System;
 
-    using FunProgLib.persistence;
+    using FunProgLib.lists;
 
     public static class BatchedQueue<T>
     {

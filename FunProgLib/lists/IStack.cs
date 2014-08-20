@@ -4,7 +4,7 @@
 // SUBSYSTEM:	FunPrograming
 // FILE:		IStack.cs
 // AUTHOR:		Greg Eakin
-namespace FunProgLib.persistence
+namespace FunProgLib.lists
 {
     public interface IStack<T>
     {

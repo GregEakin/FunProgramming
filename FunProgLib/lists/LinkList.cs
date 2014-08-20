@@ -4,7 +4,7 @@
 // SUBSYSTEM:	FunPrograming
 // FILE:		IList.cs
 // AUTHOR:		Greg Eakin
-namespace FunProgLib.persistence
+namespace FunProgLib.lists
 {
     using System;
     using System.Collections;

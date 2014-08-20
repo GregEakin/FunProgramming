@@ -11,7 +11,7 @@ namespace FunProgTests.heap
     using System.Text;
 
     using FunProgLib.heap;
-    using FunProgLib.persistence;
+    using FunProgLib.lists;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 

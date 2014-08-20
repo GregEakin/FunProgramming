@@ -4,7 +4,7 @@
 // SUBSYSTEM:	FunPrograming
 // FILE:		BinaryRandomAccessList.cs
 // AUTHOR:		Greg Eakin
-namespace FunProgLib.persistence
+namespace FunProgLib.lists
 {
     using System;
 

@@ -7,7 +7,7 @@
 namespace FunProgLib.sort
 {
     using System;
-    using FunProgLib.persistence;
+    using FunProgLib.lists;
     using FunProgLib.streams;
 
     public static class ScheduledBottomUpMergeSort<T> where T : IComparable

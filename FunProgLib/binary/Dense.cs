@@ -7,7 +7,7 @@
 
 namespace FunProgLib.binary
 {
-    using FunProgLib.persistence;
+    using FunProgLib.lists;
 
     public static class Dense
     {

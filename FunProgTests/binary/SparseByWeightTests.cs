@@ -10,7 +10,7 @@ namespace FunProgTests.binary
     using System.Text;
 
     using FunProgLib.binary;
-    using FunProgLib.persistence;
+    using FunProgLib.lists;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
