@@ -159,9 +159,9 @@ namespace FunProgLib.heap
 
         private sealed class Stuff
         {
-            private readonly Lazy<Stream<Digit>.StreamCell> stream;
-
             private readonly Tree tree;
+
+            private readonly Lazy<Stream<Digit>.StreamCell> stream;
 
             public Stuff(Tree tree, Lazy<Stream<Digit>.StreamCell> stream)
             {
