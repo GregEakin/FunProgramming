@@ -43,6 +43,7 @@
     <Compile Include="binary\SparseByWeight.cs" />
     <Compile Include="heap\LazyParingHeap.cs" />
     <Compile Include="heap\ScheduledBinomialHeap.cs" />
+    <Compile Include="persistence\AltBinaryRandomAccessList.cs" />
     <Compile Include="persistence\SkewBinaryRandomAccessList.cs" />
     <Compile Include="persistence\BinaryRandomAccessList.cs" />
     <Compile Include="persistence\LinkList.cs" />
