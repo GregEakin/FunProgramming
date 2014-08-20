@@ -126,14 +126,14 @@ namespace FunProgLib.lists
 
         private static LinkList<Digit>.List ConsTree(Tree t, LinkList<Digit>.List ts)
         {
-            if (ts == null) return LinkList<Digit>.Cons(new Digit(t), null);
+            if (IsEmpty(ts)) return LinkList<Digit>.Cons(new Digit(t), EmptyList);
             if (ts.Element == Zero) return LinkList<Digit>.Cons(new Digit(t), ts.Next);
             return LinkList<Digit>.Cons(Zero, ConsTree(Link(t, ts.Element.One), ts.Next));
         }
 
         private static Stuff UnconsTree(LinkList<Digit>.List list)
         {
-            if (list == null) throw new Exception("Empty");
+            if (IsEmpty(list)) throw new Exception("Empty");
             if (list.Element == Zero)
             {
                 var stuff = UnconsTree(list.Next);
@@ -141,7 +141,7 @@ namespace FunProgLib.lists
                 if (node != null) return new Stuff(node.Tree1, LinkList<Digit>.Cons(new Digit(node.Tree2), stuff.List));
                 throw new Exception();
             }
-            if (list.Next == null) return new Stuff(list.Element.One, null);
+            if (IsEmpty(list.Next)) return new Stuff(list.Element.One, EmptyList);
             return new Stuff(list.Element.One, LinkList<Digit>.Cons(Zero, list.Next));
         }
 
@@ -204,7 +204,7 @@ namespace FunProgLib.lists
 
         public static T Lookup(int i, LinkList<Digit>.List ts)
         {
-            if (ts == null) throw new Exception("Subscript");
+            if (IsEmpty(ts)) throw new Exception("Subscript");
             if (ts.Element == Zero) return Lookup(i, ts.Next);
             if (i < Size(ts.Element.One)) return LookupTree(i, ts.Element.One);
             return Lookup(i - Size(ts.Element.One), ts.Next);
@@ -212,7 +212,7 @@ namespace FunProgLib.lists
 
         public static LinkList<Digit>.List Update(int i, T x, LinkList<Digit>.List ts)
         {
-            if (ts == null) throw new Exception("Subscript");
+            if (IsEmpty(ts)) throw new Exception("Subscript");
             if (ts.Element == Zero) return LinkList<Digit>.Cons(Zero, Update(i, x, ts.Next));
             if (i < Size(ts.Element.One)) return LinkList<Digit>.Cons(new Digit(UpdateTree(i, x, ts.Element.One)), ts.Next);
             return LinkList<Digit>.Cons(new Digit(ts.Element.One), Update(i - Size(ts.Element.One), x, ts.Next));

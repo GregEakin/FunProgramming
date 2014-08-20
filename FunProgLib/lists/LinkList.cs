@@ -57,9 +57,9 @@ namespace FunProgLib.lists
 
                 public bool MoveNext()
                 {
-                    if (this.list == EmptyList) return false;
+                    if (IsEmpty(this.list)) return false;
                     this.list = this.list.Next;
-                    return this.list != EmptyList;
+                    return !IsEmpty(this.list);
                 }
 
                 public void Reset()
