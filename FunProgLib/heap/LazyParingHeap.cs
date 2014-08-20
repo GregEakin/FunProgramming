@@ -16,7 +16,7 @@ namespace FunProgLib.heap
 
             private readonly Heap list;
 
-            private readonly Lazy<Heap> list2;  /* susp */
+            private readonly Lazy<Heap> list2;
 
             public Heap(T root, Heap list, Lazy<Heap> list2)
             {
@@ -41,7 +41,7 @@ namespace FunProgLib.heap
             }
         }
 
-        private static readonly Lazy<Heap> EmptyHeapSusp = /* $ */ new Lazy<Heap>(() => null);
+        private static readonly Lazy<Heap> EmptyHeapSusp = new Lazy<Heap>(() => null);
 
         private static readonly Heap EmptyHeap = null;
 

@@ -43,18 +43,18 @@ namespace FunProgLib.heap
             }
         }
 
-        // type Heap = Lazy<LinkList<Tree>.List /* susp */
+        // type Heap = Lazy<LinkList<Tree>.List
 
         private static readonly LinkList<Tree>.List EmptyList = LinkList<Tree>.Empty;
 
-        private static readonly Lazy<LinkList<Tree>.List> EmptyHeap = /* $ */ new Lazy<LinkList<Tree>.List>(() => EmptyList);
+        private static readonly Lazy<LinkList<Tree>.List> EmptyHeap = new Lazy<LinkList<Tree>.List>(() => EmptyList);
 
         public static Lazy<LinkList<Tree>.List> Empty
         {
             get { return EmptyHeap; }
         }
 
-        public static bool IsEmapty(/* $ */ Lazy<LinkList<Tree>.List> heap)
+        public static bool IsEmapty(Lazy<LinkList<Tree>.List> heap)
         {
             return heap.Value == EmptyList;
         }
@@ -82,14 +82,14 @@ namespace FunProgLib.heap
             return InsTree(Link(ts1.Element, ts2.Element), Mrg(ts1.Next, ts2.Next));
         }
 
-        public static /* lazy */ Lazy<LinkList<Tree>.List> Insert(T x, /* $ */ Lazy<LinkList<Tree>.List> ts)
+        public static Lazy<LinkList<Tree>.List> Insert(T x, Lazy<LinkList<Tree>.List> ts)
         {
-            return /* $ */ new Lazy<LinkList<Tree>.List>(() => InsTree(new Tree(0, x, EmptyList), ts.Value));
+            return new Lazy<LinkList<Tree>.List>(() => InsTree(new Tree(0, x, EmptyList), ts.Value));
         }
 
-        public static /* lazy */ Lazy<LinkList<Tree>.List> Merge(/* $ */ Lazy<LinkList<Tree>.List> ts1, /* $ */ Lazy<LinkList<Tree>.List> ts2)
+        public static Lazy<LinkList<Tree>.List> Merge(Lazy<LinkList<Tree>.List> ts1, Lazy<LinkList<Tree>.List> ts2)
         {
-            return /* $ */ new Lazy<LinkList<Tree>.List>(() => Mrg(ts1.Value, ts2.Value));
+            return new Lazy<LinkList<Tree>.List>(() => Mrg(ts1.Value, ts2.Value));
         }
 
         private class TreeParts
@@ -124,16 +124,16 @@ namespace FunProgLib.heap
             return new TreeParts(prime.Tree, LinkList<Tree>.Cons(list.Element, prime.List));
         }
 
-        public static T FindMin(/* $ */ Lazy<LinkList<Tree>.List> ts)
+        public static T FindMin(Lazy<LinkList<Tree>.List> ts)
         {
             var t = RemoveMinTree(ts.Value);
             return t.Tree.Root;
 
         }
 
-        public static /* lazy */ Lazy<LinkList<Tree>.List> DeleteMin(/* $ */ Lazy<LinkList<Tree>.List> ts)
+        public static Lazy<LinkList<Tree>.List> DeleteMin(Lazy<LinkList<Tree>.List> ts)
         {
-            return /* $ */ new Lazy<LinkList<Tree>.List>(
+            return new Lazy<LinkList<Tree>.List>(
                 () =>
                 {
                     var t = RemoveMinTree(ts.Value);

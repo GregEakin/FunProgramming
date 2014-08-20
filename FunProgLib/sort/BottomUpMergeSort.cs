@@ -15,7 +15,7 @@ namespace FunProgLib.sort
         {
             private readonly int size;
 
-            private readonly /*susp*/ Lazy<LinkList<LinkList<T>.List>.List> segs;
+            private readonly Lazy<LinkList<LinkList<T>.List>.List> segs;
 
             public Sortable(int size, Lazy<LinkList<LinkList<T>.List>.List> segs)
             {
@@ -38,7 +38,7 @@ namespace FunProgLib.sort
 
         private static readonly LinkList<LinkList<T>.List>.List EmptyListList = null;
 
-        private static readonly Sortable EmptySortable = new Sortable(0, /* $ */ new Lazy<LinkList<LinkList<T>.List>.List>(() => EmptyListList));
+        private static readonly Sortable EmptySortable = new Sortable(0, new Lazy<LinkList<LinkList<T>.List>.List>(() => EmptyListList));
 
         public static Sortable Empty
         {
@@ -62,7 +62,7 @@ namespace FunProgLib.sort
         public static Sortable Add(T x, Sortable segs)
         {
             var xs = LinkList<T>.Cons(x, LinkList<T>.Empty);
-            return new Sortable(segs.Size + 1, /* $ */ new Lazy<LinkList<LinkList<T>.List>.List>(AddSeg(xs, /* force */ segs.Segs.Value, segs.Size)));
+            return new Sortable(segs.Size + 1, new Lazy<LinkList<LinkList<T>.List>.List>(AddSeg(xs, segs.Segs.Value, segs.Size)));
         }
 
         private static LinkList<T>.List MrgAll(LinkList<T>.List xs, LinkList<LinkList<T>.List>.List ys)
@@ -73,7 +73,7 @@ namespace FunProgLib.sort
 
         public static LinkList<T>.List Sort(Sortable segs)
         {
-            return MrgAll(EmptyList, /* force */ segs.Segs.Value);
+            return MrgAll(EmptyList, segs.Segs.Value);
         }
     }
 }
