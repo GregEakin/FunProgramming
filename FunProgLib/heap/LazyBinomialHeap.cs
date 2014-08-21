@@ -18,9 +18,9 @@ namespace FunProgLib.heap
 
             private readonly T root;
 
-            private readonly LinkList<Tree>.List list;
+            private readonly List<Tree>.Node list;
 
-            public Tree(int rank, T x, LinkList<Tree>.List list)
+            public Tree(int rank, T x, List<Tree>.Node list)
             {
                 this.rank = rank;
                 this.root = x;
@@ -37,68 +37,68 @@ namespace FunProgLib.heap
                 get { return root; }
             }
 
-            public LinkList<Tree>.List List
+            public List<Tree>.Node List
             {
                 get { return list; }
             }
         }
 
-        // type Heap = Lazy<LinkList<Tree>.List
+        // type Heap = Lazy<List<Tree>.Node>
 
-        private static readonly LinkList<Tree>.List EmptyList = LinkList<Tree>.Empty;
+        private static readonly List<Tree>.Node EmptyList = List<Tree>.Empty;
 
-        private static readonly Lazy<LinkList<Tree>.List> EmptyHeap = new Lazy<LinkList<Tree>.List>(() => EmptyList);
+        private static readonly Lazy<List<Tree>.Node> EmptyHeap = new Lazy<List<Tree>.Node>(() => EmptyList);
 
-        public static Lazy<LinkList<Tree>.List> Empty
+        public static Lazy<List<Tree>.Node> Empty
         {
             get { return EmptyHeap; }
         }
 
-        public static bool IsEmapty(Lazy<LinkList<Tree>.List> heap)
+        public static bool IsEmapty(Lazy<List<Tree>.Node> heap)
         {
             return heap.Value == EmptyList;
         }
 
         private static Tree Link(Tree t1, Tree t2)
         {
-            if (t1.Root.CompareTo(t2.Root) <= 0) return new Tree(t1.Rank + 1, t1.Root, LinkList<Tree>.Cons(t2, t1.List));
-            return new Tree(t1.Rank + 1, t2.Root, LinkList<Tree>.Cons(t1, t2.List));
+            if (t1.Root.CompareTo(t2.Root) <= 0) return new Tree(t1.Rank + 1, t1.Root, List<Tree>.Cons(t2, t1.List));
+            return new Tree(t1.Rank + 1, t2.Root, List<Tree>.Cons(t1, t2.List));
         }
 
-        private static LinkList<Tree>.List InsTree(Tree t, LinkList<Tree>.List ts)
+        private static List<Tree>.Node InsTree(Tree t, List<Tree>.Node ts)
         {
-            if (ts == EmptyList) return LinkList<Tree>.Cons(t, EmptyList);
-            if (t.Rank < ts.Element.Rank) return LinkList<Tree>.Cons(t, ts);
+            if (ts == EmptyList) return List<Tree>.Cons(t, EmptyList);
+            if (t.Rank < ts.Element.Rank) return List<Tree>.Cons(t, ts);
             return InsTree(Link(t, ts.Element), ts.Next);
         }
 
-        private static LinkList<Tree>.List Mrg(LinkList<Tree>.List ts1, LinkList<Tree>.List ts2)
+        private static List<Tree>.Node Mrg(List<Tree>.Node ts1, List<Tree>.Node ts2)
         {
             if (ts2 == EmptyList) return ts1;
             if (ts1 == EmptyList) return ts2;
 
-            if (ts1.Element.Rank < ts2.Element.Rank) return LinkList<Tree>.Cons(ts1.Element, Mrg(ts1.Next, ts2));
-            if (ts2.Element.Rank < ts1.Element.Rank) return LinkList<Tree>.Cons(ts2.Element, Mrg(ts1, ts2.Next));
+            if (ts1.Element.Rank < ts2.Element.Rank) return List<Tree>.Cons(ts1.Element, Mrg(ts1.Next, ts2));
+            if (ts2.Element.Rank < ts1.Element.Rank) return List<Tree>.Cons(ts2.Element, Mrg(ts1, ts2.Next));
             return InsTree(Link(ts1.Element, ts2.Element), Mrg(ts1.Next, ts2.Next));
         }
 
-        public static Lazy<LinkList<Tree>.List> Insert(T x, Lazy<LinkList<Tree>.List> ts)
+        public static Lazy<List<Tree>.Node> Insert(T x, Lazy<List<Tree>.Node> ts)
         {
-            return new Lazy<LinkList<Tree>.List>(() => InsTree(new Tree(0, x, EmptyList), ts.Value));
+            return new Lazy<List<Tree>.Node>(() => InsTree(new Tree(0, x, EmptyList), ts.Value));
         }
 
-        public static Lazy<LinkList<Tree>.List> Merge(Lazy<LinkList<Tree>.List> ts1, Lazy<LinkList<Tree>.List> ts2)
+        public static Lazy<List<Tree>.Node> Merge(Lazy<List<Tree>.Node> ts1, Lazy<List<Tree>.Node> ts2)
         {
-            return new Lazy<LinkList<Tree>.List>(() => Mrg(ts1.Value, ts2.Value));
+            return new Lazy<List<Tree>.Node>(() => Mrg(ts1.Value, ts2.Value));
         }
 
         private class TreeParts
         {
             private readonly Tree tree;
 
-            private readonly LinkList<Tree>.List list;
+            private readonly List<Tree>.Node list;
 
-            public TreeParts(Tree tree, LinkList<Tree>.List list)
+            public TreeParts(Tree tree, List<Tree>.Node list)
             {
                 this.tree = tree;
                 this.list = list;
@@ -109,35 +109,35 @@ namespace FunProgLib.heap
                 get { return this.tree; }
             }
 
-            public LinkList<Tree>.List List
+            public List<Tree>.Node List
             {
                 get { return this.list; }
             }
         }
 
-        private static TreeParts RemoveMinTree(LinkList<Tree>.List list)
+        private static TreeParts RemoveMinTree(List<Tree>.Node list)
         {
             if (list == EmptyList) throw new Exception("Empty");
             if (list.Next == EmptyList) return new TreeParts(list.Element, EmptyList);
             var prime = RemoveMinTree(list.Next);
             if (list.Element.Root.CompareTo(prime.Tree.Root) <= 0) return new TreeParts(list.Element, list.Next);
-            return new TreeParts(prime.Tree, LinkList<Tree>.Cons(list.Element, prime.List));
+            return new TreeParts(prime.Tree, List<Tree>.Cons(list.Element, prime.List));
         }
 
-        public static T FindMin(Lazy<LinkList<Tree>.List> ts)
+        public static T FindMin(Lazy<List<Tree>.Node> ts)
         {
             var t = RemoveMinTree(ts.Value);
             return t.Tree.Root;
 
         }
 
-        public static Lazy<LinkList<Tree>.List> DeleteMin(Lazy<LinkList<Tree>.List> ts)
+        public static Lazy<List<Tree>.Node> DeleteMin(Lazy<List<Tree>.Node> ts)
         {
-            return new Lazy<LinkList<Tree>.List>(
+            return new Lazy<List<Tree>.Node>(
                 () =>
                 {
                     var t = RemoveMinTree(ts.Value);
-                    var x = LinkList<Tree>.Reverse(t.Tree.List);
+                    var x = List<Tree>.Reverse(t.Tree.List);
                     return Mrg(x, t.List);
                 });
         }

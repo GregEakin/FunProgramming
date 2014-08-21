@@ -10,15 +10,15 @@ namespace FunProgLib.lists
     using System.Collections;
     using System.Collections.Generic;
 
-    public static class LinkList<T> // : Stack<T>
+    public static class List<T> // : Stack<T>
     {
-        public sealed class List : IEnumerable<T>
+        public sealed class Node : IEnumerable<T>
         {
             private readonly T element;
 
-            private readonly List next;
+            private readonly Node next;
 
-            public List(T element, List next)
+            public Node(T element, Node next)
             {
                 this.element = element;
                 this.next = next;
@@ -29,7 +29,7 @@ namespace FunProgLib.lists
                 get { return this.element; }
             }
 
-            public List Next
+            public Node Next
             {
                 get { return this.next; }
             }
@@ -46,12 +46,12 @@ namespace FunProgLib.lists
 
             private sealed class ListEnum : IEnumerator<T>
             {
-                private readonly List start;
-                private List list;
+                private readonly Node start;
+                private Node list;
 
-                public ListEnum(List list)
+                public ListEnum(Node list)
                 {
-                    this.start = new List(default(T), list);
+                    this.start = new Node(default(T), list);
                     this.list = this.start;
                 }
 
@@ -83,53 +83,53 @@ namespace FunProgLib.lists
             }
         }
 
-        private static readonly List EmptyList = null;
+        private static readonly Node EmptyList = null;
 
-        public static List Empty
+        public static Node Empty
         {
             get { return EmptyList; }
         }
 
-        public static bool IsEmpty(List list)
+        public static bool IsEmpty(Node list)
         {
             return list == EmptyList;
         }
 
-        public static List Cons(T element, List list)
+        public static Node Cons(T element, Node list)
         {
-            return new List(element, list);
+            return new Node(element, list);
         }
 
-        public static T Head(List list)
+        public static T Head(Node list)
         {
             if (IsEmpty(list)) throw new Exception("Empty");
             return list.Element;
         }
 
-        public static List Tail(List list)
+        public static Node Tail(Node list)
         {
             if (IsEmpty(list)) throw new Exception("Empty");
             return list.Next;
         }
 
-        public static List Cat(List list1, List list2)
+        public static Node Cat(Node list1, Node list2)
         {
             if (IsEmpty(list1)) return list2;
             if (IsEmpty(list2)) return list1;
-            return new List(list1.Element, Cat(list1.Next, list2));
+            return new Node(list1.Element, Cat(list1.Next, list2));
         }
 
-        public static List Reverse(List list)
+        public static Node Reverse(Node list)
         {
             if (IsEmpty(list)) return Empty;
             if (IsEmpty(list.Next)) return list;
             return Rev(list, Empty);
         }
 
-        private static List Rev(List listIn, List listOut)
+        private static Node Rev(Node listIn, Node listOut)
         {
             if (IsEmpty(listIn)) return listOut;
-            var next = new List(Head(listIn), listOut);
+            var next = new Node(Head(listIn), listOut);
             return Rev(Tail(listIn), next);
         }
     }

@@ -17,9 +17,9 @@ namespace FunProgLib.heap
         {
             private readonly T node;
 
-            private readonly LinkList<Tree>.List treeList;
+            private readonly List<Tree>.Node treeList;
 
-            public Tree(T node, LinkList<Tree>.List treeList)
+            public Tree(T node, List<Tree>.Node treeList)
             {
                 this.node = node;
                 this.treeList = treeList;
@@ -30,7 +30,7 @@ namespace FunProgLib.heap
                 get { return this.node; }
             }
 
-            public LinkList<Tree>.List TreeList
+            public List<Tree>.Node TreeList
             {
                 get { return this.treeList; }
             }
@@ -55,14 +55,14 @@ namespace FunProgLib.heap
 
         public sealed class Schedule
         {
-            private readonly LinkList<Lazy<Stream<Digit>.StreamCell>>.List digitStreamList;
+            private readonly List<Lazy<Stream<Digit>.StreamCell>>.Node digitStreamList;
 
-            public Schedule(LinkList<Lazy<Stream<Digit>.StreamCell>>.List digitStreamList)
+            public Schedule(List<Lazy<Stream<Digit>.StreamCell>>.Node digitStreamList)
             {
                 this.digitStreamList = digitStreamList;
             }
 
-            public LinkList<Lazy<Stream<Digit>.StreamCell>>.List DigitStreamList
+            public List<Lazy<Stream<Digit>.StreamCell>>.Node DigitStreamList
             {
                 get { return this.digitStreamList; }
             }
@@ -110,8 +110,8 @@ namespace FunProgLib.heap
         private static Tree Link(Tree t1, Tree t2)
         {
             if (t1.Node.CompareTo(t2.Node) <= 0)
-                return new Tree(t1.Node, LinkList<Tree>.Cons(t2, t1.TreeList));
-            return new Tree(t2.Node, LinkList<Tree>.Cons(t1, t2.TreeList));
+                return new Tree(t1.Node, List<Tree>.Cons(t2, t1.TreeList));
+            return new Tree(t2.Node, List<Tree>.Cons(t1, t2.TreeList));
         }
 
         private static Lazy<Stream<Digit>.StreamCell> InsTree(Tree t, Lazy<Stream<Digit>.StreamCell> ds)
@@ -137,17 +137,17 @@ namespace FunProgLib.heap
             return ds;
         }
 
-        private static LinkList<Lazy<Stream<Digit>.StreamCell>>.List Exec(LinkList<Lazy<Stream<Digit>.StreamCell>>.List list)
+        private static List<Lazy<Stream<Digit>.StreamCell>>.Node Exec(List<Lazy<Stream<Digit>.StreamCell>>.Node list)
         {
             if (list == null) return null;
-            if (list.Element.Value.Element == Zero) return LinkList<Lazy<Stream<Digit>.StreamCell>>.Cons(list.Element.Value.Next, list.Next);
+            if (list.Element.Value.Element == Zero) return List<Lazy<Stream<Digit>.StreamCell>>.Cons(list.Element.Value.Next, list.Next);
             return list.Next;
         }
 
         public static Heap Insert(T x, Heap heap)
         {
             var dsp = InsTree(new Tree(x, null), heap.DigitStream);
-            var list = LinkList<Lazy<Stream<Digit>.StreamCell>>.Cons(dsp, heap.Schedule.DigitStreamList);
+            var list = List<Lazy<Stream<Digit>.StreamCell>>.Cons(dsp, heap.Schedule.DigitStreamList);
             return new Heap(dsp, new Schedule(Exec(Exec(list))));
         }
 
@@ -200,7 +200,7 @@ namespace FunProgLib.heap
             return stuff.Tree.Node;
         }
 
-        private static Lazy<Stream<Digit>.StreamCell> OneMap(LinkList<Tree>.List list)
+        private static Lazy<Stream<Digit>.StreamCell> OneMap(List<Tree>.Node list)
         {
             if (list == null) return EmptyStream;
             return Stream<Digit>.Cons(new Digit(list.Element), OneMap(list.Next));
@@ -209,7 +209,7 @@ namespace FunProgLib.heap
         public static Heap DeleteMin(Heap heap)
         {
             var stuff = RemoveMinTree(heap.DigitStream);
-            var reverse = LinkList<Tree>.Reverse(stuff.Tree.TreeList);
+            var reverse = List<Tree>.Reverse(stuff.Tree.TreeList);
             var map = OneMap(reverse);
             var dspp = Mrg(map, stuff.Stream);
             return new Heap(Normalize(dspp), EmptySchedule);

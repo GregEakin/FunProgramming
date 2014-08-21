@@ -46,7 +46,7 @@
     <Compile Include="lists\AltBinaryRandomAccessList.cs" />
     <Compile Include="lists\SkewBinaryRandomAccessList.cs" />
     <Compile Include="lists\BinaryRandomAccessList.cs" />
-    <Compile Include="lists\LinkList.cs" />
+    <Compile Include="lists\List.cs" />
     <Compile Include="lists\IStack.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="queue\BankersQueue.cs" />

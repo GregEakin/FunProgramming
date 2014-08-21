@@ -33,11 +33,11 @@ namespace FunProgTests.heap
             return result.ToString();
         }
 
-        private static string DumpHeapList<T>(LinkList<ParingHeap<T>.Heap>.List list) where T : IComparable
+        private static string DumpHeapList<T>(List<ParingHeap<T>.Heap>.Node list) where T : IComparable
         {
             var result = new StringBuilder();
             result.Append("[");
-            if (list == LinkList<ParingHeap<T>.Heap>.Empty)
+            if (list == List<ParingHeap<T>.Heap>.Empty)
             {
                 foreach (var node in list)
                 {

@@ -23,7 +23,7 @@ namespace FunProgTests.heap
             var result = new StringBuilder();
             result.Append("[");
             result.Append(tree.Root);
-            if (tree.List != LinkList<BinomialHeap<T>.Tree>.Empty)
+            if (tree.List != List<BinomialHeap<T>.Tree>.Empty)
             {
                 result.Append(", ");
                 foreach (var node1 in tree.List)
@@ -35,11 +35,11 @@ namespace FunProgTests.heap
             return result.ToString();
         }
 
-        private static string DumpHeap<T>(LinkList<BinomialHeap<T>.Tree>.List list) where T : IComparable
+        private static string DumpHeap<T>(List<BinomialHeap<T>.Tree>.Node list) where T : IComparable
         {
             var result = new StringBuilder();
             result.Append("[");
-            if (list != LinkList<BinomialHeap<T>.Tree>.Empty)
+            if (list != List<BinomialHeap<T>.Tree>.Empty)
             {
                 foreach (var node in list)
                 {

@@ -16,14 +16,14 @@ namespace FunProgTests.binary
     [TestClass]
     public class DenseTests
     {
-        private static readonly LinkList<string>.List Zero = null;
-        private static readonly LinkList<string>.List One = Dense.Inc(Zero);
-        private static readonly LinkList<string>.List Two = Dense.Inc(One);
-        private static readonly LinkList<string>.List Three = Dense.Inc(Two);
-        private static readonly LinkList<string>.List Five = Dense.Add(Two, Three);
-        private static readonly LinkList<string>.List Fifteen = Dense.Add(Five, Dense.Add(Five, Five));
+        private static readonly List<string>.Node Zero = null;
+        private static readonly List<string>.Node One = Dense.Inc(Zero);
+        private static readonly List<string>.Node Two = Dense.Inc(One);
+        private static readonly List<string>.Node Three = Dense.Inc(Two);
+        private static readonly List<string>.Node Five = Dense.Add(Two, Three);
+        private static readonly List<string>.Node Fifteen = Dense.Add(Five, Dense.Add(Five, Five));
 
-        private static string DumpNat(LinkList<string>.List number)
+        private static string DumpNat(List<string>.Node number)
         {
             if (number == null) return "0";
             var result = new StringBuilder();

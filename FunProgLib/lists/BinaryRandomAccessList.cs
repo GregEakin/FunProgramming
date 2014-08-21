@@ -81,9 +81,9 @@ namespace FunProgLib.lists
         {
             private readonly Tree tree;
 
-            private readonly LinkList<Digit>.List list;
+            private readonly List<Digit>.Node list;
 
-            public Stuff(Tree tree, LinkList<Digit>.List list)
+            public Stuff(Tree tree, List<Digit>.Node list)
             {
                 this.tree = tree;
                 this.list = list;
@@ -94,20 +94,20 @@ namespace FunProgLib.lists
                 get { return this.tree; }
             }
 
-            public LinkList<Digit>.List List
+            public List<Digit>.Node List
             {
                 get { return this.list; }
             }
         }
 
-        private static readonly LinkList<Digit>.List EmptyList = null;
+        private static readonly List<Digit>.Node EmptyList = null;
 
-        public static LinkList<Digit>.List Empty
+        public static List<Digit>.Node Empty
         {
             get { return EmptyList; }
         }
 
-        public static bool IsEmpty(LinkList<Digit>.List list)
+        public static bool IsEmpty(List<Digit>.Node list)
         {
             return list == EmptyList;
         }
@@ -124,33 +124,33 @@ namespace FunProgLib.lists
             return new Node(Size(t1) + Size(t2), t1, t2);
         }
 
-        private static LinkList<Digit>.List ConsTree(Tree t, LinkList<Digit>.List ts)
+        private static List<Digit>.Node ConsTree(Tree t, List<Digit>.Node ts)
         {
-            if (IsEmpty(ts)) return LinkList<Digit>.Cons(new Digit(t), EmptyList);
-            if (ts.Element == Zero) return LinkList<Digit>.Cons(new Digit(t), ts.Next);
-            return LinkList<Digit>.Cons(Zero, ConsTree(Link(t, ts.Element.One), ts.Next));
+            if (IsEmpty(ts)) return List<Digit>.Cons(new Digit(t), EmptyList);
+            if (ts.Element == Zero) return List<Digit>.Cons(new Digit(t), ts.Next);
+            return List<Digit>.Cons(Zero, ConsTree(Link(t, ts.Element.One), ts.Next));
         }
 
-        private static Stuff UnconsTree(LinkList<Digit>.List list)
+        private static Stuff UnconsTree(List<Digit>.Node list)
         {
             if (IsEmpty(list)) throw new Exception("Empty");
             if (list.Element == Zero)
             {
                 var stuff = UnconsTree(list.Next);
                 var node = stuff.Tree as Node;
-                if (node != null) return new Stuff(node.Tree1, LinkList<Digit>.Cons(new Digit(node.Tree2), stuff.List));
+                if (node != null) return new Stuff(node.Tree1, List<Digit>.Cons(new Digit(node.Tree2), stuff.List));
                 throw new Exception();
             }
             if (IsEmpty(list.Next)) return new Stuff(list.Element.One, EmptyList);
-            return new Stuff(list.Element.One, LinkList<Digit>.Cons(Zero, list.Next));
+            return new Stuff(list.Element.One, List<Digit>.Cons(Zero, list.Next));
         }
 
-        public static LinkList<Digit>.List Cons(T x, LinkList<Digit>.List ts)
+        public static List<Digit>.Node Cons(T x, List<Digit>.Node ts)
         {
             return ConsTree(new Leaf(x), ts);
         }
 
-        public static T Head(LinkList<Digit>.List ts)
+        public static T Head(List<Digit>.Node ts)
         {
             var stuff = UnconsTree(ts);
             var leaf = stuff.Tree as Leaf;
@@ -158,7 +158,7 @@ namespace FunProgLib.lists
             throw new Exception();
         }
 
-        public static LinkList<Digit>.List Tail(LinkList<Digit>.List ts)
+        public static List<Digit>.Node Tail(List<Digit>.Node ts)
         {
             var stuff = UnconsTree(ts);
             return stuff.List;
@@ -202,7 +202,7 @@ namespace FunProgLib.lists
             throw new Exception();
         }
 
-        public static T Lookup(int i, LinkList<Digit>.List ts)
+        public static T Lookup(int i, List<Digit>.Node ts)
         {
             if (IsEmpty(ts)) throw new Exception("Subscript");
             if (ts.Element == Zero) return Lookup(i, ts.Next);
@@ -210,12 +210,12 @@ namespace FunProgLib.lists
             return Lookup(i - Size(ts.Element.One), ts.Next);
         }
 
-        public static LinkList<Digit>.List Update(int i, T x, LinkList<Digit>.List ts)
+        public static List<Digit>.Node Update(int i, T x, List<Digit>.Node ts)
         {
             if (IsEmpty(ts)) throw new Exception("Subscript");
-            if (ts.Element == Zero) return LinkList<Digit>.Cons(Zero, Update(i, x, ts.Next));
-            if (i < Size(ts.Element.One)) return LinkList<Digit>.Cons(new Digit(UpdateTree(i, x, ts.Element.One)), ts.Next);
-            return LinkList<Digit>.Cons(new Digit(ts.Element.One), Update(i - Size(ts.Element.One), x, ts.Next));
+            if (ts.Element == Zero) return List<Digit>.Cons(Zero, Update(i, x, ts.Next));
+            if (i < Size(ts.Element.One)) return List<Digit>.Cons(new Digit(UpdateTree(i, x, ts.Element.One)), ts.Next);
+            return List<Digit>.Cons(new Digit(ts.Element.One), Update(i - Size(ts.Element.One), x, ts.Next));
         }
     }
 }

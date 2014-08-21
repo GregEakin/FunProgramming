@@ -80,49 +80,49 @@ namespace FunProgLib.lists
             }
         }
 
-        private static readonly LinkList<Stuff>.List EmptyList = null;
+        private static readonly List<Stuff>.Node EmptyList = null;
 
-        public static LinkList<Stuff>.List Empty
+        public static List<Stuff>.Node Empty
         {
             get { return EmptyList; }
         }
 
-        public static bool IsEmpty(LinkList<Stuff>.List list)
+        public static bool IsEmpty(List<Stuff>.Node list)
         {
             return list == EmptyList;
         }
 
-        public static LinkList<Stuff>.List Cons(T x, LinkList<Stuff>.List ts)
+        public static List<Stuff>.Node Cons(T x, List<Stuff>.Node ts)
         {
             if (ts == EmptyList)
-                return LinkList<Stuff>.Cons(new Stuff(1, new Leaf(x)), ts);
+                return List<Stuff>.Cons(new Stuff(1, new Leaf(x)), ts);
 
-            var head1 = LinkList<Stuff>.Head(ts);
-            var tail1 = LinkList<Stuff>.Tail(ts);
+            var head1 = List<Stuff>.Head(ts);
+            var tail1 = List<Stuff>.Tail(ts);
             if (tail1 == EmptyList)
-                return LinkList<Stuff>.Cons(new Stuff(1, new Leaf(x)), ts);
+                return List<Stuff>.Cons(new Stuff(1, new Leaf(x)), ts);
 
-            var head2 = LinkList<Stuff>.Head(tail1);
-            var tail2 = LinkList<Stuff>.Tail(tail1);
+            var head2 = List<Stuff>.Head(tail1);
+            var tail2 = List<Stuff>.Tail(tail1);
 
-            if (head1.Weight == head2.Weight) return LinkList<Stuff>.Cons(new Stuff(1 + head1.Weight + head2.Weight, new Node(x, head1.Tree, head2.Tree)), tail2);
-            return LinkList<Stuff>.Cons(new Stuff(1, new Leaf(x)), ts);
+            if (head1.Weight == head2.Weight) return List<Stuff>.Cons(new Stuff(1 + head1.Weight + head2.Weight, new Node(x, head1.Tree, head2.Tree)), tail2);
+            return List<Stuff>.Cons(new Stuff(1, new Leaf(x)), ts);
         }
 
-        public static T Head(LinkList<Stuff>.List ts)
+        public static T Head(List<Stuff>.Node ts)
         {
             if (ts == EmptyList) throw new Exception("Empty");
-            var head = LinkList<Stuff>.Head(ts);
+            var head = List<Stuff>.Head(ts);
             return head.Tree.Alpha;
         }
 
-        public static LinkList<Stuff>.List Tail(LinkList<Stuff>.List ts)
+        public static List<Stuff>.Node Tail(List<Stuff>.Node ts)
         {
             if (ts == EmptyList) throw new Exception("Empty");
-            var head = LinkList<Stuff>.Head(ts);
-            if (head.Tree is Leaf) return LinkList<Stuff>.Tail(ts);
+            var head = List<Stuff>.Head(ts);
+            if (head.Tree is Leaf) return List<Stuff>.Tail(ts);
             var node = head.Tree as Node;
-            if (node != null) return LinkList<Stuff>.Cons(new Stuff(head.Weight / 2, node.Tree1), LinkList<Stuff>.Cons(new Stuff(head.Weight / 2, node.Tree2), LinkList<Stuff>.Tail(ts)));
+            if (node != null) return List<Stuff>.Cons(new Stuff(head.Weight / 2, node.Tree1), List<Stuff>.Cons(new Stuff(head.Weight / 2, node.Tree2), List<Stuff>.Tail(ts)));
             throw new Exception();
         }
 
@@ -166,22 +166,22 @@ namespace FunProgLib.lists
             throw new Exception();
         }
 
-        public static T Lookup(int i, LinkList<Stuff>.List ts)
+        public static T Lookup(int i, List<Stuff>.Node ts)
         {
             if (ts == null) throw new Exception("Subscript");
-            var head = LinkList<Stuff>.Head(ts);
+            var head = List<Stuff>.Head(ts);
             if (i < head.Weight) return LookupTree(head.Weight, i, head.Tree);
-            var tail = LinkList<Stuff>.Tail(ts);
+            var tail = List<Stuff>.Tail(ts);
             return Lookup(i - head.Weight, tail);
         }
 
-        public static LinkList<Stuff>.List Update(int i, T x, LinkList<Stuff>.List ts)
+        public static List<Stuff>.Node Update(int i, T x, List<Stuff>.Node ts)
         {
             if (ts == null) throw new Exception("Subscript");
-            var head = LinkList<Stuff>.Head(ts);
-            var tail = LinkList<Stuff>.Tail(ts);
-            if (i < head.Weight) return LinkList<Stuff>.Cons(new Stuff(head.Weight, UpdateTree(head.Weight, i, x, head.Tree)), tail);
-            return LinkList<Stuff>.Cons(head, Update(i - head.Weight, x, tail));
+            var head = List<Stuff>.Head(ts);
+            var tail = List<Stuff>.Tail(ts);
+            if (i < head.Weight) return List<Stuff>.Cons(new Stuff(head.Weight, UpdateTree(head.Weight, i, x, head.Tree)), tail);
+            return List<Stuff>.Cons(head, Update(i - head.Weight, x, tail));
         }
     }
 }

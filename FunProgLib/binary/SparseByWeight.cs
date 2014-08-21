@@ -10,35 +10,35 @@ namespace FunProgLib.binary
 
     public static class SparseByWeight
     {
-        private static LinkList<int>.List Carry(int w, LinkList<int>.List list)
+        private static List<int>.Node Carry(int w, List<int>.Node list)
         {
-            if (list == null) return LinkList<int>.Cons(w, null);
-            if (w < list.Element) return LinkList<int>.Cons(w, list);
+            if (list == null) return List<int>.Cons(w, null);
+            if (w < list.Element) return List<int>.Cons(w, list);
             return Carry(2 * w, list.Next);
         }
 
-        private static LinkList<int>.List Borrow(int w, LinkList<int>.List list)
+        private static List<int>.Node Borrow(int w, List<int>.Node list)
         {
             if (w == list.Element) return list.Next;
-            return LinkList<int>.Cons(w, Borrow(2 * w, list));
+            return List<int>.Cons(w, Borrow(2 * w, list));
         }
 
-        public static LinkList<int>.List Inc(LinkList<int>.List ws)
+        public static List<int>.Node Inc(List<int>.Node ws)
         {
             return Carry(1, ws);
         }
 
-        public static LinkList<int>.List Dec(LinkList<int>.List ws)
+        public static List<int>.Node Dec(List<int>.Node ws)
         {
             return Borrow(1, ws);
         }
 
-        public static LinkList<int>.List Add(LinkList<int>.List ds1, LinkList<int>.List ds2)
+        public static List<int>.Node Add(List<int>.Node ds1, List<int>.Node ds2)
         {
             if (ds2 == null) return ds1;
             if (ds1 == null) return ds2;
-            if (ds1.Element < ds2.Element) return LinkList<int>.Cons(ds1.Element, Add(ds1.Next, ds2));
-            if (ds2.Element < ds1.Element) return LinkList<int>.Cons(ds2.Element, Add(ds1, ds2.Next));
+            if (ds1.Element < ds2.Element) return List<int>.Cons(ds1.Element, Add(ds1.Next, ds2));
+            if (ds2.Element < ds1.Element) return List<int>.Cons(ds2.Element, Add(ds1, ds2.Next));
             return Carry(2 * ds1.Element, Add(ds1.Next, ds2.Next));
         }
     }

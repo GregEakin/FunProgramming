@@ -14,20 +14,20 @@ namespace FunProgLib.queue
     {
         public sealed class Queue
         {
-            private readonly LinkList<T>.List f;
-            private readonly LinkList<T>.List r;
+            private readonly List<T>.Node f;
+            private readonly List<T>.Node r;
 
-            public Queue(LinkList<T>.List f, LinkList<T>.List r)
+            public Queue(List<T>.Node f, List<T>.Node r)
             {
                 this.f = f;
                 this.r = r;
             }
 
-            public LinkList<T>.List F { get { return f; } }
-            public LinkList<T>.List R { get { return r; } }
+            public List<T>.Node F { get { return f; } }
+            public List<T>.Node R { get { return r; } }
         }
 
-        private static readonly LinkList<T>.List EmptyList = null; // new LinkList<T>.List(new T[0]);
+        private static readonly List<T>.Node EmptyList = null; // new List<T>.Node(new T[0]);
 
         private static readonly Queue EmptyQueue = new Queue(EmptyList, EmptyList);
 
@@ -38,15 +38,15 @@ namespace FunProgLib.queue
             return q.F == EmptyList;
         }
 
-        private static Queue CheckF(LinkList<T>.List f, LinkList<T>.List r)
+        private static Queue CheckF(List<T>.Node f, List<T>.Node r)
         {
-            if (f == EmptyList) return new Queue(LinkList<T>.Reverse(r), EmptyList);
+            if (f == EmptyList) return new Queue(List<T>.Reverse(r), EmptyList);
             return new Queue(f, r);
         }
 
         public static Queue Snoc(Queue q, T x)
         {
-            return CheckF(q.F, LinkList<T>.Cons(x, q.R));
+            return CheckF(q.F, List<T>.Cons(x, q.R));
         }
 
         public static T Head(Queue q)

@@ -61,7 +61,7 @@
     <Compile Include="lists\BinaryRandomAccessListTests.cs" />
     <Compile Include="lists\AltBinaryRandomAccessListTests.cs" />
     <Compile Include="lists\SkewBinaryRandomAccessListTests.cs" />
-    <Compile Include="lists\LinkListTests.cs" />
+    <Compile Include="lists\ListTests.cs" />
     <Compile Include="queue\BankersQueueTests.cs" />
     <Compile Include="queue\RealTimeQueueTests.cs" />
     <Compile Include="queue\BatchedQueueTests.cs" />

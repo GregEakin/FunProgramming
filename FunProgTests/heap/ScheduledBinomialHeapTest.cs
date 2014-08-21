@@ -24,7 +24,7 @@ namespace FunProgTests.heap
             var result = new StringBuilder();
             result.Append("[");
             result.Append(tree.Node);
-            if (tree.TreeList != LinkList<ScheduledBinomialHeap<T>.Tree>.Empty)
+            if (tree.TreeList != List<ScheduledBinomialHeap<T>.Tree>.Empty)
             {
                 result.Append(", ");
                 foreach (var node1 in tree.TreeList)

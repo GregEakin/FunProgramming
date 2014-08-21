@@ -16,9 +16,9 @@ namespace FunProgLib.heap
         {
             private readonly T root;
 
-            private readonly LinkList<Heap>.List list;
+            private readonly List<Heap>.Node list;
 
-            public Heap(T root, LinkList<Heap>.List list)
+            public Heap(T root, List<Heap>.Node list)
             {
                 this.root = root;
                 this.list = list;
@@ -29,13 +29,13 @@ namespace FunProgLib.heap
                 get { return root; }
             }
 
-            public LinkList<Heap>.List List
+            public List<Heap>.Node List
             {
                 get { return list; }
             }
         }
 
-        private static readonly LinkList<Heap>.List EmptyList = null;
+        private static readonly List<Heap>.Node EmptyList = null;
 
         private static readonly Heap EmptyHeap = null;
 
@@ -54,8 +54,8 @@ namespace FunProgLib.heap
             if (h2 == EmptyHeap) return h1;
             if (h1 == EmptyHeap) return h2;
 
-            if (h1.Root.CompareTo(h2.Root) <= 0) return new Heap(h1.Root, LinkList<Heap>.Cons(h2, h1.List));
-            return new Heap(h2.Root, LinkList<Heap>.Cons(h1, h2.List));
+            if (h1.Root.CompareTo(h2.Root) <= 0) return new Heap(h1.Root, List<Heap>.Cons(h2, h1.List));
+            return new Heap(h2.Root, List<Heap>.Cons(h1, h2.List));
         }
 
         public static Heap Insert(T x, Heap h)
@@ -63,7 +63,7 @@ namespace FunProgLib.heap
             return Merge(new Heap(x, EmptyList), h);
         }
 
-        private static Heap MergePairs(LinkList<Heap>.List hs)
+        private static Heap MergePairs(List<Heap>.Node hs)
         {
             if (hs == EmptyList) return EmptyHeap;
             if (hs.Next == EmptyList) return hs.Element;

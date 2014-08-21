@@ -12,14 +12,14 @@ namespace FunProgLib.lists
     {
         public abstract class Digit
         {
-            private readonly LinkList<Tuple<T, T>>.List list;
+            private readonly List<Tuple<T, T>>.Node list;
 
-            protected Digit(LinkList<Tuple<T, T>>.List list)
+            protected Digit(List<Tuple<T, T>>.Node list)
             {
                 this.list = list;
             }
 
-            public LinkList<Tuple<T, T>>.List List
+            public List<Tuple<T, T>>.Node List
             {
                 get { return this.list; }
             }
@@ -27,7 +27,7 @@ namespace FunProgLib.lists
 
         private sealed class Zero : Digit
         {
-            public Zero(LinkList<Tuple<T, T>>.List list)
+            public Zero(List<Tuple<T, T>>.Node list)
                 : base(list)
             {
             }
@@ -37,7 +37,7 @@ namespace FunProgLib.lists
         {
             private readonly T alpha;
 
-            public One(T alpha, LinkList<Tuple<T, T>>.List list)
+            public One(T alpha, List<Tuple<T, T>>.Node list)
                 : base(list)
             {
                 this.alpha = alpha;
@@ -65,7 +65,7 @@ namespace FunProgLib.lists
             var zero = ts as Zero;
             if (zero != null) return new One(x, zero.List);
             var one = ts as One;
-            if (one != null) return new Zero(LinkList<Tuple<T, T>>.Cons(new Tuple<T, T>(x, one.Alpha), one.List));
+            if (one != null) return new Zero(List<Tuple<T, T>>.Cons(new Tuple<T, T>(x, one.Alpha), one.List));
             throw new Exception();
         }
 
@@ -83,9 +83,9 @@ namespace FunProgLib.lists
             var zero = digit as Zero;
             if (zero != null)
             {
-                // var (stuff, list) = Uncons(zero.List);
-                var stuff = LinkList<Tuple<T, T>>.Head(zero.List);
-                var list = LinkList<Tuple<T, T>>.Tail(zero.List);
+                // var (stuff, Node) = Uncons(zero.Node);
+                var stuff = List<Tuple<T, T>>.Head(zero.List);
+                var list = List<Tuple<T, T>>.Tail(zero.List);
                 return new Tuple<T, Digit>(stuff.Item1, new One(stuff.Item2, list));
             }
 
@@ -118,7 +118,7 @@ namespace FunProgLib.lists
             var zero = ts as Zero;
             if (zero != null)
             {
-                //var stuff = RList.Lookup(i / 2, Zero.List);
+                //var stuff = RList.Lookup(i / 2, Zero.Node);
                 //if (i % 2 == 0) return stuff.Alpha1;
                 //return stuff.Alpha2;
                 throw new NotImplementedException();
@@ -146,7 +146,7 @@ namespace FunProgLib.lists
                 var fp = i % 2 == 0
                     ? new Func<Tuple<T, T>, Del, Tuple<T, T>>((Tuple<T, T> stuff, Del g) => new Tuple<T, T>(g(stuff.Item1), stuff.Item2))
                     : new Func<Tuple<T, T>, Del, Tuple<T, T>>((Tuple<T, T> stuff, Del g) => new Tuple<T, T>(stuff.Item1, g(stuff.Item2)));
-                //return new Zero(Fupdate(fp, i / 2, zero.List));
+                //return new Zero(Fupdate(fp, i / 2, zero.Node));
                 throw new NotImplementedException();
             }
 

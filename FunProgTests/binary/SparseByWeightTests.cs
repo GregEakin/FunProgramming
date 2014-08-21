@@ -17,14 +17,14 @@ namespace FunProgTests.binary
     [TestClass]
     public class SparseByWeightTests
     {
-        private static readonly LinkList<int>.List Zero = null;
-        private static readonly LinkList<int>.List One = SparseByWeight.Inc(Zero);
-        private static readonly LinkList<int>.List Two = SparseByWeight.Inc(One);
-        private static readonly LinkList<int>.List Three = SparseByWeight.Inc(Two);
-        private static readonly LinkList<int>.List Five = SparseByWeight.Add(Two, Three);
-        private static readonly LinkList<int>.List Fifteen = SparseByWeight.Add(Five, SparseByWeight.Add(Five, Five));
+        private static readonly List<int>.Node Zero = null;
+        private static readonly List<int>.Node One = SparseByWeight.Inc(Zero);
+        private static readonly List<int>.Node Two = SparseByWeight.Inc(One);
+        private static readonly List<int>.Node Three = SparseByWeight.Inc(Two);
+        private static readonly List<int>.Node Five = SparseByWeight.Add(Two, Three);
+        private static readonly List<int>.Node Fifteen = SparseByWeight.Add(Five, SparseByWeight.Add(Five, Five));
 
-        private static string DumpNat(LinkList<int>.List number)
+        private static string DumpNat(List<int>.Node number)
         {
             if (number == null) return "0";
             var result = new StringBuilder();

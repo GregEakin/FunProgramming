@@ -26,9 +26,9 @@ namespace FunProgTests.sort
             Assert.AreEqual(1, list.Size);
             Assert.IsNotNull(list.Segs);
 
-            // Assert.IsFalse(list.Segs.Element.ElementStream.IsValueCreated);
-            //Assert.IsNull(list.Segs.Value);
-            //Assert.IsTrue(list.Segs.IsValueCreated);
+            // Assert.IsFalse(Node.Segs.Element.ElementStream.IsValueCreated);
+            //Assert.IsNull(Node.Segs.Value);
+            //Assert.IsTrue(Node.Segs.IsValueCreated);
         }
 
         [TestMethod]
@@ -36,9 +36,9 @@ namespace FunProgTests.sort
         {
             const string Data = "How now, brown cow?";
             var list = Data.Split().Aggregate(ScheduledBottomUpMergeSort<string>.Empty, (ts, x) => ScheduledBottomUpMergeSort<string>.Add(x, ts));
-            //Assert.IsFalse(list.Segs.IsValueCreated);
+            //Assert.IsFalse(Node.Segs.IsValueCreated);
             var xs = ScheduledBottomUpMergeSort<string>.Sort(list);
-            //Assert.IsTrue(list.Segs.IsValueCreated);
+            //Assert.IsTrue(Node.Segs.IsValueCreated);
         }
 
         [TestMethod]
