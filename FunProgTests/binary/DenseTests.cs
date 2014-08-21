@@ -16,22 +16,22 @@ namespace FunProgTests.binary
     [TestClass]
     public class DenseTests
     {
-        private static readonly List<string>.Node Zero = null;
-        private static readonly List<string>.Node One = Dense.Inc(Zero);
-        private static readonly List<string>.Node Two = Dense.Inc(One);
-        private static readonly List<string>.Node Three = Dense.Inc(Two);
-        private static readonly List<string>.Node Five = Dense.Add(Two, Three);
-        private static readonly List<string>.Node Fifteen = Dense.Add(Five, Dense.Add(Five, Five));
+        private static readonly List<Dense.Digit>.Node Zero = null;
+        private static readonly List<Dense.Digit>.Node One = Dense.Inc(Zero);
+        private static readonly List<Dense.Digit>.Node Two = Dense.Inc(One);
+        private static readonly List<Dense.Digit>.Node Three = Dense.Inc(Two);
+        private static readonly List<Dense.Digit>.Node Five = Dense.Add(Two, Three);
+        private static readonly List<Dense.Digit>.Node Fifteen = Dense.Add(Five, Dense.Add(Five, Five));
 
-        private static string DumpNat(List<string>.Node number)
+        private static string DumpNat(List<Dense.Digit>.Node number)
         {
             if (number == null) return "0";
             var result = new StringBuilder();
             var digit = number;
             while (digit != null)
             {
-                if (digit.Element == "Zero") result.Insert(0, "0");
-                else if (digit.Element == "One") result.Insert(0, "1");
+                if (digit.Element == Dense.Digit.Zero) result.Insert(0, "0");
+                else if (digit.Element == Dense.Digit.One) result.Insert(0, "1");
                 else result.Insert(0, "*");
                 digit = digit.Next;
             }
@@ -76,18 +76,17 @@ namespace FunProgTests.binary
         }
 
         [TestMethod]
-        public void FourTest()
+        public void DecTest()
         {
             var four = Dense.Dec(Five);
             Assert.AreEqual("100", DumpNat(four));
         }
 
         [TestMethod]
-        public void ThreeTest()
+        public void DecWithCaryTest()
         {
             var four = Dense.Dec(Five);
             var three = Dense.Dec(four);
-            Assert.AreEqual("11", DumpNat(Three));
             Assert.AreEqual("11", DumpNat(three));
         }
     }
