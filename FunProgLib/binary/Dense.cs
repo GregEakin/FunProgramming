@@ -4,7 +4,6 @@
 // SUBSYSTEM:	FunPrograming
 // FILE:		Dense.cs
 // AUTHOR:		Greg Eakin
-
 namespace FunProgLib.binary
 {
     using FunProgLib.lists;
