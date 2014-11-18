@@ -74,23 +74,35 @@ namespace FunProgTests.heap
         [TestMethod]
         public void Test2()
         {
-            const string Words = "What's in a name? That which we call a rose by any other name would smell as sweet";
+            const string Words = "What's in a name? That which we call a rose, by any other name, would smell as sweet";
             var ts = Words.Split().Aggregate(BinomialHeap<string>.Empty, (current, word) => BinomialHeap<string>.Insert(word, current));
-            Assert.AreEqual("[[as, [sweet]][a, [a, [call, [That, [which]][we]][in, [What's]][name?]][name, [smell, [would]][other]][any, [by]][rose]]]", DumpHeap(ts));
+            Assert.AreEqual("[[as, [sweet]][a, [a, [call, [That, [which]][we]][in, [What's]][name?]][name,, [smell, [would]][other]][any, [by]][rose,]]]", DumpHeap(ts));
         }
 
         [TestMethod]
-        public void MergeTest()
+        public void MergeTest1()
         {
             const string Data1 = "What's in a name?";
             var ts1 = Data1.Split().Aggregate(BinomialHeap<string>.Empty, (current, word) => BinomialHeap<string>.Insert(word, current));
 
-            const string Data2 = "That which we call a rose by any other name would smell as sweet";
+            const string Data2 = "That which we call a rose, by any other name, would smell as sweet";
             var ts2 = Data2.Split().Aggregate(BinomialHeap<string>.Empty, (current, word) => BinomialHeap<string>.Insert(word, current));
 
             var t = BinomialHeap<string>.Merge(ts1, ts2);
-            Assert.AreEqual("[[as, [sweet]][a, [a, [call, [That, [which]][we]][any, [by]][rose]][name, [smell, [would]][other]][in, [What's]][name?]]]", DumpHeap(t));
+            Assert.AreEqual("[[as, [sweet]][a, [a, [call, [That, [which]][we]][any, [by]][rose,]][name,, [smell, [would]][other]][in, [What's]][name?]]]", DumpHeap(t));
+        }
 
+        [TestMethod]
+        public void MergeTest2()
+        {
+            const string Data1 = "That which we call a rose, by any other name, would smell as sweet";
+            var ts1 = Data1.Split().Aggregate(BinomialHeap<string>.Empty, (current, word) => BinomialHeap<string>.Insert(word, current));
+
+            const string Data2 = "What's in a name?";
+            var ts2 = Data2.Split().Aggregate(BinomialHeap<string>.Empty, (current, word) => BinomialHeap<string>.Insert(word, current));
+
+            var t = BinomialHeap<string>.Merge(ts1, ts2);
+            Assert.AreEqual("[[as, [sweet]][a, [a, [call, [That, [which]][we]][any, [by]][rose,]][name,, [smell, [would]][other]][in, [What's]][name?]]]", DumpHeap(t));
         }
 
         [TestMethod]

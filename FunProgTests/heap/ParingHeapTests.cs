@@ -104,5 +104,19 @@ namespace FunProgTests.heap
 
             Assert.AreEqual(3, ParingHeap<int>.FindMin(t3));
         }
+
+        [TestMethod]
+        [ExpectedException(typeof(Exception))]
+        public void FindMinNullTest()
+        {
+            ParingHeap<int>.FindMin(null);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(Exception))]
+        public void DeleteMinNullTest()
+        {
+            ParingHeap<int>.DeleteMin(null);
+        }
     }
 }

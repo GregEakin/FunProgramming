@@ -142,7 +142,7 @@ namespace FunProgLib.lists
             var zero = ts as Zero;
             if (zero != null)
             {
-                // var fp(x,y) = i % 2 == 0 ? (f(x) y) : (x, f(y));
+                // var fp(x,y) = i % 2 == 0 ? (f(x), y) : (x, f(y));
                 var fp = i % 2 == 0
                     ? new Func<Tuple<T, T>, Del, Tuple<T, T>>((Tuple<T, T> stuff, Del g) => new Tuple<T, T>(g(stuff.Item1), stuff.Item2))
                     : new Func<Tuple<T, T>, Del, Tuple<T, T>>((Tuple<T, T> stuff, Del g) => new Tuple<T, T>(stuff.Item1, g(stuff.Item2)));
