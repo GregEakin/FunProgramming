@@ -6,13 +6,12 @@
 // AUTHOR:		Greg Eakin
 namespace FunProgLib.tree
 {
-    public interface IFiniteMap
+    public interface IFiniteMap<TKey, T>
     {
-        // type Key
-        // type Map<T>
+        IFiniteMap<TKey, T> Empty { get; }
 
-        // Map<T> Empty { get; }
-        // Map<T> bind(Map<T> map, Key key, T value);
-        // T Lookup(Map<T>, Key key);  // throw NotFound if key isn't found
+        IFiniteMap<TKey, T> Bind(TKey key, T value, IFiniteMap<TKey, T> map);
+
+        T Lookup(TKey key, IFiniteMap<TKey, T> map);  // throw NotFound if key isn't found
     }
 }

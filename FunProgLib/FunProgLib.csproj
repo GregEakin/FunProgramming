@@ -44,6 +44,7 @@
     <Compile Include="heap\LazyParingHeap.cs" />
     <Compile Include="heap\ScheduledBinomialHeap.cs" />
     <Compile Include="lists\AltBinaryRandomAccessList.cs" />
+    <Compile Include="lists\CustomStack.cs" />
     <Compile Include="lists\SkewBinaryRandomAccessList.cs" />
     <Compile Include="lists\BinaryRandomAccessList.cs" />
     <Compile Include="lists\List.cs" />
@@ -59,6 +60,7 @@
     <Compile Include="sort\BottomUpMergeSort.cs" />
     <Compile Include="heap\LazyBinomialHeap.cs" />
     <Compile Include="heap\BinomialHeap.cs" />
+    <Compile Include="streams\IStream.cs" />
     <Compile Include="streams\Stream.cs" />
     <Compile Include="tree\IFiniteMap.cs" />
     <Compile Include="heap\IHeap.cs" />

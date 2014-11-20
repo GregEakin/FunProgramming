@@ -51,7 +51,7 @@ namespace FunProgTests.streams
         {
             var s = Stream<int>.Cons(1, Stream<int>.Cons(2, null));
             var r = Stream<int>.Reverse(s);
-            var t = Stream<int>.Cat(s, r);
+            var t = Stream<int>.Append(s, r);
 
             // Assert.IsFalse(s.IsValueCreated);
             Assert.IsFalse(s.Value.Next.IsValueCreated);

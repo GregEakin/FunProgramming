@@ -6,13 +6,12 @@
 // AUTHOR:		Greg Eakin
 namespace FunProgLib.tree
 {
-    public interface ISet
+    public interface ISet<T>
     {
-        // type Elem
-        // type Set
+        ISet<T> Empty { get; }
 
-        // Set Empty { get; }
-        // Set Insert(Set set, Elem elem);
-        // bool Member(Set set, Elem elem);
+        ISet<T> Insert(T elem, ISet<T> set);
+
+        bool Member(T elem, ISet<T> set);
     }
 }

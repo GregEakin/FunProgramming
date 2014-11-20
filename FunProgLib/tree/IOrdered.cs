@@ -2,16 +2,16 @@
 // Copyright © 2014-2014. All Rights Reserved.
 // 
 // SUBSYSTEM:	FunPrograming
-// FILE:		Ordered.cs
+// FILE:		IOrdered.cs
 // AUTHOR:		Greg Eakin
 namespace FunProgLib.tree
 {
-    public interface IOrdered<T>
+    public interface IOrdered<in T>
     {
-        bool LessThan(IOrdered<T> that);
+        bool Equal(T left, T right);
 
-        bool Equal(IOrdered<T> that);
+        bool LessThan(T left, T right);
 
-        bool LessThanEqual(IOrdered<T> that);
+        bool LessThanEqual(T left, T right);
     }
 }

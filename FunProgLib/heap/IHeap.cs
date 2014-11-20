@@ -10,15 +10,16 @@ namespace FunProgLib.heap
 
     public interface IHeap<T> where T : IComparable
     {
-        // type Heap
+        IHeap<T> Empty { get; }
 
-        // Heap Empty { get; }
-        // bool IsEmpty(Heap heap)
+        bool IsEmpty(IHeap<T> heap);
 
-        // Heap Insert(Heap heap, T value)
-        // Heap Merge(Heap a, Heap b)
+        IHeap<T> Insert(T value, IHeap<T> heap);
 
-        // T FindMin(Heap heap)
-        // Heap DeleteMin(Heap heap)
+        IHeap<T> Merge(IHeap<T> a, IHeap<T> b);
+
+        T FindMin(IHeap<T> heap);
+
+        IHeap<T> DeleteMin(IHeap<T> heap);
     }
 }

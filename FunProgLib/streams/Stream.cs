@@ -30,10 +30,10 @@ namespace FunProgLib.streams
             return new Lazy<StreamCell>(() => new StreamCell(element, s));
         }
 
-        public static Lazy<StreamCell> Cat(Lazy<StreamCell> s1, Lazy<StreamCell> s2)
+        public static Lazy<StreamCell> Append(Lazy<StreamCell> s1, Lazy<StreamCell> s2)
         {
             if (s1 == null || s1.Value == null) return s2;
-            return new Lazy<StreamCell>(() => new StreamCell(s1.Value.Element, Cat(s1.Value.Next, s2)));
+            return new Lazy<StreamCell>(() => new StreamCell(s1.Value.Element, Append(s1.Value.Next, s2)));
         }
 
         public static Lazy<StreamCell> Take(int n, Lazy<StreamCell> s)

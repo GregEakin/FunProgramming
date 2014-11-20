@@ -10,7 +10,7 @@ namespace FunProgLib.lists
     using System.Collections;
     using System.Collections.Generic;
 
-    public static class List<T> // : Stack<T>
+    public static class List<T> // : IStack<T>
     {
         public sealed class Node : IEnumerable<T>
         {

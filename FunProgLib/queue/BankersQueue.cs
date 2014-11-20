@@ -55,7 +55,7 @@ namespace FunProgLib.queue
         private static Queue Check(int lenf, Lazy<Stream<T>.StreamCell> f, int lenr, Lazy<Stream<T>.StreamCell> r)
         {
             if (lenr <= lenf) return new Queue(lenf, f, lenr, r);
-            return new Queue(lenf + lenr, Stream<T>.Cat(f, Stream<T>.Reverse(r)), 0, EmptyCell);
+            return new Queue(lenf + lenr, Stream<T>.Append(f, Stream<T>.Reverse(r)), 0, EmptyCell);
         }
 
         public static Queue Snoc(Queue queue, T element)
