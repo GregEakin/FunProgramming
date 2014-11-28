@@ -20,7 +20,7 @@ namespace FunProgTests.tree
         private static string DumpSet<T>(RedBlackSet<T>.Tree s) where T : IComparable
         {
             if (s == RedBlackSet<T>.EmptyTree) return "\u2205";
-            return DumpTree<T>(s);
+            return DumpTree(s);
         }
 
         private static string DumpTree<T>(RedBlackSet<T>.Tree s) where T : IComparable
