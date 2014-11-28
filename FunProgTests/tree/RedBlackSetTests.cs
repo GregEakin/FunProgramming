@@ -56,6 +56,23 @@ namespace FunProgTests.tree
         }
 
         [TestMethod]
+        public void EmptyLeafTest()
+        {
+            var t = RedBlackSet<string>.EmptyTree;
+            var x1 = RedBlackSet<string>.Insert("C", t);
+            Assert.AreEqual("(B: C)", DumpSet(x1));
+        }
+
+        [TestMethod]
+        public void DuplicateMemberTest()
+        {
+            var t = RedBlackSet<string>.EmptyTree;
+            var x1 = RedBlackSet<string>.Insert("C", t);
+            var x2 = RedBlackSet<string>.Insert("C", x1);
+            Assert.AreEqual("(B: C)", DumpSet(x2));
+        }
+
+        [TestMethod]
         public void MemberTest()
         {
             var t = RedBlackSet<string>.EmptyTree;
@@ -63,6 +80,7 @@ namespace FunProgTests.tree
             var x2 = RedBlackSet<string>.Insert("B", x1);
             Assert.IsTrue(RedBlackSet<string>.Member("B", x2));
             Assert.IsFalse(RedBlackSet<string>.Member("A", x2));
+            Assert.IsFalse(RedBlackSet<string>.Member("D", x2));
         }
 
         [TestMethod]
