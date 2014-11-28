@@ -1,9 +1,12 @@
-﻿// Project Console Application 0.1
-// Copyright © 2014-2014. All Rights Reserved.
+﻿// Fun Programming Data Structures 1.0
 // 
-// SUBSYSTEM:	FunPrograming
-// FILE:		BottomUpMergeSortTests.cs
-// AUTHOR:		Greg Eakin
+// Copyright © 2014 Greg Eakin. 
+//
+// Greg Eakin <greg@gdbtech.info>
+//
+// All Rights Reserved.
+//
+
 namespace FunProgTests.sort
 {
     using System.Linq;
