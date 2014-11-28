@@ -50,9 +50,18 @@ namespace FunProgTests.tree
         }
 
         [TestMethod]
-        public void SingleElement()
+        public void SingleElementTest()
         {
             var tree = UnbalancedSet<string>.Empty;
+            tree = UnbalancedSet<string>.Insert("a", tree);
+            Assert.AreEqual("[a]", DumpTree(tree));
+        }
+
+        [TestMethod]
+        public void DuplicateElementTest()
+        {
+            var tree = UnbalancedSet<string>.Empty;
+            tree = UnbalancedSet<string>.Insert("a", tree);
             tree = UnbalancedSet<string>.Insert("a", tree);
             Assert.AreEqual("[a]", DumpTree(tree));
         }
