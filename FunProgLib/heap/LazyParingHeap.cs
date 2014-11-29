@@ -6,6 +6,8 @@
 //
 // All Rights Reserved.
 //
+// Okasaki, Chris. "6.5 Lazy Paring Heaps." Purely Functional Data Structures. 
+//     Cambridge, U.K.: Cambridge UP, 1998. 79-81. Print.
 
 namespace FunProgLib.heap
 {

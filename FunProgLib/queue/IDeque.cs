@@ -6,6 +6,8 @@
 //
 // All Rights Reserved.
 //
+// Okasaki, Chris. "8.4 Double-Ended Queues." Purely Functional Data Structures. 
+//     Cambridge, U.K.: Cambridge UP, 1998. 106-107. Print.
 
 namespace FunProgLib.queue
 {

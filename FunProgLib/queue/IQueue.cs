@@ -6,6 +6,8 @@
 //
 // All Rights Reserved.
 //
+// Okasaki, Chris. "5.2 Queues." Purely Functional Data Structures. 
+//     Cambridge, U.K.: Cambridge UP, 1998. 42-45. Print.
 
 namespace FunProgLib.queue
 {

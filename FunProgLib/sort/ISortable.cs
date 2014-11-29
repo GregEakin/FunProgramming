@@ -6,6 +6,8 @@
 //
 // All Rights Reserved.
 //
+// Okasaki, Chris. "6.4.3 Example: Bottom-Up Mergesort with Sharing." Purely Functional Data Structures. 
+//     Cambridge, U.K.: Cambridge UP, 1998. 74-78. Print.
 
 namespace FunProgLib.sort
 {

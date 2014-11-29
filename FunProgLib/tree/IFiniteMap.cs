@@ -6,6 +6,8 @@
 //
 // All Rights Reserved.
 //
+// Okasaki, Chris. "2.3 Binaryt Search Trees." Purely Functional Data Structures. 
+//     Cambridge, U.K.: Cambridge UP, 1998. 11-15. Print.
 
 namespace FunProgLib.tree
 {

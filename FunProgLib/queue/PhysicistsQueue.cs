@@ -6,6 +6,8 @@
 //
 // All Rights Reserved.
 //
+// Okasaki, Chris. "6.4.2 Example: Queues." Purely Functional Data Structures. 
+//     Cambridge, U.K.: Cambridge UP, 1998. 72-74. Print.
 
 namespace FunProgLib.queue
 {

@@ -6,6 +6,8 @@
 //
 // All Rights Reserved.
 //
+// Okasaki, Chris. "5.4 Splay Heaps." Purely Functional Data Structures. 
+//     Cambridge, U.K.: Cambridge UP, 1998. 46-52. Print.
 
 namespace FunProgLib.heap
 {

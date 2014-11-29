@@ -6,6 +6,8 @@
 //
 // All Rights Reserved.
 //
+// Okasaki, Chris. "7.4 Bottom-Up Mergesrot with Sharing." Purely Functional Data Structures. 
+//     Cambridge, U.K.: Cambridge UP, 1998. 94-97. Print.
 
 namespace FunProgLib.sort
 {

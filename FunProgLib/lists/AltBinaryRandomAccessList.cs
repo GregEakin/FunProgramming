@@ -6,6 +6,8 @@
 //
 // All Rights Reserved.
 //
+// Okasaki, Chris. "10.1.2 Binary Random-Access Lists Revisited." Purely Functional Data Structures. 
+//     Cambridge, U.K.: Cambridge UP, 1998. 144-7. Print.
 
 namespace FunProgLib.lists
 {

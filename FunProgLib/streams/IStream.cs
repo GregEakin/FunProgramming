@@ -6,6 +6,8 @@
 //
 // All Rights Reserved.
 //
+// Okasaki, Chris. "4.2 Streams." Purely Functional Data Structures. 
+//     Cambridge, U.K.: Cambridge UP, 1998. 34-37. Print.
 
 namespace FunProgLib.streams
 {

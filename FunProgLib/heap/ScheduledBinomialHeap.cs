@@ -6,6 +6,8 @@
 //
 // All Rights Reserved.
 //
+// Okasaki, Chris. "7.3 Binomial Heaps." Purely Functional Data Structures. 
+//     Cambridge, U.K.: Cambridge UP, 1998. 89-93. Print.
 
 namespace FunProgLib.heap
 {

@@ -6,6 +6,8 @@
 //
 // All Rights Reserved.
 //
+// Okasaki, Chris. "3.3 Red-Black Trees." Purely Functional Data Structures. 
+//     Cambridge, U.K.: Cambridge UP, 1998. 24-29. Print.
 
 namespace FunProgLib.tree
 {

@@ -6,6 +6,8 @@
 //
 // All Rights Reserved.
 //
+// Okasaki, Chris. "6.4.1 Example: Binomial Heaps." Purely Functional Data Structures. 
+//     Cambridge, U.K.: Cambridge UP, 1998. 70-72. Print.
 
 namespace FunProgLib.heap
 {

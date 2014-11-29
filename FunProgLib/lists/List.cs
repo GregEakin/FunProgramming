@@ -6,6 +6,8 @@
 //
 // All Rights Reserved.
 //
+// Okasaki, Chris. "2.1 Lists." Purely Functional Data Structures. 
+//     Cambridge, U.K.: Cambridge UP, 1998. 7-11. Print.
 
 namespace FunProgLib.lists
 {
