@@ -144,7 +144,14 @@ namespace FunProgLib.heap
         private static List<Tree>.Node RemoveMinTree(List<Tree>.Node ds)
         {
             if (List<Tree>.IsEmpty(ds)) throw new Exception("Empty");
-            throw new NotImplementedException();
+            var ts = List<Tree>.Tail(ds);
+            if (List<Tree>.IsEmpty(ts)) return List<Tree>.Empty;
+            var t = List<Tree>.Head(ds);
+            var val = RemoveMinTree(ts);
+            var tp = List<Tree>.Head(val);
+            if (t.Rank <= tp.Rank) return ts;
+            var tsp = List<Tree>.Tail(val);
+            return List<Tree>.Cons(t, tsp);
         }
 
         public static T FindMin(List<Tree>.Node ts)
@@ -153,9 +160,22 @@ namespace FunProgLib.heap
             return val.Element.Node;
         }
 
+        private static List<Tree>.Node InsertAll(List<T>.Node xsp, List<Tree>.Node ts)
+        {
+            if (List<T>.IsEmpty(xsp)) return ts;
+            var x = List<T>.Head(xsp);
+            var xs = List<T>.Tail(xsp);
+            return InsertAll(xs, Insert(x, ts));
+        }
+
         public static List<Tree>.Node DeleteMin(List<Tree>.Node ts)
         {
-            throw new NotImplementedException();
+            var val = RemoveMinTree(ts);
+            var head = List<Tree>.Head(val);
+            var xs = head.List;
+            var ts1 = head.TreeList;
+            var ts2 = List<Tree>.Tail(val);
+            return InsertAll(xs, Merge(List<Tree>.Reverse(ts1), ts2));
         }
     }
 }
