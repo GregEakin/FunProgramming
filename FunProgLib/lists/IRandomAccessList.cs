@@ -11,8 +11,20 @@
 
 namespace FunProgLib.lists
 {
-    public interface IRandomAccessList
+    public interface IRandomAccessList<T>
     {
+        IRandomAccessList<T> Empty { get; }
 
+        bool IsEmpty(IRandomAccessList<T> list);
+
+        IRandomAccessList<T> Cons(T element, IRandomAccessList<T> list);
+
+        T Head(IRandomAccessList<T> list);
+
+        IRandomAccessList<T> Tail(IRandomAccessList<T> list);
+
+        T Lookup(int index, IRandomAccessList<T> list);
+
+        IRandomAccessList<T> Update(int index, T element, IRandomAccessList<T> list);
     }
 }

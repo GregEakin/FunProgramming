@@ -17,7 +17,7 @@ namespace FunProgLib.lists
 
         bool IsEmpty(IStack<T> stack);
 
-        IStack<T> Cons(IStack<T> stack, T element);
+        IStack<T> Cons(T element, IStack<T> stack);
 
         T Head(IStack<T> stack);
 
