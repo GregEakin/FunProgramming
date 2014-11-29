@@ -13,7 +13,7 @@ namespace FunProgLib.tree
 {
     using System;
 
-    public static class RedBlackSet<T> where T : IComparable
+    public static class RedBlackSet<T> where T : IComparable<T>
     {
         public enum Color { R, B };
 

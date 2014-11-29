@@ -20,13 +20,13 @@ namespace FunProgTests.tree
     [TestClass]
     public class RedBlackSetTests
     {
-        private static string DumpSet<T>(RedBlackSet<T>.Tree s) where T : IComparable
+        private static string DumpSet<T>(RedBlackSet<T>.Tree s) where T : IComparable<T>
         {
             if (s == RedBlackSet<T>.EmptyTree) return "\u2205";
             return DumpTree(s);
         }
 
-        private static string DumpTree<T>(RedBlackSet<T>.Tree s) where T : IComparable
+        private static string DumpTree<T>(RedBlackSet<T>.Tree s) where T : IComparable<T>
         {
             var results = new StringBuilder();
             results.Append('(');

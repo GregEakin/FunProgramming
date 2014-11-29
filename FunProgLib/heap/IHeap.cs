@@ -13,7 +13,7 @@ namespace FunProgLib.heap
 {
     using System;
 
-    public interface IHeap<T> where T : IComparable
+    public interface IHeap<T> where T : IComparable<T>
     {
         IHeap<T> Empty { get; }
 

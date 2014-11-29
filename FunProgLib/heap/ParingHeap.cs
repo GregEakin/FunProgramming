@@ -15,7 +15,7 @@ namespace FunProgLib.heap
 
     using FunProgLib.lists;
 
-    public static class ParingHeap<T> where T : IComparable
+    public static class ParingHeap<T> where T : IComparable<T>
     {
         public sealed class Heap
         {

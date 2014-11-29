@@ -20,7 +20,7 @@ namespace FunProgTests.tree
     [TestClass]
     public class UnbalancedSetTests
     {
-        private static string DumpTree<T>(UnbalancedSet<T>.Tree tree) where T : IComparable
+        private static string DumpTree<T>(UnbalancedSet<T>.Tree tree) where T : IComparable<T>
         {
             if (tree == UnbalancedSet<T>.Empty) return "\u2205";
 

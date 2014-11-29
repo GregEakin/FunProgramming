@@ -20,7 +20,7 @@ namespace FunProgTests.heap
     [TestClass]
     public class LeftistHeapTests
     {
-        private static string DumpHeap<T>(LeftistHeap<T>.Heap heap) where T : IComparable
+        private static string DumpHeap<T>(LeftistHeap<T>.Heap heap) where T : IComparable<T>
         {
             if (heap == LeftistHeap<T>.Empty) return "\u2205";
 

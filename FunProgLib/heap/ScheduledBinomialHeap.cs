@@ -16,7 +16,7 @@ namespace FunProgLib.heap
     using FunProgLib.lists;
     using FunProgLib.streams;
 
-    public static class ScheduledBinomialHeap<T> where T : IComparable
+    public static class ScheduledBinomialHeap<T> where T : IComparable<T>
     {
         public sealed class Tree
         {
@@ -107,7 +107,7 @@ namespace FunProgLib.heap
             get { return EmptyHeap; }
         }
 
-        public static bool IsEmapty(Heap heap)
+        public static bool IsEmpty(Heap heap)
         {
             return heap.DigitStream == EmptyStream;
         }

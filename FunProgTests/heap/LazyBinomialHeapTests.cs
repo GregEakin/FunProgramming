@@ -19,7 +19,7 @@ namespace FunProgTests.heap
     [TestClass]
     public class LazyBinomialHeapTests
     {
-        private static string DumpNode<T>(LazyBinomialHeap<T>.Tree tree) where T : IComparable
+        private static string DumpNode<T>(LazyBinomialHeap<T>.Tree tree) where T : IComparable<T>
         {
             var result = new StringBuilder();
             result.Append("[");
@@ -36,7 +36,7 @@ namespace FunProgTests.heap
             return result.ToString();
         }
 
-        private static string DumpHeap<T>(Lazy<List<LazyBinomialHeap<T>.Tree>.Node> list) where T : IComparable
+        private static string DumpHeap<T>(Lazy<List<LazyBinomialHeap<T>.Tree>.Node> list) where T : IComparable<T>
         {
             var result = new StringBuilder();
             result.Append("[");

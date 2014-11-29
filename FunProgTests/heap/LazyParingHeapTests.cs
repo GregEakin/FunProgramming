@@ -18,7 +18,7 @@ namespace FunProgTests.heap
     [TestClass]
     public class LazyParingHeapTests
     {
-        private static string DumpHeap<T>(LazyParingHeap<T>.Heap node, bool showSusp) where T : IComparable
+        private static string DumpHeap<T>(LazyParingHeap<T>.Heap node, bool showSusp) where T : IComparable<T>
         {
             var result = new StringBuilder();
             result.Append("[");

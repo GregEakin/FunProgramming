@@ -13,7 +13,7 @@ namespace FunProgLib.heap
 {
     using System;
 
-    public static class SplayHeap<T> where T : IComparable
+    public static class SplayHeap<T> where T : IComparable<T>
     {
         public sealed class Heap
         {

@@ -20,7 +20,7 @@ namespace FunProgTests.heap
     [TestClass]
     public class SplayHeapTests
     {
-        private static string DumpHeap<T>(SplayHeap<T>.Heap heap) where T : IComparable
+        private static string DumpHeap<T>(SplayHeap<T>.Heap heap) where T : IComparable<T>
         {
             if (SplayHeap<T>.IsEmpty(heap)) return "\u2205";
 

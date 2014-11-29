@@ -15,7 +15,7 @@ namespace FunProgLib.sort
 
     using FunProgLib.lists;
 
-    public interface ISortable<T> where T : IComparable
+    public interface ISortable<T> where T : IComparable<T>
     {
         ISortable<T> Empty { get; }
 

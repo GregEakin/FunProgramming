@@ -15,7 +15,7 @@ namespace FunProgLib.sort
     using FunProgLib.lists;
     using FunProgLib.streams;
 
-    public static class ScheduledBottomUpMergeSort<T> where T : IComparable
+    public static class ScheduledBottomUpMergeSort<T> where T : IComparable<T>
     {
         public sealed class Stuff
         {

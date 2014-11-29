@@ -14,7 +14,7 @@ namespace FunProgLib.sort
     using System;
     using FunProgLib.lists;
 
-    public static class BottomUpMergeSort<T> where T : IComparable
+    public static class BottomUpMergeSort<T> where T : IComparable<T>
     {
         public sealed class Sortable
         {

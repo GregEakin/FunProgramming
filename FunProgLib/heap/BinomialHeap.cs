@@ -15,7 +15,7 @@ namespace FunProgLib.heap
 
     using FunProgLib.lists;
 
-    public static class BinomialHeap<T> where T : IComparable
+    public static class BinomialHeap<T> where T : IComparable<T>
     {
         public sealed class Tree
         {

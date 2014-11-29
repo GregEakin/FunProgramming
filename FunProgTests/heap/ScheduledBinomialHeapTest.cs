@@ -21,7 +21,7 @@ namespace FunProgTests.heap
     [TestClass]
     public class ScheduledBinomialHeapTests
     {
-        private static string DumpTree<T>(ScheduledBinomialHeap<T>.Tree tree) where T : IComparable
+        private static string DumpTree<T>(ScheduledBinomialHeap<T>.Tree tree) where T : IComparable<T>
         {
             if (tree == null) return string.Empty;
             var result = new StringBuilder();
@@ -41,7 +41,7 @@ namespace FunProgTests.heap
             return result.ToString();
         }
 
-        private static string DumpDigitStream<T>(Lazy<Stream<ScheduledBinomialHeap<T>.Digit>.StreamCell> stream) where T : IComparable
+        private static string DumpDigitStream<T>(Lazy<Stream<ScheduledBinomialHeap<T>.Digit>.StreamCell> stream) where T : IComparable<T>
         {
             if (stream == ScheduledBinomialHeap<T>.EmptyStream) return string.Empty;
             if (!stream.IsValueCreated) return " -$- ";
@@ -52,13 +52,13 @@ namespace FunProgTests.heap
             return result.ToString();
         }
 
-        private static string DumpHeap<T>(ScheduledBinomialHeap<T>.Heap heap) where T : IComparable
+        private static string DumpHeap<T>(ScheduledBinomialHeap<T>.Heap heap) where T : IComparable<T>
         {
             var result = new StringBuilder();
             result.Append("[");
             if (heap.DigitStream != null)
             {
-                result.Append(DumpDigitStream<T>(heap.DigitStream));
+                result.Append(DumpDigitStream(heap.DigitStream));
                 result.Append(", ");
             }
             result.Remove(result.Length - 2, 2);
@@ -70,10 +70,10 @@ namespace FunProgTests.heap
         public void EmptyTest()
         {
             var t = ScheduledBinomialHeap<string>.Empty;
-            Assert.IsTrue(ScheduledBinomialHeap<string>.IsEmapty(t));
+            Assert.IsTrue(ScheduledBinomialHeap<string>.IsEmpty(t));
 
             var t1 = ScheduledBinomialHeap<string>.Insert("C", t);
-            Assert.IsFalse(ScheduledBinomialHeap<string>.IsEmapty(t1));
+            Assert.IsFalse(ScheduledBinomialHeap<string>.IsEmpty(t1));
         }
 
         [TestMethod]
@@ -160,7 +160,7 @@ namespace FunProgTests.heap
                 min = j;
             }
 
-            Assert.IsTrue(ScheduledBinomialHeap<int>.IsEmapty(t));
+            Assert.IsTrue(ScheduledBinomialHeap<int>.IsEmpty(t));
         }
 
         [TestMethod]
@@ -194,7 +194,7 @@ namespace FunProgTests.heap
                 min = j;
             }
 
-            Assert.IsTrue(ScheduledBinomialHeap<int>.IsEmapty(t));
+            Assert.IsTrue(ScheduledBinomialHeap<int>.IsEmpty(t));
         }
     }
 }

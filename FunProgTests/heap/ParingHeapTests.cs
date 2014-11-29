@@ -19,7 +19,7 @@ namespace FunProgTests.heap
     [TestClass]
     public class ParingHeapTests
     {
-        private static string DumpHeap<T>(ParingHeap<T>.Heap node) where T : IComparable
+        private static string DumpHeap<T>(ParingHeap<T>.Heap node) where T : IComparable<T>
         {
             var result = new StringBuilder();
             result.Append("[");
@@ -36,7 +36,7 @@ namespace FunProgTests.heap
             return result.ToString();
         }
 
-        private static string DumpHeapList<T>(List<ParingHeap<T>.Heap>.Node list) where T : IComparable
+        private static string DumpHeapList<T>(List<ParingHeap<T>.Heap>.Node list) where T : IComparable<T>
         {
             var result = new StringBuilder();
             result.Append("[");

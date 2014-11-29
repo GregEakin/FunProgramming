@@ -21,7 +21,7 @@ namespace FunProgTests.heap
     [TestClass]
     public class BinomialHeapTests
     {
-        private static string DumpTree<T>(BinomialHeap<T>.Tree tree) where T : IComparable
+        private static string DumpTree<T>(BinomialHeap<T>.Tree tree) where T : IComparable<T>
         {
             var result = new StringBuilder();
             result.Append("[");
@@ -38,7 +38,7 @@ namespace FunProgTests.heap
             return result.ToString();
         }
 
-        private static string DumpHeap<T>(List<BinomialHeap<T>.Tree>.Node list) where T : IComparable
+        private static string DumpHeap<T>(List<BinomialHeap<T>.Tree>.Node list) where T : IComparable<T>
         {
             var result = new StringBuilder();
             result.Append("[");

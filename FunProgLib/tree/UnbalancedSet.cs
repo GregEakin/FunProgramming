@@ -13,7 +13,7 @@ namespace FunProgLib.tree
 {
     using System;
 
-    public static class UnbalancedSet<T> where T : IComparable // ISet
+    public static class UnbalancedSet<T> where T : IComparable<T> // ISet
     {
         public sealed class Tree // : IOrdered<T>
         {
