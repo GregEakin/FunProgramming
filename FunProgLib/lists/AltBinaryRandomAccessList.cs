@@ -13,6 +13,7 @@ namespace FunProgLib.lists
 {
     using System;
 
+    // assumes polymorphic recursion!
     public static class AltBinaryRandomAccessList<T>
     {
         public abstract class Digit

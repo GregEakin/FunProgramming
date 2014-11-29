@@ -11,12 +11,53 @@
 
 namespace FunProgLib.queue
 {
+    using System;
+
+    using FunProgLib.lists;
+
+    // assumes polymorphic recursion!
     public static class BootstrappedQueue<T>
     {
         public sealed class Queue
         {
+            private readonly int lenfm;
+
+            private readonly List<T>.Node f;
+
+            // alpha list susp Queue m
+            private readonly BootstrappedQueue<Lazy<List<T>.Node>>.Queue m;
+
+            private readonly int lenr;
+
+            private readonly List<T>.Node r;
+
+            public int LenFM
+            {
+                get { return lenfm; }
+            }
+
+            public List<T>.Node F
+            {
+                get { return f; }
+            }
+
+            public BootstrappedQueue<Lazy<List<T>.Node>>.Queue M
+            {
+                get { return m; }
+            }
+
+            public int LenR
+            {
+                get { return lenr; }
+            }
+
+            public List<T>.Node R
+            {
+                get { return r; }
+            }
         }
 
+        private static readonly List<T>.Node EmptyList = null;
         private static readonly Queue EmptyQueue = null;
 
         public static Queue Empty
@@ -29,7 +70,19 @@ namespace FunProgLib.queue
             return queue == null;
         }
 
-        public static BootstrappedQueue<string>.Queue Snoc(BootstrappedQueue<string>.Queue queue, string item)
+        private static Queue CheckQ(Queue q)
+        {
+            if (q.LenR <= q.LenFM) return CheckF(q);
+            // return CheckF(new Queue(q.LenFM + q.LenR, q.F, Snoc(q.M, List<T>.Reverse(q.R)), 0, EmptyList));
+            throw new System.NotImplementedException();
+        }
+
+        private static Queue CheckF(Queue q)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public static Queue Snoc(Queue queue, T item)
         {
             throw new System.NotImplementedException();
         }
