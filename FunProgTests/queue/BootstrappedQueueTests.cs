@@ -9,8 +9,39 @@
 
 namespace FunProgTests.queue
 {
+    using System.Linq;
+
+    using FunProgLib.queue;
+
+    using Microsoft.VisualStudio.TestTools.UnitTesting;
+
     public class BootstrappedQueueTests
     {
+        [TestMethod]
+        public void EmptyTest()
+        {
+            var queue = BootstrappedQueue<string>.Empty;
+            Assert.IsTrue(BootstrappedQueue<string>.IsEmpty(queue));
+            queue = BootstrappedQueue<string>.Snoc(queue, "Item");
+            Assert.IsFalse(BootstrappedQueue<string>.IsEmpty(queue));
+            queue = BootstrappedQueue<string>.Tail(queue);
+            Assert.IsTrue(BootstrappedQueue<string>.IsEmpty(queue));
+        }
 
+        [TestMethod]
+        public void PushPopTest()
+        {
+            const string Data = "One Two Three One Three";
+            var queue = Data.Split().Aggregate(BootstrappedQueue<string>.Empty, BootstrappedQueue<string>.Snoc);
+
+            foreach (var expected in Data.Split())
+            {
+                var actual = BootstrappedQueue<string>.Head(queue);
+                Assert.AreEqual(expected, actual);
+                queue = BootstrappedQueue<string>.Tail(queue);
+            }
+
+            Assert.IsTrue(BootstrappedQueue<string>.IsEmpty(queue));
+        }
     }
 }

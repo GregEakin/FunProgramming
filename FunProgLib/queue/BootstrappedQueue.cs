@@ -11,8 +11,37 @@
 
 namespace FunProgLib.queue
 {
-    public class BootstrappedQueue
+    public static class BootstrappedQueue<T>
     {
+        public sealed class Queue
+        {
+        }
 
+        private static readonly Queue EmptyQueue = null;
+
+        public static Queue Empty
+        {
+            get { return EmptyQueue; }
+        }
+
+        public static bool IsEmpty(Queue queue)
+        {
+            return queue == null;
+        }
+
+        public static BootstrappedQueue<string>.Queue Snoc(BootstrappedQueue<string>.Queue queue, string item)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public static T Head(Queue queue)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public static Queue Tail(Queue queue)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }
