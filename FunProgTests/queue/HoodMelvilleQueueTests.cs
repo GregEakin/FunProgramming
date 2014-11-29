@@ -9,12 +9,14 @@
 
 namespace FunProgTests.queue
 {
+    using System;
     using System.Linq;
 
     using FunProgLib.queue;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
+    [TestClass]
     public class HoodMelvilleQueueTests
     {
         [TestMethod]
@@ -26,6 +28,22 @@ namespace FunProgTests.queue
             Assert.IsFalse(HoodMelvilleQueue<string>.IsEmpty(queue));
             queue = HoodMelvilleQueue<string>.Tail(queue);
             Assert.IsTrue(HoodMelvilleQueue<string>.IsEmpty(queue));
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(Exception))]
+        public void EmptyHeadTest()
+        {
+            var queue = HoodMelvilleQueue<string>.Empty;
+            var item = HoodMelvilleQueue<string>.Head(queue);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(Exception))]
+        public void EmptyTailTest()
+        {
+            var queue = HoodMelvilleQueue<string>.Empty;
+            var item = HoodMelvilleQueue<string>.Tail(queue);
         }
 
         [TestMethod]

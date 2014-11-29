@@ -9,12 +9,14 @@
 
 namespace FunProgTests.queue
 {
+    using System;
     using System.Linq;
 
     using FunProgLib.queue;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
+    [TestClass]
     public class BootstrappedQueueTests
     {
         [TestMethod]
@@ -26,6 +28,22 @@ namespace FunProgTests.queue
             Assert.IsFalse(BootstrappedQueue<string>.IsEmpty(queue));
             queue = BootstrappedQueue<string>.Tail(queue);
             Assert.IsTrue(BootstrappedQueue<string>.IsEmpty(queue));
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(Exception))]
+        public void EmptyHeadTest()
+        {
+            var queue = BootstrappedQueue<string>.Empty;
+            var item = BootstrappedQueue<string>.Head(queue);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(Exception))]
+        public void EmptyTailTest()
+        {
+            var queue = BootstrappedQueue<string>.Empty;
+            var item = BootstrappedQueue<string>.Tail(queue);
         }
 
         [TestMethod]

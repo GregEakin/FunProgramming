@@ -9,6 +9,7 @@
 
 namespace FunProgTests.queue
 {
+    using System;
     using System.Linq;
 
     using FunProgLib.queue;
@@ -29,6 +30,22 @@ namespace FunProgTests.queue
             Assert.IsTrue(BatchedQueue<string>.IsEmpty(queue));
         }
 
+        [TestMethod]
+        [ExpectedException(typeof(Exception))]
+        public void EmptyHeadTest()
+        {
+            var queue = BatchedQueue<string>.Empty;
+            var item = BatchedQueue<string>.Head(queue);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(Exception))]
+        public void EmptyTailTest()
+        {
+            var queue = BatchedQueue<string>.Empty;
+            var item = BatchedQueue<string>.Tail(queue);
+        }
+        
         [TestMethod]
         public void PushPopTest()
         {

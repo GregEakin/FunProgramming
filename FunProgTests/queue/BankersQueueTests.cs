@@ -9,6 +9,7 @@
 
 namespace FunProgTests.queue
 {
+    using System;
     using System.Linq;
 
     using FunProgLib.queue;
@@ -19,6 +20,12 @@ namespace FunProgTests.queue
     public class BankersQueueTests
     {
         [TestMethod]
+        public void NullTest()
+        {
+            Assert.IsTrue(BankersQueue<string>.IsEmpty(null));
+        }
+
+        [TestMethod]
         public void EmptyTest()
         {
             var queue = BankersQueue<string>.Empty;
@@ -27,6 +34,22 @@ namespace FunProgTests.queue
             Assert.IsFalse(BankersQueue<string>.IsEmpty(queue));
             queue = BankersQueue<string>.Tail(queue);
             Assert.IsTrue(BankersQueue<string>.IsEmpty(queue));
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(Exception))]
+        public void EmptyHeadTest()
+        {
+            var queue = BankersQueue<string>.Empty;
+            var item = BankersQueue<string>.Head(queue);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(Exception))]
+        public void EmptyTailTest()
+        {
+            var queue = BankersQueue<string>.Empty;
+            var item = BankersQueue<string>.Tail(queue);
         }
 
         [TestMethod]

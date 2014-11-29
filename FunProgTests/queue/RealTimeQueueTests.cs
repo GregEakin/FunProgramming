@@ -9,6 +9,7 @@
 
 namespace FunProgTests.queue
 {
+    using System;
     using System.Linq;
 
     using FunProgLib.queue;
@@ -27,6 +28,22 @@ namespace FunProgTests.queue
             Assert.IsFalse(RealTimeQueue<string>.IsEmpty(queue));
             queue = RealTimeQueue<string>.Tail(queue);
             Assert.IsTrue(RealTimeQueue<string>.IsEmpty(queue));
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(Exception))]
+        public void EmptyHeadTest()
+        {
+            var queue = RealTimeQueue<string>.Empty;
+            var item = RealTimeQueue<string>.Head(queue);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(Exception))]
+        public void EmptyTailTest()
+        {
+            var queue = RealTimeQueue<string>.Empty;
+            var item = RealTimeQueue<string>.Tail(queue);
         }
 
         [TestMethod]

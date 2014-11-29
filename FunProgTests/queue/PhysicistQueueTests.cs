@@ -9,6 +9,7 @@
 
 namespace FunProgTests.queue
 {
+    using System;
     using System.Linq;
 
     using FunProgLib.queue;
@@ -27,6 +28,22 @@ namespace FunProgTests.queue
             Assert.IsFalse(PhysicistsQueue<string>.IsEmpty(queue));
             queue = PhysicistsQueue<string>.Tail(queue);
             Assert.IsTrue(PhysicistsQueue<string>.IsEmpty(queue));
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(Exception))]
+        public void EmptyHeadTest()
+        {
+            var queue = PhysicistsQueue<string>.Empty;
+            var item = PhysicistsQueue<string>.Head(queue);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(Exception))]
+        public void EmptyTailTest()
+        {
+            var queue = PhysicistsQueue<string>.Empty;
+            var item = PhysicistsQueue<string>.Tail(queue);
         }
 
         [TestMethod]
