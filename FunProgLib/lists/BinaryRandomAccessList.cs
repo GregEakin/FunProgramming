@@ -13,7 +13,7 @@ namespace FunProgLib.lists
 {
     using System;
 
-    public static class BinaryRandomAccessList<T>
+    public static class BinaryRandomAccessList<T> // : IRandomAccessList<T>
     {
         public abstract class Tree
         {
