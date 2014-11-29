@@ -15,7 +15,7 @@ namespace FunProgLib.heap
 
     using FunProgLib.lists;
 
-    public class SkewBinomialHeap<T>
+    public static class SkewBinomialHeap<T>
         where T : IComparable<T> // : IHeap<T>
     {
         public sealed class Tree
@@ -57,26 +57,16 @@ namespace FunProgLib.heap
             }
         }
 
-        private static readonly Tree EmptyHeap = null;
+        private static readonly List<Tree>.Node EmptyHeap = null;
 
-        public static Tree Empty
+        public static List<Tree>.Node Empty
         {
             get { return EmptyHeap; }
         }
 
-        public static bool IsEmpty(Tree heap)
+        public static bool IsEmpty(List<Tree>.Node heap)
         {
             return heap == EmptyHeap;
-        }
-
-        private static int Rank(Tree heap)
-        {
-            return heap.Rank;
-        }
-
-        private static T Root(Tree heap)
-        {
-            return heap.Node;
         }
 
         private static Tree Link(Tree t1, Tree t2)
@@ -124,16 +114,14 @@ namespace FunProgLib.heap
 
         public static List<Tree>.Node Insert(T x, List<Tree>.Node ts)
         {
-            if (!List<Tree>.IsEmpty(ts) && List<Tree>.IsEmpty(List<Tree>.Tail(ts)))
-            {
-                var t1 = List<Tree>.Head(ts);
-                var tail = List<Tree>.Tail(ts);
-                var t2 = List<Tree>.Head(tail);
-                var rest = List<Tree>.Tail(tail);
-                if (t1.Rank == t2.Rank) return List<Tree>.Cons(SkewLink(x, t1, t2), rest);
-                return List<Tree>.Cons(new Tree(0, x, List<T>.Empty, List<Tree>.Empty), ts);
-            }
-            return List<Tree>.Cons(new Tree(0, x, List<T>.Empty, List<Tree>.Empty), List<Tree>.Tail(ts));
+            if (List<Tree>.IsEmpty(ts)) return List<Tree>.Cons(new Tree(0, x, List<T>.Empty, List<Tree>.Empty), List<Tree>.Empty);
+            var tail = List<Tree>.Tail(ts);
+            if (List<Tree>.IsEmpty(tail)) return List<Tree>.Cons(new Tree(0, x, List<T>.Empty, List<Tree>.Empty), ts);
+            var t1 = List<Tree>.Head(ts);
+            var t2 = List<Tree>.Head(tail);
+            var rest = List<Tree>.Tail(tail);
+            if (t1.Rank == t2.Rank) return List<Tree>.Cons(SkewLink(x, t1, t2), rest);
+            return List<Tree>.Cons(new Tree(0, x, List<T>.Empty, List<Tree>.Empty), ts);
         }
 
         public static List<Tree>.Node Merge(List<Tree>.Node ts1, List<Tree>.Node ts2)
@@ -141,23 +129,46 @@ namespace FunProgLib.heap
             return MergeTrees(Normalize(ts1), Normalize(ts2));
         }
 
-        private static List<Tree>.Node RemoveMinTree(List<Tree>.Node ds)
+        private class TreeParts
+        {
+            private readonly Tree tree;
+
+            private readonly List<Tree>.Node list;
+
+            public TreeParts(Tree tree, List<Tree>.Node list)
+            {
+                this.tree = tree;
+                this.list = list;
+            }
+
+            public Tree Tree
+            {
+                get { return this.tree; }
+            }
+
+            public List<Tree>.Node List
+            {
+                get { return this.list; }
+            }
+        }
+
+        private static TreeParts RemoveMinTree(List<Tree>.Node ds)
         {
             if (List<Tree>.IsEmpty(ds)) throw new Exception("Empty");
-            var ts = List<Tree>.Tail(ds);
-            if (List<Tree>.IsEmpty(ts)) return List<Tree>.Empty;
             var t = List<Tree>.Head(ds);
+            var ts = List<Tree>.Tail(ds);
+            if (List<Tree>.IsEmpty(ts)) return new TreeParts(t, ts);
             var val = RemoveMinTree(ts);
-            var tp = List<Tree>.Head(val);
-            if (t.Rank <= tp.Rank) return ts;
-            var tsp = List<Tree>.Tail(val);
-            return List<Tree>.Cons(t, tsp);
+            var tp = val.Tree;
+            if (t.Node.CompareTo(tp.Node) <= 0) return new TreeParts(t, ts);
+            var tsp = val.List;
+            return new TreeParts(tp, List<Tree>.Cons(t, tsp));
         }
 
         public static T FindMin(List<Tree>.Node ts)
         {
             var val = RemoveMinTree(ts);
-            return val.Element.Node;
+            return val.Tree.Node;
         }
 
         private static List<Tree>.Node InsertAll(List<T>.Node xsp, List<Tree>.Node ts)
@@ -171,10 +182,10 @@ namespace FunProgLib.heap
         public static List<Tree>.Node DeleteMin(List<Tree>.Node ts)
         {
             var val = RemoveMinTree(ts);
-            var head = List<Tree>.Head(val);
-            var xs = head.List;
-            var ts1 = head.TreeList;
-            var ts2 = List<Tree>.Tail(val);
+            // var x = val.Tree.Node;
+            var xs = val.Tree.List;
+            var ts1 = val.Tree.TreeList;
+            var ts2 = val.List;
             return InsertAll(xs, Merge(List<Tree>.Reverse(ts1), ts2));
         }
     }
