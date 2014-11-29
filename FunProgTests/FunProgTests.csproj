@@ -63,7 +63,11 @@
     <Compile Include="lists\AltBinaryRandomAccessListTests.cs" />
     <Compile Include="lists\SkewBinaryRandomAccessListTests.cs" />
     <Compile Include="lists\ListTests.cs" />
+    <Compile Include="queue\BankersDequeTests.cs" />
     <Compile Include="queue\BankersQueueTests.cs" />
+    <Compile Include="queue\BootstrappedQueueTests.cs" />
+    <Compile Include="queue\HoodMelvilleQueueTests.cs" />
+    <Compile Include="queue\RealTimeDequeTests.cs" />
     <Compile Include="queue\RealTimeQueueTests.cs" />
     <Compile Include="queue\BatchedQueueTests.cs" />
     <Compile Include="queue\PhysicistQueueTests.cs" />
