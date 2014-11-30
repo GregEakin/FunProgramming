@@ -22,11 +22,8 @@ namespace FunProgLib.queue
         public class Queue
         {
             private readonly int lenF;
-
             private readonly Lazy<Stream<T>.StreamCell> f;
-
             private readonly int lenR;
-
             private readonly Lazy<Stream<T>.StreamCell> r;
 
             public Queue(int lenF, Lazy<Stream<T>.StreamCell> f, int lenR, Lazy<Stream<T>.StreamCell> r)

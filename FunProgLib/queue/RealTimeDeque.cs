@@ -13,47 +13,153 @@ namespace FunProgLib.queue
 {
     using System;
 
+    using FunProgLib.streams;
+
     public static class RealTimeDeque<T> // : IDeque<T>
     {
-        public class Deque
+        private const int C = 2; // C > 1
+
+        public class Queue
         {
+            private readonly int lenF;
+            private readonly Lazy<Stream<T>.StreamCell> f;
+            private readonly Lazy<Stream<T>.StreamCell> sf;
+            private readonly int lenR;
+            private readonly Lazy<Stream<T>.StreamCell> r;
+            private readonly Lazy<Stream<T>.StreamCell> sr;
+
+            public Queue(
+                int lenF,
+                Lazy<Stream<T>.StreamCell> f,
+                Lazy<Stream<T>.StreamCell> sf,
+                int lenR,
+                Lazy<Stream<T>.StreamCell> sr,
+                Lazy<Stream<T>.StreamCell> r)
+            {
+                this.lenF = lenF;
+                this.f = f;
+                this.sf = sf;
+                this.lenR = lenR;
+                this.sr = sr;
+                this.r = r;
+            }
+
+            public int LenF { get { return this.lenF; } }
+            public Lazy<Stream<T>.StreamCell> F { get { return this.f; } }
+            public Lazy<Stream<T>.StreamCell> Sf { get { return this.sf; } }
+            public int LenR { get { return this.lenR; } }
+            public Lazy<Stream<T>.StreamCell> R { get { return this.r; } }
+            public Lazy<Stream<T>.StreamCell> Sr { get { return this.sr; } }
         }
 
-        public static Deque Empty { get { return null; } }
+        private static readonly Queue EmptyQueue = new Queue(0, null, null, 0, null, null);
 
-        public static bool IsEmpty(Deque q)
+        public static Queue Empty
         {
-            throw new NotImplementedException();
+            get
+            {
+                return EmptyQueue;
+            }
         }
 
-        public static Deque Cons(T x, Deque q)
+        public static bool IsEmpty(Queue q)
         {
-            throw new NotImplementedException();
+            return q.LenF + q.LenR == 0;
         }
 
-        public static T Head(Deque q)
+        private static Lazy<Stream<T>.StreamCell> Exec1(Lazy<Stream<T>.StreamCell> s)
         {
-            throw new NotImplementedException();
+            if (s != null)
+            {
+                var next = s.Value.Next;
+                //if (next != null) 
+                return next;
+            }
+            return s;
         }
 
-        public static Deque Tail(Deque q)
+        private static Lazy<Stream<T>.StreamCell> Exec2(Lazy<Stream<T>.StreamCell> s)
         {
-            throw new NotImplementedException();
+            return Exec1(Exec1(s));
         }
 
-        public static Deque Snoc(Deque q, T x)
+        private static Lazy<Stream<T>.StreamCell> RotateRev(Lazy<Stream<T>.StreamCell> fp, Lazy<Stream<T>.StreamCell> r, Lazy<Stream<T>.StreamCell> a)
         {
-            throw new NotImplementedException();
+            if (fp == null) return Stream<T>.Append(Stream<T>.Reverse(r), a);
+            var x = fp.Value.Element;
+            var f = fp.Value.Next;
+            return Stream<T>.Cons(x, RotateRev(f, Stream<T>.Drop(C, r), Stream<T>.Append(Stream<T>.Reverse(Stream<T>.Take(C, r)), a)));
         }
 
-        public static T Last(Deque q)
+        private static Lazy<Stream<T>.StreamCell> RotateDrop(Lazy<Stream<T>.StreamCell> f, int j, Lazy<Stream<T>.StreamCell> r)
         {
-            throw new NotImplementedException();
+            if (j < C) return RotateRev(f, Stream<T>.Drop(j, r), null);
+            var x = f.Value.Element;
+            var fp = f.Value.Next;
+            return Stream<T>.Cons(x, RotateDrop(fp, j - C, Stream<T>.Drop(C, r)));
         }
 
-        public static Deque Init(Deque q)
+        private static Queue Check(int lenF, Lazy<Stream<T>.StreamCell> f, Lazy<Stream<T>.StreamCell> sf, int lenR, Lazy<Stream<T>.StreamCell> sr, Lazy<Stream<T>.StreamCell> r)
         {
-            throw new NotImplementedException();
+            if (lenF > C * lenR + 1)
+            {
+                var i = (lenF + lenR) / 2;
+                var j = lenF + lenR - i;
+                var fp = Stream<T>.Take(i, f);
+                var rp = RotateDrop(r, i, f);
+                return new Queue(i, fp, fp, j, rp, rp);
+            }
+
+            if (lenR > C * lenF + 1)
+            {
+                var j = (lenF + lenR) / 2;
+                var i = lenF + lenR - j;
+                var rp = Stream<T>.Take(j, r);
+                var fp = RotateDrop(f, j, r);
+                return new Queue(i, fp, fp, j, rp, rp);
+            }
+
+            return new Queue(lenF, f, sf, lenR, r, sr);
+        }
+
+        public static Queue Cons(T x, Queue q)
+        {
+            return Check(q.LenF + 1, Stream<T>.Cons(x, q.F), Exec1(q.Sf), q.LenR, q.R, Exec1(q.Sr));
+        }
+
+        public static T Head(Queue q)
+        {
+            if (q.F == null && q.R == null) throw new Exception("Empty");
+            if (q.F == null) return q.R.Value.Element;
+            return q.F.Value.Element;
+        }
+
+        public static Queue Tail(Queue q)
+        {
+            if (q.F == null && q.R == null) throw new Exception("Empty");
+            if (q.F == null) return EmptyQueue;
+            var fp = q.F.Value.Next;
+            return Check(q.LenF - 1, fp, Exec2(q.Sf), q.LenR, q.R, Exec2(q.Sr));
+        }
+
+        public static Queue Snoc(Queue q, T x)
+        {
+            return Check(q.LenF, q.F, Exec1(q.Sf), q.LenR + 1, Stream<T>.Cons(x, q.R), Exec1(q.Sr));
+        }
+
+        public static T Last(Queue q)
+        {
+            if (q.R == null && q.F == null) throw new Exception("Empty");
+            if (q.R == null) return q.F.Value.Element;
+            return q.R.Value.Element;
+        }
+
+        public static Queue Init(Queue q)
+        {
+            if (q.R == null && q.F == null) throw new Exception("Empty");
+            if (q.R == null) return EmptyQueue;
+            var rp = q.R.Value.Next;
+            return Check(q.LenF, q.F, Exec2(q.Sf), q.LenR - 1, rp, Exec2(q.Sr));
         }
     }
 }
