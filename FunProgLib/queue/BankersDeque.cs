@@ -15,15 +15,18 @@ namespace FunProgLib.queue
 
     using FunProgLib.streams;
 
-    public static class BankersDeque<T>  // : IDeque<T>
+    public static class BankersDeque<T> // : IDeque<T>
     {
         private const int C = 2; // C > 1
 
         public class Queue
         {
             private readonly int lenF;
+
             private readonly Lazy<Stream<T>.StreamCell> f;
+
             private readonly int lenR;
+
             private readonly Lazy<Stream<T>.StreamCell> r;
 
             public Queue(int lenF, Lazy<Stream<T>.StreamCell> f, int lenR, Lazy<Stream<T>.StreamCell> r)
@@ -40,8 +43,7 @@ namespace FunProgLib.queue
             public Lazy<Stream<T>.StreamCell> R { get { return this.r; } }
         }
 
-        private static readonly Lazy<Stream<T>.StreamCell> EmptyStream = null;
-        private static readonly Queue EmptyQueue = new Queue(0, EmptyStream, 0, EmptyStream);
+        private static readonly Queue EmptyQueue = new Queue(0, null, 0, null);
 
         public static Queue Empty { get { return EmptyQueue; } }
 
@@ -57,7 +59,7 @@ namespace FunProgLib.queue
                 var i = (lenF + lenR) / 2;
                 var j = lenF + lenR - i;
                 var fp = Stream<T>.Take(i, f);
-                var rp = Stream<T>.Append(f, Stream<T>.Reverse(Stream<T>.Drop(j, f)));
+                var rp = Stream<T>.Append(r, Stream<T>.Reverse(Stream<T>.Drop(i, f)));
                 return new Queue(i, fp, j, rp);
             }
 
@@ -81,15 +83,15 @@ namespace FunProgLib.queue
         public static T Head(Queue q)
         {
             if (q.F == null && q.R == null) throw new Exception("Empty");
-            if (q.F == null) return Stream<T>.Head(q.R);
-            return Stream<T>.Head(q.F);
+            if (q.F == null) return q.R.Value.Element;
+            return q.F.Value.Element;
         }
 
         public static Queue Tail(Queue q)
         {
             if (q.F == null && q.R == null) throw new Exception("Empty");
             if (q.F == null) return EmptyQueue;
-            var fp = Stream<T>.Tail(q.F);
+            var fp = q.F.Value.Next;
             return Check(q.LenF - 1, fp, q.LenR, q.R);
         }
 
@@ -100,16 +102,16 @@ namespace FunProgLib.queue
 
         public static T Last(Queue q)
         {
-            if (q.F == null && q.R == null) throw new Exception("Empty");
-            if (q.R == null) return Stream<T>.Head(q.F);
-            return Stream<T>.Head(q.R);
+            if (q.R == null && q.F == null) throw new Exception("Empty");
+            if (q.R == null) return q.F.Value.Element;
+            return q.R.Value.Element;
         }
 
         public static Queue Init(Queue q)
         {
-            if (q.F == null && q.R == null) throw new Exception("Empty");
+            if (q.R == null && q.F == null) throw new Exception("Empty");
             if (q.R == null) return EmptyQueue;
-            var rp = Stream<T>.Tail(q.R);
+            var rp = q.R.Value.Next;
             return Check(q.LenF, q.F, q.LenR - 1, rp);
         }
     }
