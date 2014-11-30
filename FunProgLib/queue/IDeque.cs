@@ -17,7 +17,7 @@ namespace FunProgLib.queue
 
         bool IsEmpty(IDeque<T> queue);
 
-        IDeque<T> Cons(IDeque<T> queue, T element);
+        IDeque<T> Cons(T element, IDeque<T> queue);
 
         T Head(IDeque<T> queue);
 

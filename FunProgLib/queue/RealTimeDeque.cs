@@ -11,8 +11,49 @@
 
 namespace FunProgLib.queue
 {
-    public class RealTimeDeque
-    {
+    using System;
 
+    public static class RealTimeDeque<T> // : IDeque<T>
+    {
+        public class Deque
+        {
+        }
+
+        public static Deque Empty { get { return null; } }
+
+        public static bool IsEmpty(Deque q)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static Deque Cons(T x, Deque q)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static T Head(Deque q)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static Deque Tail(Deque q)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static Deque Snoc(Deque q, T x)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static T Last(Deque q)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static Deque Init(Deque q)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

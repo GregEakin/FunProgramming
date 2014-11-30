@@ -11,8 +11,106 @@
 
 namespace FunProgLib.queue
 {
-    public class BankersDeque
-    {
+    using System;
 
+    using FunProgLib.streams;
+
+    public static class BankersDeque<T>  // : IDeque<T>
+    {
+        private const int C = 2; // C > 1
+
+        public class Queue
+        {
+            private readonly int lenF;
+            private readonly Lazy<Stream<T>.StreamCell> f;
+            private readonly int lenR;
+            private readonly Lazy<Stream<T>.StreamCell> r;
+
+            public Queue(int lenF, Lazy<Stream<T>.StreamCell> f, int lenR, Lazy<Stream<T>.StreamCell> r)
+            {
+                this.lenF = lenF;
+                this.f = f;
+                this.lenR = lenR;
+                this.r = r;
+            }
+
+            public int LenF { get { return this.lenF; } }
+            public Lazy<Stream<T>.StreamCell> F { get { return this.f; } }
+            public int LenR { get { return this.lenR; } }
+            public Lazy<Stream<T>.StreamCell> R { get { return this.r; } }
+        }
+
+        private static readonly Lazy<Stream<T>.StreamCell> EmptyStream = null;
+        private static readonly Queue EmptyQueue = new Queue(0, EmptyStream, 0, EmptyStream);
+
+        public static Queue Empty { get { return EmptyQueue; } }
+
+        public static bool IsEmpty(Queue q)
+        {
+            return q.LenF + q.LenR == 0;
+        }
+
+        private static Queue Check(int lenF, Lazy<Stream<T>.StreamCell> f, int lenR, Lazy<Stream<T>.StreamCell> r)
+        {
+            if (lenF > C * lenR + 1)
+            {
+                var i = (lenF + lenR) / 2;
+                var j = lenF + lenR - i;
+                var fp = Stream<T>.Take(i, f);
+                var rp = Stream<T>.Append(f, Stream<T>.Reverse(Stream<T>.Drop(j, f)));
+                return new Queue(i, fp, j, rp);
+            }
+
+            if (lenR > C * lenF + 1)
+            {
+                var j = (lenF + lenR) / 2;
+                var i = lenF + lenR - j;
+                var rp = Stream<T>.Take(j, r);
+                var fp = Stream<T>.Append(f, Stream<T>.Reverse(Stream<T>.Drop(j, r)));
+                return new Queue(i, fp, j, rp);
+            }
+
+            return new Queue(lenF, f, lenR, r);
+        }
+
+        public static Queue Cons(T x, Queue q)
+        {
+            return Check(q.LenF + 1, Stream<T>.Cons(x, q.F), q.LenR, q.R);
+        }
+
+        public static T Head(Queue q)
+        {
+            if (q.F == null && q.R == null) throw new Exception("Empty");
+            if (q.F == null) return Stream<T>.Head(q.R);
+            return Stream<T>.Head(q.F);
+        }
+
+        public static Queue Tail(Queue q)
+        {
+            if (q.F == null && q.R == null) throw new Exception("Empty");
+            if (q.F == null) return EmptyQueue;
+            var fp = Stream<T>.Tail(q.F);
+            return Check(q.LenF - 1, fp, q.LenR, q.R);
+        }
+
+        public static Queue Snoc(Queue q, T x)
+        {
+            return Check(q.LenF, q.F, q.LenR + 1, Stream<T>.Cons(x, q.R));
+        }
+
+        public static T Last(Queue q)
+        {
+            if (q.F == null && q.R == null) throw new Exception("Empty");
+            if (q.R == null) return Stream<T>.Head(q.F);
+            return Stream<T>.Head(q.R);
+        }
+
+        public static Queue Init(Queue q)
+        {
+            if (q.F == null && q.R == null) throw new Exception("Empty");
+            if (q.R == null) return EmptyQueue;
+            var rp = Stream<T>.Tail(q.R);
+            return Check(q.LenF, q.F, q.LenR - 1, rp);
+        }
     }
 }
