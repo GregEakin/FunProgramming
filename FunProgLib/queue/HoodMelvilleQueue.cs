@@ -153,12 +153,11 @@ namespace FunProgLib.queue
 
         private static Queue Exec2(int lenF, List<T>.Node f, RotationState state, int lenR, List<T>.Node r)
         {
-            var exec = Exec(state);
-            var done = exec as Done;
+            var newState = Exec(Exec(state));
+            var done = newState as Done;
             if (done != null)
                 return new Queue(lenF, done.F, new Idle(), lenR, r);
-
-            return new Queue(lenF, f, exec, lenR, r);
+            return new Queue(lenF, f, newState, lenR, r);
         }
 
         private static Queue Check(int lenF, List<T>.Node f, RotationState state, int lenR, List<T>.Node r)
