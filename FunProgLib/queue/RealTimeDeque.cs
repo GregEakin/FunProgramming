@@ -17,7 +17,7 @@ namespace FunProgLib.queue
 
     public static class RealTimeDeque<T> // : IDeque<T>
     {
-        private const int C = 2; // C > 1
+        private const int C = 2; // C == 2 || C == 3
 
         public class Queue
         {
@@ -69,13 +69,8 @@ namespace FunProgLib.queue
 
         private static Lazy<Stream<T>.StreamCell> Exec1(Lazy<Stream<T>.StreamCell> s)
         {
-            if (s != null)
-            {
-                var next = s.Value.Next;
-                //if (next != null) 
-                return next;
-            }
-            return s;
+            if (s != null) return s.Value.Next;
+            return null;
         }
 
         private static Lazy<Stream<T>.StreamCell> Exec2(Lazy<Stream<T>.StreamCell> s)
@@ -99,7 +94,7 @@ namespace FunProgLib.queue
             return Stream<T>.Cons(x, RotateDrop(fp, j - C, Stream<T>.Drop(C, r)));
         }
 
-        private static Queue Check(int lenF, Lazy<Stream<T>.StreamCell> f, Lazy<Stream<T>.StreamCell> sf, int lenR, Lazy<Stream<T>.StreamCell> sr, Lazy<Stream<T>.StreamCell> r)
+        private static Queue Check(int lenF, Lazy<Stream<T>.StreamCell> f, Lazy<Stream<T>.StreamCell> sf, int lenR, Lazy<Stream<T>.StreamCell> r, Lazy<Stream<T>.StreamCell> sr)
         {
             if (lenF > C * lenR + 1)
             {
