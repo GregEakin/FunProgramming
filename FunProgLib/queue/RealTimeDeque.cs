@@ -33,8 +33,8 @@ namespace FunProgLib.queue
                 Lazy<Stream<T>.StreamCell> f,
                 Lazy<Stream<T>.StreamCell> sf,
                 int lenR,
-                Lazy<Stream<T>.StreamCell> sr,
-                Lazy<Stream<T>.StreamCell> r)
+                Lazy<Stream<T>.StreamCell> r,
+                Lazy<Stream<T>.StreamCell> sr)
             {
                 this.lenF = lenF;
                 this.f = f;
