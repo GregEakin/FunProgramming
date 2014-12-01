@@ -52,7 +52,7 @@ namespace FunProgLib.queue
             public Lazy<Stream<T>.StreamCell> Sr { get { return this.sr; } }
         }
 
-        private static readonly Queue EmptyQueue = new Queue(0, Stream<T>.Empty, Stream<T>.Empty, 0, Stream<T>.Empty, Stream<T>.Empty);
+        private static readonly Queue EmptyQueue = new Queue(0, Stream<T>.DollarNil, Stream<T>.DollarNil, 0, Stream<T>.DollarNil, Stream<T>.DollarNil);
 
         public static Queue Empty
         {
@@ -86,7 +86,7 @@ namespace FunProgLib.queue
 
         private static Lazy<Stream<T>.StreamCell> RotateDrop(Lazy<Stream<T>.StreamCell> fc, int j, Lazy<Stream<T>.StreamCell> r)
         {
-            if (j < C) return RotateRev(fc, Stream<T>.Drop(j, r), Stream<T>.Empty);
+            if (j < C) return RotateRev(fc, Stream<T>.Drop(j, r), Stream<T>.DollarNil);
             if (fc.Value == null) throw new Exception("Not supposed to happen.");
             return Stream<T>.DollarCons(fc.Value.X, RotateDrop(fc.Value.S, j - C, Stream<T>.Drop(C, r)));
         }

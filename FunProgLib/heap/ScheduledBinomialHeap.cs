@@ -98,7 +98,7 @@ namespace FunProgLib.heap
 
         private static readonly Schedule EmptySchedule = new Schedule(null);
 
-        public static readonly Lazy<Stream<Digit>.StreamCell> EmptyStream = Stream<Digit>.Empty;
+        public static readonly Lazy<Stream<Digit>.StreamCell> EmptyStream = Stream<Digit>.DollarNil;
 
         private static readonly Heap EmptyHeap = new Heap(EmptyStream, EmptySchedule);
 
@@ -137,7 +137,7 @@ namespace FunProgLib.heap
 
         private static Lazy<Stream<Digit>.StreamCell> Normalize(Lazy<Stream<Digit>.StreamCell> ds)
         {
-            if (ds.Value == null) return Stream<Digit>.Empty;
+            if (ds.Value == null) return Stream<Digit>.DollarNil;
             Normalize(ds.Value.S);
             return ds;
         }

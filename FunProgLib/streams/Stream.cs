@@ -32,7 +32,7 @@ namespace FunProgLib.streams
 
         private static readonly Lazy<StreamCell> NilStreamCell = new Lazy<StreamCell>(() => null);
 
-        public static Lazy<StreamCell> Empty { get { return NilStreamCell; } }
+        public static Lazy<StreamCell> DollarNil { get { return NilStreamCell; } }
 
         public static Lazy<StreamCell> DollarCons(T element, Lazy<StreamCell> s)
         {
@@ -47,15 +47,15 @@ namespace FunProgLib.streams
 
         public static Lazy<StreamCell> Take(int n, Lazy<StreamCell> s)
         {
-            if (n == 0) return Empty;
-            if (s.Value == null) return Empty;
+            if (n == 0) return DollarNil;
+            if (s.Value == null) return DollarNil;
             return DollarCons(s.Value.X, Take(n - 1, s.Value.S));
         }
 
         private static Lazy<StreamCell> DropPrime(int n, Lazy<StreamCell> s)
         {
             if (n == 0) return s;
-            if (s.Value == null) return Empty;
+            if (s.Value == null) return DollarNil;
             return DropPrime(n - 1, s.Value.S);
         }
 
@@ -66,14 +66,14 @@ namespace FunProgLib.streams
 
         private static Lazy<StreamCell> ReversePrime(Lazy<StreamCell> s, Lazy<StreamCell> r)
         {
-            if (s.Value == null) return Empty;
+            if (s.Value == null) return DollarNil;
             var lazy = DollarCons(s.Value.X, r);
             return ReversePrime(s.Value.S, lazy);
         }
 
         public static Lazy<StreamCell> Reverse(Lazy<StreamCell> s)
         {
-            return ReversePrime(s, Empty);
+            return ReversePrime(s, DollarNil);
         }
     }
 }

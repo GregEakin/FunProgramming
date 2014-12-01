@@ -107,7 +107,7 @@ namespace FunProgLib.sort
 
         public static Sortable Add(T x, Sortable sortable)
         {
-            var stream = Stream<T>.DollarCons(x, Stream<T>.Empty);
+            var stream = Stream<T>.DollarCons(x, Stream<T>.DollarNil);
             var segsp = AddSeg(stream, sortable.Segs, sortable.Size, null);
             return new Sortable(sortable.Size + 1, MapExec2(segsp));
         }
@@ -128,7 +128,7 @@ namespace FunProgLib.sort
 
         public static List<T>.Node Sort(Sortable sortable)
         {
-            return StreamToList(MrgAll(Stream<T>.Empty, sortable.Segs));
+            return StreamToList(MrgAll(Stream<T>.DollarNil, sortable.Segs));
         }
     }
 }
