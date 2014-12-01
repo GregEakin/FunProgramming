@@ -50,15 +50,17 @@ namespace FunProgLib.queue
             return queue.F.Value == null;
         }
 
-        private static Lazy<Stream<T>.StreamCell> Rotate(Lazy<Stream<T>.StreamCell> f, List<T>.Node r, Lazy<Stream<T>.StreamCell> s)
+        private static Lazy<Stream<T>.StreamCell> Rotate(Lazy<Stream<T>.StreamCell> fp, List<T>.Node r, Lazy<Stream<T>.StreamCell> s)
         {
-            if (f.Value == null) return Stream<T>.Cons(r.Element, s);
-            return Stream<T>.Cons(f.Value.Element, Rotate(f.Value.Next, r.Next, Stream<T>.Cons(r.Element, s)));
+            var f = fp.Value as Stream<T>.Cons;
+            if (f == null) return new Lazy<Stream<T>.StreamCell>(() => new Stream<T>.Cons(r.Element, s));
+            return new Lazy<Stream<T>.StreamCell>(() => new Stream<T>.Cons(f.X, Rotate(f.S, r.Next, new Lazy<Stream<T>.StreamCell>(() => new Stream<T>.Cons(r.Element, s)))));
         }
 
-        private static Queue Exec(Lazy<Stream<T>.StreamCell> f, List<T>.Node r, Lazy<Stream<T>.StreamCell> s)
+        private static Queue Exec(Lazy<Stream<T>.StreamCell> f, List<T>.Node r, Lazy<Stream<T>.StreamCell> sp)
         {
-            if (s.Value != null) return new Queue(f, r, s.Value.Next);
+            var s = sp.Value as Stream<T>.Cons;
+            if (s != null) return new Queue(f, r, s.S);
             var fp = Rotate(f, r, EmptyCell);
             return new Queue(fp, EmptyList, fp);
         }
@@ -70,14 +72,16 @@ namespace FunProgLib.queue
 
         public static T Head(Queue q)
         {
-            if (IsEmpty(q)) throw new Exception("Empty");
-            return q.F.Value.Element;
+            var qf = q.F.Value as Stream<T>.Cons;
+            if (qf == null) throw new Exception("Empty");
+            return qf.X;
         }
 
         public static Queue Tail(Queue q)
         {
-            if (IsEmpty(q)) throw new Exception("Empty");
-            return Exec(q.F.Value.Next, q.R, q.S);
+            var qf = q.F.Value as Stream<T>.Cons;
+            if (qf == null) throw new Exception("Empty");
+            return Exec(qf.S, q.R, q.S);
         }
     }
 }

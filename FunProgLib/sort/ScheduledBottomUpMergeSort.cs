@@ -65,25 +65,26 @@ namespace FunProgLib.sort
 
         private static Lazy<Stream<T>.StreamCell> Mrg(Lazy<Stream<T>.StreamCell> xs, Lazy<Stream<T>.StreamCell> ys)
         {
-            if (xs == EmptyStream) return ys;
-            if (ys == EmptyStream) return xs;
-            if (xs.Value.Element.CompareTo(ys.Value.Element) <= 0) return Stream<T>.Cons(xs.Value.Element, Mrg(xs.Value.Next, ys));
-            return Stream<T>.Cons(ys.Value.Element, Mrg(ys.Value.Next, xs));
+            var xsv = xs.Value as Stream<T>.Cons;
+            if (xsv == null) return ys;
+            var ysv = ys.Value as Stream<T>.Cons;
+            if (ysv == null) return xs;
+            if (xsv.X.CompareTo(ysv.X) <= 0) return new Lazy<Stream<T>.StreamCell>(() => new Stream<T>.Cons(xsv.X, Mrg(xsv.S, ys)));
+            return new Lazy<Stream<T>.StreamCell>(() => new Stream<T>.Cons(ysv.X, Mrg(xs, ysv.S)));
         }
 
         private static List<Lazy<Stream<T>.StreamCell>>.Node Exec1(List<Lazy<Stream<T>.StreamCell>>.Node list)
         {
             if (list == null) return null;
-            if (list.Element == EmptyStream) return Exec1(list.Next);
-            return List<Lazy<Stream<T>.StreamCell>>.Cons(list.Element.Value.Next, list.Next);
+            var cons = list.Element.Value as Stream<T>.Cons;
+            if (cons == null) return Exec1(list.Next);
+            return List<Lazy<Stream<T>.StreamCell>>.Cons(cons.S, list.Next);
         }
 
         private static Stuff Exec2(Stuff x)
         {
             return new Stuff(x.ElementStream, Exec1(Exec1(x.Schedule)));
         }
-
-        private static readonly Lazy<Stream<T>.StreamCell> EmptyStream = new Lazy<Stream<T>.StreamCell>(() => null);
 
         private static readonly Sortable EmptySortable = new Sortable(0, null);
 
@@ -109,7 +110,7 @@ namespace FunProgLib.sort
 
         public static Sortable Add(T x, Sortable sortable)
         {
-            var stream = Stream<T>.Cons(x, EmptyStream);
+            var stream = new Lazy<Stream<T>.StreamCell>(() => new Stream<T>.Cons(x, Stream<T>.Empty));
             var segsp = AddSeg(stream, sortable.Segs, sortable.Size, null);
             return new Sortable(sortable.Size + 1, MapExec2(segsp));
         }
@@ -124,13 +125,14 @@ namespace FunProgLib.sort
 
         private static List<T>.Node StreamToList(Lazy<Stream<T>.StreamCell> xs)
         {
-            if (xs == EmptyStream) return null;
-            return List<T>.Cons(xs.Value.Element, StreamToList(xs.Value.Next));
+            var xsv = xs.Value as Stream<T>.Cons;
+            if (xsv == null) return null;
+            return List<T>.Cons(xsv.X, StreamToList(xsv.S));
         }
 
         public static List<T>.Node Sort(Sortable sortable)
         {
-            return StreamToList(MrgAll(EmptyStream, sortable.Segs));
+            return StreamToList(MrgAll(Stream<T>.Empty, sortable.Segs));
         }
     }
 }

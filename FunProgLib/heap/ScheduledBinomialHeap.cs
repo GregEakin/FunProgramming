@@ -98,7 +98,7 @@ namespace FunProgLib.heap
 
         private static readonly Schedule EmptySchedule = new Schedule(null);
 
-        public static readonly Lazy<Stream<Digit>.StreamCell> EmptyStream = new Lazy<Stream<Digit>.StreamCell>(() => null);
+        public static readonly Lazy<Stream<Digit>.StreamCell> EmptyStream = Stream<Digit>.Empty;
 
         private static readonly Heap EmptyHeap = new Heap(EmptyStream, EmptySchedule);
 
@@ -109,7 +109,7 @@ namespace FunProgLib.heap
 
         public static bool IsEmpty(Heap heap)
         {
-            return heap.DigitStream == EmptyStream;
+            return !(heap.DigitStream.Value is Stream<Digit>.Cons);
         }
 
         private static Tree Link(Tree t1, Tree t2)
@@ -119,33 +119,38 @@ namespace FunProgLib.heap
             return new Tree(t2.Node, List<Tree>.Cons(t1, t2.TreeList));
         }
 
-        private static Lazy<Stream<Digit>.StreamCell> InsTree(Tree t, Lazy<Stream<Digit>.StreamCell> ds)
+        private static Lazy<Stream<Digit>.StreamCell> InsTree(Tree t, Lazy<Stream<Digit>.StreamCell> dsc)
         {
-            if (ds == EmptyStream) return Stream<Digit>.Cons(new Digit(t), EmptyStream);
-            if (ds.Value.Element == Zero) return Stream<Digit>.Cons(new Digit(t), ds.Value.Next);
-            return Stream<Digit>.Cons(Zero, InsTree(Link(t, ds.Value.Element.One), ds.Value.Next));
+            var ds = dsc.Value as Stream<Digit>.Cons;
+            if (ds == null) return new Lazy<Stream<Digit>.StreamCell>(() => new Stream<Digit>.Cons(new Digit(t), EmptyStream));
+            if (ds.X == Zero) return new Lazy<Stream<Digit>.StreamCell>(() => new Stream<Digit>.Cons(new Digit(t), ds.S));
+            return new Lazy<Stream<Digit>.StreamCell>(() => new Stream<Digit>.Cons(Zero, InsTree(Link(t, ds.X.One), ds.S)));
         }
 
-        private static Lazy<Stream<Digit>.StreamCell> Mrg(Lazy<Stream<Digit>.StreamCell> ds1, Lazy<Stream<Digit>.StreamCell> ds2)
+        private static Lazy<Stream<Digit>.StreamCell> Mrg(Lazy<Stream<Digit>.StreamCell> d1, Lazy<Stream<Digit>.StreamCell> d2)
         {
-            if (ds2 == EmptyStream) return ds1;
-            if (ds1 == EmptyStream) return ds2;
-            if (ds1.Value.Element == Zero) return Stream<Digit>.Cons(ds2.Value.Element, Mrg(ds1.Value.Next, ds2.Value.Next));
-            if (ds2.Value.Element == Zero) return Stream<Digit>.Cons(ds1.Value.Element, Mrg(ds1.Value.Next, ds2.Value.Next));
-            return Stream<Digit>.Cons(Zero, InsTree(Link(ds1.Value.Element.One, ds2.Value.Element.One), Mrg(ds1.Value.Next, ds2.Value.Next)));
+            var ds2 = d2.Value as Stream<Digit>.Cons;
+            if (ds2 == null) return d1;
+            var ds1 = d1.Value as Stream<Digit>.Cons;
+            if (ds1 == null) return d2;
+            if (ds1.X == Zero) return new Lazy<Stream<Digit>.StreamCell>(() => new Stream<Digit>.Cons(ds2.X, Mrg(ds1.S, ds2.S)));
+            if (ds2.X == Zero) return new Lazy<Stream<Digit>.StreamCell>(() => new Stream<Digit>.Cons(ds1.X, Mrg(ds1.S, ds2.S)));
+            return new Lazy<Stream<Digit>.StreamCell>(() => new Stream<Digit>.Cons(Zero, InsTree(Link(ds1.X.One, ds2.X.One), Mrg(ds1.S, ds2.S))));
         }
 
         private static Lazy<Stream<Digit>.StreamCell> Normalize(Lazy<Stream<Digit>.StreamCell> ds)
         {
-            if (ds == EmptyStream) return EmptyStream;
-            Normalize(ds.Value.Next);
+            var cons = ds.Value as Stream<Digit>.Cons;
+            if (cons == null) return Stream<Digit>.Empty;
+            Normalize(cons.S);
             return ds;
         }
 
         private static List<Lazy<Stream<Digit>.StreamCell>>.Node Exec(List<Lazy<Stream<Digit>.StreamCell>>.Node list)
         {
             if (list == null) return null;
-            if (list.Element.Value.Element == Zero) return List<Lazy<Stream<Digit>.StreamCell>>.Cons(list.Element.Value.Next, list.Next);
+            var cons = list.Element.Value as Stream<Digit>.Cons;
+            if (cons != null && cons.X == Zero) return List<Lazy<Stream<Digit>.StreamCell>>.Cons(cons.S, list.Next);
             return list.Next;
         }
 
@@ -185,18 +190,25 @@ namespace FunProgLib.heap
             }
         }
 
-        private static Stuff RemoveMinTree(Lazy<Stream<Digit>.StreamCell> ds)
+        private static Stuff RemoveMinTree(Lazy<Stream<Digit>.StreamCell> dsc)
         {
-            if (ds == EmptyStream) throw new Exception("Empty");
-            if (ds.Value.Element == Zero)
+            var ds = dsc.Value as Stream<Digit>.Cons;
+            if (ds == null) throw new Exception("Empty");
+            if (ds.X == Zero)
             {
-                var stuff = RemoveMinTree(ds.Value.Next);
-                return new Stuff(stuff.Tree, Stream<Digit>.Cons(Zero, stuff.Stream));
+                var stuff = RemoveMinTree(ds.S);
+                var lazy3 = new Lazy<Stream<Digit>.StreamCell>(() => new Stream<Digit>.Cons(Zero, stuff.Stream));
+                return new Stuff(stuff.Tree, lazy3);
             }
-            if (ds.Value.Next == EmptyStream) return new Stuff(ds.Value.Element.One, EmptyStream);
-            var tp = RemoveMinTree(ds.Value.Next);
-            if (ds.Value.Element.One.Node.CompareTo(tp.Tree.Node) <= 0) return new Stuff(ds.Value.Element.One, Stream<Digit>.Cons(Zero, ds.Value.Next));
-            return new Stuff(tp.Tree, Stream<Digit>.Cons(new Digit(ds.Value.Element.One), tp.Stream));
+            if (ds.S == EmptyStream) return new Stuff(ds.X.One, EmptyStream);
+            var tp = RemoveMinTree(ds.S);
+            if (ds.X.One.Node.CompareTo(tp.Tree.Node) <= 0)
+            {
+                var lazy = new Lazy<Stream<Digit>.StreamCell>(() => new Stream<Digit>.Cons(Zero, ds.S));
+                return new Stuff(ds.X.One, lazy);
+            }
+            var lazy2 = new Lazy<Stream<Digit>.StreamCell>(() => new Stream<Digit>.Cons(new Digit(ds.X.One), tp.Stream));
+            return new Stuff(tp.Tree, lazy2);
         }
 
         public static T FindMin(Heap heap)
@@ -208,7 +220,7 @@ namespace FunProgLib.heap
         private static Lazy<Stream<Digit>.StreamCell> OneMap(List<Tree>.Node list)
         {
             if (list == null) return EmptyStream;
-            return Stream<Digit>.Cons(new Digit(list.Element), OneMap(list.Next));
+            return new Lazy<Stream<Digit>.StreamCell>(() => new Stream<Digit>.Cons(new Digit(list.Element), OneMap(list.Next)));
         }
 
         public static Heap DeleteMin(Heap heap)
