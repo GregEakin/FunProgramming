@@ -51,7 +51,7 @@ namespace FunProgTests.ephemeral
                     //                  Task.CurrentId, word,
                     //                  Thread.CurrentThread.ManagedThreadId);
 
-                    Monitor.Pulse(map);
+                    Monitor.PulseAll(map);
                 }
             }
         };
