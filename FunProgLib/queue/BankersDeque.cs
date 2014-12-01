@@ -81,15 +81,15 @@ namespace FunProgLib.queue
         public static T Head(Queue q)
         {
             if (q.F == Stream<T>.DollarNil && q.R == Stream<T>.DollarNil) throw new Exception("Empty");
-            if (q.F == Stream<T>.DollarNil) return q.R.Value.X;
-            return q.F.Value.X;
+            if (q.F == Stream<T>.DollarNil) return q.R.Value.Element;
+            return q.F.Value.Element;
         }
 
         public static Queue Tail(Queue q)
         {
             if (q.F == Stream<T>.DollarNil && q.R == Stream<T>.DollarNil) throw new Exception("Empty");
             if (q.F == Stream<T>.DollarNil) return EmptyQueue;
-            return Check(q.LenF - 1, q.F.Value.S, q.LenR, q.R);
+            return Check(q.LenF - 1, q.F.Value.Next, q.LenR, q.R);
         }
 
         public static Queue Snoc(Queue q, T x)
@@ -101,15 +101,15 @@ namespace FunProgLib.queue
         public static T Last(Queue q)
         {
             if (q.R == Stream<T>.DollarNil && q.F == Stream<T>.DollarNil) throw new Exception("Empty");
-            if (q.R == Stream<T>.DollarNil) return q.F.Value.X;
-            return q.R.Value.X;
+            if (q.R == Stream<T>.DollarNil) return q.F.Value.Element;
+            return q.R.Value.Element;
         }
 
         public static Queue Init(Queue q)
         {
             if (q.R == Stream<T>.DollarNil && q.F == Stream<T>.DollarNil) throw new Exception("Empty");
             if (q.R == Stream<T>.DollarNil) return EmptyQueue;
-            var rp = q.R.Value.S;
+            var rp = q.R.Value.Next;
             return Check(q.LenF, q.F, q.LenR - 1, rp);
         }
     }

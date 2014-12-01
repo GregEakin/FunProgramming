@@ -122,30 +122,30 @@ namespace FunProgLib.heap
         private static Lazy<Stream<Digit>.StreamCell> InsTree(Tree t, Lazy<Stream<Digit>.StreamCell> dsc)
         {
             if (dsc == Stream<Digit>.DollarNil) return Stream<Digit>.DollarCons(new Digit(t), EmptyStream);
-            if (dsc.Value.X == Zero) return Stream<Digit>.DollarCons(new Digit(t), dsc.Value.S);
-            return Stream<Digit>.DollarCons(Zero, InsTree(Link(t, dsc.Value.X.One), dsc.Value.S));
+            if (dsc.Value.Element == Zero) return Stream<Digit>.DollarCons(new Digit(t), dsc.Value.Next);
+            return Stream<Digit>.DollarCons(Zero, InsTree(Link(t, dsc.Value.Element.One), dsc.Value.Next));
         }
 
         private static Lazy<Stream<Digit>.StreamCell> Mrg(Lazy<Stream<Digit>.StreamCell> d1, Lazy<Stream<Digit>.StreamCell> d2)
         {
             if (d2 == Stream<Digit>.DollarNil) return d1;
             if (d1 == Stream<Digit>.DollarNil) return d2;
-            if (d1.Value.X == Zero) return Stream<Digit>.DollarCons(d2.Value.X, Mrg(d1.Value.S, d2.Value.S));
-            if (d2.Value.X == Zero) return Stream<Digit>.DollarCons(d1.Value.X, Mrg(d1.Value.S, d2.Value.S));
-            return Stream<Digit>.DollarCons(Zero, InsTree(Link(d1.Value.X.One, d2.Value.X.One), Mrg(d1.Value.S, d2.Value.S)));
+            if (d1.Value.Element == Zero) return Stream<Digit>.DollarCons(d2.Value.Element, Mrg(d1.Value.Next, d2.Value.Next));
+            if (d2.Value.Element == Zero) return Stream<Digit>.DollarCons(d1.Value.Element, Mrg(d1.Value.Next, d2.Value.Next));
+            return Stream<Digit>.DollarCons(Zero, InsTree(Link(d1.Value.Element.One, d2.Value.Element.One), Mrg(d1.Value.Next, d2.Value.Next)));
         }
 
         private static Lazy<Stream<Digit>.StreamCell> Normalize(Lazy<Stream<Digit>.StreamCell> ds)
         {
             if (ds == Stream<Digit>.DollarNil) return ds;
-            Normalize(ds.Value.S);
+            Normalize(ds.Value.Next);
             return ds;
         }
 
         private static List<Lazy<Stream<Digit>.StreamCell>>.Node Exec(List<Lazy<Stream<Digit>.StreamCell>>.Node list)
         {
             if (list == null) return null;
-            if (list.Element.Value != null && list.Element.Value.X == Zero) return List<Lazy<Stream<Digit>.StreamCell>>.Cons(list.Element.Value.S, list.Next);
+            if (list.Element.Value != null && list.Element.Value.Element == Zero) return List<Lazy<Stream<Digit>.StreamCell>>.Cons(list.Element.Value.Next, list.Next);
             return list.Next;
         }
 
@@ -188,20 +188,20 @@ namespace FunProgLib.heap
         private static Stuff RemoveMinTree(Lazy<Stream<Digit>.StreamCell> dsc)
         {
             if (dsc == Stream<Digit>.DollarNil) throw new Exception("Empty");
-            if (dsc.Value.X == Zero)
+            if (dsc.Value.Element == Zero)
             {
-                var stuff = RemoveMinTree(dsc.Value.S);
+                var stuff = RemoveMinTree(dsc.Value.Next);
                 var lazy3 = Stream<Digit>.DollarCons(Zero, stuff.Stream);
                 return new Stuff(stuff.Tree, lazy3);
             }
-            if (dsc.Value.S == EmptyStream) return new Stuff(dsc.Value.X.One, EmptyStream);
-            var tp = RemoveMinTree(dsc.Value.S);
-            if (dsc.Value.X.One.Node.CompareTo(tp.Tree.Node) <= 0)
+            if (dsc.Value.Next == EmptyStream) return new Stuff(dsc.Value.Element.One, EmptyStream);
+            var tp = RemoveMinTree(dsc.Value.Next);
+            if (dsc.Value.Element.One.Node.CompareTo(tp.Tree.Node) <= 0)
             {
-                var lazy = Stream<Digit>.DollarCons(Zero, dsc.Value.S);
-                return new Stuff(dsc.Value.X.One, lazy);
+                var lazy = Stream<Digit>.DollarCons(Zero, dsc.Value.Next);
+                return new Stuff(dsc.Value.Element.One, lazy);
             }
-            var lazy2 = Stream<Digit>.DollarCons(new Digit(dsc.Value.X.One), tp.Stream);
+            var lazy2 = Stream<Digit>.DollarCons(new Digit(dsc.Value.Element.One), tp.Stream);
             return new Stuff(tp.Tree, lazy2);
         }
 

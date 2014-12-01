@@ -17,17 +17,17 @@ namespace FunProgLib.streams
     {
         public sealed class StreamCell
         {
-            private readonly T x;
-            private readonly Lazy<StreamCell> s;
+            private readonly T element;
+            private readonly Lazy<StreamCell> next;
 
-            public StreamCell(T x, Lazy<StreamCell> s)
+            public StreamCell(T element, Lazy<StreamCell> next)
             {
-                this.x = x;
-                this.s = s;
+                this.element = element;
+                this.next = next;
             }
 
-            public T X { get { return this.x; } }
-            public Lazy<StreamCell> S { get { return this.s; } }
+            public T Element { get { return this.element; } }
+            public Lazy<StreamCell> Next { get { return this.next; } }
         }
 
         private static readonly Lazy<StreamCell> NilStreamCell = new Lazy<StreamCell>(() => null);
@@ -42,21 +42,24 @@ namespace FunProgLib.streams
         public static Lazy<StreamCell> Append(Lazy<StreamCell> s1, Lazy<StreamCell> t)
         {
             if (s1 == null || s1 == DollarNil) return t;
-            return DollarCons(s1.Value.X, Append(s1.Value.S, t));
+            if (s1.Value == null) throw new Exception("Found it");
+            return DollarCons(s1.Value.Element, Append(s1.Value.Next, t));
         }
 
         public static Lazy<StreamCell> Take(int n, Lazy<StreamCell> s)
         {
             if (n == 0) return DollarNil;
             if (s == DollarNil) return DollarNil;
-            return DollarCons(s.Value.X, Take(n - 1, s.Value.S));
+            if (s.Value == null) throw new Exception("Found it");
+            return DollarCons(s.Value.Element, Take(n - 1, s.Value.Next));
         }
 
         private static Lazy<StreamCell> DropPrime(int n, Lazy<StreamCell> s)
         {
             if (n == 0) return s;
             if (s == DollarNil) return DollarNil;
-            return DropPrime(n - 1, s.Value.S);
+            if (s.Value == null) throw new Exception("Found it");
+            return DropPrime(n - 1, s.Value.Next);
         }
 
         public static Lazy<StreamCell> Drop(int n, Lazy<StreamCell> s)
@@ -67,7 +70,8 @@ namespace FunProgLib.streams
         private static Lazy<StreamCell> ReversePrime(Lazy<StreamCell> s, Lazy<StreamCell> r)
         {
             if (s == null || s == DollarNil) return r;
-            return ReversePrime(s.Value.S, DollarCons(s.Value.X, r));
+            if (s.Value == null) throw new Exception("Found it");
+            return ReversePrime(s.Value.Next, DollarCons(s.Value.Element, r));
         }
 
         public static Lazy<StreamCell> Reverse(Lazy<StreamCell> s)

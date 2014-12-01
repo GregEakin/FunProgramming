@@ -69,7 +69,7 @@ namespace FunProgLib.queue
 
         private static Lazy<Stream<T>.StreamCell> Exec1(Lazy<Stream<T>.StreamCell> s)
         {
-            if (s != Stream<T>.DollarNil) return s.Value.S;
+            if (s != Stream<T>.DollarNil) return s.Value.Next;
             return s;
         }
 
@@ -81,14 +81,14 @@ namespace FunProgLib.queue
         private static Lazy<Stream<T>.StreamCell> RotateRev(Lazy<Stream<T>.StreamCell> fc, Lazy<Stream<T>.StreamCell> r, Lazy<Stream<T>.StreamCell> a)
         {
             if (fc == Stream<T>.DollarNil) return Stream<T>.Append(Stream<T>.Reverse(r), a);
-            return Stream<T>.DollarCons(fc.Value.X, RotateRev(fc.Value.S, Stream<T>.Drop(C, r), Stream<T>.Append(Stream<T>.Reverse(Stream<T>.Take(C, r)), a)));
+            return Stream<T>.DollarCons(fc.Value.Element, RotateRev(fc.Value.Next, Stream<T>.Drop(C, r), Stream<T>.Append(Stream<T>.Reverse(Stream<T>.Take(C, r)), a)));
         }
 
         private static Lazy<Stream<T>.StreamCell> RotateDrop(Lazy<Stream<T>.StreamCell> fc, int j, Lazy<Stream<T>.StreamCell> r)
         {
             if (j < C) return RotateRev(fc, Stream<T>.Drop(j, r), Stream<T>.DollarNil);
             if (fc == Stream<T>.DollarNil) throw new Exception("Not supposed to happen.");
-            return Stream<T>.DollarCons(fc.Value.X, RotateDrop(fc.Value.S, j - C, Stream<T>.Drop(C, r)));
+            return Stream<T>.DollarCons(fc.Value.Element, RotateDrop(fc.Value.Next, j - C, Stream<T>.Drop(C, r)));
         }
 
         private static Queue Check(int lenF, Lazy<Stream<T>.StreamCell> f, Lazy<Stream<T>.StreamCell> sf, int lenR, Lazy<Stream<T>.StreamCell> r, Lazy<Stream<T>.StreamCell> sr)
@@ -123,15 +123,15 @@ namespace FunProgLib.queue
         public static T Head(Queue q)
         {
             if (q.F == Stream<T>.DollarNil && q.R == Stream<T>.DollarNil) throw new Exception("Empty");
-            if (q.F == Stream<T>.DollarNil) return q.R.Value.X;
-            return q.F.Value.X;
+            if (q.F == Stream<T>.DollarNil) return q.R.Value.Element;
+            return q.F.Value.Element;
         }
 
         public static Queue Tail(Queue q)
         {
             if (q.F == Stream<T>.DollarNil && q.R == Stream<T>.DollarNil) throw new Exception("Empty");
             if (q.F == Stream<T>.DollarNil) return EmptyQueue;
-            var fp = q.F.Value.S;
+            var fp = q.F.Value.Next;
             return Check(q.LenF - 1, fp, Exec2(q.Sf), q.LenR, q.R, Exec2(q.Sr));
         }
 
@@ -144,15 +144,15 @@ namespace FunProgLib.queue
         public static T Last(Queue q)
         {
             if (q.R == Stream<T>.DollarNil && q.F == Stream<T>.DollarNil) throw new Exception("Empty");
-            if (q.R == Stream<T>.DollarNil) return q.F.Value.X;
-            return q.R.Value.X;
+            if (q.R == Stream<T>.DollarNil) return q.F.Value.Element;
+            return q.R.Value.Element;
         }
 
         public static Queue Init(Queue q)
         {
             if (q.R == Stream<T>.DollarNil && q.F == Stream<T>.DollarNil) throw new Exception("Empty");
             if (q.R == Stream<T>.DollarNil) return EmptyQueue;
-            var rp = q.R.Value.S;
+            var rp = q.R.Value.Next;
             return Check(q.LenF, q.F, Exec2(q.Sf), q.LenR - 1, rp, Exec2(q.Sr));
         }
     }

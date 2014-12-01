@@ -67,15 +67,15 @@ namespace FunProgLib.sort
         {
             if (xs == Stream<T>.DollarNil) return ys;
             if (ys == Stream<T>.DollarNil) return xs;
-            if (xs.Value.X.CompareTo(ys.Value.X) <= 0) return Stream<T>.DollarCons(xs.Value.X, Mrg(xs.Value.S, ys));
-            return Stream<T>.DollarCons(ys.Value.X, Mrg(xs, ys.Value.S));
+            if (xs.Value.Element.CompareTo(ys.Value.Element) <= 0) return Stream<T>.DollarCons(xs.Value.Element, Mrg(xs.Value.Next, ys));
+            return Stream<T>.DollarCons(ys.Value.Element, Mrg(xs, ys.Value.Next));
         }
 
         private static List<Lazy<Stream<T>.StreamCell>>.Node Exec1(List<Lazy<Stream<T>.StreamCell>>.Node list)
         {
             if (list == null) return null;
             if (list.Element == Stream<T>.DollarNil) return Exec1(list.Next);
-            return List<Lazy<Stream<T>.StreamCell>>.Cons(list.Element.Value.S, list.Next);
+            return List<Lazy<Stream<T>.StreamCell>>.Cons(list.Element.Value.Next, list.Next);
         }
 
         private static Stuff Exec2(Stuff x)
@@ -123,7 +123,7 @@ namespace FunProgLib.sort
         private static List<T>.Node StreamToList(Lazy<Stream<T>.StreamCell> xs)
         {
             if (xs == Stream<T>.DollarNil) return null;
-            return List<T>.Cons(xs.Value.X, StreamToList(xs.Value.S));
+            return List<T>.Cons(xs.Value.Element, StreamToList(xs.Value.Next));
         }
 
         public static List<T>.Node Sort(Sortable sortable)

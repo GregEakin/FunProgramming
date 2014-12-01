@@ -47,8 +47,8 @@ namespace FunProgTests.heap
             if (!stream.IsValueCreated) return " -$- ";
             if (stream == Stream<ScheduledBinomialHeap<T>.Digit>.DollarNil) return string.Empty;
             var result = new StringBuilder();
-            // result.Append(DumpTree(stream.Value.Element.One));
-            // result.Append(DumpDigitStream(stream.Value.Next));
+            result.Append(DumpTree(stream.Value.Element.One));
+            result.Append(DumpDigitStream(stream.Value.Next));
             return result.ToString();
         }
 
@@ -56,12 +56,12 @@ namespace FunProgTests.heap
         {
             var result = new StringBuilder();
             result.Append("[");
-            if (heap.DigitStream != null)
+            if (heap.DigitStream != Stream<ScheduledBinomialHeap<T>.Digit>.DollarNil)
             {
                 result.Append(DumpDigitStream(heap.DigitStream));
                 result.Append(", ");
+                result.Remove(result.Length - 2, 2);
             }
-            result.Remove(result.Length - 2, 2);
             result.Append("]");
             return result.ToString();
         }
