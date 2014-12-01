@@ -15,18 +15,12 @@ namespace FunProgLib.streams
 
     public static class Stream<T>
     {
-        public abstract class StreamCell
-        { }
-
-        private sealed class Nil : StreamCell
-        { }
-
-        public sealed class Cons : StreamCell
+        public sealed class StreamCell
         {
             private readonly T x;
             private readonly Lazy<StreamCell> s;
 
-            public Cons(T x, Lazy<StreamCell> s)
+            public StreamCell(T x, Lazy<StreamCell> s)
             {
                 this.x = x;
                 this.s = s;
@@ -36,31 +30,33 @@ namespace FunProgLib.streams
             public Lazy<StreamCell> S { get { return this.s; } }
         }
 
-        private static readonly Lazy<StreamCell> NilStreamCell = new Lazy<StreamCell>(() => new Nil());
+        private static readonly Lazy<StreamCell> NilStreamCell = new Lazy<StreamCell>(() => null);
 
         public static Lazy<StreamCell> Empty { get { return NilStreamCell; } }
 
+        public static Lazy<StreamCell> DollarCons(T element, Lazy<StreamCell> s)
+        {
+            return new Lazy<StreamCell>(() => new StreamCell(element, s));
+        }
+
         public static Lazy<StreamCell> Append(Lazy<StreamCell> s1, Lazy<StreamCell> t)
         {
-            var cons = s1.Value as Cons;
-            if (cons == null) return t;
-            return new Lazy<StreamCell>(() => new Cons(cons.X, Append(cons.S, t)));
+            if (s1.Value == null) return t;
+            return DollarCons(s1.Value.X, Append(s1.Value.S, t));
         }
 
         public static Lazy<StreamCell> Take(int n, Lazy<StreamCell> s)
         {
             if (n == 0) return Empty;
-            var cons = s.Value as Cons;
-            if (cons == null) return Empty;
-            return new Lazy<StreamCell>(() => new Cons(cons.X, Take(n - 1, cons.S)));
+            if (s.Value == null) return Empty;
+            return DollarCons(s.Value.X, Take(n - 1, s.Value.S));
         }
 
         private static Lazy<StreamCell> DropPrime(int n, Lazy<StreamCell> s)
         {
             if (n == 0) return s;
-            var cons = s.Value as Cons;
-            if (cons == null) return Empty;
-            return DropPrime(n - 1, cons.S);
+            if (s.Value == null) return Empty;
+            return DropPrime(n - 1, s.Value.S);
         }
 
         public static Lazy<StreamCell> Drop(int n, Lazy<StreamCell> s)
@@ -70,10 +66,9 @@ namespace FunProgLib.streams
 
         private static Lazy<StreamCell> ReversePrime(Lazy<StreamCell> s, Lazy<StreamCell> r)
         {
-            var cons = s.Value as Cons;
-            if (cons == null) return Empty;
-            var lazy = new Lazy<StreamCell>(() => new Cons(cons.X, r));
-            return ReversePrime(cons.S, lazy);
+            if (s.Value == null) return Empty;
+            var lazy = DollarCons(s.Value.X, r);
+            return ReversePrime(s.Value.S, lazy);
         }
 
         public static Lazy<StreamCell> Reverse(Lazy<StreamCell> s)

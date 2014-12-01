@@ -69,8 +69,7 @@ namespace FunProgLib.queue
 
         private static Lazy<Stream<T>.StreamCell> Exec1(Lazy<Stream<T>.StreamCell> s)
         {
-            var cons = s.Value as Stream<T>.Cons;
-            if (cons != null) return cons.S;
+            if (s.Value != null) return s.Value.S;
             return s;
         }
 
@@ -81,17 +80,15 @@ namespace FunProgLib.queue
 
         private static Lazy<Stream<T>.StreamCell> RotateRev(Lazy<Stream<T>.StreamCell> fc, Lazy<Stream<T>.StreamCell> r, Lazy<Stream<T>.StreamCell> a)
         {
-            var fp = fc.Value as Stream<T>.Cons;
-            if (fp == null) return Stream<T>.Append(Stream<T>.Reverse(r), a);
-            return new Lazy<Stream<T>.StreamCell>(() => new Stream<T>.Cons(fp.X, RotateRev(fp.S, Stream<T>.Drop(C, r), Stream<T>.Append(Stream<T>.Reverse(Stream<T>.Take(C, r)), a))));
+            if (fc.Value == null) return Stream<T>.Append(Stream<T>.Reverse(r), a);
+            return Stream<T>.DollarCons(fc.Value.X, RotateRev(fc.Value.S, Stream<T>.Drop(C, r), Stream<T>.Append(Stream<T>.Reverse(Stream<T>.Take(C, r)), a)));
         }
 
         private static Lazy<Stream<T>.StreamCell> RotateDrop(Lazy<Stream<T>.StreamCell> fc, int j, Lazy<Stream<T>.StreamCell> r)
         {
             if (j < C) return RotateRev(fc, Stream<T>.Drop(j, r), Stream<T>.Empty);
-            var fp = fc.Value as Stream<T>.Cons;
-            if (fp == null) throw new Exception("Not supposed to happen.");
-            return new Lazy<Stream<T>.StreamCell>(() => new Stream<T>.Cons(fp.X, RotateDrop(fp.S, j - C, Stream<T>.Drop(C, r))));
+            if (fc.Value == null) throw new Exception("Not supposed to happen.");
+            return Stream<T>.DollarCons(fc.Value.X, RotateDrop(fc.Value.S, j - C, Stream<T>.Drop(C, r)));
         }
 
         private static Queue Check(int lenF, Lazy<Stream<T>.StreamCell> f, Lazy<Stream<T>.StreamCell> sf, int lenR, Lazy<Stream<T>.StreamCell> r, Lazy<Stream<T>.StreamCell> sr)
@@ -119,51 +116,43 @@ namespace FunProgLib.queue
 
         public static Queue Cons(T x, Queue q)
         {
-            var lazy = new Lazy<Stream<T>.StreamCell>(() => new Stream<T>.Cons(x, q.F));
+            var lazy = Stream<T>.DollarCons(x, q.F);
             return Check(q.LenF + 1, lazy, Exec1(q.Sf), q.LenR, q.R, Exec1(q.Sr));
         }
 
         public static T Head(Queue q)
         {
-            var consF = q.F.Value as Stream<T>.Cons;
-            var consR = q.R.Value as Stream<T>.Cons;
-            if (consF == null && consR == null) throw new Exception("Empty");
-            if (consF == null) return consR.X;
-            return consF.X;
+            if (q.F.Value == null && q.R.Value == null) throw new Exception("Empty");
+            if (q.F.Value == null) return q.R.Value.X;
+            return q.F.Value.X;
         }
 
         public static Queue Tail(Queue q)
         {
-            var consF = q.F.Value as Stream<T>.Cons;
-            var consR = q.R.Value as Stream<T>.Cons;
-            if (consF == null && consR == null) throw new Exception("Empty");
-            if (consF == null) return EmptyQueue;
-            var fp = consF.S;
+            if (q.F.Value == null && q.R.Value == null) throw new Exception("Empty");
+            if (q.F.Value == null) return EmptyQueue;
+            var fp = q.F.Value.S;
             return Check(q.LenF - 1, fp, Exec2(q.Sf), q.LenR, q.R, Exec2(q.Sr));
         }
 
         public static Queue Snoc(Queue q, T x)
         {
-            var lazy = new Lazy<Stream<T>.StreamCell>(() => new Stream<T>.Cons(x, q.R));
+            var lazy = Stream<T>.DollarCons(x, q.R);
             return Check(q.LenF, q.F, Exec1(q.Sf), q.LenR + 1, lazy, Exec1(q.Sr));
         }
 
         public static T Last(Queue q)
         {
-            var consR = q.R.Value as Stream<T>.Cons;
-            var consF = q.F.Value as Stream<T>.Cons;
-            if (consR == null && consF == null) throw new Exception("Empty");
-            if (consR == null) return consF.X;
-            return consR.X;
+            if (q.R.Value == null && q.F.Value == null) throw new Exception("Empty");
+            if (q.R.Value == null) return q.F.Value.X;
+            return q.R.Value.X;
         }
 
         public static Queue Init(Queue q)
         {
-            var consR = q.R.Value as Stream<T>.Cons;
-            var consF = q.F.Value as Stream<T>.Cons;
-            if (consR == null && consF == null) throw new Exception("Empty");
-            if (consR == null) return EmptyQueue;
-            var rp = consR.S;
+            if (q.R.Value == null && q.F.Value == null) throw new Exception("Empty");
+            if (q.R.Value == null) return EmptyQueue;
+            var rp = q.R.Value.S;
             return Check(q.LenF, q.F, Exec2(q.Sf), q.LenR - 1, rp, Exec2(q.Sr));
         }
     }

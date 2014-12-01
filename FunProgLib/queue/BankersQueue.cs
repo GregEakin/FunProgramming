@@ -65,22 +65,20 @@ namespace FunProgLib.queue
 
         public static Queue Snoc(Queue queue, T element)
         {
-            var lazy = new Lazy<Stream<T>.StreamCell>(() => new Stream<T>.Cons(element, queue.R));
+            var lazy = Stream<T>.DollarCons(element, queue.R);
             return Check(queue.LenF, queue.F, queue.LenR + 1, lazy);
         }
 
         public static T Head(Queue queue)
         {
-            var qf = queue.F.Value as Stream<T>.Cons;
-            if (qf == null) throw new Exception("Empty");
-            return qf.X;
+            if (queue.F.Value == null) throw new Exception("Empty");
+            return queue.F.Value.X;
         }
 
         public static Queue Tail(Queue queue)
         {
-            var qf = queue.F.Value as Stream<T>.Cons;
-            if (qf == null) throw new Exception("Empty");
-            return Check(queue.LenF - 1, qf.S, queue.LenR, queue.R);
+            if (queue.F.Value == null) throw new Exception("Empty");
+            return Check(queue.LenF - 1, queue.F.Value.S, queue.LenR, queue.R);
         }
     }
 }

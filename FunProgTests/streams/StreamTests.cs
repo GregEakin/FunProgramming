@@ -9,8 +9,6 @@
 
 namespace FunProgTests.streams
 {
-    using System;
-
     using FunProgLib.streams;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -21,21 +19,18 @@ namespace FunProgTests.streams
         [TestMethod]
         public void ConsTest()
         {
-            var s = new Lazy<Stream<int>.StreamCell>(() => new Stream<int>.Cons(1, new Lazy<Stream<int>.StreamCell>(() => new Stream<int>.Cons(2, new Lazy<Stream<int>.StreamCell>(() => new Stream<int>.Cons(3, null))))));
+            var s = Stream<int>.DollarCons(1, Stream<int>.DollarCons(2, Stream<int>.DollarCons(3, null)));
 
             Assert.IsFalse(s.IsValueCreated);
-            var v1 = s.Value as Stream<int>.Cons;
-            Assert.IsNotNull(v1);
-            Assert.AreEqual(1, v1.X);
-            Assert.IsFalse(v1.S.IsValueCreated);
-            var v2 = v1.S.Value as Stream<int>.Cons;
-            Assert.IsNotNull(v2);
-            Assert.AreEqual(2, v2.X);
-            Assert.IsFalse(v2.S.IsValueCreated);
-            var v3 = v2.S.Value as Stream<int>.Cons;
-            Assert.IsNotNull(v3);
-            Assert.AreEqual(3, v3.X);
-            Assert.IsNull(v3.S);
+            Assert.IsNotNull(s.Value);
+            Assert.AreEqual(1, s.Value.X);
+            Assert.IsFalse(s.Value.S.IsValueCreated);
+            Assert.IsNotNull(s.Value.S.Value);
+            Assert.AreEqual(2, s.Value.S.Value.X);
+            Assert.IsFalse(s.Value.S.Value.S.IsValueCreated);
+            Assert.IsNotNull(s.Value.S.Value.S.Value);
+            Assert.AreEqual(3, s.Value.S.Value.S.Value.X);
+            Assert.IsNull(s.Value.S.Value.S.Value.S);
         }
 
         //[TestMethod]

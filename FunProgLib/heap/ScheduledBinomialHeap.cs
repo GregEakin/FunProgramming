@@ -109,7 +109,7 @@ namespace FunProgLib.heap
 
         public static bool IsEmpty(Heap heap)
         {
-            return !(heap.DigitStream.Value is Stream<Digit>.Cons);
+            return heap.DigitStream.Value == null;
         }
 
         private static Tree Link(Tree t1, Tree t2)
@@ -121,36 +121,31 @@ namespace FunProgLib.heap
 
         private static Lazy<Stream<Digit>.StreamCell> InsTree(Tree t, Lazy<Stream<Digit>.StreamCell> dsc)
         {
-            var ds = dsc.Value as Stream<Digit>.Cons;
-            if (ds == null) return new Lazy<Stream<Digit>.StreamCell>(() => new Stream<Digit>.Cons(new Digit(t), EmptyStream));
-            if (ds.X == Zero) return new Lazy<Stream<Digit>.StreamCell>(() => new Stream<Digit>.Cons(new Digit(t), ds.S));
-            return new Lazy<Stream<Digit>.StreamCell>(() => new Stream<Digit>.Cons(Zero, InsTree(Link(t, ds.X.One), ds.S)));
+            if (dsc.Value == null) return Stream<Digit>.DollarCons(new Digit(t), EmptyStream);
+            if (dsc.Value.X == Zero) return Stream<Digit>.DollarCons(new Digit(t), dsc.Value.S);
+            return Stream<Digit>.DollarCons(Zero, InsTree(Link(t, dsc.Value.X.One), dsc.Value.S));
         }
 
         private static Lazy<Stream<Digit>.StreamCell> Mrg(Lazy<Stream<Digit>.StreamCell> d1, Lazy<Stream<Digit>.StreamCell> d2)
         {
-            var ds2 = d2.Value as Stream<Digit>.Cons;
-            if (ds2 == null) return d1;
-            var ds1 = d1.Value as Stream<Digit>.Cons;
-            if (ds1 == null) return d2;
-            if (ds1.X == Zero) return new Lazy<Stream<Digit>.StreamCell>(() => new Stream<Digit>.Cons(ds2.X, Mrg(ds1.S, ds2.S)));
-            if (ds2.X == Zero) return new Lazy<Stream<Digit>.StreamCell>(() => new Stream<Digit>.Cons(ds1.X, Mrg(ds1.S, ds2.S)));
-            return new Lazy<Stream<Digit>.StreamCell>(() => new Stream<Digit>.Cons(Zero, InsTree(Link(ds1.X.One, ds2.X.One), Mrg(ds1.S, ds2.S))));
+            if (d2.Value == null) return d1;
+            if (d1.Value == null) return d2;
+            if (d1.Value.X == Zero) return Stream<Digit>.DollarCons(d2.Value.X, Mrg(d1.Value.S, d2.Value.S));
+            if (d2.Value.X == Zero) return Stream<Digit>.DollarCons(d1.Value.X, Mrg(d1.Value.S, d2.Value.S));
+            return Stream<Digit>.DollarCons(Zero, InsTree(Link(d1.Value.X.One, d2.Value.X.One), Mrg(d1.Value.S, d2.Value.S)));
         }
 
         private static Lazy<Stream<Digit>.StreamCell> Normalize(Lazy<Stream<Digit>.StreamCell> ds)
         {
-            var cons = ds.Value as Stream<Digit>.Cons;
-            if (cons == null) return Stream<Digit>.Empty;
-            Normalize(cons.S);
+            if (ds.Value == null) return Stream<Digit>.Empty;
+            Normalize(ds.Value.S);
             return ds;
         }
 
         private static List<Lazy<Stream<Digit>.StreamCell>>.Node Exec(List<Lazy<Stream<Digit>.StreamCell>>.Node list)
         {
             if (list == null) return null;
-            var cons = list.Element.Value as Stream<Digit>.Cons;
-            if (cons != null && cons.X == Zero) return List<Lazy<Stream<Digit>.StreamCell>>.Cons(cons.S, list.Next);
+            if (list.Element.Value != null && list.Element.Value.X == Zero) return List<Lazy<Stream<Digit>.StreamCell>>.Cons(list.Element.Value.S, list.Next);
             return list.Next;
         }
 
@@ -192,22 +187,21 @@ namespace FunProgLib.heap
 
         private static Stuff RemoveMinTree(Lazy<Stream<Digit>.StreamCell> dsc)
         {
-            var ds = dsc.Value as Stream<Digit>.Cons;
-            if (ds == null) throw new Exception("Empty");
-            if (ds.X == Zero)
+            if (dsc.Value == null) throw new Exception("Empty");
+            if (dsc.Value.X == Zero)
             {
-                var stuff = RemoveMinTree(ds.S);
-                var lazy3 = new Lazy<Stream<Digit>.StreamCell>(() => new Stream<Digit>.Cons(Zero, stuff.Stream));
+                var stuff = RemoveMinTree(dsc.Value.S);
+                var lazy3 = Stream<Digit>.DollarCons(Zero, stuff.Stream);
                 return new Stuff(stuff.Tree, lazy3);
             }
-            if (ds.S == EmptyStream) return new Stuff(ds.X.One, EmptyStream);
-            var tp = RemoveMinTree(ds.S);
-            if (ds.X.One.Node.CompareTo(tp.Tree.Node) <= 0)
+            if (dsc.Value.S == EmptyStream) return new Stuff(dsc.Value.X.One, EmptyStream);
+            var tp = RemoveMinTree(dsc.Value.S);
+            if (dsc.Value.X.One.Node.CompareTo(tp.Tree.Node) <= 0)
             {
-                var lazy = new Lazy<Stream<Digit>.StreamCell>(() => new Stream<Digit>.Cons(Zero, ds.S));
-                return new Stuff(ds.X.One, lazy);
+                var lazy = Stream<Digit>.DollarCons(Zero, dsc.Value.S);
+                return new Stuff(dsc.Value.X.One, lazy);
             }
-            var lazy2 = new Lazy<Stream<Digit>.StreamCell>(() => new Stream<Digit>.Cons(new Digit(ds.X.One), tp.Stream));
+            var lazy2 = Stream<Digit>.DollarCons(new Digit(dsc.Value.X.One), tp.Stream);
             return new Stuff(tp.Tree, lazy2);
         }
 
@@ -220,7 +214,7 @@ namespace FunProgLib.heap
         private static Lazy<Stream<Digit>.StreamCell> OneMap(List<Tree>.Node list)
         {
             if (list == null) return EmptyStream;
-            return new Lazy<Stream<Digit>.StreamCell>(() => new Stream<Digit>.Cons(new Digit(list.Element), OneMap(list.Next)));
+            return Stream<Digit>.DollarCons(new Digit(list.Element), OneMap(list.Next));
         }
 
         public static Heap DeleteMin(Heap heap)

@@ -47,12 +47,8 @@ namespace FunProgTests.heap
             if (!stream.IsValueCreated) return " -$- ";
             if (stream.Value == null) return string.Empty;
             var result = new StringBuilder();
-            var x = stream.Value as Stream<T>.Cons;
-            if (x != null)
-            {
-                //result.Append(DumpTree(  stream.Value.Element.One));
-                //result.Append(DumpDigitStream(stream.Value.Next));
-            }
+            // result.Append(DumpTree(stream.Value.Element.One));
+            // result.Append(DumpDigitStream(stream.Value.Next));
             return result.ToString();
         }
 

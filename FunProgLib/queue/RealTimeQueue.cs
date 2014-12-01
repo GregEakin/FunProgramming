@@ -52,15 +52,13 @@ namespace FunProgLib.queue
 
         private static Lazy<Stream<T>.StreamCell> Rotate(Lazy<Stream<T>.StreamCell> fp, List<T>.Node r, Lazy<Stream<T>.StreamCell> s)
         {
-            var f = fp.Value as Stream<T>.Cons;
-            if (f == null) return new Lazy<Stream<T>.StreamCell>(() => new Stream<T>.Cons(r.Element, s));
-            return new Lazy<Stream<T>.StreamCell>(() => new Stream<T>.Cons(f.X, Rotate(f.S, r.Next, new Lazy<Stream<T>.StreamCell>(() => new Stream<T>.Cons(r.Element, s)))));
+            if (fp.Value == null) return Stream<T>.DollarCons(r.Element, s);
+            return Stream<T>.DollarCons(fp.Value.X, Rotate(fp.Value.S, r.Next, Stream<T>.DollarCons(r.Element, s)));
         }
 
         private static Queue Exec(Lazy<Stream<T>.StreamCell> f, List<T>.Node r, Lazy<Stream<T>.StreamCell> sp)
         {
-            var s = sp.Value as Stream<T>.Cons;
-            if (s != null) return new Queue(f, r, s.S);
+            if (sp.Value != null) return new Queue(f, r, sp.Value.S);
             var fp = Rotate(f, r, EmptyCell);
             return new Queue(fp, EmptyList, fp);
         }
@@ -72,16 +70,14 @@ namespace FunProgLib.queue
 
         public static T Head(Queue q)
         {
-            var qf = q.F.Value as Stream<T>.Cons;
-            if (qf == null) throw new Exception("Empty");
-            return qf.X;
+            if (q.F.Value == null) throw new Exception("Empty");
+            return q.F.Value.X;
         }
 
         public static Queue Tail(Queue q)
         {
-            var qf = q.F.Value as Stream<T>.Cons;
-            if (qf == null) throw new Exception("Empty");
-            return Exec(qf.S, q.R, q.S);
+            if (q.F.Value == null) throw new Exception("Empty");
+            return Exec(q.F.Value.S, q.R, q.S);
         }
     }
 }

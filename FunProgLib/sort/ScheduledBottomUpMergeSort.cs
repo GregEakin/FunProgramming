@@ -65,20 +65,17 @@ namespace FunProgLib.sort
 
         private static Lazy<Stream<T>.StreamCell> Mrg(Lazy<Stream<T>.StreamCell> xs, Lazy<Stream<T>.StreamCell> ys)
         {
-            var xsv = xs.Value as Stream<T>.Cons;
-            if (xsv == null) return ys;
-            var ysv = ys.Value as Stream<T>.Cons;
-            if (ysv == null) return xs;
-            if (xsv.X.CompareTo(ysv.X) <= 0) return new Lazy<Stream<T>.StreamCell>(() => new Stream<T>.Cons(xsv.X, Mrg(xsv.S, ys)));
-            return new Lazy<Stream<T>.StreamCell>(() => new Stream<T>.Cons(ysv.X, Mrg(xs, ysv.S)));
+            if (xs.Value == null) return ys;
+            if (ys.Value == null) return xs;
+            if (xs.Value.X.CompareTo(ys.Value.X) <= 0) return Stream<T>.DollarCons(xs.Value.X, Mrg(xs.Value.S, ys));
+            return Stream<T>.DollarCons(ys.Value.X, Mrg(xs, ys.Value.S));
         }
 
         private static List<Lazy<Stream<T>.StreamCell>>.Node Exec1(List<Lazy<Stream<T>.StreamCell>>.Node list)
         {
             if (list == null) return null;
-            var cons = list.Element.Value as Stream<T>.Cons;
-            if (cons == null) return Exec1(list.Next);
-            return List<Lazy<Stream<T>.StreamCell>>.Cons(cons.S, list.Next);
+            if (list.Element.Value == null) return Exec1(list.Next);
+            return List<Lazy<Stream<T>.StreamCell>>.Cons(list.Element.Value.S, list.Next);
         }
 
         private static Stuff Exec2(Stuff x)
@@ -110,7 +107,7 @@ namespace FunProgLib.sort
 
         public static Sortable Add(T x, Sortable sortable)
         {
-            var stream = new Lazy<Stream<T>.StreamCell>(() => new Stream<T>.Cons(x, Stream<T>.Empty));
+            var stream = Stream<T>.DollarCons(x, Stream<T>.Empty);
             var segsp = AddSeg(stream, sortable.Segs, sortable.Size, null);
             return new Sortable(sortable.Size + 1, MapExec2(segsp));
         }
@@ -125,9 +122,8 @@ namespace FunProgLib.sort
 
         private static List<T>.Node StreamToList(Lazy<Stream<T>.StreamCell> xs)
         {
-            var xsv = xs.Value as Stream<T>.Cons;
-            if (xsv == null) return null;
-            return List<T>.Cons(xsv.X, StreamToList(xsv.S));
+            if (xs.Value == null) return null;
+            return List<T>.Cons(xs.Value.X, StreamToList(xs.Value.S));
         }
 
         public static List<T>.Node Sort(Sortable sortable)
