@@ -38,9 +38,7 @@ namespace FunProgLib.queue
             public Lazy<Stream<T>.StreamCell> R { get { return r; } }
         }
 
-        private readonly static Lazy<Stream<T>.StreamCell> EmptyCell = new Lazy<Stream<T>.StreamCell>(() => null);
-
-        private static readonly Queue EmptyQueue = new Queue(0, EmptyCell, 0, EmptyCell);
+        private static readonly Queue EmptyQueue = new Queue(0, Stream<T>.DollarNil, 0, Stream<T>.DollarNil);
 
         public static Queue Empty
         {
@@ -49,18 +47,19 @@ namespace FunProgLib.queue
 
         public static bool IsEmpty(Queue queue)
         {
-            return queue == null || IsEmpty(queue.F);
+            // return queue == null || IsEmpty(queue.F);
+            return queue.LenF == 0;
         }
 
-        private static bool IsEmpty(Lazy<Stream<T>.StreamCell> queue)
-        {
-            return queue == null || queue == Stream<T>.DollarNil;
-        }
+        //private static bool IsEmpty(Lazy<Stream<T>.StreamCell> queue)
+        //{
+        //    return queue == null || queue == Stream<T>.DollarNil;
+        //}
 
         private static Queue Check(int lenf, Lazy<Stream<T>.StreamCell> f, int lenr, Lazy<Stream<T>.StreamCell> r)
         {
             if (lenr <= lenf) return new Queue(lenf, f, lenr, r);
-            return new Queue(lenf + lenr, Stream<T>.Append(f, Stream<T>.Reverse(r)), 0, EmptyCell);
+            return new Queue(lenf + lenr, Stream<T>.Append(f, Stream<T>.Reverse(r)), 0, Stream<T>.DollarNil);
         }
 
         public static Queue Snoc(Queue queue, T element)

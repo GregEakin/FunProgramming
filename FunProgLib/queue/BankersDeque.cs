@@ -40,7 +40,7 @@ namespace FunProgLib.queue
             public Lazy<Stream<T>.StreamCell> R { get { return this.r; } }
         }
 
-        private static readonly Queue EmptyQueue = new Queue(0, null, 0, null);
+        private static readonly Queue EmptyQueue = new Queue(0, Stream<T>.DollarNil, 0, Stream<T>.DollarNil);
 
         public static Queue Empty { get { return EmptyQueue; } }
 

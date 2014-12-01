@@ -66,9 +66,8 @@ namespace FunProgLib.streams
 
         private static Lazy<StreamCell> ReversePrime(Lazy<StreamCell> s, Lazy<StreamCell> r)
         {
-            if (s == DollarNil) return DollarNil;
-            var lazy = DollarCons(s.Value.X, r);
-            return ReversePrime(s.Value.S, lazy);
+            if (s == DollarNil) return r;
+            return ReversePrime(s.Value.S, DollarCons(s.Value.X, r));
         }
 
         public static Lazy<StreamCell> Reverse(Lazy<StreamCell> s)

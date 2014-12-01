@@ -137,7 +137,7 @@ namespace FunProgLib.heap
 
         private static Lazy<Stream<Digit>.StreamCell> Normalize(Lazy<Stream<Digit>.StreamCell> ds)
         {
-            if (ds == Stream<Digit>.DollarNil) return Stream<Digit>.DollarNil;
+            if (ds == Stream<Digit>.DollarNil) return ds;
             Normalize(ds.Value.S);
             return ds;
         }

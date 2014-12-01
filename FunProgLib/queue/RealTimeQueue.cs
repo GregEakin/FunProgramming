@@ -36,9 +36,8 @@ namespace FunProgLib.queue
             public Lazy<Stream<T>.StreamCell> S { get { return s; } }
         }
 
-        private static readonly Lazy<Stream<T>.StreamCell> EmptyCell = new Lazy<Stream<T>.StreamCell>(() => null);
         private static readonly List<T>.Node EmptyList = null;
-        private static readonly Queue EmptyQueue = new Queue(EmptyCell, EmptyList, EmptyCell);
+        private static readonly Queue EmptyQueue = new Queue(Stream<T>.DollarNil, EmptyList, Stream<T>.DollarNil);
 
         public static Queue Empty
         {
@@ -59,7 +58,7 @@ namespace FunProgLib.queue
         private static Queue Exec(Lazy<Stream<T>.StreamCell> f, List<T>.Node r, Lazy<Stream<T>.StreamCell> sp)
         {
             if (sp.Value != null) return new Queue(f, r, sp.Value.S);
-            var fp = Rotate(f, r, EmptyCell);
+            var fp = Rotate(f, r, Stream<T>.DollarNil);
             return new Queue(fp, EmptyList, fp);
         }
 
