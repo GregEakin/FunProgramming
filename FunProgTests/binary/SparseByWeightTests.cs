@@ -20,7 +20,7 @@ namespace FunProgTests.binary
     [TestClass]
     public class SparseByWeightTests
     {
-        private static readonly List<int>.Node Zero = null;
+        private static readonly List<int>.Node Zero = List<int>.Empty;
         private static readonly List<int>.Node One = SparseByWeight.Inc(Zero);
         private static readonly List<int>.Node Two = SparseByWeight.Inc(One);
         private static readonly List<int>.Node Three = SparseByWeight.Inc(Two);
@@ -29,10 +29,10 @@ namespace FunProgTests.binary
 
         private static string DumpNat(List<int>.Node number)
         {
-            if (number == null) return "0";
+            if (List<int>.IsEmpty(number)) return "0";
             var result = new StringBuilder();
             var digit = number;
-            while (digit != null)
+            while (!List<int>.IsEmpty(digit))
             {
                 result.Insert(0, digit.Element.ToString(CultureInfo.InvariantCulture));
                 result.Insert(0, ',');
