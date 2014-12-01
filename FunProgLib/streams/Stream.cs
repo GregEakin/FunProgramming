@@ -22,6 +22,7 @@ namespace FunProgLib.streams
 
             public StreamCell(T element, Lazy<StreamCell> next)
             {
+                // if (next == null) throw new Exception("Can't be null, use DollarNil instead.");
                 this.element = element;
                 this.next = next;
             }
@@ -33,12 +34,6 @@ namespace FunProgLib.streams
         private static readonly Lazy<StreamCell> NilStreamCell = new Lazy<StreamCell>(() => null);
 
         public static Lazy<StreamCell> DollarNil { get { return NilStreamCell; } }
-
-        //public static Lazy<StreamCell> DollarCons(T element, Lazy<StreamCell> s)
-        //{
-        //    if (s == null) throw new Exception("It's null!");//s = DollarNil;
-        //    return new Lazy<StreamCell>(() => new StreamCell(element, s));
-        //}
 
         public static Lazy<StreamCell> Append(Lazy<StreamCell> s1, Lazy<StreamCell> t)
         {
