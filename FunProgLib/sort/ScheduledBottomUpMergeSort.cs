@@ -31,7 +31,7 @@ namespace FunProgLib.sort
 
             public Lazy<Stream<T>.StreamCell> ElementStream
             {
-                get { return this.elementStream; }
+                get { return elementStream; }
             }
 
             public List<Lazy<Stream<T>.StreamCell>>.Node Schedule
@@ -54,7 +54,7 @@ namespace FunProgLib.sort
 
             public int Size
             {
-                get { return this.size; }
+                get { return size; }
             }
 
             public List<Stuff>.Node Segs

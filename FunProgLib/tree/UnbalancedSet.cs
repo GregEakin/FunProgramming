@@ -30,17 +30,17 @@ namespace FunProgLib.tree
 
             public Tree A
             {
-                get { return this.a; }
+                get { return a; }
             }
 
             public T Y
             {
-                get { return this.y; }
+                get { return y; }
             }
 
             public Tree B
             {
-                get { return this.b; }
+                get { return b; }
             }
         }
 

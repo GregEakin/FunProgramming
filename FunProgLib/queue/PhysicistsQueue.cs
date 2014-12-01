@@ -34,11 +34,11 @@ namespace FunProgLib.queue
                 this.r = r;
             }
 
-            public List<T>.Node W { get { return this.w; } }
-            public int Lenf { get { return this.lenf; } }
-            public Lazy<List<T>.Node> F { get { return this.f; } }
-            public int Lenr { get { return this.lenr; } }
-            public List<T>.Node R { get { return this.r; } }
+            public List<T>.Node W { get { return w; } }
+            public int Lenf { get { return lenf; } }
+            public Lazy<List<T>.Node> F { get { return f; } }
+            public int Lenr { get { return lenr; } }
+            public List<T>.Node R { get { return r; } }
         }
 
         private static readonly List<T>.Node EmptyList = null;

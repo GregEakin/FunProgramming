@@ -32,22 +32,22 @@ namespace FunProgLib.heap
 
             public int R
             {
-                get { return this.r; }
+                get { return r; }
             }
 
             public T X
             {
-                get { return this.x; }
+                get { return x; }
             }
 
             public Heap A
             {
-                get { return this.a; }
+                get { return a; }
             }
 
             public Heap B
             {
-                get { return this.b; }
+                get { return b; }
             }
         }
 

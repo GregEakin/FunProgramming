@@ -102,12 +102,12 @@ namespace FunProgLib.heap
 
             public Tree Tree
             {
-                get { return this.tree; }
+                get { return tree; }
             }
 
             public List<Tree>.Node List
             {
-                get { return this.list; }
+                get { return list; }
             }
         }
 

@@ -26,7 +26,7 @@ namespace FunProgLib.lists
 
             public T Alpha
             {
-                get { return this.alpha; }
+                get { return alpha; }
             }
         }
 
@@ -53,12 +53,12 @@ namespace FunProgLib.lists
 
             public Tree Tree1
             {
-                get { return this.tree1; }
+                get { return tree1; }
             }
 
             public Tree Tree2
             {
-                get { return this.tree2; }
+                get { return tree2; }
             }
         }
 
@@ -76,12 +76,12 @@ namespace FunProgLib.lists
 
             public int Weight
             {
-                get { return this.weight; }
+                get { return weight; }
             }
 
             public Tree Tree
             {
-                get { return this.tree; }
+                get { return tree; }
             }
         }
 

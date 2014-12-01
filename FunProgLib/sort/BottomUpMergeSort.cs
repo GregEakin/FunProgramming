@@ -30,7 +30,7 @@ namespace FunProgLib.sort
 
             public int Size
             {
-                get { return this.size; }
+                get { return size; }
             }
 
             public Lazy<List<List<T>.Node>.Node> Segs

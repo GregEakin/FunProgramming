@@ -37,22 +37,22 @@ namespace FunProgLib.tree
 
             public Color Color
             {
-                get { return this.color; }
+                get { return color; }
             }
 
             public Tree Tree1
             {
-                get { return this.tree1; }
+                get { return tree1; }
             }
 
             public T Elem
             {
-                get { return this.elem; }
+                get { return elem; }
             }
 
             public Tree Tree2
             {
-                get { return this.tree2; }
+                get { return tree2; }
             }
         }
 

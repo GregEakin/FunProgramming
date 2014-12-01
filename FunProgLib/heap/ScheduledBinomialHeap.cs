@@ -32,12 +32,12 @@ namespace FunProgLib.heap
 
             public T Node
             {
-                get { return this.node; }
+                get { return node; }
             }
 
             public List<Tree>.Node TreeList
             {
-                get { return this.treeList; }
+                get { return treeList; }
             }
         }
 
@@ -52,7 +52,7 @@ namespace FunProgLib.heap
 
             public Tree One
             {
-                get { return this.one; }
+                get { return one; }
             }
         }
 
@@ -69,7 +69,7 @@ namespace FunProgLib.heap
 
             public List<Lazy<Stream<Digit>.StreamCell>>.Node DigitStreamList
             {
-                get { return this.digitStreamList; }
+                get { return digitStreamList; }
             }
         }
 
@@ -87,12 +87,12 @@ namespace FunProgLib.heap
 
             public Lazy<Stream<Digit>.StreamCell> DigitStream
             {
-                get { return this.digitStream; }
+                get { return digitStream; }
             }
 
             public Schedule Schedule
             {
-                get { return this.schedule; }
+                get { return schedule; }
             }
         }
 
@@ -176,12 +176,12 @@ namespace FunProgLib.heap
 
             public Tree Tree
             {
-                get { return this.tree; }
+                get { return tree; }
             }
 
             public Lazy<Stream<Digit>.StreamCell> Stream
             {
-                get { return this.stream; }
+                get { return stream; }
             }
         }
 

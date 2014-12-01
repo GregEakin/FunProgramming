@@ -27,7 +27,7 @@ namespace FunProgLib.lists
 
             public List<Tuple<T, T>>.Node List
             {
-                get { return this.list; }
+                get { return list; }
             }
         }
 
@@ -51,7 +51,7 @@ namespace FunProgLib.lists
 
             public T Alpha
             {
-                get { return this.alpha; }
+                get { return alpha; }
             }
         }
 

@@ -38,12 +38,12 @@ namespace FunProgLib.heap
 
             public int Rank
             {
-                get { return this.rank; }
+                get { return rank; }
             }
 
             public T Node
             {
-                get { return this.node; }
+                get { return node; }
             }
 
             public List<T>.Node List
@@ -53,7 +53,7 @@ namespace FunProgLib.heap
 
             public List<Tree>.Node TreeList
             {
-                get { return this.treeList; }
+                get { return treeList; }
             }
         }
 
@@ -143,12 +143,12 @@ namespace FunProgLib.heap
 
             public Tree Tree
             {
-                get { return this.tree; }
+                get { return tree; }
             }
 
             public List<Tree>.Node List
             {
-                get { return this.list; }
+                get { return list; }
             }
         }
 

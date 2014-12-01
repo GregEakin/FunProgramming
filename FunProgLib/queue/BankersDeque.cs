@@ -34,10 +34,10 @@ namespace FunProgLib.queue
                 this.r = r;
             }
 
-            public int LenF { get { return this.lenF; } }
-            public Lazy<Stream<T>.StreamCell> F { get { return this.f; } }
-            public int LenR { get { return this.lenR; } }
-            public Lazy<Stream<T>.StreamCell> R { get { return this.r; } }
+            public int LenF { get { return lenF; } }
+            public Lazy<Stream<T>.StreamCell> F { get { return f; } }
+            public int LenR { get { return lenR; } }
+            public Lazy<Stream<T>.StreamCell> R { get { return r; } }
         }
 
         private static readonly Queue EmptyQueue = new Queue(0, Stream<T>.DollarNil, 0, Stream<T>.DollarNil);

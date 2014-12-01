@@ -26,8 +26,8 @@ namespace FunProgLib.streams
                 this.next = next;
             }
 
-            public T Element { get { return this.element; } }
-            public Lazy<StreamCell> Next { get { return this.next; } }
+            public T Element { get { return element; } }
+            public Lazy<StreamCell> Next { get { return next; } }
         }
 
         private static readonly Lazy<StreamCell> NilStreamCell = new Lazy<StreamCell>(() => null);

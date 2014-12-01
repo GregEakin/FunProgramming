@@ -40,11 +40,11 @@ namespace FunProgLib.queue
                 this.rp = rp;
             }
 
-            public int Ok { get { return this.ok; } }
-            public List<T>.Node F { get { return this.f; } }
-            public List<T>.Node Fp { get { return this.fp; } }
-            public List<T>.Node R { get { return this.r; } }
-            public List<T>.Node Rp { get { return this.rp; } }
+            public int Ok { get { return ok; } }
+            public List<T>.Node F { get { return f; } }
+            public List<T>.Node Fp { get { return fp; } }
+            public List<T>.Node R { get { return r; } }
+            public List<T>.Node Rp { get { return rp; } }
         }
 
         private sealed class Appending : RotationState
@@ -60,9 +60,9 @@ namespace FunProgLib.queue
                 this.rp = rp;
             }
 
-            public int Ok { get { return this.ok; } }
-            public List<T>.Node Fp { get { return this.fp; } }
-            public List<T>.Node Rp { get { return this.rp; } }
+            public int Ok { get { return ok; } }
+            public List<T>.Node Fp { get { return fp; } }
+            public List<T>.Node Rp { get { return rp; } }
         }
 
         private sealed class Done : RotationState
@@ -74,7 +74,7 @@ namespace FunProgLib.queue
                 this.f = f;
             }
 
-            public List<T>.Node F { get { return this.f; } }
+            public List<T>.Node F { get { return f; } }
         }
 
         public sealed class Queue

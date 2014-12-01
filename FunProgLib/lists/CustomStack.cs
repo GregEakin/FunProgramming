@@ -29,12 +29,12 @@ namespace FunProgLib.lists
 
             public T Element
             {
-                get { return this.element; }
+                get { return element; }
             }
 
             public Node Next
             {
-                get { return this.next; }
+                get { return next; }
             }
 
             //public IEnumerator<T> GetEnumerator()
@@ -44,7 +44,7 @@ namespace FunProgLib.lists
 
             //IEnumerator IEnumerable.GetEnumerator()
             //{
-            //    return this.GetEnumerator();
+            //    return GetEnumerator();
             //}
 
             //private sealed class StackEnum : IEnumerator<T>
@@ -72,12 +72,12 @@ namespace FunProgLib.lists
 
             //    object IEnumerator.Current
             //    {
-            //        get { return this.stack.element; }
+            //        get { return stack.element; }
             //    }
 
             //    public T Current
             //    {
-            //        get { return this.stack.element; }
+            //        get { return stack.element; }
             //    }
 
             //    public void Dispose()
