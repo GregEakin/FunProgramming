@@ -54,7 +54,7 @@ namespace FunProgLib.queue
 
         private static bool IsEmpty(Lazy<Stream<T>.StreamCell> queue)
         {
-            return queue == null || queue.Value == null;
+            return queue == null || queue == Stream<T>.DollarNil;
         }
 
         private static Queue Check(int lenf, Lazy<Stream<T>.StreamCell> f, int lenr, Lazy<Stream<T>.StreamCell> r)
@@ -71,13 +71,13 @@ namespace FunProgLib.queue
 
         public static T Head(Queue queue)
         {
-            if (queue.F.Value == null) throw new Exception("Empty");
+            if (queue.F == Stream<T>.DollarNil) throw new Exception("Empty");
             return queue.F.Value.X;
         }
 
         public static Queue Tail(Queue queue)
         {
-            if (queue.F.Value == null) throw new Exception("Empty");
+            if (queue.F == Stream<T>.DollarNil) throw new Exception("Empty");
             return Check(queue.LenF - 1, queue.F.Value.S, queue.LenR, queue.R);
         }
     }

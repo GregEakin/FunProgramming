@@ -47,12 +47,12 @@ namespace FunProgLib.queue
 
         public static bool IsEmpty(Queue queue)
         {
-            return queue.F.Value == null;
+            return queue.F == Stream<T>.DollarNil;
         }
 
         private static Lazy<Stream<T>.StreamCell> Rotate(Lazy<Stream<T>.StreamCell> fp, List<T>.Node r, Lazy<Stream<T>.StreamCell> s)
         {
-            if (fp.Value == null) return Stream<T>.DollarCons(r.Element, s);
+            if (fp == Stream<T>.DollarNil) return Stream<T>.DollarCons(r.Element, s);
             return Stream<T>.DollarCons(fp.Value.X, Rotate(fp.Value.S, r.Next, Stream<T>.DollarCons(r.Element, s)));
         }
 
@@ -70,13 +70,13 @@ namespace FunProgLib.queue
 
         public static T Head(Queue q)
         {
-            if (q.F.Value == null) throw new Exception("Empty");
+            if (q.F == Stream<T>.DollarNil) throw new Exception("Empty");
             return q.F.Value.X;
         }
 
         public static Queue Tail(Queue q)
         {
-            if (q.F.Value == null) throw new Exception("Empty");
+            if (q.F == Stream<T>.DollarNil) throw new Exception("Empty");
             return Exec(q.F.Value.S, q.R, q.S);
         }
     }

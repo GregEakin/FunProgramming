@@ -65,8 +65,8 @@ namespace FunProgLib.sort
 
         private static Lazy<Stream<T>.StreamCell> Mrg(Lazy<Stream<T>.StreamCell> xs, Lazy<Stream<T>.StreamCell> ys)
         {
-            if (xs.Value == null) return ys;
-            if (ys.Value == null) return xs;
+            if (xs == Stream<T>.DollarNil) return ys;
+            if (ys == Stream<T>.DollarNil) return xs;
             if (xs.Value.X.CompareTo(ys.Value.X) <= 0) return Stream<T>.DollarCons(xs.Value.X, Mrg(xs.Value.S, ys));
             return Stream<T>.DollarCons(ys.Value.X, Mrg(xs, ys.Value.S));
         }
@@ -74,7 +74,7 @@ namespace FunProgLib.sort
         private static List<Lazy<Stream<T>.StreamCell>>.Node Exec1(List<Lazy<Stream<T>.StreamCell>>.Node list)
         {
             if (list == null) return null;
-            if (list.Element.Value == null) return Exec1(list.Next);
+            if (list.Element == Stream<T>.DollarNil) return Exec1(list.Next);
             return List<Lazy<Stream<T>.StreamCell>>.Cons(list.Element.Value.S, list.Next);
         }
 
@@ -122,7 +122,7 @@ namespace FunProgLib.sort
 
         private static List<T>.Node StreamToList(Lazy<Stream<T>.StreamCell> xs)
         {
-            if (xs.Value == null) return null;
+            if (xs == Stream<T>.DollarNil) return null;
             return List<T>.Cons(xs.Value.X, StreamToList(xs.Value.S));
         }
 

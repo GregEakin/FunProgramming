@@ -109,7 +109,7 @@ namespace FunProgLib.heap
 
         public static bool IsEmpty(Heap heap)
         {
-            return heap.DigitStream.Value == null;
+            return heap.DigitStream == Stream<Digit>.DollarNil;
         }
 
         private static Tree Link(Tree t1, Tree t2)
@@ -121,15 +121,15 @@ namespace FunProgLib.heap
 
         private static Lazy<Stream<Digit>.StreamCell> InsTree(Tree t, Lazy<Stream<Digit>.StreamCell> dsc)
         {
-            if (dsc.Value == null) return Stream<Digit>.DollarCons(new Digit(t), EmptyStream);
+            if (dsc == Stream<Digit>.DollarNil) return Stream<Digit>.DollarCons(new Digit(t), EmptyStream);
             if (dsc.Value.X == Zero) return Stream<Digit>.DollarCons(new Digit(t), dsc.Value.S);
             return Stream<Digit>.DollarCons(Zero, InsTree(Link(t, dsc.Value.X.One), dsc.Value.S));
         }
 
         private static Lazy<Stream<Digit>.StreamCell> Mrg(Lazy<Stream<Digit>.StreamCell> d1, Lazy<Stream<Digit>.StreamCell> d2)
         {
-            if (d2.Value == null) return d1;
-            if (d1.Value == null) return d2;
+            if (d2 == Stream<Digit>.DollarNil) return d1;
+            if (d1 == Stream<Digit>.DollarNil) return d2;
             if (d1.Value.X == Zero) return Stream<Digit>.DollarCons(d2.Value.X, Mrg(d1.Value.S, d2.Value.S));
             if (d2.Value.X == Zero) return Stream<Digit>.DollarCons(d1.Value.X, Mrg(d1.Value.S, d2.Value.S));
             return Stream<Digit>.DollarCons(Zero, InsTree(Link(d1.Value.X.One, d2.Value.X.One), Mrg(d1.Value.S, d2.Value.S)));
@@ -137,7 +137,7 @@ namespace FunProgLib.heap
 
         private static Lazy<Stream<Digit>.StreamCell> Normalize(Lazy<Stream<Digit>.StreamCell> ds)
         {
-            if (ds.Value == null) return Stream<Digit>.DollarNil;
+            if (ds == Stream<Digit>.DollarNil) return Stream<Digit>.DollarNil;
             Normalize(ds.Value.S);
             return ds;
         }
@@ -187,7 +187,7 @@ namespace FunProgLib.heap
 
         private static Stuff RemoveMinTree(Lazy<Stream<Digit>.StreamCell> dsc)
         {
-            if (dsc.Value == null) throw new Exception("Empty");
+            if (dsc == Stream<Digit>.DollarNil) throw new Exception("Empty");
             if (dsc.Value.X == Zero)
             {
                 var stuff = RemoveMinTree(dsc.Value.S);
