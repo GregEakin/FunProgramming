@@ -36,13 +36,13 @@ namespace FunProgLib.streams
 
         public static Lazy<StreamCell> DollarCons(T element, Lazy<StreamCell> s)
         {
+            if (s == null) s = DollarNil;
             return new Lazy<StreamCell>(() => new StreamCell(element, s));
         }
 
         public static Lazy<StreamCell> Append(Lazy<StreamCell> s1, Lazy<StreamCell> t)
         {
             if (s1 == null || s1 == DollarNil) return t;
-            if (s1.Value == null) throw new Exception("Found it");
             return DollarCons(s1.Value.Element, Append(s1.Value.Next, t));
         }
 
@@ -50,7 +50,6 @@ namespace FunProgLib.streams
         {
             if (n == 0) return DollarNil;
             if (s == DollarNil) return DollarNil;
-            if (s.Value == null) throw new Exception("Found it");
             return DollarCons(s.Value.Element, Take(n - 1, s.Value.Next));
         }
 
@@ -58,7 +57,6 @@ namespace FunProgLib.streams
         {
             if (n == 0) return s;
             if (s == DollarNil) return DollarNil;
-            if (s.Value == null) throw new Exception("Found it");
             return DropPrime(n - 1, s.Value.Next);
         }
 
@@ -70,7 +68,6 @@ namespace FunProgLib.streams
         private static Lazy<StreamCell> ReversePrime(Lazy<StreamCell> s, Lazy<StreamCell> r)
         {
             if (s == null || s == DollarNil) return r;
-            if (s.Value == null) throw new Exception("Found it");
             return ReversePrime(s.Value.Next, DollarCons(s.Value.Element, r));
         }
 

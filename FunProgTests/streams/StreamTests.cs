@@ -19,7 +19,7 @@ namespace FunProgTests.streams
         [TestMethod]
         public void ConsTest()
         {
-            var s = Stream<int>.DollarCons(1, Stream<int>.DollarCons(2, Stream<int>.DollarCons(3, null)));
+            var s = Stream<int>.DollarCons(1, Stream<int>.DollarCons(2, Stream<int>.DollarCons(3, Stream<int>.DollarNil)));
 
             Assert.IsFalse(s.IsValueCreated);
             Assert.IsNotNull(s.Value);
@@ -30,13 +30,13 @@ namespace FunProgTests.streams
             Assert.IsFalse(s.Value.Next.Value.Next.IsValueCreated);
             Assert.IsNotNull(s.Value.Next.Value.Next.Value);
             Assert.AreEqual(3, s.Value.Next.Value.Next.Value.Element);
-            Assert.IsNull(s.Value.Next.Value.Next.Value.Next);
+            Assert.AreEqual(Stream<int>.DollarNil, s.Value.Next.Value.Next.Value.Next);
         }
 
         [TestMethod]
         public void ReverseTest()
         {
-            var s = Stream<int>.DollarCons(1, Stream<int>.DollarCons(2, Stream<int>.DollarCons(3, null)));
+            var s = Stream<int>.DollarCons(1, Stream<int>.DollarCons(2, Stream<int>.DollarCons(3, Stream<int>.DollarNil)));
             var r = Stream<int>.Reverse(s);
 
             //Assert.IsFalse(s.IsValueCreated);
@@ -55,7 +55,7 @@ namespace FunProgTests.streams
         [TestMethod]
         public void CatTest()
         {
-            var s = Stream<int>.DollarCons(1, Stream<int>.DollarCons(2, null));
+            var s = Stream<int>.DollarCons(1, Stream<int>.DollarCons(2, Stream<int>.DollarNil));
             var r = Stream<int>.Reverse(s);
             var t = Stream<int>.Append(s, r);
 
@@ -83,7 +83,7 @@ namespace FunProgTests.streams
         [TestMethod]
         public void DropTest()
         {
-            var s = Stream<int>.DollarCons(1, Stream<int>.DollarCons(2, Stream<int>.DollarCons(3, null)));
+            var s = Stream<int>.DollarCons(1, Stream<int>.DollarCons(2, Stream<int>.DollarCons(3, Stream<int>.DollarNil)));
             var r = Stream<int>.Drop(1, s);
 
             // Assert.IsFalse(s.IsValueCreated);
@@ -94,7 +94,7 @@ namespace FunProgTests.streams
             Assert.AreEqual(2, r.Value.Element);
             Assert.IsFalse(r.Value.Next.IsValueCreated);
             Assert.AreEqual(3, r.Value.Next.Value.Element);
-            Assert.IsNull(r.Value.Next.Value.Next);
+            Assert.AreSame(Stream<int>.DollarNil, r.Value.Next.Value.Next);
         }
     }
 }
