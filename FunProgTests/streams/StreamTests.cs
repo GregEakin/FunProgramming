@@ -9,6 +9,8 @@
 
 namespace FunProgTests.streams
 {
+    using System;
+
     using FunProgLib.streams;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -19,7 +21,7 @@ namespace FunProgTests.streams
         [TestMethod]
         public void ConsTest()
         {
-            var s = Stream<int>.DollarCons(1, Stream<int>.DollarCons(2, Stream<int>.DollarCons(3, Stream<int>.DollarNil)));
+            var s = new Lazy<Stream<int>.StreamCell>(() => new Stream<int>.StreamCell(1, new Lazy<Stream<int>.StreamCell>(() => new Stream<int>.StreamCell(2, new Lazy<Stream<int>.StreamCell>(() => new Stream<int>.StreamCell(3, Stream<int>.DollarNil))))));
 
             Assert.IsFalse(s.IsValueCreated);
             Assert.IsNotNull(s.Value);
@@ -36,12 +38,12 @@ namespace FunProgTests.streams
         [TestMethod]
         public void ReverseTest()
         {
-            var s = Stream<int>.DollarCons(1, Stream<int>.DollarCons(2, Stream<int>.DollarCons(3, Stream<int>.DollarNil)));
+            var s = new Lazy<Stream<int>.StreamCell>(() => new Stream<int>.StreamCell(1, new Lazy<Stream<int>.StreamCell>(() => new Stream<int>.StreamCell(2, new Lazy<Stream<int>.StreamCell>(() => new Stream<int>.StreamCell(3, Stream<int>.DollarNil))))));
             var r = Stream<int>.Reverse(s);
 
-            //Assert.IsFalse(s.IsValueCreated);
-            //Assert.IsFalse(s.Value.Next.IsValueCreated);
-            //Assert.IsFalse(s.Value.Next.Value.Next.IsValueCreated);
+            // Assert.IsFalse(s.IsValueCreated);
+            // Assert.IsFalse(s.Value.Next.IsValueCreated);
+            // Assert.IsFalse(s.Value.Next.Value.Next.IsValueCreated);
 
             Assert.IsFalse(r.IsValueCreated);
             Assert.AreEqual(3, r.Value.Element);
@@ -55,7 +57,7 @@ namespace FunProgTests.streams
         [TestMethod]
         public void CatTest()
         {
-            var s = Stream<int>.DollarCons(1, Stream<int>.DollarCons(2, Stream<int>.DollarNil));
+            var s = new Lazy<Stream<int>.StreamCell>(() => new Stream<int>.StreamCell(1, new Lazy<Stream<int>.StreamCell>(() => new Stream<int>.StreamCell(2, Stream<int>.DollarNil))));
             var r = Stream<int>.Reverse(s);
             var t = Stream<int>.Append(s, r);
 
@@ -69,7 +71,7 @@ namespace FunProgTests.streams
             Assert.AreEqual(1, t.Value.Element);
             Assert.IsFalse(t.Value.Next.IsValueCreated);
             Assert.AreEqual(2, t.Value.Next.Value.Element);
-            // Assert.IsFalse(t.Value.S.Value.S.IsValueCreated);
+            // Assert.IsFalse(t.Value.Next.Value.Next.IsValueCreated);
             Assert.AreEqual(2, t.Value.Next.Value.Next.Value.Element);
             Assert.IsFalse(t.Value.Next.Value.Next.Value.Next.IsValueCreated);
             Assert.AreEqual(1, t.Value.Next.Value.Next.Value.Next.Value.Element);
@@ -83,14 +85,14 @@ namespace FunProgTests.streams
         [TestMethod]
         public void DropTest()
         {
-            var s = Stream<int>.DollarCons(1, Stream<int>.DollarCons(2, Stream<int>.DollarCons(3, Stream<int>.DollarNil)));
+            var s = new Lazy<Stream<int>.StreamCell>(() => new Stream<int>.StreamCell(1, new Lazy<Stream<int>.StreamCell>(() => new Stream<int>.StreamCell(2, new Lazy<Stream<int>.StreamCell>(() => new Stream<int>.StreamCell(3, Stream<int>.DollarNil))))));
             var r = Stream<int>.Drop(1, s);
 
             // Assert.IsFalse(s.IsValueCreated);
             Assert.IsFalse(s.Value.Next.IsValueCreated);
             Assert.IsFalse(s.Value.Next.Value.Next.IsValueCreated);
 
-            //Assert.IsFalse(r.IsValueCreated);
+            // Assert.IsFalse(r.IsValueCreated);
             Assert.AreEqual(2, r.Value.Element);
             Assert.IsFalse(r.Value.Next.IsValueCreated);
             Assert.AreEqual(3, r.Value.Next.Value.Element);
