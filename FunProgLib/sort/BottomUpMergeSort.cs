@@ -47,11 +47,7 @@ namespace FunProgLib.sort
             return List<T>.Cons(ys.Element, Mrg(xs, ys.Next));
         }
 
-        private static readonly List<T>.Node EmptyList = null;
-
-        private static readonly List<List<T>.Node>.Node EmptyListList = null;
-
-        private static readonly Sortable EmptySortable = new Sortable(0, new Lazy<List<List<T>.Node>.Node>(() => EmptyListList));
+        private static readonly Sortable EmptySortable = new Sortable(0, new Lazy<List<List<T>.Node>.Node>(() => List<List<T>.Node>.Empty));
 
         public static Sortable Empty
         {
@@ -72,7 +68,7 @@ namespace FunProgLib.sort
 
         public static List<T>.Node Sort(Sortable segs)
         {
-            return MrgAll(EmptyList, segs.Segs.Value);
+            return MrgAll(List<T>.Empty, segs.Segs.Value);
         }
 
         private static List<T>.Node MrgAll(List<T>.Node xs, List<List<T>.Node>.Node ys)

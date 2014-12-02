@@ -19,7 +19,7 @@ namespace FunProgTests.binary
     [TestClass]
     public class DenseTests
     {
-        private static readonly List<Dense.Digit>.Node Zero = null;
+        private static readonly List<Dense.Digit>.Node Zero = List<Dense.Digit>.Empty;
         private static readonly List<Dense.Digit>.Node One = Dense.Inc(Zero);
         private static readonly List<Dense.Digit>.Node Two = Dense.Inc(One);
         private static readonly List<Dense.Digit>.Node Three = Dense.Inc(Two);

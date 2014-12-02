@@ -105,16 +105,14 @@ namespace FunProgLib.lists
             }
         }
 
-        private static readonly List<Digit>.Node EmptyList = null;
-
         public static List<Digit>.Node Empty
         {
-            get { return EmptyList; }
+            get { return List<Digit>.Empty; }
         }
 
         public static bool IsEmpty(List<Digit>.Node list)
         {
-            return list == EmptyList;
+            return List<Digit>.IsEmpty(list);
         }
 
         private static int Size(Tree tree)
@@ -131,7 +129,7 @@ namespace FunProgLib.lists
 
         private static List<Digit>.Node ConsTree(Tree t, List<Digit>.Node ts)
         {
-            if (IsEmpty(ts)) return List<Digit>.Cons(new Digit(t), EmptyList);
+            if (IsEmpty(ts)) return List<Digit>.Cons(new Digit(t), List<Digit>.Empty);
             if (ts.Element == Zero) return List<Digit>.Cons(new Digit(t), ts.Next);
             return List<Digit>.Cons(Zero, ConsTree(Link(t, ts.Element.One), ts.Next));
         }
@@ -146,7 +144,7 @@ namespace FunProgLib.lists
                 if (node != null) return new Stuff(node.Tree1, List<Digit>.Cons(new Digit(node.Tree2), stuff.List));
                 throw new Exception();
             }
-            if (IsEmpty(list.Next)) return new Stuff(list.Element.One, EmptyList);
+            if (IsEmpty(list.Next)) return new Stuff(list.Element.One, List<Digit>.Empty);
             return new Stuff(list.Element.One, List<Digit>.Cons(Zero, list.Next));
         }
 

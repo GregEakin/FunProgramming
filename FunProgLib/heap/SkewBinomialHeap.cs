@@ -57,16 +57,14 @@ namespace FunProgLib.heap
             }
         }
 
-        private static readonly List<Tree>.Node EmptyHeap = null;
-
         public static List<Tree>.Node Empty
         {
-            get { return EmptyHeap; }
+            get { return List<Tree>.Empty; }
         }
 
         public static bool IsEmpty(List<Tree>.Node heap)
         {
-            return heap == EmptyHeap;
+            return List<Tree>.IsEmpty(heap);
         }
 
         private static Tree Link(Tree t1, Tree t2)
