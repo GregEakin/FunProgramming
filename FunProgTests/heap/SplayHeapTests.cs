@@ -99,5 +99,24 @@ namespace FunProgTests.heap
 
             Assert.AreEqual(3, SplayHeap<int>.FindMin(t3));
         }
+
+        [TestMethod]
+        public void DeleteLotsOfMinsTest()
+        {
+            var random = new Random(3456);
+            var heap = SplayHeap<int>.Empty;
+            for (var i = 0; i < 100; i++) heap = SplayHeap<int>.Insert(random.Next(100), heap);
+            var last = 0;
+            var count = 0;
+            while (!SplayHeap<int>.IsEmpty(heap))
+            {
+                var next = SplayHeap<int>.FindMin(heap);
+                heap = SplayHeap<int>.DeleteMin(heap);
+                Assert.IsTrue(last <= next);
+                last = next;
+                count++;
+            }
+            Assert.AreEqual(100, count);
+        }
     }
 }

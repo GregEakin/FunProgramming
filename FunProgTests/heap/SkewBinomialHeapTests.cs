@@ -136,25 +136,20 @@ namespace FunProgTests.heap
         [TestMethod]
         public void DeleteLotsOfMinsTest()
         {
-            var random = new Random(1000);
-            var t = SkewBinomialHeap<int>.Empty;
-
-            for (var i = 0; i < 1000; i++)
+            var random = new Random(3456);
+            var heap = SkewBinomialHeap<int>.Empty;
+            for (var i = 0; i < 100; i++) heap = SkewBinomialHeap<int>.Insert(random.Next(100), heap);
+            var last = 0;
+            var count = 0;
+            while (!SkewBinomialHeap<int>.IsEmpty(heap))
             {
-                var j = random.Next(1000);
-                t = SkewBinomialHeap<int>.Insert(j, t);
+                var next = SkewBinomialHeap<int>.FindMin(heap);
+                heap = SkewBinomialHeap<int>.DeleteMin(heap);
+                Assert.IsTrue(last <= next);
+                last = next;
+                count++;
             }
-
-            var min = 0;
-            for (var i = 0; i < 1000; i++)
-            {
-                var j = SkewBinomialHeap<int>.FindMin(t);
-                t = SkewBinomialHeap<int>.DeleteMin(t);
-                Assert.IsTrue(min <= j);
-                min = j;
-            }
-
-            Assert.IsTrue(SkewBinomialHeap<int>.IsEmpty(t));
+            Assert.AreEqual(100, count);
         }
 
         [TestMethod]

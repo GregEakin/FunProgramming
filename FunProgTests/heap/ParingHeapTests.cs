@@ -110,7 +110,7 @@ namespace FunProgTests.heap
         }
 
         [TestMethod]
-        public void DeleteLostOfMinTest()
+        public void DeleteLotsOfMinsTest()
         {
             var random = new Random(3456);
             var heap = ParingHeap<int>.Empty;
