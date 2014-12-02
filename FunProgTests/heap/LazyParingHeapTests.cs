@@ -28,12 +28,12 @@ namespace FunProgTests.heap
                 result.Append(", ");
                 result.Append(DumpHeap(node.List, showSusp));
             }
-            if (showSusp || node.List2.IsValueCreated)
+            if (showSusp || node.LazyList.IsValueCreated)
             {
-                if (!LazyParingHeap<T>.IsEmpty(node.List2.Value))
+                if (!LazyParingHeap<T>.IsEmpty(node.LazyList.Value))
                 {
                     result.Append("; ");
-                    result.Append(DumpHeap(node.List2.Value, showSusp));
+                    result.Append(DumpHeap(node.LazyList.Value, showSusp));
                 }
             }
             else
@@ -104,17 +104,36 @@ namespace FunProgTests.heap
         }
 
         [TestMethod]
+        public void DeleteLostOfMinTest()
+        {
+            var random = new Random(3456);
+            var heap = LazyParingHeap<int>.Empty;
+            for (var i = 0; i < 100; i++) heap = LazyParingHeap<int>.Insert(random.Next(100), heap);
+            var last = 0;
+            var count = 0;
+            while (!LazyParingHeap<int>.IsEmpty(heap))
+            {
+                var next = LazyParingHeap<int>.FindMin(heap);
+                heap = LazyParingHeap<int>.DeleteMin(heap);
+                Assert.IsTrue(last <= next);
+                last = next;
+                count++;
+            }
+            Assert.AreEqual(100, count);
+        }
+
+        [TestMethod]
         [ExpectedException(typeof(Exception))]
         public void FindMinNullTest()
         {
-            LazyParingHeap<int>.FindMin(null);
+            LazyParingHeap<int>.FindMin(LazyParingHeap<int>.Empty);
         }
 
         [TestMethod]
         [ExpectedException(typeof(Exception))]
         public void DeleteMinNullTest()
         {
-            LazyParingHeap<int>.DeleteMin(null);
+            LazyParingHeap<int>.DeleteMin(LazyParingHeap<int>.Empty);
         }
     }
 }

@@ -21,13 +21,13 @@ namespace FunProgLib.heap
 
             private readonly Heap list;
 
-            private readonly Lazy<Heap> list2;
+            private readonly Lazy<Heap> lazyList;
 
-            public Heap(T root, Heap list, Lazy<Heap> list2)
+            public Heap(T root, Heap list, Lazy<Heap> lazyList)
             {
                 this.root = root;
                 this.list = list;
-                this.list2 = list2;
+                this.lazyList = lazyList;
             }
 
             public T Root
@@ -40,9 +40,9 @@ namespace FunProgLib.heap
                 get { return list; }
             }
 
-            public Lazy<Heap> List2
+            public Lazy<Heap> LazyList
             {
-                get { return list2; }
+                get { return this.lazyList; }
             }
         }
 
@@ -71,8 +71,8 @@ namespace FunProgLib.heap
 
         private static Heap Link(Heap h1, Heap h2)
         {
-            if (IsEmpty(h1.List)) return new Heap(h1.Root, h2, h1.List2);
-            return new Heap(h1.Root, EmptyHeap, new Lazy<Heap>(() => Merge(Merge(h2, h1.List), h1.List2.Value)));
+            if (IsEmpty(h1.List)) return new Heap(h1.Root, h2, h1.LazyList);
+            return new Heap(h1.Root, EmptyHeap, new Lazy<Heap>(() => Merge(Merge(h2, h1.List), h1.LazyList.Value)));
         }
 
         public static Heap Insert(T x, Heap h)
@@ -89,7 +89,7 @@ namespace FunProgLib.heap
         public static Heap DeleteMin(Heap h)
         {
             if (IsEmpty(h)) throw new Exception("Empty");
-            return Merge(h.List, h.List2.Value);
+            return Merge(h.List, h.LazyList.Value);
         }
     }
 }
