@@ -81,7 +81,7 @@ namespace FunProgTests.ephemeral
         public void BlockingQueueTest()
         {
             var tasks = new System.Collections.Generic.List<Task>();
-            var q = new BlockingQueue<int>(4000);
+            var q = new BlockingQueue<int>(4);
             var watch = new Stopwatch();
             watch.Start();
 
@@ -100,7 +100,7 @@ namespace FunProgTests.ephemeral
             tasks.Add(producer);
 
             // Consumers
-            for (var i = 0; i < 200; i++)
+            for (var i = 0; i < 2; i++)
             {
                 var consumer = new Task(() =>
                 {
