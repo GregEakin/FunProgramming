@@ -40,8 +40,6 @@ namespace FunProgLib.heap
             }
         }
 
-        private static readonly List<Heap>.Node EmptyList = null;
-
         private static readonly Heap EmptyHeap = null;
 
         public static Heap Empty
@@ -49,7 +47,7 @@ namespace FunProgLib.heap
             get { return EmptyHeap; }
         }
 
-        public static bool IsEmapty(Heap list)
+        public static bool IsEmpty(Heap list)
         {
             return list == EmptyHeap;
         }
@@ -65,14 +63,14 @@ namespace FunProgLib.heap
 
         public static Heap Insert(T x, Heap h)
         {
-            return Merge(new Heap(x, EmptyList), h);
+            return Merge(new Heap(x, List<Heap>.Empty), h);
         }
 
         private static Heap MergePairs(List<Heap>.Node hs)
         {
-            if (hs == EmptyList) return EmptyHeap;
-            if (hs.Next == EmptyList) return hs.Element;
-            return Merge(Merge(hs.Element, hs.Next.Element), MergePairs(hs.Next.Element.List));
+            if (List<Heap>.IsEmpty(hs)) return EmptyHeap;
+            if (List<Heap>.IsEmpty(hs.Next)) return hs.Element;
+            return Merge(Merge(hs.Element, hs.Next.Element), MergePairs(hs.Next.Next));
         }
 
         public static T FindMin(Heap h)

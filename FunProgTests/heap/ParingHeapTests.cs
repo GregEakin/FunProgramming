@@ -25,7 +25,7 @@ namespace FunProgTests.heap
             var result = new StringBuilder();
             result.Append("[");
             result.Append(node.Root);
-            if (node.List != null && node.List.Any())
+            if (!FunProgLib.lists.List<ParingHeap<T>.Heap>.IsEmpty(node.List) && node.List.Any())
             {
                 result.Append(", ");
                 foreach (var node1 in node.List)
@@ -58,10 +58,10 @@ namespace FunProgTests.heap
         public void EmptyTest()
         {
             var t = ParingHeap<string>.Empty;
-            Assert.IsTrue(ParingHeap<string>.IsEmapty(t));
+            Assert.IsTrue(ParingHeap<string>.IsEmpty(t));
 
             var t1 = ParingHeap<string>.Insert("C", t);
-            Assert.IsFalse(ParingHeap<string>.IsEmapty(t1));
+            Assert.IsFalse(ParingHeap<string>.IsEmpty(t1));
         }
 
         [TestMethod]
@@ -110,17 +110,36 @@ namespace FunProgTests.heap
         }
 
         [TestMethod]
+        public void DeleteLostOfMinTest()
+        {
+            var random = new Random(3456);
+            var heap = ParingHeap<int>.Empty;
+            for (var i = 0; i < 100; i++) heap = ParingHeap<int>.Insert(random.Next(100), heap);
+            var last = 0;
+            var count = 0;
+            while (!ParingHeap<int>.IsEmpty(heap))
+            {
+                var next = ParingHeap<int>.FindMin(heap);
+                heap = ParingHeap<int>.DeleteMin(heap);
+                Assert.IsTrue(last <= next);
+                last = next;
+                count++;
+            }
+            Assert.AreEqual(100, count);
+        }
+
+        [TestMethod]
         [ExpectedException(typeof(Exception))]
         public void FindMinNullTest()
         {
-            ParingHeap<int>.FindMin(null);
+            ParingHeap<int>.FindMin(ParingHeap<int>.Empty);
         }
 
         [TestMethod]
         [ExpectedException(typeof(Exception))]
         public void DeleteMinNullTest()
         {
-            ParingHeap<int>.DeleteMin(null);
+            ParingHeap<int>.DeleteMin(ParingHeap<int>.Empty);
         }
     }
 }
