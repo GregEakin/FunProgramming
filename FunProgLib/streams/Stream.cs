@@ -22,7 +22,7 @@ namespace FunProgLib.streams
 
             public StreamCell(T element, Lazy<StreamCell> next)
             {
-                // if (next == null) throw new Exception("Can't be null, use DollarNil instead.");
+                if (next == null) throw new Exception("Can't be null, use Stream<T>.DollarNil instead.");
                 this.element = element;
                 this.next = next;
             }
