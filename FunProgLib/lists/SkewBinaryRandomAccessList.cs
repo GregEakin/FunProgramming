@@ -85,26 +85,24 @@ namespace FunProgLib.lists
             }
         }
 
-        private static readonly List<Stuff>.Node EmptyList = null;
-
         public static List<Stuff>.Node Empty
         {
-            get { return EmptyList; }
+            get { return List<Stuff>.Empty; }
         }
 
         public static bool IsEmpty(List<Stuff>.Node list)
         {
-            return list == EmptyList;
+            return List<Stuff>.IsEmpty(list);
         }
 
         public static List<Stuff>.Node Cons(T x, List<Stuff>.Node ts)
         {
-            if (ts == EmptyList)
+            if (List<Stuff>.IsEmpty(ts))
                 return List<Stuff>.Cons(new Stuff(1, new Leaf(x)), ts);
 
             var head1 = List<Stuff>.Head(ts);
             var tail1 = List<Stuff>.Tail(ts);
-            if (tail1 == EmptyList)
+            if (List<Stuff>.IsEmpty(tail1))
                 return List<Stuff>.Cons(new Stuff(1, new Leaf(x)), ts);
 
             var head2 = List<Stuff>.Head(tail1);
@@ -116,14 +114,14 @@ namespace FunProgLib.lists
 
         public static T Head(List<Stuff>.Node ts)
         {
-            if (ts == EmptyList) throw new Exception("Empty");
+            if (List<Stuff>.IsEmpty(ts)) throw new Exception("Empty");
             var head = List<Stuff>.Head(ts);
             return head.Tree.Alpha;
         }
 
         public static List<Stuff>.Node Tail(List<Stuff>.Node ts)
         {
-            if (ts == EmptyList) throw new Exception("Empty");
+            if (List<Stuff>.IsEmpty(ts)) throw new Exception("Empty");
             var head = List<Stuff>.Head(ts);
             if (head.Tree is Leaf) return List<Stuff>.Tail(ts);
             var node = head.Tree as Node;
@@ -173,7 +171,7 @@ namespace FunProgLib.lists
 
         public static T Lookup(int i, List<Stuff>.Node ts)
         {
-            if (ts == null) throw new Exception("Subscript");
+            if (List<Stuff>.IsEmpty(ts)) throw new Exception("Subscript");
             var head = List<Stuff>.Head(ts);
             if (i < head.Weight) return LookupTree(head.Weight, i, head.Tree);
             var tail = List<Stuff>.Tail(ts);
@@ -182,7 +180,7 @@ namespace FunProgLib.lists
 
         public static List<Stuff>.Node Update(int i, T x, List<Stuff>.Node ts)
         {
-            if (ts == null) throw new Exception("Subscript");
+            if (List<Stuff>.IsEmpty(ts)) throw new Exception("Subscript");
             var head = List<Stuff>.Head(ts);
             var tail = List<Stuff>.Tail(ts);
             if (i < head.Weight) return List<Stuff>.Cons(new Stuff(head.Weight, UpdateTree(head.Weight, i, x, head.Tree)), tail);

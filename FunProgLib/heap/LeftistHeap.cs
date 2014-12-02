@@ -90,13 +90,13 @@ namespace FunProgLib.heap
 
         public static T FindMin(Heap h)
         {
-            if (h == EmptyHeap) throw new Exception("Empty");
+            if (IsEmpty(h)) throw new Exception("Empty");
             return h.X;
         }
 
         public static Heap DeleteMin(Heap h)
         {
-            if (h == EmptyHeap) throw new Exception("Empty");
+            if (IsEmpty(h)) throw new Exception("Empty");
             return Merge(h.A, h.B);
         }
     }

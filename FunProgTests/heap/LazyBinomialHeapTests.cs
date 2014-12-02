@@ -24,7 +24,7 @@ namespace FunProgTests.heap
             var result = new StringBuilder();
             result.Append("[");
             result.Append(tree.Root);
-            if (tree.List != List<LazyBinomialHeap<T>.Tree>.Empty)
+            if (!List<LazyBinomialHeap<T>.Tree>.IsEmpty(tree.List))
             {
                 result.Append(", ");
                 foreach (var node1 in tree.List)
@@ -40,7 +40,7 @@ namespace FunProgTests.heap
         {
             var result = new StringBuilder();
             result.Append("[");
-            if (list.Value != List<LazyBinomialHeap<T>.Tree>.Empty)
+            if (!List<LazyBinomialHeap<T>.Tree>.IsEmpty(list.Value))
             {
                 foreach (var node in list.Value)
                 {

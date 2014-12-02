@@ -48,16 +48,14 @@ namespace FunProgLib.heap
             }
         }
 
-        private static readonly List<Tree>.Node EmptyList = null; // new List<Tree>.Node(EmptyList, null);
-
         public static List<Tree>.Node Empty
         {
-            get { return EmptyList; }
+            get { return List<Tree>.Empty; }
         }
 
         public static bool IsEmpty(List<Tree>.Node list)
         {
-            return list == EmptyList;
+            return List<Tree>.IsEmpty(list);
         }
 
         private static Tree Link(Tree t1, Tree t2)
@@ -68,20 +66,20 @@ namespace FunProgLib.heap
 
         private static List<Tree>.Node InsertTree(Tree t, List<Tree>.Node ts)
         {
-            if (ts == EmptyList) return new List<Tree>.Node(t, EmptyList);
+            if (List<Tree>.IsEmpty(ts)) return new List<Tree>.Node(t, List<Tree>.Empty);
             if (t.Rank < ts.Element.Rank) return List<Tree>.Cons(t, ts);
             return InsertTree(Link(t, ts.Element), ts.Next);
         }
 
         public static List<Tree>.Node Insert(T x, List<Tree>.Node ts)
         {
-            return InsertTree(new Tree(0, x, EmptyList), ts);
+            return InsertTree(new Tree(0, x, List<Tree>.Empty), ts);
         }
 
         public static List<Tree>.Node Merge(List<Tree>.Node ts1, List<Tree>.Node ts2)
         {
-            if (ts2 == EmptyList) return ts1;
-            if (ts1 == EmptyList) return ts2;
+            if (List<Tree>.IsEmpty(ts2)) return ts1;
+            if (List<Tree>.IsEmpty(ts1)) return ts2;
 
             if (ts1.Element.Rank < ts2.Element.Rank) return List<Tree>.Cons(ts1.Element, Merge(ts1.Next, ts2));
             if (ts2.Element.Rank < ts1.Element.Rank) return List<Tree>.Cons(ts2.Element, Merge(ts1, ts2.Next));
@@ -113,8 +111,8 @@ namespace FunProgLib.heap
 
         private static TreeParts RemoveMinTree(List<Tree>.Node list)
         {
-            if (list == EmptyList) throw new Exception("Empty");
-            if (list.Next == EmptyList) return new TreeParts(list.Element, EmptyList);
+            if (List<Tree>.IsEmpty(list)) throw new Exception("Empty");
+            if (List<Tree>.IsEmpty(list.Next)) return new TreeParts(list.Element, List<Tree>.Empty);
             var prime = RemoveMinTree(list.Next);
             if (list.Element.Root.CompareTo(prime.Tree.Root) <= 0) return new TreeParts(list.Element, list.Next);
             return new TreeParts(prime.Tree, List<Tree>.Cons(list.Element, prime.List));

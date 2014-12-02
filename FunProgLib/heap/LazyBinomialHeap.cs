@@ -50,9 +50,7 @@ namespace FunProgLib.heap
 
         // type Heap = Lazy<List<Tree>.Node>
 
-        private static readonly List<Tree>.Node EmptyList = List<Tree>.Empty;
-
-        private static readonly Lazy<List<Tree>.Node> EmptyHeap = new Lazy<List<Tree>.Node>(() => EmptyList);
+        private static readonly Lazy<List<Tree>.Node> EmptyHeap = new Lazy<List<Tree>.Node>(() => List<Tree>.Empty);
 
         public static Lazy<List<Tree>.Node> Empty
         {
@@ -61,7 +59,7 @@ namespace FunProgLib.heap
 
         public static bool IsEmpty(Lazy<List<Tree>.Node> heap)
         {
-            return heap.Value == EmptyList;
+            return List<Tree>.IsEmpty(heap.Value);
         }
 
         private static Tree Link(Tree t1, Tree t2)
@@ -72,15 +70,15 @@ namespace FunProgLib.heap
 
         private static List<Tree>.Node InsTree(Tree t, List<Tree>.Node ts)
         {
-            if (ts == EmptyList) return List<Tree>.Cons(t, EmptyList);
+            if (List<Tree>.IsEmpty(ts)) return List<Tree>.Cons(t, List<Tree>.Empty);
             if (t.Rank < ts.Element.Rank) return List<Tree>.Cons(t, ts);
             return InsTree(Link(t, ts.Element), ts.Next);
         }
 
         private static List<Tree>.Node Mrg(List<Tree>.Node ts1, List<Tree>.Node ts2)
         {
-            if (ts2 == EmptyList) return ts1;
-            if (ts1 == EmptyList) return ts2;
+            if (List<Tree>.IsEmpty(ts2)) return ts1;
+            if (List<Tree>.IsEmpty(ts1)) return ts2;
 
             if (ts1.Element.Rank < ts2.Element.Rank) return List<Tree>.Cons(ts1.Element, Mrg(ts1.Next, ts2));
             if (ts2.Element.Rank < ts1.Element.Rank) return List<Tree>.Cons(ts2.Element, Mrg(ts1, ts2.Next));
@@ -89,7 +87,7 @@ namespace FunProgLib.heap
 
         public static Lazy<List<Tree>.Node> Insert(T x, Lazy<List<Tree>.Node> ts)
         {
-            return new Lazy<List<Tree>.Node>(() => InsTree(new Tree(0, x, EmptyList), ts.Value));
+            return new Lazy<List<Tree>.Node>(() => InsTree(new Tree(0, x, List<Tree>.Empty), ts.Value));
         }
 
         public static Lazy<List<Tree>.Node> Merge(Lazy<List<Tree>.Node> ts1, Lazy<List<Tree>.Node> ts2)
@@ -122,8 +120,8 @@ namespace FunProgLib.heap
 
         private static TreeParts RemoveMinTree(List<Tree>.Node list)
         {
-            if (list == EmptyList) throw new Exception("Empty");
-            if (list.Next == EmptyList) return new TreeParts(list.Element, EmptyList);
+            if (List<Tree>.IsEmpty(list)) throw new Exception("Empty");
+            if (List<Tree>.IsEmpty(list.Next)) return new TreeParts(list.Element, List<Tree>.Empty);
             var prime = RemoveMinTree(list.Next);
             if (list.Element.Root.CompareTo(prime.Tree.Root) <= 0) return new TreeParts(list.Element, list.Next);
             return new TreeParts(prime.Tree, List<Tree>.Cons(list.Element, prime.List));

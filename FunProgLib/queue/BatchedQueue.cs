@@ -32,20 +32,18 @@ namespace FunProgLib.queue
             public List<T>.Node R { get { return r; } }
         }
 
-        private static readonly List<T>.Node EmptyList = null; // new List<T>.Node(new T[0]);
-
-        private static readonly Queue EmptyQueue = new Queue(EmptyList, EmptyList);
+        private static readonly Queue EmptyQueue = new Queue(List<T>.Empty, List<T>.Empty);
 
         public static Queue Empty { get { return EmptyQueue; } }
 
         public static bool IsEmpty(Queue q)
         {
-            return q.F == EmptyList;
+            return List<T>.IsEmpty(q.F);
         }
 
         private static Queue CheckF(List<T>.Node f, List<T>.Node r)
         {
-            if (f == EmptyList) return new Queue(List<T>.Reverse(r), EmptyList);
+            if (List<T>.IsEmpty(f)) return new Queue(List<T>.Reverse(r), List<T>.Empty);
             return new Queue(f, r);
         }
 
@@ -56,13 +54,13 @@ namespace FunProgLib.queue
 
         public static T Head(Queue q)
         {
-            if (q.F == EmptyList) throw new Exception("Empty");
+            if (List<T>.IsEmpty(q.F)) throw new Exception("Empty");
             return q.F.Element;
         }
 
         public static Queue Tail(Queue q)
         {
-            if (q.F == EmptyList) throw new Exception("Empty");
+            if (List<T>.IsEmpty(q.F)) throw new Exception("Empty");
             return CheckF(q.F.Next, q.R);
         }
     }

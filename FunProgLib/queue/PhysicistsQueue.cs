@@ -41,9 +41,7 @@ namespace FunProgLib.queue
             public List<T>.Node R { get { return r; } }
         }
 
-        private static readonly List<T>.Node EmptyList = null;
-
-        private static readonly Queue EmptyQueue = new Queue(EmptyList, 0, new Lazy<List<T>.Node>(() => EmptyList), 0, EmptyList);
+        private static readonly Queue EmptyQueue = new Queue(List<T>.Empty, 0, new Lazy<List<T>.Node>(() => List<T>.Empty), 0, List<T>.Empty);
 
         public static Queue Empty
         {
@@ -57,14 +55,14 @@ namespace FunProgLib.queue
 
         private static Queue CheckW(List<T>.Node w, int lenf, Lazy<List<T>.Node> f, int lenr, List<T>.Node r)
         {
-            if (w == EmptyList) return new Queue(f.Value, lenf, f, lenr, r);
+            if (List<T>.IsEmpty(w)) return new Queue(f.Value, lenf, f, lenr, r);
             return new Queue(w, lenf, f, lenr, r);
         }
 
         private static Queue Check(List<T>.Node w, int lenf, Lazy<List<T>.Node> f, int lenr, List<T>.Node r)
         {
             if (lenr <= lenf) return CheckW(w, lenf, f, lenr, r);
-            return CheckW(f.Value, lenf + lenr, new Lazy<List<T>.Node>(() => List<T>.Cat(f.Value, List<T>.Reverse(r))), 0, EmptyList);
+            return CheckW(f.Value, lenf + lenr, new Lazy<List<T>.Node>(() => List<T>.Cat(f.Value, List<T>.Reverse(r))), 0, List<T>.Empty);
         }
 
         public static Queue Snoc(Queue queue, T element)
@@ -74,13 +72,13 @@ namespace FunProgLib.queue
 
         public static T Head(Queue queue)
         {
-            if (queue.W == EmptyList) throw new Exception("Empty");
+            if (List<T>.IsEmpty(queue.W)) throw new Exception("Empty");
             return queue.W.Element;
         }
 
         public static Queue Tail(Queue queue)
         {
-            if (queue.W == EmptyList) throw new Exception("Empty");
+            if (List<T>.IsEmpty(queue.W)) throw new Exception("Empty");
             return Check(queue.W.Next, queue.Lenf - 1, new Lazy<List<T>.Node>(() => queue.F.Value.Next), queue.Lenr, queue.R);
         }
     }

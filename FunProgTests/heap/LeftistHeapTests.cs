@@ -22,11 +22,11 @@ namespace FunProgTests.heap
     {
         private static string DumpHeap<T>(LeftistHeap<T>.Heap heap) where T : IComparable<T>
         {
-            if (heap == LeftistHeap<T>.Empty) return "\u2205";
+            if (LeftistHeap<T>.IsEmpty(heap)) return "\u2205";
 
             var results = new StringBuilder();
 
-            if (heap.A != LeftistHeap<T>.Empty)
+            if (!LeftistHeap<T>.IsEmpty(heap.A))
             {
                 results.Append(DumpHeap(heap.A));
             }
@@ -37,7 +37,7 @@ namespace FunProgTests.heap
             //results.Append("]");
             results.Append(", ");
 
-            if (heap.B != LeftistHeap<T>.Empty)
+            if (!LeftistHeap<T>.IsEmpty(heap.B))
             {
                 results.Append(DumpHeap(heap.B));
             }
