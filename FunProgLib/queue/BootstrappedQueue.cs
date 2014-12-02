@@ -31,6 +31,15 @@ namespace FunProgLib.queue
 
             private readonly List<T>.Node r;
 
+            public Queue(int lenfm, List<T>.Node f, BootstrappedQueue<Lazy<List<T>.Node>>.Queue m, int lenr, List<T>.Node r)
+            {
+                this.lenfm = lenfm;
+                this.f = f;
+                this.m = m;
+                this.lenr = lenr;
+                this.r = r;
+            }
+
             public int LenFM
             {
                 get { return lenfm; }
@@ -57,7 +66,7 @@ namespace FunProgLib.queue
             }
         }
 
-        private static readonly List<T>.Node EmptyList = null;
+        // private static readonly List<T>.Node EmptyList = null;
         private static readonly Queue EmptyQueue = null;
 
         public static Queue Empty
