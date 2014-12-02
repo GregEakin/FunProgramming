@@ -49,9 +49,9 @@ namespace FunProgTests.streams
 
             var r = Stream<int>.Reverse(s4);
 
-            // Assert.IsFalse(s4.IsValueCreated);
-            // Assert.IsFalse(s4.Value.Next.IsValueCreated);
-            // Assert.IsFalse(s4.Value.Next.Value.Next.IsValueCreated);
+            Assert.IsTrue(s4.IsValueCreated);
+            Assert.IsTrue(s4.Value.Next.IsValueCreated);
+            Assert.IsTrue(s4.Value.Next.Value.Next.IsValueCreated);
 
             Assert.IsFalse(r.IsValueCreated);
             Assert.AreEqual(3, r.Value.Element);
@@ -71,8 +71,8 @@ namespace FunProgTests.streams
             var r = Stream<int>.Reverse(s3);
             var t = Stream<int>.Append(s3, r);
 
-            // Assert.IsFalse(s3.IsValueCreated);
-            // Assert.IsFalse(s3.Value.Next.IsValueCreated);
+            Assert.IsTrue(s3.IsValueCreated);
+            Assert.IsTrue(s3.Value.Next.IsValueCreated);
 
             Assert.IsFalse(r.IsValueCreated);
             Assert.IsFalse(r.Value.Next.IsValueCreated);
@@ -81,7 +81,7 @@ namespace FunProgTests.streams
             Assert.AreEqual(1, t.Value.Element);
             Assert.IsFalse(t.Value.Next.IsValueCreated);
             Assert.AreEqual(2, t.Value.Next.Value.Element);
-            // Assert.IsFalse(t.Value.Next.Value.Next.IsValueCreated);
+            Assert.IsTrue(t.Value.Next.Value.Next.IsValueCreated);
             Assert.AreEqual(2, t.Value.Next.Value.Next.Value.Element);
             Assert.IsFalse(t.Value.Next.Value.Next.Value.Next.IsValueCreated);
             Assert.AreEqual(1, t.Value.Next.Value.Next.Value.Next.Value.Element);
@@ -101,11 +101,11 @@ namespace FunProgTests.streams
             var s4 = new Lazy<Stream<int>.StreamCell>(() => new Stream<int>.StreamCell(1, s3));
             var r = Stream<int>.Drop(1, s4);
 
-            // Assert.IsFalse(s4.IsValueCreated);
+            Assert.IsTrue(s4.IsValueCreated);
             Assert.IsFalse(s4.Value.Next.IsValueCreated);
             Assert.IsFalse(s4.Value.Next.Value.Next.IsValueCreated);
 
-            // Assert.IsFalse(r.IsValueCreated);
+            Assert.IsTrue(r.IsValueCreated);
             Assert.AreEqual(2, r.Value.Element);
             Assert.IsFalse(r.Value.Next.IsValueCreated);
             Assert.AreEqual(3, r.Value.Next.Value.Element);

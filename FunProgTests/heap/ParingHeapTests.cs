@@ -10,10 +10,11 @@
 namespace FunProgTests.heap
 {
     using System;
+    using System.Collections.Generic;
     using System.Linq;
     using System.Text;
     using FunProgLib.heap;
-    using FunProgLib.lists;
+
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     [TestClass]
@@ -36,11 +37,11 @@ namespace FunProgTests.heap
             return result.ToString();
         }
 
-        private static string DumpHeapList<T>(List<ParingHeap<T>.Heap>.Node list) where T : IComparable<T>
+        private static string DumpHeapList<T>(IEnumerable<ParingHeap<T>.Heap> list) where T : IComparable<T>
         {
             var result = new StringBuilder();
             result.Append("[");
-            if (list == List<ParingHeap<T>.Heap>.Empty)
+            if (Equals(list, FunProgLib.lists.List<ParingHeap<T>.Heap>.Empty))
             {
                 foreach (var node in list)
                 {

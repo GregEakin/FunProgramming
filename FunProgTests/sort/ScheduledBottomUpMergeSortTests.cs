@@ -28,20 +28,27 @@ namespace FunProgTests.sort
             list = ScheduledBottomUpMergeSort<string>.Add("One", list);
             Assert.AreEqual(1, list.Size);
             Assert.IsNotNull(list.Segs);
-
-            // Assert.IsFalse(Node.Segs.Element.ElementStream.IsValueCreated);
-            //Assert.IsNull(Node.Segs.Value);
-            //Assert.IsTrue(Node.Segs.IsValueCreated);
         }
 
         [TestMethod]
         public void LazyTest()
         {
+            var list = ScheduledBottomUpMergeSort<string>.Empty;
+            list = ScheduledBottomUpMergeSort<string>.Add("One", list);
+
+            Assert.IsFalse(list.Segs.Element.ElementStream.IsValueCreated);
+            Assert.AreEqual("One", list.Segs.Element.ElementStream.Value.Element);
+            Assert.IsTrue(list.Segs.Element.ElementStream.IsValueCreated);
+        }
+
+        [TestMethod]
+        public void SortLazyTest()
+        {
             const string Data = "How now, brown cow?";
             var list = Data.Split().Aggregate(ScheduledBottomUpMergeSort<string>.Empty, (ts, x) => ScheduledBottomUpMergeSort<string>.Add(x, ts));
-            //Assert.IsFalse(Node.Segs.IsValueCreated);
-            var xs = ScheduledBottomUpMergeSort<string>.Sort(list);
-            //Assert.IsTrue(Node.Segs.IsValueCreated);
+            Assert.IsFalse(list.Segs.Element.ElementStream.IsValueCreated);
+            var sorted = ScheduledBottomUpMergeSort<string>.Sort(list);
+            Assert.IsTrue(list.Segs.Element.ElementStream.IsValueCreated);
         }
 
         [TestMethod]
@@ -51,22 +58,22 @@ namespace FunProgTests.sort
             list = ScheduledBottomUpMergeSort<string>.Add("One", list);
             Assert.AreEqual(1, list.Size);
             var xs = ScheduledBottomUpMergeSort<string>.Sort(list);
-            CollectionAssert.AreEqual(new[] { "One" }, xs.ToList());
+            CollectionAssert.AreEqual(new[] { "One" }, xs.ToArray());
 
             list = ScheduledBottomUpMergeSort<string>.Add("Two", list);
             Assert.AreEqual(2, list.Size);
             xs = ScheduledBottomUpMergeSort<string>.Sort(list);
-            CollectionAssert.AreEqual(new[] { "One", "Two" }, xs.ToList());
+            CollectionAssert.AreEqual(new[] { "One", "Two" }, xs.ToArray());
 
             list = ScheduledBottomUpMergeSort<string>.Add("Three", list);
             Assert.AreEqual(3, list.Size);
             xs = ScheduledBottomUpMergeSort<string>.Sort(list);
-            CollectionAssert.AreEqual(new[] { "One", "Three", "Two" }, xs.ToList());
+            CollectionAssert.AreEqual(new[] { "One", "Three", "Two" }, xs.ToArray());
 
             list = ScheduledBottomUpMergeSort<string>.Add("Four", list);
             Assert.AreEqual(4, list.Size);
             xs = ScheduledBottomUpMergeSort<string>.Sort(list);
-            CollectionAssert.AreEqual(new[] { "Four", "One", "Three", "Two" }, xs.ToList());
+            CollectionAssert.AreEqual(new[] { "Four", "One", "Three", "Two" }, xs.ToArray());
         }
 
         [TestMethod]
@@ -75,7 +82,7 @@ namespace FunProgTests.sort
             const string Data = "How now, jack brown cow? zed";
             var list = Data.Split().Aggregate(ScheduledBottomUpMergeSort<string>.Empty, (ts, x) => ScheduledBottomUpMergeSort<string>.Add(x, ts));
             var xs = ScheduledBottomUpMergeSort<string>.Sort(list);
-            CollectionAssert.AreEqual(new[] { "brown", "cow?", "How", "jack", "now,", "zed" }, xs.ToList());
+            CollectionAssert.AreEqual(new[] { "brown", "cow?", "How", "jack", "now,", "zed" }, xs.ToArray());
         }
 
         [TestMethod]
@@ -84,7 +91,7 @@ namespace FunProgTests.sort
             const string Data = "Alpha Bravo Charlie Delta Echo Foxtrot Golf Hotel India Juliet Kilo Lima Mike November Oscar Papa Quebec Romeo Sierra Tango Uniform Victor Whiskey X-ray Yankee Zulu";
             var list = Data.Split().Aggregate(ScheduledBottomUpMergeSort<string>.Empty, (ts, x) => ScheduledBottomUpMergeSort<string>.Add(x, ts));
             var xs = ScheduledBottomUpMergeSort<string>.Sort(list);
-            CollectionAssert.AreEqual(new[] { "Alpha", "Bravo", "Charlie", "Delta", "Echo", "Foxtrot", "Golf", "Hotel", "India", "Juliet", "Kilo", "Lima", "Mike", "November", "Oscar", "Papa", "Quebec", "Romeo", "Sierra", "Tango", "Uniform", "Victor", "Whiskey", "X-ray", "Yankee", "Zulu" }, xs.ToList());
+            CollectionAssert.AreEqual(new[] { "Alpha", "Bravo", "Charlie", "Delta", "Echo", "Foxtrot", "Golf", "Hotel", "India", "Juliet", "Kilo", "Lima", "Mike", "November", "Oscar", "Papa", "Quebec", "Romeo", "Sierra", "Tango", "Uniform", "Victor", "Whiskey", "X-ray", "Yankee", "Zulu" }, xs.ToArray());
         }
 
         [TestMethod]
@@ -93,7 +100,7 @@ namespace FunProgTests.sort
             const string Data = "Zulu Yankee X-ray Whiskey Victor Uniform Tango Sierra Romeo Quebec Papa Oscar November Mike Lima Kilo Juliet India Hotel Golf Foxtrot Echo Delta Charlie Bravo Alpha";
             var list = Data.Split().Aggregate(ScheduledBottomUpMergeSort<string>.Empty, (ts, x) => ScheduledBottomUpMergeSort<string>.Add(x, ts));
             var xs = ScheduledBottomUpMergeSort<string>.Sort(list);
-            CollectionAssert.AreEqual(new[] { "Alpha", "Bravo", "Charlie", "Delta", "Echo", "Foxtrot", "Golf", "Hotel", "India", "Juliet", "Kilo", "Lima", "Mike", "November", "Oscar", "Papa", "Quebec", "Romeo", "Sierra", "Tango", "Uniform", "Victor", "Whiskey", "X-ray", "Yankee", "Zulu" }, xs.ToList());
+            CollectionAssert.AreEqual(new[] { "Alpha", "Bravo", "Charlie", "Delta", "Echo", "Foxtrot", "Golf", "Hotel", "India", "Juliet", "Kilo", "Lima", "Mike", "November", "Oscar", "Papa", "Quebec", "Romeo", "Sierra", "Tango", "Uniform", "Victor", "Whiskey", "X-ray", "Yankee", "Zulu" }, xs.ToArray());
         }
     }
 }

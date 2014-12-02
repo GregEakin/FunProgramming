@@ -60,7 +60,7 @@ namespace FunProgTests.heap
             var t = LazyParingHeap<string>.Empty;
             var x1 = LazyParingHeap<string>.Insert("X", t);
             var x2 = LazyParingHeap<string>.Insert("Y", x1);
-            // Assert.AreEqual("[X, [Y; susp]; susp]", DumpHeap(x2, false));
+            Assert.AreEqual("[X, [Y; susp]; susp]", DumpHeap(x2, false));
             Assert.AreEqual("[X, [Y]]", DumpHeap(x2, true));
         }
 

@@ -50,6 +50,7 @@ namespace FunProgTests.heap
         {
             var t = SplayHeap<string>.Empty;
             Assert.IsTrue(SplayHeap<string>.IsEmpty(t));
+            Assert.AreEqual("∅", DumpHeap(t));
 
             var t1 = SplayHeap<string>.Insert("C", t);
             Assert.IsFalse(SplayHeap<string>.IsEmpty(t1));

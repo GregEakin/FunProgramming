@@ -10,11 +10,11 @@
 namespace FunProgTests.heap
 {
     using System;
+    using System.Collections.Generic;
     using System.Linq;
     using System.Text;
 
     using FunProgLib.heap;
-    using FunProgLib.lists;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -26,7 +26,7 @@ namespace FunProgTests.heap
             var result = new StringBuilder();
             result.Append("[");
             result.Append(tree.Root);
-            if (tree.List != List<BinomialHeap<T>.Tree>.Empty)
+            if (tree.List != FunProgLib.lists.List<BinomialHeap<T>.Tree>.Empty)
             {
                 result.Append(", ");
                 foreach (var node1 in tree.List)
@@ -38,11 +38,11 @@ namespace FunProgTests.heap
             return result.ToString();
         }
 
-        private static string DumpHeap<T>(List<BinomialHeap<T>.Tree>.Node list) where T : IComparable<T>
+        private static string DumpHeap<T>(IEnumerable<BinomialHeap<T>.Tree> list) where T : IComparable<T>
         {
             var result = new StringBuilder();
             result.Append("[");
-            if (list != List<BinomialHeap<T>.Tree>.Empty)
+            if (!Equals(list, FunProgLib.lists.List<BinomialHeap<T>.Tree>.Empty))
             {
                 foreach (var node in list)
                 {
