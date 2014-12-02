@@ -59,7 +59,7 @@ namespace FunProgLib.heap
             get { return EmptyHeap; }
         }
 
-        public static bool IsEmapty(Lazy<List<Tree>.Node> heap)
+        public static bool IsEmpty(Lazy<List<Tree>.Node> heap)
         {
             return heap.Value == EmptyList;
         }

@@ -169,5 +169,24 @@ namespace FunProgTests.heap
             Assert.AreEqual("cow?, brown, now,, How, ", DumpHeap(heap));
             Assert.AreEqual("brown", LeftistHeap<string>.FindMin(heap));
         }
+
+        [TestMethod]
+        public void DeleteLotsOfMinsTest()
+        {
+            var random = new Random(3456);
+            var heap = LeftistHeap<int>.Empty;
+            for (var i = 0; i < 100; i++) heap = LeftistHeap<int>.Insert(random.Next(100), heap);
+            var last = 0;
+            var count = 0;
+            while (!LeftistHeap<int>.IsEmpty(heap))
+            {
+                var next = LeftistHeap<int>.FindMin(heap);
+                heap = LeftistHeap<int>.DeleteMin(heap);
+                Assert.IsTrue(last <= next);
+                last = next;
+                count++;
+            }
+            Assert.AreEqual(100, count);
+        }
     }
 }

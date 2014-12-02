@@ -55,7 +55,7 @@ namespace FunProgLib.heap
             get { return EmptyList; }
         }
 
-        public static bool IsEmapty(List<Tree>.Node list)
+        public static bool IsEmpty(List<Tree>.Node list)
         {
             return list == EmptyList;
         }

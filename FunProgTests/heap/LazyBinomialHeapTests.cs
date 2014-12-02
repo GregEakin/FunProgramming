@@ -57,10 +57,10 @@ namespace FunProgTests.heap
         public void EmptyTest()
         {
             var t = LazyBinomialHeap<string>.Empty;
-            Assert.IsTrue(LazyBinomialHeap<string>.IsEmapty(t));
+            Assert.IsTrue(LazyBinomialHeap<string>.IsEmpty(t));
 
             var t1 = LazyBinomialHeap<string>.Insert("C", t);
-            Assert.IsFalse(LazyBinomialHeap<string>.IsEmapty(t1));
+            Assert.IsFalse(LazyBinomialHeap<string>.IsEmpty(t1));
         }
 
         [TestMethod]
@@ -106,6 +106,25 @@ namespace FunProgTests.heap
             Assert.AreEqual(5, LazyBinomialHeap<int>.FindMin(t4));
 
             Assert.AreEqual(3, LazyBinomialHeap<int>.FindMin(t3));
+        }
+
+        [TestMethod]
+        public void DeleteLotsOfMinsTest()
+        {
+            var random = new Random(3456);
+            var heap = LazyBinomialHeap<int>.Empty;
+            for (var i = 0; i < 100; i++) heap = LazyBinomialHeap<int>.Insert(random.Next(100), heap);
+            var last = 0;
+            var count = 0;
+            while (!LazyBinomialHeap<int>.IsEmpty(heap))
+            {
+                var next = LazyBinomialHeap<int>.FindMin(heap);
+                heap = LazyBinomialHeap<int>.DeleteMin(heap);
+                Assert.IsTrue(last <= next);
+                last = next;
+                count++;
+            }
+            Assert.AreEqual(100, count);
         }
     }
 }
