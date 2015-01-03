@@ -9,22 +9,22 @@
 // Okasaki, Chris. "6.3.2 Example: Queues." Purely Functional Data Structures. 
 //     Cambridge, U.K.: Cambridge UP, 1998. 64-67. Print.
 
+using System;
+using System.Threading.Tasks;
+using FunProgLib.streams;
+
 namespace FunProgLib.queue
 {
-    using System;
-
-    using FunProgLib.streams;
-
     public static class BankersQueue<T>
     {
         public sealed class Queue
         {
             private readonly int lenf;
-            private readonly Lazy<Stream<T>.StreamCell> f;
+            private readonly Lazy<Task<Stream<T>.StreamCell>> f;
             private readonly int lenr;
-            private readonly Lazy<Stream<T>.StreamCell> r;
+            private readonly Lazy<Task<Stream<T>.StreamCell>> r;
 
-            public Queue(int lenf, Lazy<Stream<T>.StreamCell> f, int lenr, Lazy<Stream<T>.StreamCell> r)
+            public Queue(int lenf, Lazy<Task<Stream<T>.StreamCell>> f, int lenr, Lazy<Task<Stream<T>.StreamCell>> r)
             {
                 this.lenf = lenf;
                 this.f = f;
@@ -33,9 +33,9 @@ namespace FunProgLib.queue
             }
 
             public int LenF { get { return lenf; } }
-            public Lazy<Stream<T>.StreamCell> F { get { return f; } }
+            public Lazy<Task<Stream<T>.StreamCell>> F { get { return f; } }
             public int LenR { get { return lenr; } }
-            public Lazy<Stream<T>.StreamCell> R { get { return r; } }
+            public Lazy<Task<Stream<T>.StreamCell>> R { get { return r; } }
         }
 
         private static readonly Queue EmptyQueue = new Queue(0, Stream<T>.DollarNil, 0, Stream<T>.DollarNil);
@@ -50,7 +50,7 @@ namespace FunProgLib.queue
             return queue.LenF == 0;
         }
 
-        private static Queue Check(int lenf, Lazy<Stream<T>.StreamCell> f, int lenr, Lazy<Stream<T>.StreamCell> r)
+        private static Queue Check(int lenf, Lazy<Task<Stream<T>.StreamCell>> f, int lenr, Lazy<Task<Stream<T>.StreamCell>> r)
         {
             if (lenr <= lenf) return new Queue(lenf, f, lenr, r);
             return new Queue(lenf + lenr, Stream<T>.Append(f, Stream<T>.Reverse(r)), 0, Stream<T>.DollarNil);
@@ -58,20 +58,20 @@ namespace FunProgLib.queue
 
         public static Queue Snoc(Queue queue, T element)
         {
-            var lazy = new Lazy<Stream<T>.StreamCell>(() => new Stream<T>.StreamCell(element, queue.R));
+            var lazy = new Lazy<Task<Stream<T>.StreamCell>>(() => Task.Factory.StartNew(() => new Stream<T>.StreamCell(element, queue.R)));
             return Check(queue.LenF, queue.F, queue.LenR + 1, lazy);
         }
 
         public static T Head(Queue queue)
         {
             if (queue.F == Stream<T>.DollarNil) throw new Exception("Empty");
-            return queue.F.Value.Element;
+            return queue.F.Value.Result.Element;
         }
 
         public static Queue Tail(Queue queue)
         {
             if (queue.F == Stream<T>.DollarNil) throw new Exception("Empty");
-            return Check(queue.LenF - 1, queue.F.Value.Next, queue.LenR, queue.R);
+            return Check(queue.LenF - 1, queue.F.Value.Result.Next, queue.LenR, queue.R);
         }
     }
 }

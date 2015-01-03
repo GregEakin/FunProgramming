@@ -9,6 +9,8 @@
 // Okasaki, Chris. "7.3 Binomial Heaps." Purely Functional Data Structures. 
 //     Cambridge, U.K.: Cambridge UP, 1998. 89-93. Print.
 
+using System.Threading.Tasks;
+
 namespace FunProgLib.heap
 {
     using System;
@@ -60,14 +62,14 @@ namespace FunProgLib.heap
 
         public sealed class Schedule
         {
-            private readonly List<Lazy<Stream<Digit>.StreamCell>>.Node digitStreamList;
+            private readonly List<Lazy<Task<Stream<Digit>.StreamCell>>>.Node digitStreamList;
 
-            public Schedule(List<Lazy<Stream<Digit>.StreamCell>>.Node digitStreamList)
+            public Schedule(List<Lazy<Task<Stream<Digit>.StreamCell>>>.Node digitStreamList)
             {
                 this.digitStreamList = digitStreamList;
             }
 
-            public List<Lazy<Stream<Digit>.StreamCell>>.Node DigitStreamList
+            public List<Lazy<Task<Stream<Digit>.StreamCell>>>.Node DigitStreamList
             {
                 get { return digitStreamList; }
             }
@@ -75,17 +77,17 @@ namespace FunProgLib.heap
 
         public sealed class Heap
         {
-            private readonly Lazy<Stream<Digit>.StreamCell> digitStream;
+            private readonly Lazy<Task<Stream<Digit>.StreamCell>> digitStream;
 
             private readonly Schedule schedule;
 
-            public Heap(Lazy<Stream<Digit>.StreamCell> ds, Schedule schedule)
+            public Heap(Lazy<Task<Stream<Digit>.StreamCell>> ds, Schedule schedule)
             {
                 this.digitStream = ds;
                 this.schedule = schedule;
             }
 
-            public Lazy<Stream<Digit>.StreamCell> DigitStream
+            public Lazy<Task<Stream<Digit>.StreamCell>> DigitStream
             {
                 get { return digitStream; }
             }
@@ -98,7 +100,7 @@ namespace FunProgLib.heap
 
         private static readonly Schedule EmptySchedule = new Schedule(null);
 
-        public static readonly Lazy<Stream<Digit>.StreamCell> EmptyStream = Stream<Digit>.DollarNil;
+        public static readonly Lazy<Task<Stream<Digit>.StreamCell>> EmptyStream = Stream<Digit>.DollarNil;
 
         private static readonly Heap EmptyHeap = new Heap(EmptyStream, EmptySchedule);
 
@@ -119,40 +121,40 @@ namespace FunProgLib.heap
             return new Tree(t2.Node, List<Tree>.Cons(t1, t2.TreeList));
         }
 
-        private static Lazy<Stream<Digit>.StreamCell> InsTree(Tree t, Lazy<Stream<Digit>.StreamCell> dsc)
+        private static Lazy<Task<Stream<Digit>.StreamCell>> InsTree(Tree t, Lazy<Task<Stream<Digit>.StreamCell>> dsc)
         {
-            if (dsc == Stream<Digit>.DollarNil) return new Lazy<Stream<Digit>.StreamCell>(() => new Stream<Digit>.StreamCell(new Digit(t), EmptyStream));
-            if (dsc.Value.Element == Zero) return new Lazy<Stream<Digit>.StreamCell>(() => new Stream<Digit>.StreamCell(new Digit(t), dsc.Value.Next));
-            return new Lazy<Stream<Digit>.StreamCell>(() => new Stream<Digit>.StreamCell(Zero, InsTree(Link(t, dsc.Value.Element.One), dsc.Value.Next)));
+            if (dsc == Stream<Digit>.DollarNil) return new Lazy<Task<Stream<Digit>.StreamCell>>(() => Task.Factory.StartNew(() => new Stream<Digit>.StreamCell(new Digit(t), EmptyStream)));
+            if (dsc.Value.Result.Element == Zero) return new Lazy<Task<Stream<Digit>.StreamCell>>(() => Task.Factory.StartNew(() => new Stream<Digit>.StreamCell(new Digit(t), dsc.Value.Result.Next)));
+            return new Lazy<Task<Stream<Digit>.StreamCell>>(() => Task.Factory.StartNew(() => new Stream<Digit>.StreamCell(Zero, InsTree(Link(t, dsc.Value.Result.Element.One), dsc.Value.Result.Next))));
         }
 
-        private static Lazy<Stream<Digit>.StreamCell> Mrg(Lazy<Stream<Digit>.StreamCell> d1, Lazy<Stream<Digit>.StreamCell> d2)
+        private static Lazy<Task<Stream<Digit>.StreamCell>> Mrg(Lazy<Task<Stream<Digit>.StreamCell>> d1, Lazy<Task<Stream<Digit>.StreamCell>> d2)
         {
             if (d2 == Stream<Digit>.DollarNil) return d1;
             if (d1 == Stream<Digit>.DollarNil) return d2;
-            if (d1.Value.Element == Zero) return new Lazy<Stream<Digit>.StreamCell>(() => new Stream<Digit>.StreamCell(d2.Value.Element, Mrg(d1.Value.Next, d2.Value.Next)));
-            if (d2.Value.Element == Zero) return new Lazy<Stream<Digit>.StreamCell>(() => new Stream<Digit>.StreamCell(d1.Value.Element, Mrg(d1.Value.Next, d2.Value.Next)));
-            return new Lazy<Stream<Digit>.StreamCell>(() => new Stream<Digit>.StreamCell(Zero, InsTree(Link(d1.Value.Element.One, d2.Value.Element.One), Mrg(d1.Value.Next, d2.Value.Next))));
+            if (d1.Value.Result.Element == Zero) return new Lazy<Task<Stream<Digit>.StreamCell>>(() => Task.Factory.StartNew(() => new Stream<Digit>.StreamCell(d2.Value.Result.Element, Mrg(d1.Value.Result.Next, d2.Value.Result.Next))));
+            if (d2.Value.Result.Element == Zero) return new Lazy<Task<Stream<Digit>.StreamCell>>(() => Task.Factory.StartNew(() => new Stream<Digit>.StreamCell(d1.Value.Result.Element, Mrg(d1.Value.Result.Next, d2.Value.Result.Next))));
+            return new Lazy<Task<Stream<Digit>.StreamCell>>(() => Task.Factory.StartNew(() => new Stream<Digit>.StreamCell(Zero, InsTree(Link(d1.Value.Result.Element.One, d2.Value.Result.Element.One), Mrg(d1.Value.Result.Next, d2.Value.Result.Next)))));
         }
 
-        private static Lazy<Stream<Digit>.StreamCell> Normalize(Lazy<Stream<Digit>.StreamCell> ds)
+        private static Lazy<Task<Stream<Digit>.StreamCell>> Normalize(Lazy<Task<Stream<Digit>.StreamCell>> ds)
         {
             if (ds == Stream<Digit>.DollarNil) return ds;
-            Normalize(ds.Value.Next);
+            Normalize(ds.Value.Result.Next);
             return ds;
         }
 
-        private static List<Lazy<Stream<Digit>.StreamCell>>.Node Exec(List<Lazy<Stream<Digit>.StreamCell>>.Node list)
+        private static List<Lazy<Task<Stream<Digit>.StreamCell>>>.Node Exec(List<Lazy<Task<Stream<Digit>.StreamCell>>>.Node list)
         {
             if (list == null) return null;
-            if (list.Element.Value != null && list.Element.Value.Element == Zero) return List<Lazy<Stream<Digit>.StreamCell>>.Cons(list.Element.Value.Next, list.Next);
+            if (list.Element.Value != null && list.Element.Value.Result.Element == Zero) return List<Lazy<Task<Stream<Digit>.StreamCell>>>.Cons(list.Element.Value.Result.Next, list.Next);
             return list.Next;
         }
 
         public static Heap Insert(T x, Heap heap)
         {
             var dsp = InsTree(new Tree(x, null), heap.DigitStream);
-            var list = List<Lazy<Stream<Digit>.StreamCell>>.Cons(dsp, heap.Schedule.DigitStreamList);
+            var list = List<Lazy<Task<Stream<Digit>.StreamCell>>>.Cons(dsp, heap.Schedule.DigitStreamList);
             return new Heap(dsp, new Schedule(Exec(Exec(list))));
         }
 
@@ -166,9 +168,9 @@ namespace FunProgLib.heap
         {
             private readonly Tree tree;
 
-            private readonly Lazy<Stream<Digit>.StreamCell> stream;
+            private readonly Lazy<Task<Stream<Digit>.StreamCell>> stream;
 
-            public Stuff(Tree tree, Lazy<Stream<Digit>.StreamCell> stream)
+            public Stuff(Tree tree, Lazy<Task<Stream<Digit>.StreamCell>> stream)
             {
                 this.tree = tree;
                 this.stream = stream;
@@ -179,29 +181,29 @@ namespace FunProgLib.heap
                 get { return tree; }
             }
 
-            public Lazy<Stream<Digit>.StreamCell> Stream
+            public Lazy<Task<Stream<Digit>.StreamCell>> Stream
             {
                 get { return stream; }
             }
         }
 
-        private static Stuff RemoveMinTree(Lazy<Stream<Digit>.StreamCell> dsc)
+        private static Stuff RemoveMinTree(Lazy<Task<Stream<Digit>.StreamCell>> dsc)
         {
             if (dsc == Stream<Digit>.DollarNil) throw new Exception("Empty");
-            if (dsc.Value.Element == Zero)
+            if (dsc.Value.Result.Element == Zero)
             {
-                var stuff = RemoveMinTree(dsc.Value.Next);
-                var lazy3 = new Lazy<Stream<Digit>.StreamCell>(() => new Stream<Digit>.StreamCell(Zero, stuff.Stream));
+                var stuff = RemoveMinTree(dsc.Value.Result.Next);
+                var lazy3 = new Lazy<Task<Stream<Digit>.StreamCell>>(() => Task.Factory.StartNew(() => new Stream<Digit>.StreamCell(Zero, stuff.Stream)));
                 return new Stuff(stuff.Tree, lazy3);
             }
-            if (dsc.Value.Next == EmptyStream) return new Stuff(dsc.Value.Element.One, EmptyStream);
-            var tp = RemoveMinTree(dsc.Value.Next);
-            if (dsc.Value.Element.One.Node.CompareTo(tp.Tree.Node) <= 0)
+            if (dsc.Value.Result.Next == EmptyStream) return new Stuff(dsc.Value.Result.Element.One, EmptyStream);
+            var tp = RemoveMinTree(dsc.Value.Result.Next);
+            if (dsc.Value.Result.Element.One.Node.CompareTo(tp.Tree.Node) <= 0)
             {
-                var lazy = new Lazy<Stream<Digit>.StreamCell>(() => new Stream<Digit>.StreamCell(Zero, dsc.Value.Next));
-                return new Stuff(dsc.Value.Element.One, lazy);
+                var lazy = new Lazy<Task<Stream<Digit>.StreamCell>>(() => Task.Factory.StartNew(() => new Stream<Digit>.StreamCell(Zero, dsc.Value.Result.Next)));
+                return new Stuff(dsc.Value.Result.Element.One, lazy);
             }
-            var lazy2 = new Lazy<Stream<Digit>.StreamCell>(() => new Stream<Digit>.StreamCell(new Digit(dsc.Value.Element.One), tp.Stream));
+            var lazy2 = new Lazy<Task<Stream<Digit>.StreamCell>>(() => Task.Factory.StartNew(() => new Stream<Digit>.StreamCell(new Digit(dsc.Value.Result.Element.One), tp.Stream)));
             return new Stuff(tp.Tree, lazy2);
         }
 
@@ -211,10 +213,10 @@ namespace FunProgLib.heap
             return stuff.Tree.Node;
         }
 
-        private static Lazy<Stream<Digit>.StreamCell> OneMap(List<Tree>.Node list)
+        private static Lazy<Task<Stream<Digit>.StreamCell>> OneMap(List<Tree>.Node list)
         {
             if (list == null) return EmptyStream;
-            return new Lazy<Stream<Digit>.StreamCell>(() => new Stream<Digit>.StreamCell(new Digit(list.Element), OneMap(list.Next)));
+            return new Lazy<Task<Stream<Digit>.StreamCell>>(() => Task.Factory.StartNew(() => new Stream<Digit>.StreamCell(new Digit(list.Element), OneMap(list.Next))));
         }
 
         public static Heap DeleteMin(Heap heap)

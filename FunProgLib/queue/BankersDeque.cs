@@ -9,12 +9,12 @@
 // Okasaki, Chris. "8.4.2 Banker's Deques." Purely Functional Data Structures. 
 //     Cambridge, U.K.: Cambridge UP, 1998. 108-10. Print.
 
+using System;
+using System.Threading.Tasks;
+using FunProgLib.streams;
+
 namespace FunProgLib.queue
 {
-    using System;
-
-    using FunProgLib.streams;
-
     public static class BankersDeque<T> // : IDeque<T>
     {
         private const int C = 2; // C > 1
@@ -22,11 +22,11 @@ namespace FunProgLib.queue
         public class Queue
         {
             private readonly int lenF;
-            private readonly Lazy<Stream<T>.StreamCell> f;
+            private readonly Lazy<Task<Stream<T>.StreamCell>> f;
             private readonly int lenR;
-            private readonly Lazy<Stream<T>.StreamCell> r;
+            private readonly Lazy<Task<Stream<T>.StreamCell>> r;
 
-            public Queue(int lenF, Lazy<Stream<T>.StreamCell> f, int lenR, Lazy<Stream<T>.StreamCell> r)
+            public Queue(int lenF, Lazy<Task<Stream<T>.StreamCell>> f, int lenR, Lazy<Task<Stream<T>.StreamCell>> r)
             {
                 this.lenF = lenF;
                 this.f = f;
@@ -35,9 +35,9 @@ namespace FunProgLib.queue
             }
 
             public int LenF { get { return lenF; } }
-            public Lazy<Stream<T>.StreamCell> F { get { return f; } }
+            public Lazy<Task<Stream<T>.StreamCell>> F { get { return f; } }
             public int LenR { get { return lenR; } }
-            public Lazy<Stream<T>.StreamCell> R { get { return r; } }
+            public Lazy<Task<Stream<T>.StreamCell>> R { get { return r; } }
         }
 
         private static readonly Queue EmptyQueue = new Queue(0, Stream<T>.DollarNil, 0, Stream<T>.DollarNil);
@@ -49,7 +49,7 @@ namespace FunProgLib.queue
             return q.LenF + q.LenR == 0;
         }
 
-        private static Queue Check(int lenF, Lazy<Stream<T>.StreamCell> f, int lenR, Lazy<Stream<T>.StreamCell> r)
+        private static Queue Check(int lenF, Lazy<Task<Stream<T>.StreamCell>> f, int lenR, Lazy<Task<Stream<T>.StreamCell>> r)
         {
             if (lenF > C * lenR + 1)
             {
@@ -74,42 +74,42 @@ namespace FunProgLib.queue
 
         public static Queue Cons(T x, Queue q)
         {
-            var lazy = new Lazy<Stream<T>.StreamCell>(() => new Stream<T>.StreamCell(x, q.F));
+            var lazy = new Lazy<Task<Stream<T>.StreamCell>>(() => Task.Factory.StartNew(() => new Stream<T>.StreamCell(x, q.F)));
             return Check(q.LenF + 1, lazy, q.LenR, q.R);
         }
 
         public static T Head(Queue q)
         {
             if (q.F == Stream<T>.DollarNil && q.R == Stream<T>.DollarNil) throw new Exception("Empty");
-            if (q.F == Stream<T>.DollarNil) return q.R.Value.Element;
-            return q.F.Value.Element;
+            if (q.F == Stream<T>.DollarNil) return q.R.Value.Result.Element;
+            return q.F.Value.Result.Element;
         }
 
         public static Queue Tail(Queue q)
         {
             if (q.F == Stream<T>.DollarNil && q.R == Stream<T>.DollarNil) throw new Exception("Empty");
             if (q.F == Stream<T>.DollarNil) return EmptyQueue;
-            return Check(q.LenF - 1, q.F.Value.Next, q.LenR, q.R);
+            return Check(q.LenF - 1, q.F.Value.Result.Next, q.LenR, q.R);
         }
 
         public static Queue Snoc(Queue q, T x)
         {
-            var lazy = new Lazy<Stream<T>.StreamCell>(() => new Stream<T>.StreamCell(x, q.R));
+            var lazy = new Lazy<Task<Stream<T>.StreamCell>>(() => Task.Factory.StartNew(() => new Stream<T>.StreamCell(x, q.R)));
             return Check(q.LenF, q.F, q.LenR + 1, lazy);
         }
 
         public static T Last(Queue q)
         {
             if (q.R == Stream<T>.DollarNil && q.F == Stream<T>.DollarNil) throw new Exception("Empty");
-            if (q.R == Stream<T>.DollarNil) return q.F.Value.Element;
-            return q.R.Value.Element;
+            if (q.R == Stream<T>.DollarNil) return q.F.Value.Result.Element;
+            return q.R.Value.Result.Element;
         }
 
         public static Queue Init(Queue q)
         {
             if (q.R == Stream<T>.DollarNil && q.F == Stream<T>.DollarNil) throw new Exception("Empty");
             if (q.R == Stream<T>.DollarNil) return EmptyQueue;
-            var rp = q.R.Value.Next;
+            var rp = q.R.Value.Result.Next;
             return Check(q.LenF, q.F, q.LenR - 1, rp);
         }
     }

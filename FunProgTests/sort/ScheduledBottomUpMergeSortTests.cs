@@ -37,7 +37,7 @@ namespace FunProgTests.sort
             list = ScheduledBottomUpMergeSort<string>.Add("One", list);
 
             Assert.IsFalse(list.Segs.Element.ElementStream.IsValueCreated);
-            Assert.AreEqual("One", list.Segs.Element.ElementStream.Value.Element);
+            Assert.AreEqual("One", list.Segs.Element.ElementStream.Value.Result.Element);
             Assert.IsTrue(list.Segs.Element.ElementStream.IsValueCreated);
         }
 

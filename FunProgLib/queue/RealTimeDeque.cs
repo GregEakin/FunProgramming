@@ -9,12 +9,12 @@
 // Okasaki, Chris. "8.4.3 Real-Time Deques." Purely Functional Data Structures. 
 //     Cambridge, U.K.: Cambridge UP, 1998. 111-12. Print.
 
+using System;
+using System.Threading.Tasks;
+using FunProgLib.streams;
+
 namespace FunProgLib.queue
 {
-    using System;
-
-    using FunProgLib.streams;
-
     public static class RealTimeDeque<T> // : IDeque<T>
     {
         private const int C = 2; // C == 2 || C == 3
@@ -22,19 +22,19 @@ namespace FunProgLib.queue
         public class Queue
         {
             private readonly int lenF;
-            private readonly Lazy<Stream<T>.StreamCell> f;
-            private readonly Lazy<Stream<T>.StreamCell> sf;
+            private readonly Lazy<Task<Stream<T>.StreamCell>> f;
+            private readonly Lazy<Task<Stream<T>.StreamCell>> sf;
             private readonly int lenR;
-            private readonly Lazy<Stream<T>.StreamCell> r;
-            private readonly Lazy<Stream<T>.StreamCell> sr;
+            private readonly Lazy<Task<Stream<T>.StreamCell>> r;
+            private readonly Lazy<Task<Stream<T>.StreamCell>> sr;
 
             public Queue(
                 int lenF,
-                Lazy<Stream<T>.StreamCell> f,
-                Lazy<Stream<T>.StreamCell> sf,
+                Lazy<Task<Stream<T>.StreamCell>> f,
+                Lazy<Task<Stream<T>.StreamCell>> sf,
                 int lenR,
-                Lazy<Stream<T>.StreamCell> r,
-                Lazy<Stream<T>.StreamCell> sr)
+                Lazy<Task<Stream<T>.StreamCell>> r,
+                Lazy<Task<Stream<T>.StreamCell>> sr)
             {
                 this.lenF = lenF;
                 this.f = f;
@@ -45,11 +45,11 @@ namespace FunProgLib.queue
             }
 
             public int LenF { get { return lenF; } }
-            public Lazy<Stream<T>.StreamCell> F { get { return f; } }
-            public Lazy<Stream<T>.StreamCell> Sf { get { return sf; } }
+            public Lazy<Task<Stream<T>.StreamCell>> F { get { return f; } }
+            public Lazy<Task<Stream<T>.StreamCell>> Sf { get { return sf; } }
             public int LenR { get { return lenR; } }
-            public Lazy<Stream<T>.StreamCell> R { get { return r; } }
-            public Lazy<Stream<T>.StreamCell> Sr { get { return sr; } }
+            public Lazy<Task<Stream<T>.StreamCell>> R { get { return r; } }
+            public Lazy<Task<Stream<T>.StreamCell>> Sr { get { return sr; } }
         }
 
         private static readonly Queue EmptyQueue = new Queue(0, Stream<T>.DollarNil, Stream<T>.DollarNil, 0, Stream<T>.DollarNil, Stream<T>.DollarNil);
@@ -67,31 +67,31 @@ namespace FunProgLib.queue
             return q.LenF + q.LenR == 0;
         }
 
-        private static Lazy<Stream<T>.StreamCell> Exec1(Lazy<Stream<T>.StreamCell> s)
+        private static Lazy<Task<Stream<T>.StreamCell>> Exec1(Lazy<Task<Stream<T>.StreamCell>> s)
         {
-            if (s != Stream<T>.DollarNil) return s.Value.Next;
+            if (s != Stream<T>.DollarNil) return s.Value.Result.Next;
             return s;
         }
 
-        private static Lazy<Stream<T>.StreamCell> Exec2(Lazy<Stream<T>.StreamCell> s)
+        private static Lazy<Task<Stream<T>.StreamCell>> Exec2(Lazy<Task<Stream<T>.StreamCell>> s)
         {
             return Exec1(Exec1(s));
         }
 
-        private static Lazy<Stream<T>.StreamCell> RotateRev(Lazy<Stream<T>.StreamCell> fc, Lazy<Stream<T>.StreamCell> r, Lazy<Stream<T>.StreamCell> a)
+        private static Lazy<Task<Stream<T>.StreamCell>> RotateRev(Lazy<Task<Stream<T>.StreamCell>> fc, Lazy<Task<Stream<T>.StreamCell>> r, Lazy<Task<Stream<T>.StreamCell>> a)
         {
             if (fc == Stream<T>.DollarNil) return Stream<T>.Append(Stream<T>.Reverse(r), a);
-            return new Lazy<Stream<T>.StreamCell>(() => new Stream<T>.StreamCell(fc.Value.Element, RotateRev(fc.Value.Next, Stream<T>.Drop(C, r), Stream<T>.Append(Stream<T>.Reverse(Stream<T>.Take(C, r)), a))));
+            return new Lazy<Task<Stream<T>.StreamCell>>(() => Task.Factory.StartNew(() => new Stream<T>.StreamCell(fc.Value.Result.Element, RotateRev(fc.Value.Result.Next, Stream<T>.Drop(C, r), Stream<T>.Append(Stream<T>.Reverse(Stream<T>.Take(C, r)), a)))));
         }
 
-        private static Lazy<Stream<T>.StreamCell> RotateDrop(Lazy<Stream<T>.StreamCell> fc, int j, Lazy<Stream<T>.StreamCell> r)
+        private static Lazy<Task<Stream<T>.StreamCell>> RotateDrop(Lazy<Task<Stream<T>.StreamCell>> fc, int j, Lazy<Task<Stream<T>.StreamCell>> r)
         {
             if (j < C) return RotateRev(fc, Stream<T>.Drop(j, r), Stream<T>.DollarNil);
             if (fc == Stream<T>.DollarNil) throw new Exception("Not supposed to happen.");
-            return new Lazy<Stream<T>.StreamCell>(() => new Stream<T>.StreamCell(fc.Value.Element, RotateDrop(fc.Value.Next, j - C, Stream<T>.Drop(C, r))));
+            return new Lazy<Task<Stream<T>.StreamCell>>(() => Task.Factory.StartNew(() => new Stream<T>.StreamCell(fc.Value.Result.Element, RotateDrop(fc.Value.Result.Next, j - C, Stream<T>.Drop(C, r)))));
         }
 
-        private static Queue Check(int lenF, Lazy<Stream<T>.StreamCell> f, Lazy<Stream<T>.StreamCell> sf, int lenR, Lazy<Stream<T>.StreamCell> r, Lazy<Stream<T>.StreamCell> sr)
+        private static Queue Check(int lenF, Lazy<Task<Stream<T>.StreamCell>> f, Lazy<Task<Stream<T>.StreamCell>> sf, int lenR, Lazy<Task<Stream<T>.StreamCell>> r, Lazy<Task<Stream<T>.StreamCell>> sr)
         {
             if (lenF > C * lenR + 1)
             {
@@ -116,43 +116,43 @@ namespace FunProgLib.queue
 
         public static Queue Cons(T x, Queue q)
         {
-            var lazy = new Lazy<Stream<T>.StreamCell>(() => new Stream<T>.StreamCell(x, q.F));
+            var lazy = new Lazy<Task<Stream<T>.StreamCell>>(() => Task.Factory.StartNew(() => new Stream<T>.StreamCell(x, q.F)));
             return Check(q.LenF + 1, lazy, Exec1(q.Sf), q.LenR, q.R, Exec1(q.Sr));
         }
 
         public static T Head(Queue q)
         {
             if (q.F == Stream<T>.DollarNil && q.R == Stream<T>.DollarNil) throw new Exception("Empty");
-            if (q.F == Stream<T>.DollarNil) return q.R.Value.Element;
-            return q.F.Value.Element;
+            if (q.F == Stream<T>.DollarNil) return q.R.Value.Result.Element;
+            return q.F.Value.Result.Element;
         }
 
         public static Queue Tail(Queue q)
         {
             if (q.F == Stream<T>.DollarNil && q.R == Stream<T>.DollarNil) throw new Exception("Empty");
             if (q.F == Stream<T>.DollarNil) return EmptyQueue;
-            var fp = q.F.Value.Next;
+            var fp = q.F.Value.Result.Next;
             return Check(q.LenF - 1, fp, Exec2(q.Sf), q.LenR, q.R, Exec2(q.Sr));
         }
 
         public static Queue Snoc(Queue q, T x)
         {
-            var lazy = new Lazy<Stream<T>.StreamCell>(() => new Stream<T>.StreamCell(x, q.R));
+            var lazy = new Lazy<Task<Stream<T>.StreamCell>>(() => Task.Factory.StartNew(() => new Stream<T>.StreamCell(x, q.R)));
             return Check(q.LenF, q.F, Exec1(q.Sf), q.LenR + 1, lazy, Exec1(q.Sr));
         }
 
         public static T Last(Queue q)
         {
             if (q.R == Stream<T>.DollarNil && q.F == Stream<T>.DollarNil) throw new Exception("Empty");
-            if (q.R == Stream<T>.DollarNil) return q.F.Value.Element;
-            return q.R.Value.Element;
+            if (q.R == Stream<T>.DollarNil) return q.F.Value.Result.Element;
+            return q.R.Value.Result.Element;
         }
 
         public static Queue Init(Queue q)
         {
             if (q.R == Stream<T>.DollarNil && q.F == Stream<T>.DollarNil) throw new Exception("Empty");
             if (q.R == Stream<T>.DollarNil) return EmptyQueue;
-            var rp = q.R.Value.Next;
+            var rp = q.R.Value.Result.Next;
             return Check(q.LenF, q.F, Exec2(q.Sf), q.LenR - 1, rp, Exec2(q.Sr));
         }
     }

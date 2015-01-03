@@ -7,17 +7,17 @@
 // All Rights Reserved.
 //
 
+using System;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using FunProgLib.heap;
+using FunProgLib.lists;
+using FunProgLib.streams;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+
 namespace FunProgTests.heap
 {
-    using System;
-    using System.Linq;
-    using System.Text;
-    using FunProgLib.heap;
-    using FunProgLib.lists;
-    using FunProgLib.streams;
-
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
-
     [TestClass]
     public class ScheduledBinomialHeapTests
     {
@@ -41,14 +41,14 @@ namespace FunProgTests.heap
             return result.ToString();
         }
 
-        private static string DumpDigitStream<T>(Lazy<Stream<ScheduledBinomialHeap<T>.Digit>.StreamCell> stream) where T : IComparable<T>
+        private static string DumpDigitStream<T>(Lazy<Task<Stream<ScheduledBinomialHeap<T>.Digit>.StreamCell>> stream) where T : IComparable<T>
         {
             if (stream == ScheduledBinomialHeap<T>.EmptyStream) return string.Empty;
             if (!stream.IsValueCreated) return " -$- ";
             if (stream == Stream<ScheduledBinomialHeap<T>.Digit>.DollarNil) return string.Empty;
             var result = new StringBuilder();
-            result.Append(DumpTree(stream.Value.Element.One));
-            result.Append(DumpDigitStream(stream.Value.Next));
+            result.Append(DumpTree(stream.Value.Result.Element.One));
+            result.Append(DumpDigitStream(stream.Value.Result.Next));
             return result.ToString();
         }
 
