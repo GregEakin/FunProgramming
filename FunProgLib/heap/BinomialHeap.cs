@@ -9,12 +9,11 @@
 // Okasaki, Chris. "3.2 Binomial Heaps." Purely Functional Data Structures. 
 //     Cambridge, U.K.: Cambridge UP, 1998. 20-24. Print.
 
+using System;
+using FunProgLib.lists;
+
 namespace FunProgLib.heap
 {
-    using System;
-
-    using FunProgLib.lists;
-
     public static class BinomialHeap<T> where T : IComparable<T>
     {
         public sealed class Tree

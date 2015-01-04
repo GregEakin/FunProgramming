@@ -7,12 +7,12 @@
 // All Rights Reserved.
 //
 
+using System.Collections;
+using System.Globalization;
+using System.Text;
+
 namespace FunProgLib.Utilities
 {
-    using System.Collections;
-    using System.Globalization;
-    using System.Text;
-
     public static class StringUtilities
     {
         public static string ToReadableString(this IEnumerable list)

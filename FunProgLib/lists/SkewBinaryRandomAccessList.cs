@@ -9,10 +9,10 @@
 // Okasaki, Chris. "9.3.1 Skew Binary Random-Access Lists." Purely Functional Data Structures. 
 //     Cambridge, U.K.: Cambridge UP, 1998. 132-34. Print.
 
+using System;
+
 namespace FunProgLib.lists
 {
-    using System;
-
     public static class SkewBinaryRandomAccessList<T> // : IRandomAccessList<T>
     {
         public abstract class Tree

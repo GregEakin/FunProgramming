@@ -9,12 +9,12 @@
 // Okasaki, Chris. "2.1 Lists." Purely Functional Data Structures. 
 //     Cambridge, U.K.: Cambridge UP, 1998. 7-11. Print.
 
+using System;
+using System.Collections;
+using System.Collections.Generic;
+
 namespace FunProgLib.lists
 {
-    using System;
-    using System.Collections;
-    using System.Collections.Generic;
-
     public static class List<T> // : IStack<T>
     {
         public sealed class Node : IEnumerable<T>

@@ -9,12 +9,11 @@
 // Okasaki, Chris. "5.5 Pairing Heaps." Purely Functional Data Structures. 
 //     Cambridge, U.K.: Cambridge UP, 1998. 52-54. Print.
 
+using System;
+using FunProgLib.lists;
+
 namespace FunProgLib.heap
 {
-    using System;
-
-    using FunProgLib.lists;
-
     public static class ParingHeap<T> where T : IComparable<T>
     {
         public sealed class Heap

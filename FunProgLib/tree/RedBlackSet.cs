@@ -9,10 +9,10 @@
 // Okasaki, Chris. "3.3 Red-Black Trees." Purely Functional Data Structures. 
 //     Cambridge, U.K.: Cambridge UP, 1998. 24-29. Print.
 
+using System;
+
 namespace FunProgLib.tree
 {
-    using System;
-
     public static class RedBlackSet<T> where T : IComparable<T>
     {
         public enum Color { R, B };

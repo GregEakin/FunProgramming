@@ -9,15 +9,13 @@
 // Okasaki, Chris. "7.3 Binomial Heaps." Purely Functional Data Structures. 
 //     Cambridge, U.K.: Cambridge UP, 1998. 89-93. Print.
 
+using System;
 using System.Threading.Tasks;
+using FunProgLib.lists;
+using FunProgLib.streams;
 
 namespace FunProgLib.heap
 {
-    using System;
-
-    using FunProgLib.lists;
-    using FunProgLib.streams;
-
     public static class ScheduledBinomialHeap<T> where T : IComparable<T>
     {
         public sealed class Tree

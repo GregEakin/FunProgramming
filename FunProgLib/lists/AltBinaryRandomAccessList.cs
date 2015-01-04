@@ -9,10 +9,10 @@
 // Okasaki, Chris. "10.1.2 Binary Random-Access Lists Revisited." Purely Functional Data Structures. 
 //     Cambridge, U.K.: Cambridge UP, 1998. 144-7. Print.
 
+using System;
+
 namespace FunProgLib.lists
 {
-    using System;
-
     // assumes polymorphic recursion!
     public static class AltBinaryRandomAccessList<T>
     {

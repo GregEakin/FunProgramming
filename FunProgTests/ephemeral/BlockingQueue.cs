@@ -4,16 +4,15 @@
 // SUBSYSTEM:	FunProgramming
 // FILE:		BlockingQueue.cs
 // AUTHOR:		Greg Eakin
+
+using System.Diagnostics;
+using System.Threading;
+using System.Threading.Tasks;
+using FunProgLib.queue;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+
 namespace FunProgTests.ephemeral
 {
-    using System.Diagnostics;
-    using System.Threading;
-    using System.Threading.Tasks;
-
-    using FunProgLib.queue;
-
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
-
     class BlockingQueue<T>
     {
         private readonly object key = new object();

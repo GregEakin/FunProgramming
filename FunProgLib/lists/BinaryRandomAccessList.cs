@@ -9,10 +9,10 @@
 // Okasaki, Chris. "9.2.1 Binary Random-Access Lists." Purely Functional Data Structures. 
 //     Cambridge, U.K.: Cambridge UP, 1998. 119-22. Print.
 
+using System;
+
 namespace FunProgLib.lists
 {
-    using System;
-
     public static class BinaryRandomAccessList<T> // : IRandomAccessList<T>
     {
         public abstract class Tree

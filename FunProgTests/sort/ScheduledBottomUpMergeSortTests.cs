@@ -7,14 +7,12 @@
 // All Rights Reserved.
 //
 
+using System.Linq;
+using FunProgLib.sort;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+
 namespace FunProgTests.sort
 {
-    using System.Linq;
-
-    using FunProgLib.sort;
-
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
-
     [TestClass]
     public class ScheduledBottomUpMergeSortTests
     {

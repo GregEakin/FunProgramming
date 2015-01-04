@@ -9,12 +9,11 @@
 // Okasaki, Chris. "4.2 Streams." Purely Functional Data Structures. 
 //     Cambridge, U.K.: Cambridge UP, 1998. 34-37. Print.
 
+using System;
 using System.Threading.Tasks;
 
 namespace FunProgLib.streams
 {
-    using System;
-
     public static class Stream<T>
     {
         public sealed class StreamCell

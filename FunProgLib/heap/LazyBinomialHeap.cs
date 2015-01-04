@@ -9,12 +9,11 @@
 // Okasaki, Chris. "6.4.1 Example: Binomial Heaps." Purely Functional Data Structures. 
 //     Cambridge, U.K.: Cambridge UP, 1998. 70-72. Print.
 
+using System;
+using FunProgLib.lists;
+
 namespace FunProgLib.heap
 {
-    using System;
-
-    using FunProgLib.lists;
-
     public static class LazyBinomialHeap<T> where T : IComparable<T>
     {
         public sealed class Tree

@@ -7,15 +7,15 @@
 // All Rights Reserved.
 //
 
+using System;
+using System.Linq;
+using System.Text;
+using FunProgLib.heap;
+using FunProgLib.lists;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+
 namespace FunProgTests.heap
 {
-    using System;
-    using System.Linq;
-    using System.Text;
-    using FunProgLib.heap;
-    using FunProgLib.lists;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
-
     [TestClass]
     public class LazyBinomialHeapTests
     {

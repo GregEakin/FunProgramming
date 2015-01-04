@@ -7,15 +7,14 @@
 // All Rights Reserved.
 //
 
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+
 namespace FunProgTests.lamda
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Threading;
-
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
-
     [TestClass]
     public class ListOfFuncsTests
     {

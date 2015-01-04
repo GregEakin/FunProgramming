@@ -9,10 +9,10 @@
 // Okasaki, Chris. "3.1 Leftist Heaps." Purely Functional Data Structures. 
 //     Cambridge, U.K.: Cambridge UP, 1998. 17-20. Print.
 
+using System;
+
 namespace FunProgLib.heap
 {
-    using System;
-
     public static class LeftistHeap<T> where T : IComparable<T>
     {
         public sealed class Heap

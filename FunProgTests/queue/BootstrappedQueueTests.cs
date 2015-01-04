@@ -7,15 +7,13 @@
 // All Rights Reserved.
 //
 
+using System;
+using System.Linq;
+using FunProgLib.queue;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+
 namespace FunProgTests.queue
 {
-    using System;
-    using System.Linq;
-
-    using FunProgLib.queue;
-
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
-
     [TestClass]
     public class BootstrappedQueueTests
     {

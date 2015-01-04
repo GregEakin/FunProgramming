@@ -7,16 +7,14 @@
 // All Rights Reserved.
 //
 
+using System;
+using System.Linq;
+using System.Text;
+using FunProgLib.tree;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+
 namespace FunProgTests.tree
 {
-    using System;
-    using System.Linq;
-    using System.Text;
-
-    using FunProgLib.tree;
-
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
-
     [TestClass]
     public class UnbalancedSetTests
     {

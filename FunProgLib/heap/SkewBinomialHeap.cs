@@ -9,12 +9,11 @@
 // Okasaki, Chris. "9.3.2 Skew Binomial Heaps." Purely Functional Data Structures. 
 //     Cambridge, U.K.: Cambridge UP, 1998. 134-8. Print.
 
+using System;
+using FunProgLib.lists;
+
 namespace FunProgLib.heap
 {
-    using System;
-
-    using FunProgLib.lists;
-
     public static class SkewBinomialHeap<T>
         where T : IComparable<T> // : IHeap<T>
     {

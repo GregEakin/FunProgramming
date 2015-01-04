@@ -9,11 +9,11 @@
 // Okasaki, Chris. "6.4.3 Example: Bottom-Up  Mergesort with Sharing." Purely Functional Data Structures. 
 //     Cambridge, U.K.: Cambridge UP, 1998. 144-7. Print.
 
+using System;
+using FunProgLib.lists;
+
 namespace FunProgLib.sort
 {
-    using System;
-    using FunProgLib.lists;
-
     public static class BottomUpMergeSort<T> where T : IComparable<T>
     {
         public sealed class Sortable

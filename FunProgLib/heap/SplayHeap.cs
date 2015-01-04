@@ -9,10 +9,10 @@
 // Okasaki, Chris. "5.4 Splay Heaps." Purely Functional Data Structures. 
 //     Cambridge, U.K.: Cambridge UP, 1998. 46-52. Print.
 
+using System;
+
 namespace FunProgLib.heap
 {
-    using System;
-
     public static class SplayHeap<T> where T : IComparable<T>
     {
         public sealed class Heap

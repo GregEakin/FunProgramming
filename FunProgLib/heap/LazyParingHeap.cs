@@ -9,10 +9,10 @@
 // Okasaki, Chris. "6.5 Lazy Paring Heaps." Purely Functional Data Structures. 
 //     Cambridge, U.K.: Cambridge UP, 1998. 79-81. Print.
 
+using System;
+
 namespace FunProgLib.heap
 {
-    using System;
-
     public static class LazyParingHeap<T> where T : IComparable<T>
     {
         public sealed class Heap

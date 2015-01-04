@@ -9,10 +9,10 @@
 // Okasaki, Chris. "2.2 Binaryt Search Trees." Purely Functional Data Structures. 
 //     Cambridge, U.K.: Cambridge UP, 1998. 11-15. Print.
 
+using System;
+
 namespace FunProgLib.tree
 {
-    using System;
-
     public static class UnbalancedSet<T> where T : IComparable<T> // ISet
     {
         public sealed class Tree // : IOrdered<T>

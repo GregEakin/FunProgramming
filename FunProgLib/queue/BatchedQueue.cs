@@ -9,12 +9,11 @@
 // Okasaki, Chris. "5.2 Queues." Purely Functional Data Structures. 
 //     Cambridge, U.K.: Cambridge UP, 1998. 42-45. Print.
 
+using System;
+using FunProgLib.lists;
+
 namespace FunProgLib.queue
 {
-    using System;
-
-    using FunProgLib.lists;
-
     public static class BatchedQueue<T>
     {
         public sealed class Queue
