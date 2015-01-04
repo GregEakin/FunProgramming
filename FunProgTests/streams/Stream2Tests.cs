@@ -33,7 +33,7 @@ namespace FunProgTests.streams
         [TestMethod]
         public void FirstTenTest()
         {
-            var stream = new Lazy<Task<Stream<Stuff>.StreamCell>>(() => Task.Factory.StartNew(() => Factory(0)));
+            var stream = Factory(-1).Next;
 
             for (var i = 0; i < 10; i++)
             {
