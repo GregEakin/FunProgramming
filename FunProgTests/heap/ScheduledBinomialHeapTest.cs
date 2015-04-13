@@ -7,17 +7,16 @@
 // All Rights Reserved.
 //
 
+using System;
+using System.Linq;
+using System.Text;
+using FunProgLib.heap;
+using FunProgLib.lists;
+using FunProgLib.streams;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+
 namespace FunProgTests.heap
 {
-    using System;
-    using System.Linq;
-    using System.Text;
-    using FunProgLib.heap;
-    using FunProgLib.lists;
-    using FunProgLib.streams;
-
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
-
     [TestClass]
     public class ScheduledBinomialHeapTests
     {
@@ -147,6 +146,7 @@ namespace FunProgTests.heap
             for (var i = 0; i < 100; i++) heap = ScheduledBinomialHeap<int>.Insert(random.Next(100), heap);
             var last = 0;
             var count = 0;
+            
             while (!ScheduledBinomialHeap<int>.IsEmpty(heap))
             {
                 var next = ScheduledBinomialHeap<int>.FindMin(heap);
@@ -155,6 +155,7 @@ namespace FunProgTests.heap
                 last = next;
                 count++;
             }
+
             Assert.AreEqual(100, count);
         }
 

@@ -7,24 +7,24 @@
 // All Rights Reserved.
 //
 
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
+using FunProgLib.tree;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+
 namespace FunProgTests.ephemeral
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Text;
-    using System.Threading;
-    using System.Threading.Tasks;
-
-    using FunProgLib.tree;
-
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
-
     [TestClass]
     public class MultiReaderMapTests
     {
         private readonly Random random = new Random();
 
-        private volatile RedBlackSet<string>.Tree set = RedBlackSet<string>.EmptyTree;
+        private RedBlackSet<string>.Tree set = RedBlackSet<string>.EmptyTree;
+        private int retryCount;
 
         private string NextWord()
         {
@@ -37,17 +37,30 @@ namespace FunProgTests.ephemeral
             return stringBuilder.ToString();
         }
 
+        public static void UpdateSet(string word, ref RedBlackSet<string>.Tree set, ref int retryCount)
+        {
+            RedBlackSet<string>.Tree comparand;
+            RedBlackSet<string>.Tree before;
+            do
+            {
+                comparand = set;
+                var value = RedBlackSet<string>.Insert(word, set);
+                before = Interlocked.CompareExchange(ref set, value, comparand);
+
+                if (before != comparand)
+                    Interlocked.Increment(ref retryCount);
+            }
+            while (before != comparand);
+        }
+
         private readonly Action<object> writeAction = (object obj) =>
         {
             var map = (MultiReaderMapTests)obj;
             for (var i = 0; i < 200; i++)
             {
                 var word = map.NextWord();
-                lock (map)
-                {
-                    Thread.Yield();
-                    map.set = RedBlackSet<string>.Insert(word, map.set);
-                }
+                Thread.Yield();
+                UpdateSet(word, ref map.set, ref map.retryCount);
             }
             //Console.WriteLine("Task={0}, obj={1}, Thread={2} : 100 words added",
             //                  Task.CurrentId, obj.ToString(),
@@ -73,6 +86,8 @@ namespace FunProgTests.ephemeral
         public void Test1()
         {
             var map = new MultiReaderMapTests();
+            var watch = new Stopwatch();
+            watch.Start();
 
             var taskList = new List<Task>();
             for (var i = 0; i < 10; i++)
@@ -82,7 +97,9 @@ namespace FunProgTests.ephemeral
                 taskList.Add(Task.Factory.StartNew(readAction, map));
             }
             Task.WaitAll(taskList.ToArray());
-            Console.WriteLine("Done....");
+
+            watch.Stop();
+            Console.WriteLine("Done.... retryCount = {0}, time = {1} ms", map.retryCount, watch.ElapsedMilliseconds);
         }
     }
 }

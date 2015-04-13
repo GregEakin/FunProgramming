@@ -7,15 +7,13 @@
 // All Rights Reserved.
 //
 
+using System;
+using System.Linq;
+using FunProgLib.streams;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+
 namespace FunProgTests.streams
 {
-    using System;
-    using System.Linq;
-
-    using FunProgLib.streams;
-
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
-
     [TestClass]
     public class StreamTests
     {
@@ -209,6 +207,26 @@ namespace FunProgTests.streams
 
             var empty = Stream<string>.Drop(data.Length, stream);
             Assert.AreSame(Stream<string>.DollarNil, empty);
+        }
+
+        [TestMethod]
+        public void TimeTest()
+        {
+            var s1 = Stream<int>.DollarNil;
+            var s2 = new Lazy<Stream<int>.StreamCell>(() => new Stream<int>.StreamCell(2, s1));
+            var s3 = new Lazy<Stream<int>.StreamCell>(() => new Stream<int>.StreamCell(1, s2));
+
+            Console.WriteLine(s1);
+            Console.WriteLine(s2);
+            Console.WriteLine(s3);
+
+            // Console.WriteLine(s1.Value);
+            Console.WriteLine(s2.Value);
+            Console.WriteLine(s3.Value);
+
+            Console.WriteLine(s1);
+            Console.WriteLine(s2);
+            Console.WriteLine(s3);
         }
     }
 }

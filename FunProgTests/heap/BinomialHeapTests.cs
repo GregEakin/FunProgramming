@@ -7,17 +7,16 @@
 // All Rights Reserved.
 //
 
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading;
+using FunProgLib.heap;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+
 namespace FunProgTests.heap
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-
-    using FunProgLib.heap;
-
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
-
     [TestClass]
     public class BinomialHeapTests
     {
@@ -139,6 +138,18 @@ namespace FunProgTests.heap
                 count++;
             }
             Assert.AreEqual(100, count);
+        }
+
+        public void UpdateHeap(ref FunProgLib.lists.List<BinomialHeap<int>.Tree>.Node heap, int next)
+        {
+            var comparand = heap;
+            FunProgLib.lists.List<BinomialHeap<int>.Tree>.Node before;
+            do
+            {
+                var value = BinomialHeap<int>.Insert(next, heap);
+                before = Interlocked.CompareExchange(ref heap, value, comparand);
+            }
+            while (before != comparand);
         }
     }
 }

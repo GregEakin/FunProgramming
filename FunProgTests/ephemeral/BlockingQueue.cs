@@ -4,23 +4,22 @@
 // SUBSYSTEM:	FunProgramming
 // FILE:		BlockingQueue.cs
 // AUTHOR:		Greg Eakin
+
+using System.Diagnostics;
+using System.Threading;
+using System.Threading.Tasks;
+using FunProgLib.queue;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+
 namespace FunProgTests.ephemeral
 {
-    using System.Diagnostics;
-    using System.Threading;
-    using System.Threading.Tasks;
-
-    using FunProgLib.queue;
-
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
-
     class BlockingQueue<T>
     {
         private readonly object key = new object();
         private readonly int size;
         private int count;
-        private volatile RealTimeQueue<T>.Queue queue = RealTimeQueue<T>.Empty;
-        private volatile bool quit;
+        private RealTimeQueue<T>.Queue queue = RealTimeQueue<T>.Empty;
+        private bool quit;
 
         public BlockingQueue(int size)
         {
@@ -77,7 +76,7 @@ namespace FunProgTests.ephemeral
     [TestClass]
     public class BlockingQueueTests
     {
-        // [TestMethod]
+        [TestMethod]
         public void BlockingQueueTest()
         {
             var tasks = new System.Collections.Generic.List<Task>();

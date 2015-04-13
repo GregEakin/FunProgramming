@@ -9,12 +9,12 @@
 // Okasaki, Chris. "7.4 Bottom-Up Mergesrot with Sharing." Purely Functional Data Structures. 
 //     Cambridge, U.K.: Cambridge UP, 1998. 94-97. Print.
 
+using System;
+using FunProgLib.lists;
+using FunProgLib.streams;
+
 namespace FunProgLib.sort
 {
-    using System;
-    using FunProgLib.lists;
-    using FunProgLib.streams;
-
     public static class ScheduledBottomUpMergeSort<T> where T : IComparable<T>
     {
         public sealed class Stuff

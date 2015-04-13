@@ -9,12 +9,11 @@
 // Okasaki, Chris. "6.3.2 Example: Queues." Purely Functional Data Structures. 
 //     Cambridge, U.K.: Cambridge UP, 1998. 64-67. Print.
 
+using System;
+using FunProgLib.streams;
+
 namespace FunProgLib.queue
 {
-    using System;
-
-    using FunProgLib.streams;
-
     public static class BankersQueue<T>
     {
         public sealed class Queue

@@ -9,12 +9,11 @@
 // Okasaki, Chris. "8.4.2 Banker's Deques." Purely Functional Data Structures. 
 //     Cambridge, U.K.: Cambridge UP, 1998. 108-10. Print.
 
+using System;
+using FunProgLib.streams;
+
 namespace FunProgLib.queue
 {
-    using System;
-
-    using FunProgLib.streams;
-
     public static class BankersDeque<T> // : IDeque<T>
     {
         private const int C = 2; // C > 1

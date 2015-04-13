@@ -9,26 +9,46 @@
 // Okasaki, Chris. "4.2 Streams." Purely Functional Data Structures. 
 //     Cambridge, U.K.: Cambridge UP, 1998. 34-37. Print.
 
+using System;
+using System.Diagnostics;
+using System.Threading;
+using FunProgLib.Utilities;
+
 namespace FunProgLib.streams
 {
-    using System;
-
     public static class Stream<T>
     {
         public sealed class StreamCell
         {
+            private static readonly Stopwatch watch = new Stopwatch();
+            private static long counter;
+
+            static StreamCell()
+            {
+                watch.Start();
+            }
+
+            private readonly long time;
+            private readonly long count;
             private readonly T element;
             private readonly Lazy<StreamCell> next;
 
             public StreamCell(T element, Lazy<StreamCell> next)
             {
                 if (next == null) throw new Exception("Can't be null, use Stream<T>.DollarNil instead.");
+                this.time = watch.ElapsedTicks;
+                this.count = Interlocked.Increment(ref counter);
                 this.element = element;
                 this.next = next;
             }
 
             public T Element { get { return element; } }
             public Lazy<StreamCell> Next { get { return next; } }
+
+            public override string ToString()
+            {
+                return "StreamCell n={0}, t={1}".FormatWith(count, time);
+            }
         }
 
         private static readonly Lazy<StreamCell> NilStreamCell = new Lazy<StreamCell>(() => null);

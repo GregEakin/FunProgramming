@@ -9,12 +9,11 @@
 // Okasaki, Chris. "8.4.3 Real-Time Deques." Purely Functional Data Structures. 
 //     Cambridge, U.K.: Cambridge UP, 1998. 111-12. Print.
 
+using System;
+using FunProgLib.streams;
+
 namespace FunProgLib.queue
 {
-    using System;
-
-    using FunProgLib.streams;
-
     public static class RealTimeDeque<T> // : IDeque<T>
     {
         private const int C = 2; // C == 2 || C == 3

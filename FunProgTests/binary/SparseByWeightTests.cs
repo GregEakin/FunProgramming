@@ -7,16 +7,14 @@
 // All Rights Reserved.
 //
 
+using System.Globalization;
+using System.Text;
+using FunProgLib.binary;
+using FunProgLib.lists;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+
 namespace FunProgTests.binary
 {
-    using System.Globalization;
-    using System.Text;
-
-    using FunProgLib.binary;
-    using FunProgLib.lists;
-
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
-
     [TestClass]
     public class SparseByWeightTests
     {

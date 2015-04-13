@@ -7,24 +7,26 @@
 // All Rights Reserved.
 //
 
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
+using FunProgLib.heap;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+
 namespace FunProgTests.ephemeral
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Text;
-    using System.Threading;
-    using System.Threading.Tasks;
-
-    using FunProgLib.heap;
-
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
-
     [TestClass]
     public class DictionaryTests
     {
+        private const int Threads = 10;
+        private const int Count = 300;
+
         private readonly Random random = new Random();
 
-        private volatile SplayHeap<string>.Heap set = SplayHeap<string>.Empty;
+        private SplayHeap<string>.Heap set = SplayHeap<string>.Empty;
 
         private string NextWord()
         {
@@ -40,11 +42,11 @@ namespace FunProgTests.ephemeral
         private readonly Action<object> writeAction = (object obj) =>
         {
             var map = (DictionaryTests)obj;
-            for (var i = 0; i < 300; i++)
+            for (var i = 0; i < Count; i++)
             {
+                var word = map.NextWord();
                 lock (map)
                 {
-                    var word = map.NextWord();
                     map.set = SplayHeap<string>.Insert(word, map.set);
 
                     //Console.WriteLine("--> Task={0}, obj={1}, Thread={2}",
@@ -59,7 +61,7 @@ namespace FunProgTests.ephemeral
         private readonly Action<object> readAction = (object obj) =>
         {
             var map = (DictionaryTests)obj;
-            for (var i = 0; i < 300; i++)
+            for (var i = 0; i < Count; i++)
             {
                 lock (map)
                 {
@@ -86,15 +88,19 @@ namespace FunProgTests.ephemeral
         public void Test1()
         {
             var map = new DictionaryTests();
+            var watch = new Stopwatch();
+            watch.Start();
 
             var taskList = new List<Task>();
-            for (var i = 0; i < 10; i++)
+            for (var i = 0; i < Threads; i++)
             {
                 taskList.Add(Task.Factory.StartNew(writeAction, map));
                 taskList.Add(Task.Factory.StartNew(readAction, map));
             }
             Task.WaitAll(taskList.ToArray());
-            Console.WriteLine("Done....");
+
+            watch.Stop();
+            Console.WriteLine("Done.... time = {0} ms", watch.ElapsedMilliseconds);
         }
     }
 }

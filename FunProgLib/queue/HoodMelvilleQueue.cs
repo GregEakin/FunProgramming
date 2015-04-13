@@ -9,12 +9,11 @@
 // Okasaki, Chris. "8.2.1 Example: Hood-Melville Real-Time Queues." Purely Functional Data Structures. 
 //     Cambridge, U.K.: Cambridge UP, 1998. 102-105. Print.
 
+using System;
+using FunProgLib.lists;
+
 namespace FunProgLib.queue
 {
-    using System;
-
-    using FunProgLib.lists;
-
     public static class HoodMelvilleQueue<T>
     {
         public abstract class RotationState
