@@ -9,10 +9,10 @@
 // Okasaki, Chris. "9.3.1 Skew Binary Random-Access Lists." Purely Functional Data Structures. 
 //     Cambridge, U.K.: Cambridge UP, 1998. 132-34. Print.
 
+using System;
+
 namespace FunProgLib.lists
 {
-    using System;
-
     public static class SkewBinaryRandomAccessList<T> // : IRandomAccessList<T>
     {
         public abstract class Tree
@@ -28,6 +28,12 @@ namespace FunProgLib.lists
             {
                 get { return alpha; }
             }
+
+            public abstract T LookupTree(int w, int i);
+
+            public abstract Tree UpdateTree(int w, int i, T x);
+
+            public abstract List<Stuff>.Node Tail(int weight, List<Stuff>.Node ts);
         }
 
         private sealed class Leaf : Tree
@@ -35,6 +41,24 @@ namespace FunProgLib.lists
             public Leaf(T alpha)
                 : base(alpha)
             {
+            }
+
+            public override T LookupTree(int w, int i)
+            {
+                if (i == 0) return Alpha;
+                throw new Exception("Subscript");
+            }
+
+            public override Tree UpdateTree(int w, int i, T x)
+            {
+                if (w != 1) throw new Exception();
+                if (i != 0) throw new Exception("Subscript");
+                return new Leaf(x);
+            }
+
+            public override List<Stuff>.Node Tail(int weight, List<Stuff>.Node ts)
+            {
+                return List<Stuff>.Tail(ts);
             }
         }
 
@@ -51,18 +75,31 @@ namespace FunProgLib.lists
                 this.tree2 = tree2;
             }
 
-            public Tree Tree1
+            public override T LookupTree(int w, int i)
             {
-                get { return tree1; }
+                if (i == 0) return Alpha;
+                return i <= w / 2
+                    ? tree1.LookupTree(w / 2, i - 1)
+                    : tree2.LookupTree(w / 2, i - 1 - w / 2);
             }
 
-            public Tree Tree2
+            public override Tree UpdateTree(int w, int i, T x)
             {
-                get { return tree2; }
+                if (i == 0) return new Node(x, tree1, tree2);
+                return i <= w / 2
+                    ? new Node(Alpha, tree1.UpdateTree(w / 2, i - 1, x), tree2)
+                    : new Node(Alpha, tree1, tree2.UpdateTree(w / 2, i - 1 - w / 2, x));
+            }
+
+            public override List<Stuff>.Node Tail(int weight, List<Stuff>.Node ts)
+            {
+                var element = new Stuff(weight / 2, tree1);
+                var list = List<Stuff>.Cons(new Stuff(weight / 2, tree2), List<Stuff>.Tail(ts));
+                return List<Stuff>.Cons(element, list);
             }
         }
 
-        public sealed class Stuff
+        public struct Stuff
         {
             private readonly int weight;
 
@@ -107,9 +144,9 @@ namespace FunProgLib.lists
 
             var head2 = List<Stuff>.Head(tail1);
             var tail2 = List<Stuff>.Tail(tail1);
-
-            if (head1.Weight == head2.Weight) return List<Stuff>.Cons(new Stuff(1 + head1.Weight + head2.Weight, new Node(x, head1.Tree, head2.Tree)), tail2);
-            return List<Stuff>.Cons(new Stuff(1, new Leaf(x)), ts);
+            return head1.Weight == head2.Weight
+                ? List<Stuff>.Cons(new Stuff(1 + head1.Weight + head2.Weight, new Node(x, head1.Tree, head2.Tree)), tail2)
+                : List<Stuff>.Cons(new Stuff(1, new Leaf(x)), ts);
         }
 
         public static T Head(List<Stuff>.Node ts)
@@ -123,57 +160,14 @@ namespace FunProgLib.lists
         {
             if (List<Stuff>.IsEmpty(ts)) throw new Exception("Empty");
             var head = List<Stuff>.Head(ts);
-            if (head.Tree is Leaf) return List<Stuff>.Tail(ts);
-            var node = head.Tree as Node;
-            if (node != null) return List<Stuff>.Cons(new Stuff(head.Weight / 2, node.Tree1), List<Stuff>.Cons(new Stuff(head.Weight / 2, node.Tree2), List<Stuff>.Tail(ts)));
-            throw new Exception();
-        }
-
-        private static T LookupTree(int w, int i, Tree t)
-        {
-            var leaf = t as Leaf;
-            if (leaf != null)
-            {
-                if (i == 0) return leaf.Alpha;
-                throw new Exception("Subscript");
-            }
-
-            var node = t as Node;
-            if (node != null)
-            {
-                if (i == 0) return node.Alpha;
-                if (i <= w / 2) return LookupTree(w / 2, i - 1, node.Tree1);
-                return LookupTree(w / 2, i - 1 - w / 2, node.Tree2);
-            }
-
-            throw new Exception();
-        }
-
-        private static Tree UpdateTree(int w, int i, T x, Tree t)
-        {
-            var leaf = t as Leaf;
-            if (w == 1 && leaf != null)
-            {
-                if (i == 0) return new Leaf(x);
-                throw new Exception("Subscript");
-            }
-
-            var node = t as Node;
-            if (node != null)
-            {
-                if (i == 0) return new Node(x, node.Tree1, node.Tree2);
-                if (i <= w / 2) return new Node(node.Alpha, UpdateTree(w / 2, i - 1, x, node.Tree1), node.Tree2);
-                return new Node(node.Alpha, node.Tree1, UpdateTree(w / 2, i - 1 - w / 2, x, node.Tree2));
-            }
-
-            throw new Exception();
+            return head.Tree.Tail(head.Weight, ts);
         }
 
         public static T Lookup(int i, List<Stuff>.Node ts)
         {
             if (List<Stuff>.IsEmpty(ts)) throw new Exception("Subscript");
             var head = List<Stuff>.Head(ts);
-            if (i < head.Weight) return LookupTree(head.Weight, i, head.Tree);
+            if (i < head.Weight) return head.Tree.LookupTree(head.Weight, i);
             var tail = List<Stuff>.Tail(ts);
             return Lookup(i - head.Weight, tail);
         }
@@ -183,8 +177,9 @@ namespace FunProgLib.lists
             if (List<Stuff>.IsEmpty(ts)) throw new Exception("Subscript");
             var head = List<Stuff>.Head(ts);
             var tail = List<Stuff>.Tail(ts);
-            if (i < head.Weight) return List<Stuff>.Cons(new Stuff(head.Weight, UpdateTree(head.Weight, i, x, head.Tree)), tail);
-            return List<Stuff>.Cons(head, Update(i - head.Weight, x, tail));
+            return i < head.Weight
+                ? List<Stuff>.Cons(new Stuff(head.Weight, head.Tree.UpdateTree(head.Weight, i, x)), tail)
+                : List<Stuff>.Cons(head, Update(i - head.Weight, x, tail));
         }
     }
 }

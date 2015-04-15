@@ -7,15 +7,13 @@
 // All Rights Reserved.
 //
 
+using System;
+using System.Linq;
+using FunProgLib.lists;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+
 namespace FunProgTests.lists
 {
-    using System;
-    using System.Linq;
-
-    using FunProgLib.lists;
-
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
-
     [TestClass]
     public class ListTests
     {

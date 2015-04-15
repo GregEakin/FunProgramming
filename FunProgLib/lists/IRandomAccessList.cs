@@ -13,18 +13,22 @@ namespace FunProgLib.lists
 {
     public interface IRandomAccessList<T>
     {
+        // datatype alpha Tree = Leaf of alpha | Node of int x alpha Tree x alpha Tree
+        // datatype alpha Digit = Zero | One of alpha Tree
+        // type alpha RList = alpha Digit list
+
         IRandomAccessList<T> Empty { get; }
 
-        bool IsEmpty(IRandomAccessList<T> list);
+        bool IsEmpty(IRandomAccessList<T> rlist);
 
-        IRandomAccessList<T> Cons(T element, IRandomAccessList<T> list);
+        IRandomAccessList<T> Cons(T element, IRandomAccessList<T> rlist);
 
-        T Head(IRandomAccessList<T> list);
+        T Head(IRandomAccessList<T> rlist);
 
-        IRandomAccessList<T> Tail(IRandomAccessList<T> list);
+        IRandomAccessList<T> Tail(IRandomAccessList<T> rlist);
 
-        T Lookup(int index, IRandomAccessList<T> list);
+        T Lookup(int index, IRandomAccessList<T> rlist);
 
-        IRandomAccessList<T> Update(int index, T element, IRandomAccessList<T> list);
+        IRandomAccessList<T> Update(int index, T element, IRandomAccessList<T> rlist);
     }
 }

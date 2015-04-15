@@ -17,6 +17,21 @@ namespace FunProgLib.lists
     {
         public abstract class Tree
         {
+            internal virtual T Head
+            {
+                get { throw new Exception(); }
+            }
+
+            public abstract int Size { get; }
+
+            public abstract T LookupTree(int i);
+
+            public abstract Tree UpdateTree(int i, T x);
+
+            internal virtual Stuff Cons(List<Digit>.Node list)
+            {
+                throw new Exception();
+            }
         }
 
         private sealed class Leaf : Tree
@@ -28,9 +43,26 @@ namespace FunProgLib.lists
                 this.alpha = alpha;
             }
 
-            public T Alpha
+            internal override T Head
             {
                 get { return alpha; }
+            }
+
+            public override int Size
+            {
+                get { return 1; }
+            }
+
+            public override T LookupTree(int i)
+            {
+                if (i == 0) return alpha;
+                throw new Exception("Subscript");
+            }
+
+            public override Tree UpdateTree(int i, T x)
+            {
+                if (i == 0) return new Leaf(x);
+                throw new Exception("Subscript");
             }
         }
 
@@ -49,19 +81,28 @@ namespace FunProgLib.lists
                 this.tree2 = tree2;
             }
 
-            public int Index
+            public override int Size
             {
                 get { return index; }
             }
 
-            public Tree Tree1
+            public override T LookupTree(int i)
             {
-                get { return tree1; }
+                return i < index / 2
+                    ? tree1.LookupTree(i)
+                    : tree2.LookupTree(i - index / 2);
             }
 
-            public Tree Tree2
+            public override Tree UpdateTree(int i, T x)
             {
-                get { return tree2; }
+                return i < index / 2
+                    ? new Node(index, tree1.UpdateTree(i, x), tree2)
+                    : new Node(index, tree1, tree2.UpdateTree(i - index / 2, x));
+            }
+
+            internal override Stuff Cons(List<Digit>.Node list)
+            {
+                return new Stuff(tree1, List<Digit>.Cons(new Digit(tree2), list));
             }
         }
 
@@ -82,7 +123,7 @@ namespace FunProgLib.lists
 
         private readonly static Digit Zero = new Digit(null);
 
-        private sealed class Stuff
+        internal sealed class Stuff
         {
             private readonly Tree tree;
 
@@ -115,16 +156,9 @@ namespace FunProgLib.lists
             return List<Digit>.IsEmpty(list);
         }
 
-        private static int Size(Tree tree)
-        {
-            var node = tree as Node;
-            if (node != null) return node.Index;
-            return 1;
-        }
-
         private static Tree Link(Tree t1, Tree t2)
         {
-            return new Node(Size(t1) + Size(t2), t1, t2);
+            return new Node(t1.Size + t2.Size, t1, t2);
         }
 
         private static List<Digit>.Node ConsTree(Tree t, List<Digit>.Node ts)
@@ -140,9 +174,7 @@ namespace FunProgLib.lists
             if (list.Element == Zero)
             {
                 var stuff = UnconsTree(list.Next);
-                var node = stuff.Tree as Node;
-                if (node != null) return new Stuff(node.Tree1, List<Digit>.Cons(new Digit(node.Tree2), stuff.List));
-                throw new Exception();
+                return stuff.Tree.Cons(stuff.List);
             }
             if (IsEmpty(list.Next)) return new Stuff(list.Element.One, List<Digit>.Empty);
             return new Stuff(list.Element.One, List<Digit>.Cons(Zero, list.Next));
@@ -156,9 +188,7 @@ namespace FunProgLib.lists
         public static T Head(List<Digit>.Node ts)
         {
             var stuff = UnconsTree(ts);
-            var leaf = stuff.Tree as Leaf;
-            if (leaf != null) return leaf.Alpha;
-            throw new Exception();
+            return stuff.Tree.Head;
         }
 
         public static List<Digit>.Node Tail(List<Digit>.Node ts)
@@ -167,58 +197,20 @@ namespace FunProgLib.lists
             return stuff.List;
         }
 
-        private static T LookupTree(int i, Tree t)
-        {
-            var leaf = t as Leaf;
-            if (leaf != null)
-            {
-                if (i == 0) return leaf.Alpha;
-                throw new Exception("Subscript");
-            }
-
-            var node = t as Node;
-            if (node != null)
-            {
-                if (i < node.Index / 2) return LookupTree(i, node.Tree1);
-                return LookupTree(i - node.Index / 2, node.Tree2);
-            }
-
-            throw new Exception();
-        }
-
-        private static Tree UpdateTree(int i, T x, Tree t)
-        {
-            var leaf = t as Leaf;
-            if (leaf != null)
-            {
-                if (i == 0) return new Leaf(x);
-                throw new Exception("Subscript");
-            }
-
-            var node = t as Node;
-            if (node != null)
-            {
-                if (i < node.Index / 2) return new Node(node.Index, UpdateTree(i, x, node.Tree1), node.Tree2);
-                return new Node(node.Index, node.Tree1, UpdateTree(i - node.Index / 2, x, node.Tree2));
-            }
-
-            throw new Exception();
-        }
-
         public static T Lookup(int i, List<Digit>.Node ts)
         {
             if (IsEmpty(ts)) throw new Exception("Subscript");
             if (ts.Element == Zero) return Lookup(i, ts.Next);
-            if (i < Size(ts.Element.One)) return LookupTree(i, ts.Element.One);
-            return Lookup(i - Size(ts.Element.One), ts.Next);
+            if (i < ts.Element.One.Size) return ts.Element.One.LookupTree(i);
+            return Lookup(i - ts.Element.One.Size, ts.Next);
         }
 
         public static List<Digit>.Node Update(int i, T x, List<Digit>.Node ts)
         {
             if (IsEmpty(ts)) throw new Exception("Subscript");
             if (ts.Element == Zero) return List<Digit>.Cons(Zero, Update(i, x, ts.Next));
-            if (i < Size(ts.Element.One)) return List<Digit>.Cons(new Digit(UpdateTree(i, x, ts.Element.One)), ts.Next);
-            return List<Digit>.Cons(new Digit(ts.Element.One), Update(i - Size(ts.Element.One), x, ts.Next));
+            if (i < ts.Element.One.Size) return List<Digit>.Cons(new Digit(ts.Element.One.UpdateTree(i, x)), ts.Next);
+            return List<Digit>.Cons(new Digit(ts.Element.One), Update(i - ts.Element.One.Size, x, ts.Next));
         }
     }
 }

@@ -47,6 +47,7 @@
     <Compile Include="lists\AltBinaryRandomAccessList.cs" />
     <Compile Include="lists\CustomStack.cs" />
     <Compile Include="lists\IRandomAccessList.cs" />
+    <Compile Include="lists\RList.cs" />
     <Compile Include="lists\SkewBinaryRandomAccessList.cs" />
     <Compile Include="lists\BinaryRandomAccessList.cs" />
     <Compile Include="lists\List.cs" />

@@ -9,33 +9,75 @@
 // Okasaki, Chris. "10.1.2 Binary Random-Access Lists Revisited." Purely Functional Data Structures. 
 //     Cambridge, U.K.: Cambridge UP, 1998. 144-7. Print.
 
+using System;
+
 namespace FunProgLib.lists
 {
-    using System;
-
     // assumes polymorphic recursion!
     public static class AltBinaryRandomAccessList<T>
     {
+        // datatype alpha RList = Nil | Zero of (alpha x alpha) RList | One of alpha x (alpha x alpha) RList
+
+        public delegate T Fun(T value);
+        // public delegate Tuple<T, T> Fun2(Fun g, Tuple<T, T> t);
+
         public abstract class Digit
         {
-            private readonly List<Tuple<T, T>>.Node list;
+            private readonly RList<Tuple<T, T>>.Node rlist;
 
-            protected Digit(List<Tuple<T, T>>.Node list)
+            protected Digit(RList<Tuple<T, T>>.Node rlist)
             {
-                this.list = list;
+                this.rlist = rlist;
             }
 
-            public List<Tuple<T, T>>.Node List
+            protected RList<Tuple<T, T>>.Node RList
             {
-                get { return list; }
+                get { return rlist; }
             }
+
+            public abstract Digit Cons(T x);
+
+            public abstract Tuple<T, Digit> Uncons();
+
+            public abstract T Lookup(int i);
+
+            public abstract Digit Fupdate(Fun f, int i);
         }
 
         private sealed class Zero : Digit
         {
-            public Zero(List<Tuple<T, T>>.Node list)
-                : base(list)
+            public Zero(RList<Tuple<T, T>>.Node rlist)
+                : base(rlist)
             {
+            }
+
+            public override Digit Cons(T x)
+            {
+                return new One(x, RList);
+            }
+
+            public override Tuple<T, Digit> Uncons()
+            {
+                var stuff = RList<Tuple<T, T>>.Head(RList);
+                var list = RList<Tuple<T, T>>.Tail(RList);
+                return new Tuple<T, Digit>(stuff.Item1, new One(stuff.Item2, list));
+            }
+
+            public override T Lookup(int i)
+            {
+                var stuff = RList<Tuple<T, T>>.Lookup(i / 2, RList);
+                return i % 2 == 0
+                    ? stuff.Item1
+                    : stuff.Item2;
+            }
+
+            public override Digit Fupdate(Fun f, int i)
+            {
+                var fp = i % 2 == 0
+                    ? new RList<Tuple<T, T>>.Fun(t => new Tuple<T, T>(f(t.Item1), t.Item2))
+                    : new RList<Tuple<T, T>>.Fun(t => new Tuple<T, T>(t.Item1, f(t.Item2)));
+                var list = RList<Tuple<T, T>>.Fupdate(fp, i / 2, RList);
+                return new Zero(list);
             }
         }
 
@@ -43,15 +85,37 @@ namespace FunProgLib.lists
         {
             private readonly T alpha;
 
-            public One(T alpha, List<Tuple<T, T>>.Node list)
-                : base(list)
+            public One(T alpha, RList<Tuple<T, T>>.Node rlist)
+                : base(rlist)
             {
                 this.alpha = alpha;
             }
 
-            public T Alpha
+            public override Digit Cons(T x)
             {
-                get { return alpha; }
+                var list = RList<Tuple<T, T>>.Cons(new Tuple<T, T>(x, alpha), RList);
+                return new Zero(list);
+            }
+
+            public override Tuple<T, Digit> Uncons()
+            {
+                return RList == null
+                    ? new Tuple<T, Digit>(alpha, null)
+                    : new Tuple<T, Digit>(alpha, new Zero(RList));
+            }
+
+            public override T Lookup(int i)
+            {
+                return i == 0
+                    ? alpha
+                    : new Zero(RList).Lookup(i - 1);
+            }
+
+            public override Digit Fupdate(Fun f, int i)
+            {
+                return i == 0
+                    ? new One(f(alpha), RList)
+                    : new Zero(RList).Fupdate(f, i - 1).Cons(alpha);
             }
         }
 
@@ -67,101 +131,46 @@ namespace FunProgLib.lists
 
         public static Digit Cons(T x, Digit ts)
         {
-            if (ts == null) return new One(x, null);
-            var zero = ts as Zero;
-            if (zero != null) return new One(x, zero.List);
-            var one = ts as One;
-            if (one != null) return new Zero(List<Tuple<T, T>>.Cons(new Tuple<T, T>(x, one.Alpha), one.List));
-            throw new Exception();
+            return ts == null
+                ? new One(x, null)
+                : ts.Cons(x);
         }
 
-        private static Tuple<T, Digit> Uncons(Digit digit)
+        public static Tuple<T, Digit> Uncons(Digit ts)
         {
-            if (digit == null) throw new Exception("Empty");
-
-            var one = digit as One;
-            if (one != null)
-            {
-                if (one.List == null) return new Tuple<T, Digit>(one.Alpha, null);
-                return new Tuple<T, Digit>(one.Alpha, new Zero(one.List));
-            }
-
-            var zero = digit as Zero;
-            if (zero != null)
-            {
-                // var (stuff, Node) = Uncons(zero.Node);
-                var stuff = List<Tuple<T, T>>.Head(zero.List);
-                var list = List<Tuple<T, T>>.Tail(zero.List);
-                return new Tuple<T, Digit>(stuff.Item1, new One(stuff.Item2, list));
-            }
-
-            throw new Exception();
+            if (ts == null) throw new Exception("Empty");
+            return ts.Uncons();
         }
 
-        public static T Head(Digit ts)
+        public static T Head(Digit xs)
         {
-            var x = Uncons(ts);
+            if (xs == null) throw new Exception("Empty");
+            var x = xs.Uncons();
             return x.Item1;
         }
 
-        public static Digit Tail(Digit ts)
+        public static Digit Tail(Digit xs)
         {
-            var x = Uncons(ts);
+            if (xs == null) throw new Exception("Empty");
+            var x = xs.Uncons();
             return x.Item2;
         }
 
         public static T Lookup(int i, Digit ts)
         {
-            if (ts == null) throw new Exception("Subscript");
-
-            var one = ts as One;
-            if (one != null)
-            {
-                if (i == 0) return one.Alpha;
-                return Lookup(i - 1, new Zero(one.List));
-            }
-
-            var zero = ts as Zero;
-            if (zero != null)
-            {
-                //var stuff = RList.Lookup(i / 2, Zero.Node);
-                //if (i % 2 == 0) return stuff.Alpha1;
-                //return stuff.Alpha2;
-                throw new NotImplementedException();
-            }
-
-            throw new Exception();
+            if (ts == null) throw new Exception("Empty");
+            return ts.Lookup(i);
         }
 
-        private delegate T Del(T value);
-
-        private static Digit Fupdate(Del f, int i, Digit ts)
+        public static Digit Fupdate(Fun f, int i, Digit ts)
         {
             if (ts == null) throw new Exception("Subscript");
-            var one = ts as One;
-            if (one != null)
-            {
-                if (i == 0) return new One(f(one.Alpha), one.List);
-                return Cons(one.Alpha, Fupdate(f, i - 1, new Zero(one.List)));
-            }
-
-            var zero = ts as Zero;
-            if (zero != null)
-            {
-                // var fp(x,y) = i % 2 == 0 ? (f(x), y) : (x, f(y));
-                var fp = i % 2 == 0
-                    ? new Func<Tuple<T, T>, Del, Tuple<T, T>>((Tuple<T, T> stuff, Del g) => new Tuple<T, T>(g(stuff.Item1), stuff.Item2))
-                    : new Func<Tuple<T, T>, Del, Tuple<T, T>>((Tuple<T, T> stuff, Del g) => new Tuple<T, T>(stuff.Item1, g(stuff.Item2)));
-                //return new Zero(Fupdate(fp, i / 2, zero.Node));
-                throw new NotImplementedException();
-            }
-
-            throw new Exception();
+            return ts.Fupdate(f, i);
         }
 
-        public static Digit Update(int i, T x, Digit ts)
+        public static Digit Update(int i, T y, Digit ts)
         {
-            return Fupdate(y => x, i, ts);
+            return ts.Fupdate(x => y, i);
         }
     }
 }
