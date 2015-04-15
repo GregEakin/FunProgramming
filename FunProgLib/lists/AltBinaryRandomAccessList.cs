@@ -16,10 +16,7 @@ namespace FunProgLib.lists
     // assumes polymorphic recursion!
     public static class AltBinaryRandomAccessList<T>
     {
-        // datatype alpha RList = Nil | Zero of (alpha x alpha) RList | One of alpha x (alpha x alpha) RList
-
         public delegate T Fun(T value);
-        // public delegate Tuple<T, T> Fun2(Fun g, Tuple<T, T> t);
 
         public abstract class Digit
         {
@@ -131,45 +128,46 @@ namespace FunProgLib.lists
 
         public static Digit Cons(T x, Digit ts)
         {
-            return ts == null
+            return IsEmpty(ts)
                 ? new One(x, null)
                 : ts.Cons(x);
         }
 
         public static Tuple<T, Digit> Uncons(Digit ts)
         {
-            if (ts == null) throw new Exception("Empty");
+            if (IsEmpty(ts)) throw new Exception("Empty");
             return ts.Uncons();
         }
 
         public static T Head(Digit xs)
         {
-            if (xs == null) throw new Exception("Empty");
+            if (IsEmpty(xs)) throw new Exception("Empty");
             var x = xs.Uncons();
             return x.Item1;
         }
 
         public static Digit Tail(Digit xs)
         {
-            if (xs == null) throw new Exception("Empty");
+            if (IsEmpty(xs)) throw new Exception("Empty");
             var x = xs.Uncons();
             return x.Item2;
         }
 
         public static T Lookup(int i, Digit ts)
         {
-            if (ts == null) throw new Exception("Empty");
+            if (IsEmpty(ts)) throw new Exception("Empty");
             return ts.Lookup(i);
         }
 
         public static Digit Fupdate(Fun f, int i, Digit ts)
         {
-            if (ts == null) throw new Exception("Subscript");
+            if (IsEmpty(ts)) throw new Exception("Subscript");
             return ts.Fupdate(f, i);
         }
 
         public static Digit Update(int i, T y, Digit ts)
         {
+            if (IsEmpty(ts)) throw new Exception("Empty");
             return ts.Fupdate(x => y, i);
         }
     }

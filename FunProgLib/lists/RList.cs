@@ -9,14 +9,16 @@
 // Okasaki, Chris. "2.1 Lists." Purely Functional Data Structures. 
 //     Cambridge, U.K.: Cambridge UP, 1998. 7-11. Print.
 
+using System;
+using System.Collections;
+using System.Collections.Generic;
+
 namespace FunProgLib.lists
 {
-    using System;
-    using System.Collections;
-    using System.Collections.Generic;
-
-    public static class RList<T> // : IStack<T>
+    public static class RList<T>
     {
+        public delegate T Fun(T value);
+
         public sealed class Node : IEnumerable<T>
         {
             private readonly T element;
@@ -144,8 +146,6 @@ namespace FunProgLib.lists
             if (i == 0) return Head(list);
             return Lookup(i - 1, Tail(list));
         }
-
-        public delegate T Fun(T value);
 
         public static Node Fupdate(Fun f, int i, Node list)
         {

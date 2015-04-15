@@ -19,7 +19,7 @@ namespace FunProgTests.queue
     [TestClass]
     public class BootstrappedQueueTests
     {
-        // [TestMethod]
+        [TestMethod]
         public void EmptyTest()
         {
             var queue = BootstrappedQueue<string>.Empty;
@@ -30,7 +30,7 @@ namespace FunProgTests.queue
             Assert.IsTrue(BootstrappedQueue<string>.IsEmpty(queue));
         }
 
-        // [TestMethod]
+        [TestMethod]
         [ExpectedException(typeof(Exception))]
         public void EmptyHeadTest()
         {
@@ -38,7 +38,7 @@ namespace FunProgTests.queue
             var item = BootstrappedQueue<string>.Head(queue);
         }
 
-        // [TestMethod]
+        [TestMethod]
         [ExpectedException(typeof(Exception))]
         public void EmptyTailTest()
         {
@@ -46,7 +46,7 @@ namespace FunProgTests.queue
             var item = BootstrappedQueue<string>.Tail(queue);
         }
 
-        // [TestMethod]
+        [TestMethod]
         public void PushPopTest()
         {
             const string Data = "One Two Three One Three";

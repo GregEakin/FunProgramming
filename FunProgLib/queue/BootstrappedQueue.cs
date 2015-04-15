@@ -15,7 +15,7 @@ using FunProgLib.lists;
 namespace FunProgLib.queue
 {
     // assumes polymorphic recursion!
-    public static class BootstrappedQueue<T>
+    public static class BootstrappedQueue<T>  // : Queue<T>
     {
         public sealed class Queue
         {
@@ -23,7 +23,6 @@ namespace FunProgLib.queue
 
             private readonly List<T>.Node f;
 
-            // alpha list susp Queue m
             private readonly BootstrappedQueue<Lazy<List<T>.Node>>.Queue m;
 
             private readonly int lenr;
@@ -39,7 +38,7 @@ namespace FunProgLib.queue
                 this.r = r;
             }
 
-            public int LenFM
+            public int LenFm
             {
                 get { return lenfm; }
             }
@@ -65,7 +64,7 @@ namespace FunProgLib.queue
             }
         }
 
-        // private static readonly List<T>.Node EmptyList = null;
+        private static readonly List<T>.Node EmptyList = null;
         private static readonly Queue EmptyQueue = null;
 
         public static Queue Empty
@@ -78,31 +77,42 @@ namespace FunProgLib.queue
             return queue == null;
         }
 
-        private static Queue CheckQ(Queue q)
+        private static Queue CheckQ(Queue queue)
         {
-            if (q.LenR <= q.LenFM) return CheckF(q);
-            // return CheckF(new Queue(q.LenFM + q.LenR, q.F, Snoc(q.M, List<T>.Reverse(q.R)), 0, EmptyList));
-            throw new System.NotImplementedException();
+            if (IsEmpty(queue)) throw new Exception("Empty");
+            if (queue.LenR <= queue.LenFm) return CheckF(queue);
+            var m = BootstrappedQueue<Lazy<List<T>.Node>>.Snoc(queue.M, new Lazy<List<T>.Node>(() => List<T>.Reverse(queue.R)));
+            var q = new Queue(queue.LenFm + queue.LenR, queue.F, m, 0, EmptyList);
+            return CheckF(q);
         }
 
-        private static Queue CheckF(Queue q)
+        private static Queue CheckF(Queue queue)
         {
-            throw new System.NotImplementedException();
+            if (IsEmpty(queue)) throw new Exception("Empty");
+            if (!List<T>.IsEmpty(queue.F)) return queue;
+            if (BootstrappedQueue<Lazy<List<T>.Node>>.IsEmpty(queue.M)) return Empty;
+            var headM = BootstrappedQueue<Lazy<List<T>.Node>>.Head(queue.M).Value;
+            var tailM = BootstrappedQueue<Lazy<List<T>.Node>>.Tail(queue.M);
+            return new Queue(queue.LenFm, headM, tailM, queue.LenR, queue.R);
         }
 
-        public static Queue Snoc(Queue queue, T item)
+        public static Queue Snoc(Queue queue, T x)
         {
-            throw new System.NotImplementedException();
+            return IsEmpty(queue)
+                ? new Queue(1, List<T>.Cons(x, List<T>.Empty), BootstrappedQueue<Lazy<List<T>.Node>>.Empty, 0, List<T>.Empty)
+                : CheckQ(new Queue(queue.LenFm, queue.F, queue.M, queue.LenR + 1, List<T>.Cons(x, queue.R)));
         }
 
         public static T Head(Queue queue)
         {
-            throw new System.NotImplementedException();
+            if (IsEmpty(queue)) throw new Exception("Empty");
+            return List<T>.Head(queue.F);
         }
 
         public static Queue Tail(Queue queue)
         {
-            throw new System.NotImplementedException();
+            if (IsEmpty(queue)) throw new Exception("Empty");
+            return CheckQ(new Queue(queue.LenFm - 1, List<T>.Tail(queue.F), queue.M, queue.LenR, queue.R));
         }
     }
 }
