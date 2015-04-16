@@ -46,6 +46,7 @@
     <Compile Include="heap\SkewBinomialHeap.cs" />
     <Compile Include="lists\AltBinaryRandomAccessList.cs" />
     <Compile Include="lists\CustomStack.cs" />
+    <Compile Include="lists\ICatenableList.cs" />
     <Compile Include="lists\IRandomAccessList.cs" />
     <Compile Include="lists\RList.cs" />
     <Compile Include="lists\SkewBinaryRandomAccessList.cs" />
