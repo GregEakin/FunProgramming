@@ -63,6 +63,7 @@
     <Compile Include="lamda\ListOfFuncsTests.cs" />
     <Compile Include="lists\BinaryRandomAccessListTests.cs" />
     <Compile Include="lists\AltBinaryRandomAccessListTests.cs" />
+    <Compile Include="queue\CatenableListTests.cs" />
     <Compile Include="lists\SkewBinaryRandomAccessListTests.cs" />
     <Compile Include="lists\ListTests.cs" />
     <Compile Include="queue\BankersDequeTests.cs" />
