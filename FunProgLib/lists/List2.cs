@@ -9,6 +9,7 @@
 // Okasaki, Chris. "2.1 Lists." Purely Functional Data Structures. 
 //     Cambridge, U.K.: Cambridge UP, 1998. 7-11. Print.
 
+using System;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -23,19 +24,19 @@ namespace FunProgLib.lists
             get { return EmptyList; }
         }
 
-        private readonly T head;
+        private readonly T _head;
 
-        private readonly IStack<T> tail;
+        private readonly IStack<T> _tail;
 
-        public List2(T head)
-            : this(head, Empty)
+        public List2(T element)
+            : this(element, Empty)
         {
         }
 
-        private List2(T head, IStack<T> tail)
+        private List2(T element, IStack<T> list)
         {
-            this.head = head;
-            this.tail = tail;
+            _head = element;
+            _tail = list;
         }
 
         public bool IsEmpty
@@ -43,40 +44,74 @@ namespace FunProgLib.lists
             get { return this == EmptyList; }
         }
 
-        public IStack<T> Cons(T item)
+        public IStack<T> Cons(T element)
         {
-            return new List2<T>(item, this);
+            return new List2<T>(element, this);
         }
 
         public T Head
         {
-            get { return head; }
+            get
+            {
+                if (IsEmpty) throw new Exception("Empty");
+                return _head;
+            }
         }
 
         public IStack<T> Tail
         {
-            get { return tail; }
+            get
+            {
+                if (IsEmpty) throw new Exception("Empty");
+                return _tail;
+            }
         }
 
-        public IStack<T> Cat(List2<T> list2)
+        public IStack<T> Cat(IStack<T> list2)
         {
             if (IsEmpty) return list2;
             if (list2.IsEmpty) return this;
-            return new List2<T>(head, list2.Cat((List2<T>)tail));
+            return new List2<T>(_head, ((List2<T>)_tail).Cat(list2));
         }
 
-        public IStack<T> Reverse()
+        public IStack<T> Reverse
         {
-            if (IsEmpty) return Empty;
-            if (tail.IsEmpty) return this;
-            return Rev(this, Empty);
+            get
+            {
+                if (IsEmpty) return Empty;
+                if (_tail.IsEmpty) return this;
+                return Rev(this, Empty);
+            }
         }
 
         private static IStack<T> Rev(IStack<T> listIn, IStack<T> listOut)
         {
-            if (listIn.IsEmpty) return listOut;
-            var next = new List2<T>(listIn.Head, listOut);
-            return Rev(listIn.Tail, next);
+            while (!listIn.IsEmpty)
+            {
+                var next = new List2<T>(listIn.Head, listOut);
+                listIn = listIn.Tail;
+                listOut = next;
+            }
+
+            return listOut;
+        }
+
+        public T Lookup(int i)
+        {
+            if (IsEmpty) throw new Exception("Empty");
+            return i == 0
+                ? Head
+                : ((List2<T>)Tail).Lookup(i - 1);
+        }
+
+        public delegate T Fun(T value);
+
+        public IStack<T> Fupdate(Fun f, int i)
+        {
+            if (IsEmpty) throw new Exception("Empty");
+            return i == 0
+                ? Tail.Cons(f(Head))
+                : ((List2<T>)Tail).Fupdate(f, i - 1).Cons(Head);
         }
 
         public IEnumerator<T> GetEnumerator()
@@ -91,35 +126,35 @@ namespace FunProgLib.lists
 
         private sealed class ListEnum : IEnumerator<T>
         {
-            private readonly IStack<T> start;
-            private IStack<T> list;
+            private readonly IStack<T> _start;
+            private IStack<T> _list;
 
             public ListEnum(IStack<T> list)
             {
-                this.start = list.Cons(default(T));
-                this.list = start;
+                _start = list.Cons(default(T));
+                _list = _start;
             }
 
             public bool MoveNext()
             {
-                if (list.IsEmpty) return false;
-                list = list.Tail;
-                return !list.IsEmpty;
+                if (_list.IsEmpty) return false;
+                _list = _list.Tail;
+                return !_list.IsEmpty;
             }
 
             public void Reset()
             {
-                list = start;
+                _list = _start;
             }
 
             object IEnumerator.Current
             {
-                get { return list.Head; }
+                get { return _list.Head; }
             }
 
             public T Current
             {
-                get { return list.Head; }
+                get { return _list.Head; }
             }
 
             public void Dispose()
