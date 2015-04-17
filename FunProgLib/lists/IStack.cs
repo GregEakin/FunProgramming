@@ -13,14 +13,12 @@ namespace FunProgLib.lists
 {
     public interface IStack<T>
     {
-        IStack<T> Empty { get; }
+        bool IsEmpty { get; }
 
-        bool IsEmpty(IStack<T> stack);
+        IStack<T> Cons(T element);
 
-        IStack<T> Cons(T element, IStack<T> stack);
+        T Head { get; }
 
-        T Head(IStack<T> stack);
-
-        IStack<T> Tail(IStack<T> stack);
+        IStack<T> Tail { get; }
     }
 }

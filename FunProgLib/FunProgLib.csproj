@@ -45,6 +45,7 @@
     <Compile Include="heap\ScheduledBinomialHeap.cs" />
     <Compile Include="heap\SkewBinomialHeap.cs" />
     <Compile Include="lists\AltBinaryRandomAccessList.cs" />
+    <Compile Include="lists\List2.cs" />
     <Compile Include="queue\CatenableList.cs" />
     <Compile Include="lists\CustomStack.cs" />
     <Compile Include="lists\ICatenableList.cs" />
