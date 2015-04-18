@@ -14,161 +14,200 @@ using System;
 namespace FunProgLib.lists
 {
     // assumes polymorphic recursion!
-    public static class AltBinaryRandomAccessList<T>
+    public abstract class AltBinaryRandomAccessList<T>
     {
         public delegate T Fun(T value);
 
-        public abstract class Digit
+        private static readonly AltBinaryRandomAccessList<T> EmptyList = new AltBinaryRandomAccessEmpty<T>();
+
+        public static AltBinaryRandomAccessList<T> Empty
         {
-            private readonly RList<Tuple<T, T>>.Node rlist;
-
-            protected Digit(RList<Tuple<T, T>>.Node rlist)
-            {
-                this.rlist = rlist;
-            }
-
-            protected RList<Tuple<T, T>>.Node RList
-            {
-                get { return rlist; }
-            }
-
-            public abstract Digit Cons(T x);
-
-            public abstract Tuple<T, Digit> Uncons();
-
-            public abstract T Lookup(int i);
-
-            public abstract Digit Fupdate(Fun f, int i);
+            get { return EmptyList; }
         }
 
-        private sealed class Zero : Digit
+        private readonly List2<Tuple<T, T>> _rlist;
+
+        protected AltBinaryRandomAccessList(List2<Tuple<T, T>> rlist)
         {
-            public Zero(RList<Tuple<T, T>>.Node rlist)
-                : base(rlist)
-            {
-            }
+            _rlist = rlist;
+        }
 
-            public override Digit Cons(T x)
-            {
-                return new One(x, RList);
-            }
+        protected List2<Tuple<T, T>> List
+        {
+            get { return _rlist; }
+        }
 
-            public override Tuple<T, Digit> Uncons()
-            {
-                var stuff = RList<Tuple<T, T>>.Head(RList);
-                var list = RList<Tuple<T, T>>.Tail(RList);
-                return new Tuple<T, Digit>(stuff.Item1, new One(stuff.Item2, list));
-            }
+        public abstract bool IsEmpty { get; }
 
-            public override T Lookup(int i)
-            {
-                var stuff = RList<Tuple<T, T>>.Lookup(i / 2, RList);
-                return i % 2 == 0
-                    ? stuff.Item1
-                    : stuff.Item2;
-            }
+        public abstract AltBinaryRandomAccessList<T> Cons(T x);
 
-            public override Digit Fupdate(Fun f, int i)
+        public abstract Tuple<T, AltBinaryRandomAccessList<T>> Uncons { get; }
+
+        public abstract T Head { get; }
+
+        public abstract AltBinaryRandomAccessList<T> Tail { get; }
+
+        public abstract T Lookup(int i);
+
+        public abstract AltBinaryRandomAccessList<T> Fupdate(Fun f, int i);
+
+        public AltBinaryRandomAccessList<T> Update(int i, T y)
+        {
+            return Fupdate(x => y, i);
+        }
+    }
+
+    internal class AltBinaryRandomAccessEmpty<T> : AltBinaryRandomAccessList<T>
+    {
+        internal AltBinaryRandomAccessEmpty()
+            : base(List2<Tuple<T, T>>.Empty)
+        {
+        }
+
+        public override bool IsEmpty
+        {
+            get { return true; }
+        }
+
+        public override AltBinaryRandomAccessList<T> Cons(T x)
+        {
+            return new AltBinaryRandomAccessOne<T>(x, List2<Tuple<T, T>>.Empty);
+        }
+
+        public override Tuple<T, AltBinaryRandomAccessList<T>> Uncons
+        {
+            get { throw new Exception("Empty"); }
+        }
+
+        public override T Head
+        {
+            get { throw new Exception("Empty"); }
+        }
+
+        public override AltBinaryRandomAccessList<T> Tail
+        {
+            get { throw new Exception("Empty"); }
+        }
+
+        public override T Lookup(int i)
+        {
+            throw new Exception("Empty");
+        }
+
+        public override AltBinaryRandomAccessList<T> Fupdate(Fun f, int i)
+        {
+            throw new Exception("Subscript");
+        }
+    }
+
+    internal sealed class AltBinaryRandomAccessZero<T> : AltBinaryRandomAccessList<T>
+    {
+        internal AltBinaryRandomAccessZero(List2<Tuple<T, T>> rlist)
+            : base(rlist)
+        {
+        }
+
+        public override bool IsEmpty
+        {
+            get { return false; }
+        }
+
+        public override AltBinaryRandomAccessList<T> Cons(T x)
+        {
+            return new AltBinaryRandomAccessOne<T>(x, List);
+        }
+
+        public override Tuple<T, AltBinaryRandomAccessList<T>> Uncons
+        {
+            get
             {
-                var fp = i % 2 == 0
-                    ? new RList<Tuple<T, T>>.Fun(t => new Tuple<T, T>(f(t.Item1), t.Item2))
-                    : new RList<Tuple<T, T>>.Fun(t => new Tuple<T, T>(t.Item1, f(t.Item2)));
-                var list = RList<Tuple<T, T>>.Fupdate(fp, i / 2, RList);
-                return new Zero(list);
+                var head = List.Head;
+                var list = List.Tail;
+                return new Tuple<T, AltBinaryRandomAccessList<T>>(head.Item1, new AltBinaryRandomAccessOne<T>(head.Item2, list));
             }
         }
 
-        private sealed class One : Digit
+        public override T Head
         {
-            private readonly T alpha;
+            get { return Uncons.Item1; }
+        }
 
-            public One(T alpha, RList<Tuple<T, T>>.Node rlist)
-                : base(rlist)
+        public override AltBinaryRandomAccessList<T> Tail
+        {
+            get { return Uncons.Item2; }
+        }
+
+        public override T Lookup(int i)
+        {
+            var element = List.Lookup(i / 2);
+            return i % 2 == 0
+                ? element.Item1
+                : element.Item2;
+        }
+
+        public override AltBinaryRandomAccessList<T> Fupdate(Fun f, int i)
+        {
+            var fp = i % 2 == 0
+                ? new List2<Tuple<T, T>>.Fun(t => new Tuple<T, T>(f(t.Item1), t.Item2))
+                : new List2<Tuple<T, T>>.Fun(t => new Tuple<T, T>(t.Item1, f(t.Item2)));
+            var list = List.Fupdate(fp, i / 2);
+            return new AltBinaryRandomAccessZero<T>(list);
+        }
+    }
+
+    internal sealed class AltBinaryRandomAccessOne<T> : AltBinaryRandomAccessList<T>
+    {
+        private readonly T _alpha;
+
+        internal AltBinaryRandomAccessOne(T alpha, List2<Tuple<T, T>> rlist)
+            : base(rlist)
+        {
+            _alpha = alpha;
+        }
+
+        public override bool IsEmpty
+        {
+            get { return false; }
+        }
+
+        public override AltBinaryRandomAccessList<T> Cons(T x)
+        {
+            var list = List.Cons(new Tuple<T, T>(x, _alpha));
+            return new AltBinaryRandomAccessZero<T>(list);
+        }
+
+        public override Tuple<T, AltBinaryRandomAccessList<T>> Uncons
+        {
+            get
             {
-                this.alpha = alpha;
-            }
-
-            public override Digit Cons(T x)
-            {
-                var list = RList<Tuple<T, T>>.Cons(new Tuple<T, T>(x, alpha), RList);
-                return new Zero(list);
-            }
-
-            public override Tuple<T, Digit> Uncons()
-            {
-                return RList == null
-                    ? new Tuple<T, Digit>(alpha, null)
-                    : new Tuple<T, Digit>(alpha, new Zero(RList));
-            }
-
-            public override T Lookup(int i)
-            {
-                return i == 0
-                    ? alpha
-                    : new Zero(RList).Lookup(i - 1);
-            }
-
-            public override Digit Fupdate(Fun f, int i)
-            {
-                return i == 0
-                    ? new One(f(alpha), RList)
-                    : new Zero(RList).Fupdate(f, i - 1).Cons(alpha);
+                return List.IsEmpty
+                    ? new Tuple<T, AltBinaryRandomAccessList<T>>(_alpha, Empty)
+                    : new Tuple<T, AltBinaryRandomAccessList<T>>(_alpha, new AltBinaryRandomAccessZero<T>(List));
             }
         }
 
-        public static Digit Empty
+        public override T Head
         {
-            get { return null; }
+            get { return Uncons.Item1; }
         }
 
-        public static bool IsEmpty(Digit list)
+        public override AltBinaryRandomAccessList<T> Tail
         {
-            return list == null;
+            get { return Uncons.Item2; }
         }
 
-        public static Digit Cons(T x, Digit ts)
+        public override T Lookup(int i)
         {
-            return IsEmpty(ts)
-                ? new One(x, null)
-                : ts.Cons(x);
+            return i == 0
+                ? _alpha
+                : new AltBinaryRandomAccessZero<T>(List).Lookup(i - 1);
         }
 
-        public static Tuple<T, Digit> Uncons(Digit ts)
+        public override AltBinaryRandomAccessList<T> Fupdate(Fun f, int i)
         {
-            if (IsEmpty(ts)) throw new Exception("Empty");
-            return ts.Uncons();
-        }
-
-        public static T Head(Digit xs)
-        {
-            if (IsEmpty(xs)) throw new Exception("Empty");
-            var x = xs.Uncons();
-            return x.Item1;
-        }
-
-        public static Digit Tail(Digit xs)
-        {
-            if (IsEmpty(xs)) throw new Exception("Empty");
-            var x = xs.Uncons();
-            return x.Item2;
-        }
-
-        public static T Lookup(int i, Digit ts)
-        {
-            if (IsEmpty(ts)) throw new Exception("Empty");
-            return ts.Lookup(i);
-        }
-
-        public static Digit Fupdate(Fun f, int i, Digit ts)
-        {
-            if (IsEmpty(ts)) throw new Exception("Subscript");
-            return ts.Fupdate(f, i);
-        }
-
-        public static Digit Update(int i, T y, Digit ts)
-        {
-            if (IsEmpty(ts)) throw new Exception("Empty");
-            return ts.Fupdate(x => y, i);
+            return i == 0
+                ? new AltBinaryRandomAccessOne<T>(f(_alpha), List)
+                : new AltBinaryRandomAccessZero<T>(List).Fupdate(f, i - 1).Cons(_alpha);
         }
     }
 }
