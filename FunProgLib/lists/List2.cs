@@ -15,25 +15,25 @@ using System.Collections.Generic;
 
 namespace FunProgLib.lists
 {
-    public class List2<T> : IStack<T>, IEnumerable<T>
+    public class List2<T> : IEnumerable<T>
     {
-        private static readonly IStack<T> EmptyList = new List2<T>(default(T), null);
+        private static readonly List2<T> EmptyList = new List2<T>(default(T), null);
 
-        public static IStack<T> Empty
+        public static List2<T> Empty
         {
             get { return EmptyList; }
         }
 
         private readonly T _head;
 
-        private readonly IStack<T> _tail;
+        private readonly List2<T> _tail;
 
         public List2(T element)
             : this(element, Empty)
         {
         }
 
-        private List2(T element, IStack<T> list)
+        private List2(T element, List2<T> list)
         {
             _head = element;
             _tail = list;
@@ -44,7 +44,7 @@ namespace FunProgLib.lists
             get { return this == EmptyList; }
         }
 
-        public IStack<T> Cons(T element)
+        public List2<T> Cons(T element)
         {
             return new List2<T>(element, this);
         }
@@ -58,7 +58,7 @@ namespace FunProgLib.lists
             }
         }
 
-        public IStack<T> Tail
+        public List2<T> Tail
         {
             get
             {
@@ -67,24 +67,26 @@ namespace FunProgLib.lists
             }
         }
 
-        public IStack<T> Cat(IStack<T> list2)
+        public List2<T> Cat(List2<T> list2)
         {
             if (IsEmpty) return list2;
-            if (list2.IsEmpty) return this;
-            return new List2<T>(_head, ((List2<T>)_tail).Cat(list2));
+            return list2.IsEmpty
+                ? this
+                : new List2<T>(_head, _tail.Cat(list2));
         }
 
-        public IStack<T> Reverse
+        public List2<T> Reverse
         {
             get
             {
                 if (IsEmpty) return Empty;
-                if (_tail.IsEmpty) return this;
-                return Rev(this, Empty);
+                return _tail.IsEmpty
+                    ? this
+                    : Rev(this, Empty);
             }
         }
 
-        private static IStack<T> Rev(IStack<T> listIn, IStack<T> listOut)
+        private static List2<T> Rev(List2<T> listIn, List2<T> listOut)
         {
             while (!listIn.IsEmpty)
             {
@@ -101,17 +103,17 @@ namespace FunProgLib.lists
             if (IsEmpty) throw new Exception("Empty");
             return i == 0
                 ? Head
-                : ((List2<T>)Tail).Lookup(i - 1);
+                : Tail.Lookup(i - 1);
         }
 
         public delegate T Fun(T value);
 
-        public IStack<T> Fupdate(Fun f, int i)
+        public List2<T> Fupdate(Fun f, int i)
         {
             if (IsEmpty) throw new Exception("Empty");
             return i == 0
                 ? Tail.Cons(f(Head))
-                : ((List2<T>)Tail).Fupdate(f, i - 1).Cons(Head);
+                : Tail.Fupdate(f, i - 1).Cons(Head);
         }
 
         public IEnumerator<T> GetEnumerator()
@@ -126,10 +128,10 @@ namespace FunProgLib.lists
 
         private sealed class ListEnum : IEnumerator<T>
         {
-            private readonly IStack<T> _start;
-            private IStack<T> _list;
+            private readonly List2<T> _start;
+            private List2<T> _list;
 
-            public ListEnum(IStack<T> list)
+            public ListEnum(List2<T> list)
             {
                 _start = list.Cons(default(T));
                 _list = _start;
