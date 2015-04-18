@@ -7,7 +7,6 @@
 // All Rights Reserved.
 //
 
-using System;
 using System.Linq;
 using FunProgLib.lists;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -22,74 +21,28 @@ namespace FunProgTests.lists
         [TestMethod]
         public void EmptyTest()
         {
-            Assert.IsTrue(list.IsEmpty);
+            Assert.IsFalse(list.IsEmpty);
         }
 
         [TestMethod]
         public void ConsTest()
         {
-            list = list.Cons("Test");
-            // Assert.IsNotInstanceOfType(list, typeof(AltBinaryRandomAccessOne<string>));
+            var list1 = list.Cons("Test");
+            // Assert.IsNotInstanceOfType(list1, typeof(AltBinaryRandomAccessOne<string>));
         }
 
         [TestMethod]
-        [ExpectedException(typeof(Exception))]
         public void UnconsTest()
         {
-            var hd = list.Uncons;
-        }
-
-
-        [TestMethod]
-        [ExpectedException(typeof(Exception))]
-        public void HeadTest()
-        {
-            var hd = list.Head;
-        }
-
-        [TestMethod]
-        [ExpectedException(typeof(Exception))]
-        public void TailTest()
-        {
-            var tl = list.Tail;
-        }
-
-        [TestMethod]
-        [ExpectedException(typeof(Exception))]
-        public void LookupTest()
-        {
-            var tl = list.Lookup(0);
-        }
-
-        [TestMethod]
-        [ExpectedException(typeof(Exception))]
-        public void FupdateTest()
-        {
-            var tl = list.Fupdate(x => "test", 0);
-        }
-
-        [TestMethod]
-        public void LookupTest()
-        {
-            const string Data = "How now, brown cow?";
+            const string Data = "What's in a name? That which we call a rose by any other name would smell as sweet.";
             var data = Data.Split().Aggregate(AltBinaryRandomAccessList<string>.Empty, (current, word) => current.Cons(word));
+            var data5 = data.Uncons;
+            Assert.AreEqual("sweet.", data5.Item1);
 
-            Assert.AreEqual("now,", data.Lookup(2));
-            Assert.AreEqual("now,", data.Lookup(2));
+            var data6 = data5.Item2;
+            Assert.AreEqual("smell", data6.Lookup(1));
+            Assert.AreEqual("as", data6.Lookup(0));
         }
-
-        [TestMethod]
-        public void UpdateTest()
-        {
-            const string Data = "How now, brown cow?";
-            var data = Data.Split().Aggregate(AltBinaryRandomAccessList<string>.Empty, (current, word) => current.Cons(word));
-            data = data.Fupdate(y => "green", 1);
-            data = data.Fupdate(y => "white", 1);
-            Assert.AreEqual("cow?", data.Lookup(0));
-            Assert.AreEqual("white", data.Lookup(1));
-            Assert.AreEqual("now,", data.Lookup(2));
-        }
-
 
         [TestMethod]
         public void HeadTest()
@@ -114,25 +67,40 @@ namespace FunProgTests.lists
         }
 
         [TestMethod]
+        public void LookupTest()
+        {
+            const string Data = "How now, brown cow?";
+            var data = Data.Split().Aggregate(AltBinaryRandomAccessList<string>.Empty, (current, word) => current.Cons(word));
+
+            Assert.AreEqual("now,", data.Lookup(2));
+            Assert.AreEqual("now,", data.Lookup(2));
+        }
+
+        [TestMethod]
+        public void FupdateTest()
+        {
+            var tl = list.Fupdate(x => "test", 0);
+        }
+
+        [TestMethod]
+        public void UpdateTest()
+        {
+            const string Data = "How now, brown cow?";
+            var data = Data.Split().Aggregate(AltBinaryRandomAccessList<string>.Empty, (current, word) => current.Cons(word));
+            data = data.Fupdate(y => "green", 1);
+            data = data.Fupdate(y => "white", 1);
+            Assert.AreEqual("cow?", data.Lookup(0));
+            Assert.AreEqual("white", data.Lookup(1));
+            Assert.AreEqual("now,", data.Lookup(2));
+        }
+
+        [TestMethod]
         public void RoseTest()
         {
             const string Data = "What's in a name? That which we call a rose by any other name would smell as sweet.";
             var data = Data.Split().Aggregate(AltBinaryRandomAccessList<string>.Empty, (current, word) => current.Cons(word));
             Assert.AreEqual("sweet.", data.Lookup(0));
             Assert.AreEqual("What's", data.Lookup(17));
-        }
-
-        [TestMethod]
-        public void UnconsTest()
-        {
-            const string Data = "What's in a name? That which we call a rose by any other name would smell as sweet.";
-            var data = Data.Split().Aggregate(AltBinaryRandomAccessList<string>.Empty, (current, word) => current.Cons(word));
-            var data5 = data.Uncons;
-            Assert.AreEqual("sweet.", data5.Item1);
-
-            var data6 = data5.Item2;
-            Assert.AreEqual("smell", data6.Lookup(1));
-            Assert.AreEqual("as", data6.Lookup(0));
         }
     }
 }

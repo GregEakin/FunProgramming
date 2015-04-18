@@ -61,7 +61,6 @@
     <Compile Include="heap\SplayHeapTests.cs" />
     <Compile Include="heap\LazyParingHeapTests.cs" />
     <Compile Include="lamda\ListOfFuncsTests.cs" />
-    <Compile Include="lists\AltBinaryRandomAccessEmptyTests.cs" />
     <Compile Include="lists\AltBinaryRandomAccessOneTests.cs" />
     <Compile Include="lists\AltBinaryRandomAccessZeroTests.cs" />
     <Compile Include="lists\BinaryRandomAccessListTests.cs" />
