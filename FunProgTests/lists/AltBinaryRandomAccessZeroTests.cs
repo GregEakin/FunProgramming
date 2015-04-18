@@ -15,86 +15,27 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace FunProgTests.lists
 {
     [TestClass]
-    public class AltBinaryRandomAccessListTests
+    public class AltBinaryRandomAccessZeroTests
     {
-        [TestMethod]
-        public void EmptyListEmptyTest()
-        {
-            var list = AltBinaryRandomAccessList<string>.Empty;
-            Assert.IsTrue(list.IsEmpty);
-        }
-
-        [TestMethod]
-        public void EmptyListConsTest()
-        {
-            var list = AltBinaryRandomAccessList<string>.Empty;
-            list = list.Cons("Test");
-            // Assert.IsNotInstanceOfType(list, typeof(AltBinaryRandomAccessOne<string>));
-            // Assert.AreSame(List2<Tuple<string, string>>.Empty, list.List);
-        }
-
-        [TestMethod]
-        [ExpectedException(typeof(Exception))]
-        public void EmptyListUnconsTest()
-        {
-            var list = AltBinaryRandomAccessList<string>.Empty;
-            var hd = list.Uncons;
-        }
-
-
-        [TestMethod]
-        [ExpectedException(typeof(Exception))]
-        public void EmptyListHeadTest()
-        {
-            var list = AltBinaryRandomAccessList<string>.Empty;
-            var hd = list.Head;
-        }
-
-        [TestMethod]
-        [ExpectedException(typeof(Exception))]
-        public void EmptyListTailTest()
-        {
-            var list = AltBinaryRandomAccessList<string>.Empty;
-            var tl = list.Tail;
-        }
-
-        [TestMethod]
-        [ExpectedException(typeof(Exception))]
-        public void EmptyListLookupTest()
-        {
-            var list = AltBinaryRandomAccessList<string>.Empty;
-            var tl = list.Lookup(0);
-        }
-
-        [TestMethod]
-        [ExpectedException(typeof(Exception))]
-        public void EmptyListFupdateTest()
-        {
-            var list = AltBinaryRandomAccessList<string>.Empty;
-            var tl = list.Fupdate(x => "test", 0);
-        }
+        private readonly AltBinaryRandomAccessList<string> list = AltBinaryRandomAccessList<string>.Empty.Cons("One").Cons("Zero");
 
         [TestMethod]
         public void ZeroListEmptyTest()
         {
-            var list = AltBinaryRandomAccessList<string>.Empty;
-            Assert.IsTrue(list.IsEmpty);
+            Assert.IsFalse(list.IsEmpty);
         }
 
         [TestMethod]
         public void ZeroListConsTest()
         {
-            var list = AltBinaryRandomAccessList<string>.Empty;
-            list = list.Cons("Test");
-            // Assert.IsNotInstanceOfType(list, typeof(AltBinaryRandomAccessOne<string>));
-            // Assert.AreSame(List2<Tuple<string, string>>.Empty, list.List);
+            var list1 = list.Cons("Test");
+            // Assert.IsNotInstanceOfType(list1, typeof(AltBinaryRandomAccessZero<string>));
         }
 
         [TestMethod]
         [ExpectedException(typeof(Exception))]
         public void ZeroListUnconsTest()
         {
-            var list = AltBinaryRandomAccessList<string>.Empty;
             var hd = list.Uncons;
         }
 
@@ -103,7 +44,6 @@ namespace FunProgTests.lists
         [ExpectedException(typeof(Exception))]
         public void ZeroListHeadTest()
         {
-            var list = AltBinaryRandomAccessList<string>.Empty;
             var hd = list.Head;
         }
 
@@ -111,7 +51,6 @@ namespace FunProgTests.lists
         [ExpectedException(typeof(Exception))]
         public void ZeroListTailTest()
         {
-            var list = AltBinaryRandomAccessList<string>.Empty;
             var tl = list.Tail;
         }
 
@@ -119,7 +58,6 @@ namespace FunProgTests.lists
         [ExpectedException(typeof(Exception))]
         public void ZeroListLookupTest()
         {
-            var list = AltBinaryRandomAccessList<string>.Empty;
             var tl = list.Lookup(0);
         }
 
@@ -127,7 +65,6 @@ namespace FunProgTests.lists
         [ExpectedException(typeof(Exception))]
         public void ZeroListFupdateTest()
         {
-            var list = AltBinaryRandomAccessList<string>.Empty;
             var tl = list.Fupdate(x => "test", 0);
         }
 

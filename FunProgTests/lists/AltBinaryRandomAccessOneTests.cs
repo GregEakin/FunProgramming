@@ -15,119 +15,56 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace FunProgTests.lists
 {
     [TestClass]
-    public class AltBinaryRandomAccessListTests
+    public class AltBinaryRandomAccessOneTests
     {
+        private readonly AltBinaryRandomAccessList<string> list = AltBinaryRandomAccessList<string>.Empty.Cons("One");
+
         [TestMethod]
-        public void EmptyListEmptyTest()
+        public void EmptyTest()
         {
-            var list = AltBinaryRandomAccessList<string>.Empty;
             Assert.IsTrue(list.IsEmpty);
         }
 
         [TestMethod]
-        public void EmptyListConsTest()
+        public void ConsTest()
         {
-            var list = AltBinaryRandomAccessList<string>.Empty;
             list = list.Cons("Test");
             // Assert.IsNotInstanceOfType(list, typeof(AltBinaryRandomAccessOne<string>));
-            // Assert.AreSame(List2<Tuple<string, string>>.Empty, list.List);
         }
 
         [TestMethod]
         [ExpectedException(typeof(Exception))]
-        public void EmptyListUnconsTest()
+        public void UnconsTest()
         {
-            var list = AltBinaryRandomAccessList<string>.Empty;
             var hd = list.Uncons;
         }
 
 
         [TestMethod]
         [ExpectedException(typeof(Exception))]
-        public void EmptyListHeadTest()
+        public void HeadTest()
         {
-            var list = AltBinaryRandomAccessList<string>.Empty;
             var hd = list.Head;
         }
 
         [TestMethod]
         [ExpectedException(typeof(Exception))]
-        public void EmptyListTailTest()
+        public void TailTest()
         {
-            var list = AltBinaryRandomAccessList<string>.Empty;
             var tl = list.Tail;
         }
 
         [TestMethod]
         [ExpectedException(typeof(Exception))]
-        public void EmptyListLookupTest()
+        public void LookupTest()
         {
-            var list = AltBinaryRandomAccessList<string>.Empty;
             var tl = list.Lookup(0);
         }
 
         [TestMethod]
         [ExpectedException(typeof(Exception))]
-        public void EmptyListFupdateTest()
+        public void FupdateTest()
         {
-            var list = AltBinaryRandomAccessList<string>.Empty;
-            var tl = list.Fupdate(x => "test", 0);
-        }
-
-        [TestMethod]
-        public void ZeroListEmptyTest()
-        {
-            var list = AltBinaryRandomAccessList<string>.Empty;
-            Assert.IsTrue(list.IsEmpty);
-        }
-
-        [TestMethod]
-        public void ZeroListConsTest()
-        {
-            var list = AltBinaryRandomAccessList<string>.Empty;
-            list = list.Cons("Test");
-            // Assert.IsNotInstanceOfType(list, typeof(AltBinaryRandomAccessOne<string>));
-            // Assert.AreSame(List2<Tuple<string, string>>.Empty, list.List);
-        }
-
-        [TestMethod]
-        [ExpectedException(typeof(Exception))]
-        public void ZeroListUnconsTest()
-        {
-            var list = AltBinaryRandomAccessList<string>.Empty;
-            var hd = list.Uncons;
-        }
-
-
-        [TestMethod]
-        [ExpectedException(typeof(Exception))]
-        public void ZeroListHeadTest()
-        {
-            var list = AltBinaryRandomAccessList<string>.Empty;
-            var hd = list.Head;
-        }
-
-        [TestMethod]
-        [ExpectedException(typeof(Exception))]
-        public void ZeroListTailTest()
-        {
-            var list = AltBinaryRandomAccessList<string>.Empty;
-            var tl = list.Tail;
-        }
-
-        [TestMethod]
-        [ExpectedException(typeof(Exception))]
-        public void ZeroListLookupTest()
-        {
-            var list = AltBinaryRandomAccessList<string>.Empty;
-            var tl = list.Lookup(0);
-        }
-
-        [TestMethod]
-        [ExpectedException(typeof(Exception))]
-        public void ZeroListFupdateTest()
-        {
-            var list = AltBinaryRandomAccessList<string>.Empty;
             var tl = list.Fupdate(x => "test", 0);
         }
 
