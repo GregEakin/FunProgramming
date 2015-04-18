@@ -28,7 +28,7 @@ namespace FunProgLib.queue
                 return this;
             }
 
-            public virtual Queue Exec2(int lenF, List<T>.Node f, int lenR, List<T>.Node r)
+            public virtual Queue Exec2(int lenF, List2<T> f, int lenR, List2<T> r)
             {
                 return new Queue(lenF, f, this, lenR, r);
             }
@@ -40,12 +40,12 @@ namespace FunProgLib.queue
         private sealed class Reversing : RotationState
         {
             private readonly int ok;
-            private readonly List<T>.Node f;
-            private readonly List<T>.Node fp;
-            private readonly List<T>.Node r;
-            private readonly List<T>.Node rp;
+            private readonly List2<T> f;
+            private readonly List2<T> fp;
+            private readonly List2<T> r;
+            private readonly List2<T> rp;
 
-            public Reversing(int ok, List<T>.Node f, List<T>.Node fp, List<T>.Node r, List<T>.Node rp)
+            public Reversing(int ok, List2<T> f, List2<T> fp, List2<T> r, List2<T> rp)
             {
                 this.ok = ok;
                 this.f = f;
@@ -56,17 +56,17 @@ namespace FunProgLib.queue
 
             public override RotationState Exec()
             {
-                if (!List<T>.IsEmpty(f)) // && !List<T>.IsEmpty(reversing.R))
+                if (!f.IsEmpty) // && !reversing.R.IsEmpty)
                 {
-                    var x1 = List<T>.Head(f);
-                    var f1 = List<T>.Tail(f);
-                    var y1 = List<T>.Head(r);
-                    var r1 = List<T>.Tail(r);
-                    return new Reversing(ok + 1, f1, List<T>.Cons(x1, fp), r1, List<T>.Cons(y1, rp));
+                    var x1 = f.Head;
+                    var f1 = f.Tail;
+                    var y1 = r.Head;
+                    var r1 = r.Tail;
+                    return new Reversing(ok + 1, f1, fp.Cons(x1), r1, rp.Cons(y1));
                 }
 
-                var y2 = List<T>.Head(r);
-                return new Appending(ok, fp, List<T>.Cons(y2, rp));
+                var y2 = r.Head;
+                return new Appending(ok, fp, rp.Cons(y2));
             }
 
             public override RotationState Invalidate()
@@ -78,10 +78,10 @@ namespace FunProgLib.queue
         private sealed class Appending : RotationState
         {
             private readonly int ok;
-            private readonly List<T>.Node fp;
-            private readonly List<T>.Node rp;
+            private readonly List2<T> fp;
+            private readonly List2<T> rp;
 
-            public Appending(int ok, List<T>.Node fp, List<T>.Node rp)
+            public Appending(int ok, List2<T> fp, List2<T> rp)
             {
                 this.ok = ok;
                 this.fp = fp;
@@ -93,28 +93,28 @@ namespace FunProgLib.queue
                 if (ok == 0)
                     return new Done(rp);
 
-                var x1 = List<T>.Head(fp);
-                var fp1 = List<T>.Tail(fp);
-                return new Appending(ok - 1, fp1, List<T>.Cons(x1, rp));
+                var x1 = fp.Head;
+                var fp1 = fp.Tail;
+                return new Appending(ok - 1, fp1, rp.Cons(x1));
             }
 
             public override RotationState Invalidate()
             {
-                if (ok == 0) return new Done(List<T>.Tail(rp));
+                if (ok == 0) return new Done(rp.Tail);
                 return new Appending(ok - 1, fp, rp);
             }
         }
 
         private sealed class Done : RotationState
         {
-            private readonly List<T>.Node f;
+            private readonly List2<T> f;
 
-            public Done(List<T>.Node f)
+            public Done(List2<T> f)
             {
                 this.f = f;
             }
 
-            public override Queue Exec2(int lenF, List<T>.Node f1, int lenR, List<T>.Node r)
+            public override Queue Exec2(int lenF, List2<T> f1, int lenR, List2<T> r)
             {
                 return new Queue(lenF, f, new Idle(), lenR, r);
             }
@@ -123,12 +123,12 @@ namespace FunProgLib.queue
         public sealed class Queue
         {
             private readonly int lenF;
-            private readonly List<T>.Node f;
+            private readonly List2<T> f;
             private readonly RotationState state;
             private readonly int lenR;
-            private readonly List<T>.Node r;
+            private readonly List2<T> r;
 
-            public Queue(int lenF, List<T>.Node f, RotationState state, int lenR, List<T>.Node r)
+            public Queue(int lenF, List2<T> f, RotationState state, int lenR, List2<T> r)
             {
                 this.lenF = lenF;
                 this.f = f;
@@ -138,26 +138,26 @@ namespace FunProgLib.queue
             }
 
             public int LenF { get { return lenF; } }
-            public List<T>.Node F { get { return f; } }
+            public List2<T> F { get { return f; } }
             public RotationState State { get { return state; } }
             public int LenR { get { return lenR; } }
-            public List<T>.Node R { get { return r; } }
+            public List2<T> R { get { return r; } }
         }
 
-        private static Queue Exec2(int lenF, List<T>.Node f, RotationState state, int lenR, List<T>.Node r)
+        private static Queue Exec2(int lenF, List2<T> f, RotationState state, int lenR, List2<T> r)
         {
             var newState = state.Exec().Exec();
             return newState.Exec2(lenF, f, lenR, r);
         }
 
-        private static Queue Check(int lenF, List<T>.Node f, RotationState state, int lenR, List<T>.Node r)
+        private static Queue Check(int lenF, List2<T> f, RotationState state, int lenR, List2<T> r)
         {
             if (lenR <= lenF) return Exec2(lenF, f, state, lenR, r);
-            var newState = new Reversing(0, f, List<T>.Empty, r, List<T>.Empty);
-            return Exec2(lenF + lenR, f, newState, 0, List<T>.Empty);
+            var newState = new Reversing(0, f, List2<T>.Empty, r, List2<T>.Empty);
+            return Exec2(lenF + lenR, f, newState, 0, List2<T>.Empty);
         }
 
-        private static readonly Queue EmptyQueue = new Queue(0, List<T>.Empty, new Idle(), 0, List<T>.Empty);
+        private static readonly Queue EmptyQueue = new Queue(0, List2<T>.Empty, new Idle(), 0, List2<T>.Empty);
 
         public static Queue Empty
         {
@@ -171,20 +171,20 @@ namespace FunProgLib.queue
 
         public static Queue Snoc(Queue q, T x)
         {
-            return Check(q.LenF, q.F, q.State, q.LenR + 1, List<T>.Cons(x, q.R));
+            return Check(q.LenF, q.F, q.State, q.LenR + 1, q.R.Cons(x));
         }
 
         public static T Head(Queue q)
         {
             if (IsEmpty(q)) throw new Exception("Empty");
-            var x = List<T>.Head(q.F);
+            var x = q.F.Head;
             return x;
         }
 
         public static Queue Tail(Queue q)
         {
-            if (List<T>.IsEmpty(q.F)) throw new Exception("Empty");
-            var f = List<T>.Tail(q.F);
+            if (q.F.IsEmpty) throw new Exception("Empty");
+            var f = q.F.Tail;
             return Check(q.LenF - 1, f, q.State.Invalidate(), q.LenR, q.R);
         }
     }
