@@ -47,6 +47,12 @@
     <Compile Include="lists\AltBinaryRandomAccessOne.cs" />
     <Compile Include="lists\AltBinaryRandomAccessZero.cs" />
     <Compile Include="lists\AltBinaryRandomAccessList.cs" />
+    <Compile Include="lists\BinaryRandomAccessDigit.cs" />
+    <Compile Include="lists\BinaryRandomAccessLeaf.cs" />
+    <Compile Include="lists\BinaryRandomAccessOne.cs" />
+    <Compile Include="lists\BinaryRandomAccessNode.cs" />
+    <Compile Include="lists\BinaryRandomAccessTree.cs" />
+    <Compile Include="lists\BinaryRandomAccessZero.cs" />
     <Compile Include="lists\List2.cs" />
     <Compile Include="queue\CatenableList.cs" />
     <Compile Include="lists\CustomStack.cs" />
