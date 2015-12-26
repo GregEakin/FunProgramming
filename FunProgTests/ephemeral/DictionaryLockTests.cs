@@ -20,16 +20,17 @@ namespace FunProgTests.ephemeral
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     [TestClass]
-    public class DictionaryTests
+    public class DictionaryLockTests
     {
-        private readonly Random random = new Random();
+        private readonly Random random = new Random(10000);
 
-        private volatile SplayHeap<string>.Heap set = SplayHeap<string>.Empty;
+        // volatile 
+        private SplayHeap<string>.Heap set = SplayHeap<string>.Empty;
 
-        private string NextWord()
+        private string NextWord(int length)
         {
-            var stringBuilder = new StringBuilder();
-            for (var i = 0; i < 10; i++)
+            var stringBuilder = new StringBuilder(length);
+            for (var i = 0; i < length; i++)
             {
                 var x = random.Next(32, 126);
                 stringBuilder.Append((char)x);
@@ -39,12 +40,12 @@ namespace FunProgTests.ephemeral
 
         private readonly Action<object> writeAction = (object obj) =>
         {
-            var map = (DictionaryTests)obj;
+            var map = (DictionaryLockTests)obj;
             for (var i = 0; i < 300; i++)
             {
                 lock (map)
                 {
-                    var word = map.NextWord();
+                    var word = map.NextWord(10);
                     map.set = SplayHeap<string>.Insert(word, map.set);
 
                     //Console.WriteLine("--> Task={0}, obj={1}, Thread={2}",
@@ -58,7 +59,7 @@ namespace FunProgTests.ephemeral
 
         private readonly Action<object> readAction = (object obj) =>
         {
-            var map = (DictionaryTests)obj;
+            var map = (DictionaryLockTests)obj;
             for (var i = 0; i < 300; i++)
             {
                 lock (map)
@@ -85,7 +86,7 @@ namespace FunProgTests.ephemeral
         [TestMethod]
         public void Test1()
         {
-            var map = new DictionaryTests();
+            var map = new DictionaryLockTests();
 
             var taskList = new List<Task>();
             for (var i = 0; i < 10; i++)
