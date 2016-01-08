@@ -87,17 +87,88 @@ namespace FunProgTests.heap
         }
 
         [TestMethod]
-        public void DeleteMinTest()
+        [ExpectedException(typeof(Exception))]
+        public void FindMinTest1()
         {
             var t = SplayHeap<int>.Empty;
-            var t1 = SplayHeap<int>.Insert(5, t);
-            var t2 = SplayHeap<int>.Insert(3, t1);
-            var t3 = SplayHeap<int>.Insert(6, t2);
-            var t4 = SplayHeap<int>.DeleteMin(t3);
-            Assert.AreEqual("[5, [6]]", DumpHeap(t4));
-            Assert.AreEqual(5, SplayHeap<int>.FindMin(t4));
+            SplayHeap<int>.FindMin(t);
+        }
 
-            Assert.AreEqual(3, SplayHeap<int>.FindMin(t3));
+        [TestMethod]
+        public void FindMinTest2()
+        {
+            var t0 = SplayHeap<int>.Empty;
+            var t1 = SplayHeap<int>.Insert(5, t0);
+            var result = SplayHeap<int>.FindMin(t1);
+            Assert.AreEqual(5, result);
+        }
+
+        [TestMethod]
+        public void FindMinTest3()
+        {
+            var t0 = SplayHeap<int>.Empty;
+            var t1 = SplayHeap<int>.Insert(5, t0);
+            var t2 = SplayHeap<int>.Insert(3, t1);
+            var result = SplayHeap<int>.FindMin(t2);
+            Assert.AreEqual(3, result);
+        }
+
+        [TestMethod]
+        public void FindMinTest4()
+        {
+            var t0 = SplayHeap<int>.Empty;
+            var t1 = SplayHeap<int>.Insert(3, t0);
+            var t2 = SplayHeap<int>.Insert(5, t1);
+            var result = SplayHeap<int>.FindMin(t2);
+            Assert.AreEqual(3, result);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(Exception))]
+        public void DeleteMinTest1()
+        {
+            var t = SplayHeap<int>.Empty;
+            SplayHeap<int>.DeleteMin(t);
+        }
+
+        [TestMethod]
+        public void DeleteMinTest2()
+        {
+            var t0 = SplayHeap<int>.Empty;
+            var t1 = SplayHeap<int>.Insert(5, t0);
+            var result = SplayHeap<int>.DeleteMin(t1);
+            Assert.AreEqual("∅", DumpHeap(result));
+        }
+
+        [TestMethod]
+        public void DeleteMinTest3()
+        {
+            var t0 = SplayHeap<int>.Empty;
+            var t1 = SplayHeap<int>.Insert(5, t0);
+            var t2 = SplayHeap<int>.Insert(3, t1);
+            var result = SplayHeap<int>.DeleteMin(t2);
+            Assert.AreEqual("[5]", DumpHeap(result));
+        }
+
+        [TestMethod]
+        public void DeleteMinTest4()
+        {
+            var t0 = SplayHeap<int>.Empty;
+            var t1 = SplayHeap<int>.Insert(3, t0);
+            var t2 = SplayHeap<int>.Insert(5, t1);
+            var result = SplayHeap<int>.DeleteMin(t2);
+            Assert.AreEqual("[5]", DumpHeap(result));
+        }
+
+        [TestMethod]
+        public void DeleteMinTest5()
+        {
+            var t0 = SplayHeap<int>.Empty;
+            var t1 = SplayHeap<int>.Insert(3, t0);
+            var t2 = SplayHeap<int>.Insert(5, t1);
+            var t3 = SplayHeap<int>.Insert(6, t2);
+            var result = SplayHeap<int>.DeleteMin(t3);
+            Assert.AreEqual("[5, [6]]", DumpHeap(result));
         }
 
         [TestMethod]
