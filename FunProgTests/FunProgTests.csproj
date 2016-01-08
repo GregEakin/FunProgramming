@@ -53,6 +53,8 @@
     <Compile Include="binary\DenseTests.cs" />
     <Compile Include="binary\SparseByWeightTests.cs" />
     <Compile Include="ephemeral\BlockingQueue.cs" />
+    <Compile Include="ephemeral\DictionaryInterlockTests.cs" />
+    <Compile Include="ephemeral\DictionaryVolatileTests.cs" />
     <Compile Include="ephemeral\DictionaryLockTests.cs" />
     <Compile Include="ephemeral\MultiReaderMapTests.cs" />
     <Compile Include="heap\ScheduledBinomialHeapTest.cs" />

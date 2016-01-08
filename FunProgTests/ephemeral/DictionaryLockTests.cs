@@ -22,9 +22,11 @@ namespace FunProgTests.ephemeral
     [TestClass]
     public class DictionaryLockTests
     {
+        const int threads = 20;
+        const int count = 300;
+
         private readonly Random random = new Random(10000);
 
-        // volatile 
         private SplayHeap<string>.Heap set = SplayHeap<string>.Empty;
 
         private string NextWord(int length)
@@ -38,14 +40,14 @@ namespace FunProgTests.ephemeral
             return stringBuilder.ToString();
         }
 
-        private readonly Action<object> writeAction = (object obj) =>
+        private readonly Action<object> insertAction = (object obj) =>
         {
             var map = (DictionaryLockTests)obj;
-            for (var i = 0; i < 300; i++)
+            for (var i = 0; i < count; i++)
             {
+                var word = map.NextWord(10);
                 lock (map)
                 {
-                    var word = map.NextWord(10);
                     map.set = SplayHeap<string>.Insert(word, map.set);
 
                     //Console.WriteLine("--> Task={0}, obj={1}, Thread={2}",
@@ -57,10 +59,10 @@ namespace FunProgTests.ephemeral
             }
         };
 
-        private readonly Action<object> readAction = (object obj) =>
+        private readonly Action<object> removeAction = (object obj) =>
         {
             var map = (DictionaryLockTests)obj;
-            for (var i = 0; i < 300; i++)
+            for (var i = 0; i < count; i++)
             {
                 lock (map)
                 {
@@ -86,16 +88,14 @@ namespace FunProgTests.ephemeral
         [TestMethod]
         public void Test1()
         {
-            var map = new DictionaryLockTests();
-
             var taskList = new List<Task>();
-            for (var i = 0; i < 10; i++)
+            for (var i = 0; i < threads; i += 2)
             {
-                taskList.Add(Task.Factory.StartNew(writeAction, map));
-                taskList.Add(Task.Factory.StartNew(readAction, map));
+                taskList.Add(Task.Factory.StartNew(insertAction, this));
+                taskList.Add(Task.Factory.StartNew(removeAction, this));
             }
+
             Task.WaitAll(taskList.ToArray());
-            Console.WriteLine("Done....");
         }
     }
 }

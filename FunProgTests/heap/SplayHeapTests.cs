@@ -118,5 +118,20 @@ namespace FunProgTests.heap
             }
             Assert.AreEqual(100, count);
         }
+
+        [TestMethod]
+        public void Test3()
+        {
+            var heap = SplayHeap<int>.Empty;
+            for (var i = 1; i < 8; i++)
+                heap = SplayHeap<int>.Insert(i, heap);
+            Assert.AreEqual("[[[[[[[1], 2], 3], 4], 5], 6], 7]", DumpHeap(heap));
+
+            var x = SplayHeap<int>.Insert(0, heap);
+            Assert.AreEqual("[0, [[[[1], 2, [3]], 4, [5]], 6, [7]]]", DumpHeap(x));
+
+            var y = SplayHeap<int>.DeleteMin(x);
+            Assert.AreEqual("[[[[1], 2, [3]], 4, [5]], 6, [7]]", DumpHeap(y));
+        }
     }
 }
