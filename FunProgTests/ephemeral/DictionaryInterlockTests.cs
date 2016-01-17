@@ -49,9 +49,9 @@ namespace FunProgTests.ephemeral
             for (var i = 0; i < count; i++)
             {
                 var word = map.NextWord(10);
-
-                do
+                while (true)
                 {
+                    Interlocked.MemoryBarrier();
                     var localSet = map.set;
                     var newSet = SplayHeap<string>.Insert(word, localSet);
                     var oldSet = Interlocked.CompareExchange(ref map.set, newSet, localSet);
@@ -66,7 +66,6 @@ namespace FunProgTests.ephemeral
 
                     // Interlocked.Increment(ref map.insCount);
                 }
-                while (true);
             }
         };
 
@@ -75,12 +74,12 @@ namespace FunProgTests.ephemeral
             var map = (DictionaryInterlockTests)obj;
             for (var i = 0; i < count; i++)
             {
-                do
+                while (true)
                 {
+                    Interlocked.MemoryBarrier();
                     var localSet = map.set;
                     if (SplayHeap<string>.IsEmpty(localSet))
                     {
-                        Interlocked.MemoryBarrier();
                         continue;
                     }
 
@@ -98,7 +97,6 @@ namespace FunProgTests.ephemeral
 
                     // Interlocked.Increment(ref map.remCount);
                 }
-                while (true);
             }
         };
 

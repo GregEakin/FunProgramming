@@ -20,17 +20,16 @@ namespace FunProgTests.ephemeral
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     [TestClass]
-    public class DictionaryVolatileTests
+    public class DictionarySemaphoreTests
     {
         const int threads = 20;
         const int count = 300;
 
         private readonly Random random = new Random(10000);
 
-        private volatile SplayHeap<string>.Heap set = SplayHeap<string>.Empty;
+        private readonly SemaphoreSlim semaphore = new SemaphoreSlim(1);
 
-        //private int insCount;
-        //private int remCount;
+        private volatile SplayHeap<string>.Heap set = SplayHeap<string>.Empty;
 
         private string NextWord(int length)
         {
@@ -45,59 +44,72 @@ namespace FunProgTests.ephemeral
 
         private readonly Action<object> insertAction = (object obj) =>
         {
-            var map = (DictionaryVolatileTests)obj;
+            var map = (DictionarySemaphoreTests)obj;
             for (var i = 0; i < count; i++)
             {
                 var word = map.NextWord(10);
 
-                do
+                map.semaphore.Wait();
+                try
                 {
-                    var localSet = map.set;
-                    var newSet = SplayHeap<string>.Insert(word, localSet);
-                    var oldSet = Interlocked.CompareExchange(ref map.set, newSet, localSet);
-                    if (oldSet == localSet)
-                    {
-                        //Console.WriteLine("--> Task={0}, obj={1}, Thread={2}",
-                        //                  Task.CurrentId, word,
-                        //                  Thread.CurrentThread.ManagedThreadId);
-
-                        break;
-                    }
-
-                    // Interlocked.Increment(ref map.insCount);
+                    Interlocked.MemoryBarrier();
+                    var newSet = SplayHeap<string>.Insert(word, map.set);
+                    Interlocked.Exchange(ref map.set, newSet);
                 }
-                while (true);
+                finally
+                {
+                    map.semaphore.Release();
+                }
+
+                //Console.WriteLine("--> Task={0}, obj={1}, Thread={2}",
+                //                  Task.CurrentId, word,
+                //                  Thread.CurrentThread.ManagedThreadId);
             }
         };
 
         private readonly Action<object> removeAction = (object obj) =>
         {
-            var map = (DictionaryVolatileTests)obj;
+            var map = (DictionarySemaphoreTests)obj;
             for (var i = 0; i < count; i++)
             {
-                do
+                while (true)
                 {
-                    var localSet = map.set;
-                    if (SplayHeap<string>.IsEmpty(localSet))
+                    Interlocked.MemoryBarrier();
+                    if (SplayHeap<string>.IsEmpty(map.set))
                     {
+                        //Console.WriteLine("=== Task={0}, obj={1}, Thread={2}",
+                        //  Task.CurrentId, "Wait",
+                        //  Thread.CurrentThread.ManagedThreadId);
+
+                        Thread.Yield();
                         continue;
                     }
 
-                    var word = SplayHeap<string>.FindMin(localSet);
-                    var newSet = SplayHeap<string>.DeleteMin(localSet);
-                    var oldSet = Interlocked.CompareExchange(ref map.set, newSet, localSet);
-                    if (oldSet == localSet)
+                    map.semaphore.Wait();
+                    try
                     {
+                        Interlocked.MemoryBarrier();
+                        var localSet = map.set;
+                        if (SplayHeap<string>.IsEmpty(localSet))
+                        {
+                            continue;
+                        }
+
+                        var word = SplayHeap<string>.FindMin(localSet);
+                        var newSet = SplayHeap<string>.DeleteMin(localSet);
+                        Interlocked.Exchange(ref map.set, newSet);
+
                         //Console.WriteLine("<-- Task={0}, obj={1}, Thread={2}",
                         //                  Task.CurrentId, word,
                         //                  Thread.CurrentThread.ManagedThreadId);
 
                         break;
                     }
-
-                    // Interlocked.Increment(ref map.remCount);
+                    finally
+                    {
+                        map.semaphore.Release();
+                    }
                 }
-                while (true);
             }
         };
 
@@ -112,7 +124,6 @@ namespace FunProgTests.ephemeral
             }
 
             Task.WaitAll(taskList.ToArray());
-            // Console.WriteLine("Ins = {0}, Rem = {1}", insCount, remCount);
         }
     }
 }
