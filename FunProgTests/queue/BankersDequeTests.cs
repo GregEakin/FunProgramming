@@ -98,7 +98,7 @@ namespace FunProgTests.queue
         }
 
         [TestMethod]
-        [ExpectedException(typeof(Exception))]
+        [ExpectedException(typeof(ArgumentException))]
         public void EmptyHeadTest()
         {
             var queue = BankersDeque<string>.Empty;
@@ -106,7 +106,7 @@ namespace FunProgTests.queue
         }
 
         [TestMethod]
-        [ExpectedException(typeof(Exception))]
+        [ExpectedException(typeof(ArgumentException))]
         public void EmptyTailTest()
         {
             var queue = BankersDeque<string>.Empty;
@@ -114,7 +114,7 @@ namespace FunProgTests.queue
         }
 
         [TestMethod]
-        [ExpectedException(typeof(Exception))]
+        [ExpectedException(typeof(ArgumentException))]
         public void EmptyLastTest()
         {
             var queue = BankersDeque<string>.Empty;
@@ -122,7 +122,7 @@ namespace FunProgTests.queue
         }
 
         [TestMethod]
-        [ExpectedException(typeof(Exception))]
+        [ExpectedException(typeof(ArgumentException))]
         public void EmptyInitTest()
         {
             var queue = BankersDeque<string>.Empty;

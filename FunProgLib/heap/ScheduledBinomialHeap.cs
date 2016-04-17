@@ -187,7 +187,7 @@ namespace FunProgLib.heap
 
         private static Stuff RemoveMinTree(Lazy<Stream<Digit>.StreamCell> dsc)
         {
-            if (dsc == Stream<Digit>.DollarNil) throw new Exception("Empty");
+            if (dsc == Stream<Digit>.DollarNil) throw new ArgumentException("Empty", nameof(dsc));
             if (dsc.Value.Element == Zero)
             {
                 var stuff = RemoveMinTree(dsc.Value.Next);

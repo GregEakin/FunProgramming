@@ -123,14 +123,14 @@ namespace FunProgTests.heap
         }
 
         [TestMethod]
-        [ExpectedException(typeof(Exception))]
+        [ExpectedException(typeof(ArgumentException))]
         public void FindMinNullTest()
         {
             LazyParingHeap<int>.FindMin(LazyParingHeap<int>.Empty);
         }
 
         [TestMethod]
-        [ExpectedException(typeof(Exception))]
+        [ExpectedException(typeof(ArgumentException))]
         public void DeleteMinNullTest()
         {
             LazyParingHeap<int>.DeleteMin(LazyParingHeap<int>.Empty);

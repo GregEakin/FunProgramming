@@ -60,7 +60,7 @@ namespace FunProgLib.heap
 
         private static int Rank(Heap h)
         {
-            if (h == EmptyHeap) return 0;
+            if (IsEmpty(h)) return 0;
             return h.R;
         }
 
@@ -77,8 +77,8 @@ namespace FunProgLib.heap
 
         public static Heap Merge(Heap h1, Heap h2)
         {
-            if (h2 == EmptyHeap) return h1;
-            if (h1 == EmptyHeap) return h2;
+            if (IsEmpty(h2)) return h1;
+            if (IsEmpty(h1)) return h2;
             if (h1.X.CompareTo(h2.X) <= 0) return MakeT(h1.X, h1.A, Merge(h1.B, h2));
             return MakeT(h2.X, h2.A, Merge(h1, h2.B));
         }
@@ -90,13 +90,13 @@ namespace FunProgLib.heap
 
         public static T FindMin(Heap h)
         {
-            if (IsEmpty(h)) throw new Exception("Empty");
+            if (IsEmpty(h)) throw new ArgumentException("Empty", nameof(h));
             return h.X;
         }
 
         public static Heap DeleteMin(Heap h)
         {
-            if (IsEmpty(h)) throw new Exception("Empty");
+            if (IsEmpty(h)) throw new ArgumentException("Empty", nameof(h));
             return Merge(h.A, h.B);
         }
     }

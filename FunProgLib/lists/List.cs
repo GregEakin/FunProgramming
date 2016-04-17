@@ -107,13 +107,13 @@ namespace FunProgLib.lists
 
         public static T Head(Node list)
         {
-            if (IsEmpty(list)) throw new Exception("Empty");
+            if (IsEmpty(list)) throw new ArgumentException("Empty", nameof(list));
             return list.Element;
         }
 
         public static Node Tail(Node list)
         {
-            if (IsEmpty(list)) throw new Exception("Empty");
+            if (IsEmpty(list)) throw new ArgumentException("Empty", nameof(list));
             return list.Next;
         }
 

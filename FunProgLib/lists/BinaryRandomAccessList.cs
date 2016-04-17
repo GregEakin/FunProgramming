@@ -136,7 +136,7 @@ namespace FunProgLib.lists
 
         private static Stuff UnconsTree(List<Digit>.Node list)
         {
-            if (IsEmpty(list)) throw new Exception("Empty");
+            if (IsEmpty(list)) throw new ArgumentException("Empty", nameof(list));
             if (list.Element == Zero)
             {
                 var stuff = UnconsTree(list.Next);
@@ -207,7 +207,7 @@ namespace FunProgLib.lists
 
         public static T Lookup(int i, List<Digit>.Node ts)
         {
-            if (IsEmpty(ts)) throw new Exception("Subscript");
+            if (IsEmpty(ts)) throw new ArgumentException("Subscript", nameof(ts));
             if (ts.Element == Zero) return Lookup(i, ts.Next);
             if (i < Size(ts.Element.One)) return LookupTree(i, ts.Element.One);
             return Lookup(i - Size(ts.Element.One), ts.Next);
@@ -215,7 +215,7 @@ namespace FunProgLib.lists
 
         public static List<Digit>.Node Update(int i, T x, List<Digit>.Node ts)
         {
-            if (IsEmpty(ts)) throw new Exception("Subscript");
+            if (IsEmpty(ts)) throw new ArgumentException("Subscript", nameof(ts));
             if (ts.Element == Zero) return List<Digit>.Cons(Zero, Update(i, x, ts.Next));
             if (i < Size(ts.Element.One)) return List<Digit>.Cons(new Digit(UpdateTree(i, x, ts.Element.One)), ts.Next);
             return List<Digit>.Cons(new Digit(ts.Element.One), Update(i - Size(ts.Element.One), x, ts.Next));

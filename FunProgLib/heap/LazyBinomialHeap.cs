@@ -120,7 +120,7 @@ namespace FunProgLib.heap
 
         private static TreeParts RemoveMinTree(List<Tree>.Node list)
         {
-            if (List<Tree>.IsEmpty(list)) throw new Exception("Empty");
+            if (List<Tree>.IsEmpty(list)) throw new ArgumentException("Empty", nameof(list));
             if (List<Tree>.IsEmpty(list.Next)) return new TreeParts(list.Element, List<Tree>.Empty);
             var prime = RemoveMinTree(list.Next);
             if (list.Element.Root.CompareTo(prime.Tree.Root) <= 0) return new TreeParts(list.Element, list.Next);

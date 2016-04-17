@@ -9,12 +9,11 @@
 // Okasaki, Chris. "10.1.3 Bootstrapped Queues." Purely Functional Data Structures. 
 //     Cambridge, U.K.: Cambridge UP, 1998. 146-50. Print.
 
+using FunProgLib.lists;
+using System;
+
 namespace FunProgLib.queue
 {
-    using System;
-
-    using FunProgLib.lists;
-
     // assumes polymorphic recursion!
     public static class BootstrappedQueue<T>
     {

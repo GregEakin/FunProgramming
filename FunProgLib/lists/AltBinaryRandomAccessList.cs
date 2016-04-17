@@ -77,7 +77,7 @@ namespace FunProgLib.lists
 
         private static Tuple<T, Digit> Uncons(Digit digit)
         {
-            if (digit == null) throw new Exception("Empty");
+            if (digit == null) throw new ArgumentException("Empty", nameof(digit));
 
             var one = digit as One;
             if (one != null)
@@ -112,7 +112,7 @@ namespace FunProgLib.lists
 
         public static T Lookup(int i, Digit ts)
         {
-            if (ts == null) throw new Exception("Subscript");
+            if (ts == null) throw new ArgumentException("Subscript", nameof(ts));
 
             var one = ts as One;
             if (one != null)
@@ -137,7 +137,7 @@ namespace FunProgLib.lists
 
         private static Digit Fupdate(Del f, int i, Digit ts)
         {
-            if (ts == null) throw new Exception("Subscript");
+            if (ts == null) throw new ArgumentException("Subscript", nameof(ts));
             var one = ts as One;
             if (one != null)
             {

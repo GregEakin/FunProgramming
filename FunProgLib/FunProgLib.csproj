@@ -20,6 +20,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -78,7 +79,7 @@
     <Compile Include="tree\RedBlackSet.cs" />
     <Compile Include="heap\SplayHeap.cs" />
     <Compile Include="tree\UnbalancedSet.cs" />
-    <Compile Include="Utilities\StringUtilities.cs" />
+    <Compile Include="utilities\StringUtilities.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

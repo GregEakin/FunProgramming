@@ -31,7 +31,7 @@ namespace FunProgTests.queue
         }
 
         [TestMethod]
-        [ExpectedException(typeof(Exception))]
+        [ExpectedException(typeof(ArgumentException))]
         public void EmptyHeadTest()
         {
             var queue = RealTimeQueue<string>.Empty;
@@ -39,7 +39,7 @@ namespace FunProgTests.queue
         }
 
         [TestMethod]
-        [ExpectedException(typeof(Exception))]
+        [ExpectedException(typeof(ArgumentException))]
         public void EmptyTailTest()
         {
             var queue = RealTimeQueue<string>.Empty;

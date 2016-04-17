@@ -20,7 +20,7 @@ namespace FunProgTests.streams
     public class StreamTests
     {
         [TestMethod]
-        [ExpectedException(typeof(Exception))]
+        [ExpectedException(typeof(ArgumentException))]
         public void DollarNilTest()
         {
             var s = new Stream<int>.StreamCell(3, null);

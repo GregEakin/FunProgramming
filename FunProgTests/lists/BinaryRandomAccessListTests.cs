@@ -29,7 +29,7 @@ namespace FunProgTests.lists
         }
 
         [TestMethod]
-        [ExpectedException(typeof(Exception))]
+        [ExpectedException(typeof(ArgumentException))]
         public void EmptyHeadTest()
         {
             var list = BinaryRandomAccessList<string>.Empty;
@@ -37,7 +37,7 @@ namespace FunProgTests.lists
         }
 
         [TestMethod]
-        [ExpectedException(typeof(Exception))]
+        [ExpectedException(typeof(ArgumentException))]
         public void EmptyTailTest()
         {
             var list = BinaryRandomAccessList<string>.Empty;

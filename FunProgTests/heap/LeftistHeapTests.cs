@@ -60,7 +60,7 @@ namespace FunProgTests.heap
         }
 
         [TestMethod]
-        [ExpectedException(typeof(Exception))]
+        [ExpectedException(typeof(ArgumentException))]
         public void EmptyMinTest()
         {
             var heap = LeftistHeap<int>.Empty;
@@ -68,7 +68,7 @@ namespace FunProgTests.heap
         }
 
         [TestMethod]
-        [ExpectedException(typeof(Exception))]
+        [ExpectedException(typeof(ArgumentException))]
         public void EmptyDeleteMinTest()
         {
             var heap = LeftistHeap<int>.Empty;

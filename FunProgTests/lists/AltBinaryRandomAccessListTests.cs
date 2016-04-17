@@ -29,7 +29,7 @@ namespace FunProgTests.lists
         }
 
         [TestMethod]
-        [ExpectedException(typeof(Exception))]
+        [ExpectedException(typeof(ArgumentException))]
         public void EmptyHeadTest()
         {
             var list = AltBinaryRandomAccessList<string>.Empty;
@@ -37,14 +37,14 @@ namespace FunProgTests.lists
         }
 
         [TestMethod]
-        [ExpectedException(typeof(Exception))]
+        [ExpectedException(typeof(ArgumentException))]
         public void EmptyTailTest()
         {
             var list = AltBinaryRandomAccessList<string>.Empty;
             var tl = AltBinaryRandomAccessList<string>.Tail(list);
         }
 
-        //        [TestMethod]
+        [TestMethod]
         public void LookupTest()
         {
             const string Data = "How now, brown cow?";
@@ -53,7 +53,7 @@ namespace FunProgTests.lists
             Assert.AreEqual("now,", AltBinaryRandomAccessList<string>.Lookup(2, data));
         }
 
-        //        [TestMethod]
+        [TestMethod]
         public void UpdateTest()
         {
             const string Data = "How now, brown cow?";
@@ -62,7 +62,7 @@ namespace FunProgTests.lists
             Assert.AreEqual("green", AltBinaryRandomAccessList<string>.Lookup(1, data));
         }
 
-        //        [TestMethod]
+        [TestMethod]
         public void HeadTest()
         {
             const string Data = "How now, brown cow?";
@@ -73,7 +73,7 @@ namespace FunProgTests.lists
             Assert.AreEqual("dog?", AltBinaryRandomAccessList<string>.Head(data));
         }
 
-        //        [TestMethod]
+        [TestMethod]
         public void TailTest()
         {
             const string Data = "How now, brown cow?";
@@ -84,7 +84,7 @@ namespace FunProgTests.lists
             Assert.AreEqual("How", AltBinaryRandomAccessList<string>.Lookup(2, data));
         }
 
-        //        [TestMethod]
+        [TestMethod]
         public void RoseTest()
         {
             const string Data = "What's in a name? That which we call a rose by any other name would smell as sweet.";

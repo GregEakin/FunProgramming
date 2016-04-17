@@ -87,7 +87,7 @@ namespace FunProgTests.heap
         }
 
         [TestMethod]
-        [ExpectedException(typeof(Exception))]
+        [ExpectedException(typeof(ArgumentException))]
         public void FindMinTest1()
         {
             var t = SplayHeap<int>.Empty;
@@ -124,7 +124,7 @@ namespace FunProgTests.heap
         }
 
         [TestMethod]
-        [ExpectedException(typeof(Exception))]
+        [ExpectedException(typeof(ArgumentException))]
         public void DeleteMinTest1()
         {
             var t = SplayHeap<int>.Empty;
