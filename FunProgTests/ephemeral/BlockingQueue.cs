@@ -29,25 +29,25 @@ namespace FunProgTests.ephemeral
 
         public void Quit()
         {
-            lock (this.key)
+            lock (key)
             {
-                this.quit = true;
-                Monitor.PulseAll(this.key);
+                quit = true;
+                Monitor.PulseAll(key);
             }
         }
 
         public bool Enqueue(T t)
         {
-            lock (this.key)
+            lock (key)
             {
-                while (!this.quit && count >= this.size) Monitor.Wait(this.key);
+                while (!quit && count >= size) Monitor.Wait(key);
 
-                if (this.quit) return false;
+                if (quit) return false;
 
                 Interlocked.Increment(ref count);
                 queue = RealTimeQueue<T>.Snoc(queue, t);
 
-                Monitor.PulseAll(this.key);
+                Monitor.PulseAll(key);
             }
 
             return true;
@@ -57,9 +57,9 @@ namespace FunProgTests.ephemeral
         {
             t = default(T);
 
-            lock (this.key)
+            lock (key)
             {
-                while (!this.quit && RealTimeQueue<T>.IsEmpty(queue)) Monitor.Wait(this.key);
+                while (!quit && RealTimeQueue<T>.IsEmpty(queue)) Monitor.Wait(key);
 
                 if (RealTimeQueue<T>.IsEmpty(queue)) return false;
 
@@ -67,7 +67,7 @@ namespace FunProgTests.ephemeral
                 t = RealTimeQueue<T>.Head(queue);
                 queue = RealTimeQueue<T>.Tail(queue);
 
-                Monitor.PulseAll(this.key);
+                Monitor.PulseAll(key);
             }
 
             return true;

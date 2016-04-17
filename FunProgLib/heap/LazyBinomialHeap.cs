@@ -28,7 +28,7 @@ namespace FunProgLib.heap
             public Tree(int rank, T x, List<Tree>.Node list)
             {
                 this.rank = rank;
-                this.root = x;
+                root = x;
                 this.list = list;
             }
 

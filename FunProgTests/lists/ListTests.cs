@@ -62,7 +62,7 @@ namespace FunProgTests.lists
         [TestMethod]
         public void ReverseSingleListTest()
         {
-            var list = List<String>.Cons("Wow", List<string>.Empty);
+            var list = List<string>.Cons("Wow", List<string>.Empty);
             var reverse = List<string>.Reverse(list);
             Assert.AreSame(list, reverse);
         }

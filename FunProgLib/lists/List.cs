@@ -56,20 +56,20 @@ namespace FunProgLib.lists
 
                 public ListEnum(Node list)
                 {
-                    this.start = new Node(default(T), list);
-                    this.list = this.start;
+                    start = new Node(default(T), list);
+                    this.list = start;
                 }
 
                 public bool MoveNext()
                 {
-                    if (IsEmpty(this.list)) return false;
-                    this.list = this.list.Next;
-                    return !IsEmpty(this.list);
+                    if (IsEmpty(list)) return false;
+                    list = list.Next;
+                    return !IsEmpty(list);
                 }
 
                 public void Reset()
                 {
-                    this.list = this.start;
+                    list = start;
                 }
 
                 object IEnumerator.Current

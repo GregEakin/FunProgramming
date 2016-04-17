@@ -47,7 +47,7 @@ namespace FunProgLib.heap
 
             public Digit(Tree tree)
             {
-                this.one = tree;
+                one = tree;
             }
 
             public Tree One
@@ -56,7 +56,7 @@ namespace FunProgLib.heap
             }
         }
 
-        private readonly static Digit Zero = new Digit(null);
+        private static readonly Digit Zero = new Digit(null);
 
         public sealed class Schedule
         {
@@ -81,7 +81,7 @@ namespace FunProgLib.heap
 
             public Heap(Lazy<Stream<Digit>.StreamCell> ds, Schedule schedule)
             {
-                this.digitStream = ds;
+                digitStream = ds;
                 this.schedule = schedule;
             }
 

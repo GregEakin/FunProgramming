@@ -42,7 +42,7 @@ namespace FunProgLib.heap
 
             public Lazy<Heap> LazyList
             {
-                get { return this.lazyList; }
+                get { return lazyList; }
             }
         }
 

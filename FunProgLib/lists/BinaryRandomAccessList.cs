@@ -71,7 +71,7 @@ namespace FunProgLib.lists
 
             public Digit(Tree tree)
             {
-                this.one = tree;
+                one = tree;
             }
 
             public Tree One
@@ -80,7 +80,7 @@ namespace FunProgLib.lists
             }
         }
 
-        private readonly static Digit Zero = new Digit(null);
+        private static readonly Digit Zero = new Digit(null);
 
         private sealed class Stuff
         {
