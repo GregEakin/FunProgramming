@@ -23,42 +23,40 @@ namespace FunProgTests.ephemeral
         private SplayHeap<string>.Heap set = SplayHeap<string>.Empty;
 
         // 158 ms, 10 calls
-        private readonly Action<object> insertAction = obj =>
+        private void InsertAction()
         {
-            var map = (DictionarySemaphoreTests)obj;
             for (var i = 0; i < count; i++)
             {
                 // 4 ms, 3,000 calls
-                var word = map.NextWord(10);
+                var word = NextWord(10);
 
                 // 106 ms, 3,000 calls
-                map.semaphore.Wait();
+                semaphore.Wait();
                 try
                 {
                     // 0 ms, 3,000 calls
                     Interlocked.MemoryBarrier();
                     // 43 ms, 3,000 calls
-                    var newSet = SplayHeap<string>.Insert(word, map.set);
+                    var newSet = SplayHeap<string>.Insert(word, set);
                     // 0 ms, 3,000 calls
-                    Interlocked.Exchange(ref map.set, newSet);
+                    Interlocked.Exchange(ref set, newSet);
                 }
                 finally
                 {
-                    map.semaphore.Release();
+                    semaphore.Release();
                 }
             }
-        };
+        }
 
         // 329 ms, 10 calls
-        private readonly Action<object> removeAction = obj =>
+        private void RemoveAction()
         {
-            var map = (DictionarySemaphoreTests)obj;
             for (var i = 0; i < count; i++)
             {
                 while (true)
                 {
                     Interlocked.MemoryBarrier();
-                    if (SplayHeap<string>.IsEmpty(map.set))
+                    if (SplayHeap<string>.IsEmpty(set))
                     {
                         // 14 ms, 17,011 calls
                         Thread.Yield();
@@ -66,11 +64,11 @@ namespace FunProgTests.ephemeral
                     }
 
                     // 294 ms, 3,000 calls
-                    map.semaphore.Wait();
+                    semaphore.Wait();
                     try
                     {
                         Interlocked.MemoryBarrier();
-                        var localSet = map.set;
+                        var localSet = set;
                         if (SplayHeap<string>.IsEmpty(localSet))
                         {
                             continue;
@@ -80,16 +78,16 @@ namespace FunProgTests.ephemeral
                         var word = SplayHeap<string>.FindMin(localSet);
                         // 4 ms, 3,000 calls
                         var newSet = SplayHeap<string>.DeleteMin(localSet);
-                        Interlocked.Exchange(ref map.set, newSet);
+                        Interlocked.Exchange(ref set, newSet);
                         break;
                     }
                     finally
                     {
-                        map.semaphore.Release();
+                        semaphore.Release();
                     }
                 }
             }
-        };
+        }
 
         [TestMethod]
         public void Test1()
@@ -97,8 +95,8 @@ namespace FunProgTests.ephemeral
             var taskList = new List<Task>();
             for (var i = 0; i < threads; i += 2)
             {
-                taskList.Add(Task.Factory.StartNew(insertAction, this));
-                taskList.Add(Task.Factory.StartNew(removeAction, this));
+                taskList.Add(Task.Factory.StartNew(map => InsertAction(), this));
+                taskList.Add(Task.Factory.StartNew(map => RemoveAction(), this));
             }
 
             Task.WaitAll(taskList.ToArray());

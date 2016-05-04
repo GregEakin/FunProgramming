@@ -9,7 +9,6 @@
 
 using FunProgLib.heap;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
@@ -23,47 +22,45 @@ namespace FunProgTests.ephemeral
         private SplayHeap<string>.Heap set = SplayHeap<string>.Empty;
 
         // 157 ms, 1o calls
-        private readonly Action<object> insertAction = obj =>
+        private void InsertAction()
         {
-            var map = (DictionaryLockTests)obj;
             for (var i = 0; i < count; i++)
             {
                 // 5 ms, 3,000 calls
-                var word = map.NextWord(10);
+                var word = NextWord(10);
                 // 132 ms, 3,000 calls
-                lock (map.lockObject)
+                lock (lockObject)
                 {
                     // 13 ms, 3,000 calls
-                    map.set = SplayHeap<string>.Insert(word, map.set);
+                    set = SplayHeap<string>.Insert(word, set);
 
                     // 2 ms, 3,000 calls
-                    Monitor.Pulse(map.lockObject);
+                    Monitor.Pulse(lockObject);
                 }
             }
-        };
+        }
 
         // 98 ms, 10 calls
-        private readonly Action<object> removeAction = obj =>
+        private void RemoveAction()
         {
-            var map = (DictionaryLockTests)obj;
             for (var i = 0; i < count; i++)
             {
                 // 58 ms, 3,000 calls
-                lock (map.lockObject)
+                lock (lockObject)
                 {
-                    while (SplayHeap<string>.IsEmpty(map.set))
+                    while (SplayHeap<string>.IsEmpty(set))
                     {
                         // 33 ms, 1,609 calls
-                        Monitor.Wait(map.lockObject);
+                        Monitor.Wait(lockObject);
                     }
 
                     // 2 ms, 3,000 calls
-                    var word = SplayHeap<string>.FindMin(map.set);
+                    var word = SplayHeap<string>.FindMin(set);
                     // 2 ms, 3,000 calls
-                    map.set = SplayHeap<string>.DeleteMin(map.set);
+                    set = SplayHeap<string>.DeleteMin(set);
                 }
             }
-        };
+        }
 
         [TestMethod]
         public void Test1()
@@ -71,8 +68,8 @@ namespace FunProgTests.ephemeral
             var taskList = new List<Task>();
             for (var i = 0; i < threads; i += 2)
             {
-                taskList.Add(Task.Factory.StartNew(insertAction, this));
-                taskList.Add(Task.Factory.StartNew(removeAction, this));
+                taskList.Add(Task.Factory.StartNew(map => InsertAction(), this));
+                taskList.Add(Task.Factory.StartNew(map => RemoveAction(), this));
             }
 
             Task.WaitAll(taskList.ToArray());

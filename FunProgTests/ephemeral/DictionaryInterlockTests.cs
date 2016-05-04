@@ -9,7 +9,6 @@
 
 using FunProgLib.heap;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
@@ -22,21 +21,20 @@ namespace FunProgTests.ephemeral
         private SplayHeap<string>.Heap set = SplayHeap<string>.Empty;
 
         // 132 ms, 10 calls
-        private readonly Action<object> insertAction = (object obj) =>
+        private void InsertAction()
         {
-            var map = (DictionaryInterlockTests)obj;
             for (var i = 0; i < count; i++)
             {
                 // 18 ms, 3,000 calls
-                var word = map.NextWord(10);
+                var word = NextWord(10);
                 while (true)
                 {
                     Interlocked.MemoryBarrier();
-                    var workingSet = map.set;
+                    var workingSet = set;
                     // 99 ms, 13,072 calls
                     var newSet = SplayHeap<string>.Insert(word, workingSet);
                     // 3 ms, 13,072 calls
-                    var oldSet = Interlocked.CompareExchange(ref map.set, newSet, workingSet);
+                    var oldSet = Interlocked.CompareExchange(ref set, newSet, workingSet);
                     if (ReferenceEquals(oldSet, workingSet))
                     {
                         // 3,000 calls
@@ -44,18 +42,17 @@ namespace FunProgTests.ephemeral
                     }
                 }
             }
-        };
+        }
 
         // 91 ms, 10 calls
-        private readonly Action<object> removeAction = (object obj) =>
+        private void RemoveAction()
         {
-            var map = (DictionaryInterlockTests)obj;
             for (var i = 0; i < count; i++)
             {
                 while (true)
                 {
                     Interlocked.MemoryBarrier();
-                    var workingSet = map.set;
+                    var workingSet = set;
                     // 13 ms, 66,042 calls
                     if (SplayHeap<string>.IsEmpty(workingSet))
                     {
@@ -67,7 +64,7 @@ namespace FunProgTests.ephemeral
                     // 15 ms, 7,594 calls
                     var newSet = SplayHeap<string>.DeleteMin(workingSet);
                     // 2 ms, 7,594 calls
-                    var oldSet = Interlocked.CompareExchange(ref map.set, newSet, workingSet);
+                    var oldSet = Interlocked.CompareExchange(ref set, newSet, workingSet);
                     if (ReferenceEquals(oldSet, workingSet))
                     {
                         // 3,000 calls
@@ -75,7 +72,7 @@ namespace FunProgTests.ephemeral
                     }
                 }
             }
-        };
+        }
 
         [TestMethod]
         public void Test1()
@@ -83,8 +80,8 @@ namespace FunProgTests.ephemeral
             var taskList = new List<Task>();
             for (var i = 0; i < threads; i += 2)
             {
-                taskList.Add(Task.Factory.StartNew(insertAction, this));
-                taskList.Add(Task.Factory.StartNew(removeAction, this));
+                taskList.Add(Task.Factory.StartNew(map => InsertAction(), this));
+                taskList.Add(Task.Factory.StartNew(map => RemoveAction(), this));
             }
 
             Task.WaitAll(taskList.ToArray());
