@@ -7,68 +7,46 @@
 // All Rights Reserved.
 //
 
+using FunProgLib.heap;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
+using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
+
 namespace FunProgTests.ephemeral
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Text;
-    using System.Threading;
-    using System.Threading.Tasks;
-
-    using FunProgLib.heap;
-
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
-
     [TestClass]
-    public class DictionaryInterlockTests
+    public class DictionaryInterlockTests : DictionaryTests
     {
-        const int threads = 20;
-        const int count = 300;
-
-        private readonly Random random = new Random(10000);
-
         private SplayHeap<string>.Heap set = SplayHeap<string>.Empty;
 
-        //private int insCount;
-        //private int remCount;
-
-        private string NextWord(int length)
-        {
-            var stringBuilder = new StringBuilder(length);
-            for (var i = 0; i < length; i++)
-            {
-                var x = random.Next(32, 126);
-                stringBuilder.Append((char)x);
-            }
-            return stringBuilder.ToString();
-        }
-
+        // 132 ms, 10 calls
         private readonly Action<object> insertAction = (object obj) =>
         {
             var map = (DictionaryInterlockTests)obj;
             for (var i = 0; i < count; i++)
             {
+                // 18 ms, 3,000 calls
                 var word = map.NextWord(10);
                 while (true)
                 {
                     Interlocked.MemoryBarrier();
-                    var localSet = map.set;
-                    var newSet = SplayHeap<string>.Insert(word, localSet);
-                    var oldSet = Interlocked.CompareExchange(ref map.set, newSet, localSet);
-                    if (oldSet == localSet)
+                    var workingSet = map.set;
+                    // 99 ms, 13,072 calls
+                    var newSet = SplayHeap<string>.Insert(word, workingSet);
+                    // 3 ms, 13,072 calls
+                    var oldSet = Interlocked.CompareExchange(ref map.set, newSet, workingSet);
+                    if (ReferenceEquals(oldSet, workingSet))
                     {
-                        //Console.WriteLine("--> Task={0}, obj={1}, Thread={2}",
-                        //                  Task.CurrentId, word,
-                        //                  Thread.CurrentThread.ManagedThreadId);
-
+                        // 3,000 calls
                         break;
                     }
-
-                    // Interlocked.Increment(ref map.insCount);
                 }
             }
         };
 
+        // 91 ms, 10 calls
         private readonly Action<object> removeAction = (object obj) =>
         {
             var map = (DictionaryInterlockTests)obj;
@@ -77,25 +55,24 @@ namespace FunProgTests.ephemeral
                 while (true)
                 {
                     Interlocked.MemoryBarrier();
-                    var localSet = map.set;
-                    if (SplayHeap<string>.IsEmpty(localSet))
+                    var workingSet = map.set;
+                    // 13 ms, 66,042 calls
+                    if (SplayHeap<string>.IsEmpty(workingSet))
                     {
                         continue;
                     }
 
-                    var word = SplayHeap<string>.FindMin(localSet);
-                    var newSet = SplayHeap<string>.DeleteMin(localSet);
-                    var oldSet = Interlocked.CompareExchange(ref map.set, newSet, localSet);
-                    if (oldSet == localSet)
+                    // 15 ms, 7,594 calls
+                    var word = SplayHeap<string>.FindMin(workingSet);
+                    // 15 ms, 7,594 calls
+                    var newSet = SplayHeap<string>.DeleteMin(workingSet);
+                    // 2 ms, 7,594 calls
+                    var oldSet = Interlocked.CompareExchange(ref map.set, newSet, workingSet);
+                    if (ReferenceEquals(oldSet, workingSet))
                     {
-                        //Console.WriteLine("<-- Task={0}, obj={1}, Thread={2}",
-                        //                  Task.CurrentId, word,
-                        //                  Thread.CurrentThread.ManagedThreadId);
-
+                        // 3,000 calls
                         break;
                     }
-
-                    // Interlocked.Increment(ref map.remCount);
                 }
             }
         };
@@ -111,7 +88,6 @@ namespace FunProgTests.ephemeral
             }
 
             Task.WaitAll(taskList.ToArray());
-            // Console.WriteLine("Ins = {0}, Rem = {1}", insCount, remCount);
         }
     }
 }

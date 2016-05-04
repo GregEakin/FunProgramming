@@ -15,6 +15,7 @@ namespace FunProgTests.queue
     using FunProgLib.queue;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using static FunProgTests.utilities.ExpectedException;
 
     [TestClass]
     public class BootstrappedQueueTests
@@ -31,19 +32,17 @@ namespace FunProgTests.queue
         }
 
         [TestMethod]
-        [ExpectedException(typeof(ArgumentException))]
         public void EmptyHeadTest()
         {
             var queue = BootstrappedQueue<string>.Empty;
-            var item = BootstrappedQueue<string>.Head(queue);
+            AssertThrows<ArgumentException>(() => BootstrappedQueue<string>.Head(queue));
         }
 
         [TestMethod]
-        [ExpectedException(typeof(ArgumentException))]
         public void EmptyTailTest()
         {
             var queue = BootstrappedQueue<string>.Empty;
-            var item = BootstrappedQueue<string>.Tail(queue);
+            AssertThrows<ArgumentException>(() => BootstrappedQueue<string>.Tail(queue));
         }
 
         [TestMethod]

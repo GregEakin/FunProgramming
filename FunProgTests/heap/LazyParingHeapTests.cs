@@ -14,6 +14,7 @@ namespace FunProgTests.heap
     using System.Text;
     using FunProgLib.heap;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using static FunProgTests.utilities.ExpectedException;
 
     [TestClass]
     public class LazyParingHeapTests
@@ -123,17 +124,15 @@ namespace FunProgTests.heap
         }
 
         [TestMethod]
-        [ExpectedException(typeof(ArgumentException))]
         public void FindMinNullTest()
         {
-            LazyParingHeap<int>.FindMin(LazyParingHeap<int>.Empty);
+            AssertThrows<ArgumentException>(() => LazyParingHeap<int>.FindMin(LazyParingHeap<int>.Empty));
         }
 
         [TestMethod]
-        [ExpectedException(typeof(ArgumentException))]
         public void DeleteMinNullTest()
         {
-            LazyParingHeap<int>.DeleteMin(LazyParingHeap<int>.Empty);
+            AssertThrows<ArgumentException>(() => LazyParingHeap<int>.DeleteMin(LazyParingHeap<int>.Empty));
         }
     }
 }

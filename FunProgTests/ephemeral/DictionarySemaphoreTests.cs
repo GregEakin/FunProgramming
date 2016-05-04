@@ -7,67 +7,50 @@
 // All Rights Reserved.
 //
 
+using FunProgLib.heap;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
+using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
+
 namespace FunProgTests.ephemeral
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Text;
-    using System.Threading;
-    using System.Threading.Tasks;
-
-    using FunProgLib.heap;
-
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
-
     [TestClass]
-    public class DictionarySemaphoreTests
+    public sealed class DictionarySemaphoreTests : DictionaryTests, IDisposable
     {
-        const int threads = 20;
-        const int count = 300;
-
-        private readonly Random random = new Random(10000);
-
         private readonly SemaphoreSlim semaphore = new SemaphoreSlim(1);
+        private SplayHeap<string>.Heap set = SplayHeap<string>.Empty;
 
-        private volatile SplayHeap<string>.Heap set = SplayHeap<string>.Empty;
-
-        private string NextWord(int length)
-        {
-            var stringBuilder = new StringBuilder(length);
-            for (var i = 0; i < length; i++)
-            {
-                var x = random.Next(32, 126);
-                stringBuilder.Append((char)x);
-            }
-            return stringBuilder.ToString();
-        }
-
-        private readonly Action<object> insertAction = (object obj) =>
+        // 158 ms, 10 calls
+        private readonly Action<object> insertAction = obj =>
         {
             var map = (DictionarySemaphoreTests)obj;
             for (var i = 0; i < count; i++)
             {
+                // 4 ms, 3,000 calls
                 var word = map.NextWord(10);
 
+                // 106 ms, 3,000 calls
                 map.semaphore.Wait();
                 try
                 {
+                    // 0 ms, 3,000 calls
                     Interlocked.MemoryBarrier();
+                    // 43 ms, 3,000 calls
                     var newSet = SplayHeap<string>.Insert(word, map.set);
+                    // 0 ms, 3,000 calls
                     Interlocked.Exchange(ref map.set, newSet);
                 }
                 finally
                 {
                     map.semaphore.Release();
                 }
-
-                //Console.WriteLine("--> Task={0}, obj={1}, Thread={2}",
-                //                  Task.CurrentId, word,
-                //                  Thread.CurrentThread.ManagedThreadId);
             }
         };
 
-        private readonly Action<object> removeAction = (object obj) =>
+        // 329 ms, 10 calls
+        private readonly Action<object> removeAction = obj =>
         {
             var map = (DictionarySemaphoreTests)obj;
             for (var i = 0; i < count; i++)
@@ -77,14 +60,12 @@ namespace FunProgTests.ephemeral
                     Interlocked.MemoryBarrier();
                     if (SplayHeap<string>.IsEmpty(map.set))
                     {
-                        //Console.WriteLine("=== Task={0}, obj={1}, Thread={2}",
-                        //  Task.CurrentId, "Wait",
-                        //  Thread.CurrentThread.ManagedThreadId);
-
+                        // 14 ms, 17,011 calls
                         Thread.Yield();
                         continue;
                     }
 
+                    // 294 ms, 3,000 calls
                     map.semaphore.Wait();
                     try
                     {
@@ -95,14 +76,11 @@ namespace FunProgTests.ephemeral
                             continue;
                         }
 
+                        // 3 ms, 3,000 calls
                         var word = SplayHeap<string>.FindMin(localSet);
+                        // 4 ms, 3,000 calls
                         var newSet = SplayHeap<string>.DeleteMin(localSet);
                         Interlocked.Exchange(ref map.set, newSet);
-
-                        //Console.WriteLine("<-- Task={0}, obj={1}, Thread={2}",
-                        //                  Task.CurrentId, word,
-                        //                  Thread.CurrentThread.ManagedThreadId);
-
                         break;
                     }
                     finally
@@ -124,6 +102,33 @@ namespace FunProgTests.ephemeral
             }
 
             Task.WaitAll(taskList.ToArray());
+        }
+
+        private bool disposed;
+
+        ~DictionarySemaphoreTests()
+        {
+            Dispose(false);    
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        // Protected implementation of Dispose pattern.
+        private void Dispose(bool disposing)
+        {
+            if (disposed) return;
+            if (disposing)
+            {
+                semaphore.Dispose();
+                // Free any other managed objects here.
+            }
+
+            // Free any unmanaged objects here.
+            disposed = true;
         }
     }
 }

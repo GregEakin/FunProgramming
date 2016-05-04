@@ -16,152 +16,133 @@ namespace FunProgLib.lists
     // assumes polymorphic recursion!
     public static class AltBinaryRandomAccessList<T>
     {
-        public abstract class Digit
+        public abstract class DataType
         {
-            private readonly List<Tuple<T, T>>.Node list;
-
-            protected Digit(List<Tuple<T, T>>.Node list)
+            protected DataType(RList<Tuple<T, T>>.Node list)
             {
-                this.list = list;
+                RList = list;
             }
 
-            public List<Tuple<T, T>>.Node List
-            {
-                get { return list; }
-            }
+            public RList<Tuple<T, T>>.Node RList { get; }
         }
 
-        private sealed class Zero : Digit
+        public sealed class Zero : DataType
         {
-            public Zero(List<Tuple<T, T>>.Node list)
+            public Zero(RList<Tuple<T, T>>.Node list)
                 : base(list)
             {
             }
         }
 
-        private sealed class One : Digit
+        public sealed class One : DataType
         {
-            private readonly T alpha;
-
-            public One(T alpha, List<Tuple<T, T>>.Node list)
+            public One(T alpha, RList<Tuple<T, T>>.Node list)
                 : base(list)
             {
-                this.alpha = alpha;
+                Alpha = alpha;
             }
 
-            public T Alpha
-            {
-                get { return alpha; }
-            }
+            public T Alpha { get; }
         }
 
-        public static Digit Empty
-        {
-            get { return null; }
-        }
+        public static DataType Empty => null;
 
-        public static bool IsEmpty(Digit list)
+        public static bool IsEmpty(DataType list)
         {
             return list == null;
         }
 
-        public static Digit Cons(T x, Digit ts)
+        public static DataType Cons(T x, DataType ts)
         {
             if (ts == null) return new One(x, null);
+
             var zero = ts as Zero;
-            if (zero != null) return new One(x, zero.List);
+            if (zero != null) return new One(x, zero.RList);
+
             var one = ts as One;
-            if (one != null) return new Zero(List<Tuple<T, T>>.Cons(new Tuple<T, T>(x, one.Alpha), one.List));
-            throw new Exception();
+            if (one != null) return new Zero(RList<Tuple<T, T>>.Cons(new Tuple<T, T>(x, one.Alpha), one.RList));
+
+            throw new ArgumentException("must be null, Zero or One", nameof(ts));
         }
 
-        private static Tuple<T, Digit> Uncons(Digit digit)
+        private static Tuple<T, DataType> Uncons(DataType dataType)
         {
-            if (digit == null) throw new ArgumentException("Empty", nameof(digit));
-
-            var one = digit as One;
+            var one = dataType as One;
             if (one != null)
             {
-                if (one.List == null) return new Tuple<T, Digit>(one.Alpha, null);
-                return new Tuple<T, Digit>(one.Alpha, new Zero(one.List));
+                if (one.RList == null) return new Tuple<T, DataType>(one.Alpha, null);
+                return new Tuple<T, DataType>(one.Alpha, new Zero(one.RList));
             }
 
-            var zero = digit as Zero;
+            var zero = dataType as Zero;
             if (zero != null)
             {
-                // var (stuff, Node) = Uncons(zero.Node);
-                var stuff = List<Tuple<T, T>>.Head(zero.List);
-                var list = List<Tuple<T, T>>.Tail(zero.List);
-                return new Tuple<T, Digit>(stuff.Item1, new One(stuff.Item2, list));
+                var xy = RList<Tuple<T, T>>.Head(zero.RList);
+                var psp = RList<Tuple<T, T>>.Tail(zero.RList);
+                return new Tuple<T, DataType>(xy.Item1, new One(xy.Item2, psp));
             }
 
-            throw new Exception();
+            throw new ArgumentException("must be Zero or One", nameof(dataType));
         }
 
-        public static T Head(Digit ts)
+        public static T Head(DataType ts)
         {
             var x = Uncons(ts);
             return x.Item1;
         }
 
-        public static Digit Tail(Digit ts)
+        public static DataType Tail(DataType ts)
         {
             var x = Uncons(ts);
             return x.Item2;
         }
 
-        public static T Lookup(int i, Digit ts)
+        public static T Lookup(int i, DataType ts)
         {
-            if (ts == null) throw new ArgumentException("Subscript", nameof(ts));
-
             var one = ts as One;
             if (one != null)
             {
                 if (i == 0) return one.Alpha;
-                return Lookup(i - 1, new Zero(one.List));
+                return Lookup(i - 1, new Zero(one.RList));
             }
 
             var zero = ts as Zero;
             if (zero != null)
             {
-                //var stuff = RList.Lookup(i / 2, Zero.Node);
-                //if (i % 2 == 0) return stuff.Alpha1;
-                //return stuff.Alpha2;
-                throw new NotImplementedException();
+                var node = RList<Tuple<T, T>>.Lookup(i / 2, zero.RList);
+                if (i % 2 == 0) return node.Item1;
+                return node.Item2;
             }
 
-            throw new Exception();
+            throw new ArgumentException("must be Zero or One", nameof(ts));
         }
 
-        private delegate T Del(T value);
+        public delegate T Del(T value);
 
-        private static Digit Fupdate(Del f, int i, Digit ts)
+        public static DataType Fupdate(Del f, int i, DataType ts)
         {
-            if (ts == null) throw new ArgumentException("Subscript", nameof(ts));
             var one = ts as One;
             if (one != null)
             {
-                if (i == 0) return new One(f(one.Alpha), one.List);
-                return Cons(one.Alpha, Fupdate(f, i - 1, new Zero(one.List)));
+                if (i == 0) return new One(f(one.Alpha), one.RList);
+                return Cons(one.Alpha, Fupdate(f, i - 1, new Zero(one.RList)));
             }
 
             var zero = ts as Zero;
             if (zero != null)
             {
-                // var fp(x,y) = i % 2 == 0 ? (f(x), y) : (x, f(y));
-                var fp = i % 2 == 0
-                    ? new Func<Tuple<T, T>, Del, Tuple<T, T>>((Tuple<T, T> stuff, Del g) => new Tuple<T, T>(g(stuff.Item1), stuff.Item2))
-                    : new Func<Tuple<T, T>, Del, Tuple<T, T>>((Tuple<T, T> stuff, Del g) => new Tuple<T, T>(stuff.Item1, g(stuff.Item2)));
-                //return new Zero(Fupdate(fp, i / 2, zero.Node));
-                throw new NotImplementedException();
+                RList<Tuple<T, T>>.Del fp0 = value => new Tuple<T, T>(f(value.Item1), value.Item2);
+                RList<Tuple<T, T>>.Del fp1 = value => new Tuple<T, T>(value.Item1, f(value.Item2));
+                var fp = i % 2 == 0 ? fp0 : fp1;
+                return new Zero(RList<Tuple<T, T>>.Fupdate(fp, i / 2, zero.RList));
             }
 
-            throw new Exception();
+            throw new ArgumentException("must be Zero or One", nameof(ts));
         }
 
-        public static Digit Update(int i, T x, Digit ts)
+        public static DataType Update(int i, T y, DataType xs)
         {
-            return Fupdate(y => x, i, ts);
+            return Fupdate(x => y, i, xs);
         }
     }
 }

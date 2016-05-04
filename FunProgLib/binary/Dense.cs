@@ -9,6 +9,8 @@
 // Okasaki, Chris. "9.1 Positional Number System." Purely Functional Data Structures. 
 //     Cambridge, U.K.: Cambridge UP, 1998. 116-17. Print.
 
+using System;
+
 namespace FunProgLib.binary
 {
     using FunProgLib.lists;
@@ -26,6 +28,7 @@ namespace FunProgLib.binary
 
         public static List<Digit>.Node Dec(List<Digit>.Node ds)
         {
+            if (ds == null) throw new ArgumentException("Can't go negative", nameof(ds));
             if (ds.Next == null) return null;
             if (ds.Element == Digit.One) return List<Digit>.Cons(Digit.Zero, ds.Next);
             return List<Digit>.Cons(Digit.One, Dec(ds.Next));

@@ -15,6 +15,7 @@ namespace FunProgTests.queue
     using FunProgLib.queue;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using static FunProgTests.utilities.ExpectedException;
 
     [TestClass]
     public class RealTimeQueueTests
@@ -31,19 +32,17 @@ namespace FunProgTests.queue
         }
 
         [TestMethod]
-        [ExpectedException(typeof(ArgumentException))]
         public void EmptyHeadTest()
         {
             var queue = RealTimeQueue<string>.Empty;
-            var item = RealTimeQueue<string>.Head(queue);
+            AssertThrows<ArgumentException>(() => RealTimeQueue<string>.Head(queue));
         }
 
         [TestMethod]
-        [ExpectedException(typeof(ArgumentException))]
         public void EmptyTailTest()
         {
             var queue = RealTimeQueue<string>.Empty;
-            var item = RealTimeQueue<string>.Tail(queue);
+            AssertThrows<ArgumentException>(() => RealTimeQueue<string>.Tail(queue));
         }
 
         [TestMethod]

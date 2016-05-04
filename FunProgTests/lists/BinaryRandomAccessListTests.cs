@@ -15,6 +15,7 @@ namespace FunProgTests.lists
     using FunProgLib.lists;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using static FunProgTests.utilities.ExpectedException;
 
     [TestClass]
     public class BinaryRandomAccessListTests
@@ -29,19 +30,17 @@ namespace FunProgTests.lists
         }
 
         [TestMethod]
-        [ExpectedException(typeof(ArgumentException))]
         public void EmptyHeadTest()
         {
             var list = BinaryRandomAccessList<string>.Empty;
-            var hd = BinaryRandomAccessList<string>.Head(list);
+            AssertThrows<ArgumentException>(() => BinaryRandomAccessList<string>.Head(list));
         }
 
         [TestMethod]
-        [ExpectedException(typeof(ArgumentException))]
         public void EmptyTailTest()
         {
             var list = BinaryRandomAccessList<string>.Empty;
-            var tl = BinaryRandomAccessList<string>.Tail(list);
+            AssertThrows<ArgumentException>(() => BinaryRandomAccessList<string>.Tail(list));
         }
 
         [TestMethod]

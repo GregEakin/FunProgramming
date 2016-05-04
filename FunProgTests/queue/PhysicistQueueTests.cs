@@ -15,6 +15,7 @@ namespace FunProgTests.queue
     using FunProgLib.queue;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using static FunProgTests.utilities.ExpectedException;
 
     [TestClass]
     public class PhysicistQueueTests
@@ -31,19 +32,17 @@ namespace FunProgTests.queue
         }
 
         [TestMethod]
-        [ExpectedException(typeof(ArgumentException))]
         public void EmptyHeadTest()
         {
             var queue = PhysicistsQueue<string>.Empty;
-            var item = PhysicistsQueue<string>.Head(queue);
+            AssertThrows<ArgumentException>(() => PhysicistsQueue<string>.Head(queue));
         }
 
         [TestMethod]
-        [ExpectedException(typeof(ArgumentException))]
         public void EmptyTailTest()
         {
             var queue = PhysicistsQueue<string>.Empty;
-            var item = PhysicistsQueue<string>.Tail(queue);
+            AssertThrows<ArgumentException>(() => PhysicistsQueue<string>.Tail(queue));
         }
 
         [TestMethod]

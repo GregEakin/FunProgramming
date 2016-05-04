@@ -15,6 +15,7 @@ namespace FunProgTests.queue
     using FunProgLib.queue;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using static FunProgTests.utilities.ExpectedException;
 
     [TestClass]
     public class HoodMelvilleQueueTests
@@ -31,19 +32,17 @@ namespace FunProgTests.queue
         }
 
         [TestMethod]
-        [ExpectedException(typeof(ArgumentException))]
         public void EmptyHeadTest()
         {
             var queue = HoodMelvilleQueue<string>.Empty;
-            var item = HoodMelvilleQueue<string>.Head(queue);
+            AssertThrows<ArgumentException>(() => HoodMelvilleQueue<string>.Head(queue));
         }
 
         [TestMethod]
-        [ExpectedException(typeof(ArgumentException))]
         public void EmptyTailTest()
         {
             var queue = HoodMelvilleQueue<string>.Empty;
-            var item = HoodMelvilleQueue<string>.Tail(queue);
+            AssertThrows<ArgumentException>(() => HoodMelvilleQueue<string>.Tail(queue));
         }
 
         [TestMethod]

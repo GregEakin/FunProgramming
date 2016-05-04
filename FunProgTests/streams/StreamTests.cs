@@ -15,15 +15,15 @@ namespace FunProgTests.streams
     using FunProgLib.streams;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using static FunProgTests.utilities.ExpectedException;
 
     [TestClass]
     public class StreamTests
     {
         [TestMethod]
-        [ExpectedException(typeof(ArgumentException))]
         public void DollarNilTest()
         {
-            var s = new Stream<int>.StreamCell(3, null);
+            AssertThrows<ArgumentException>(() => new Stream<int>.StreamCell(3, null));
         }
 
         [TestMethod]

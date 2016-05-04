@@ -7,17 +7,17 @@
 // All Rights Reserved.
 //
 
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+
+using FunProgLib.heap;
+
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+
 namespace FunProgTests.heap
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-
-    using FunProgLib.heap;
-
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
-
     [TestClass]
     public class BinomialHeapTests
     {
@@ -26,7 +26,7 @@ namespace FunProgTests.heap
             var result = new StringBuilder();
             result.Append("[");
             result.Append(tree.Root);
-            if (tree.List != FunProgLib.lists.List<BinomialHeap<T>.Tree>.Empty)
+            if (!FunProgLib.lists.List<BinomialHeap<T>.Tree>.IsEmpty(tree.List))
             {
                 result.Append(", ");
                 foreach (var node1 in tree.List)

@@ -126,7 +126,7 @@ namespace FunProgLib.lists
             if (head.Tree is Leaf) return List<Stuff>.Tail(ts);
             var node = head.Tree as Node;
             if (node != null) return List<Stuff>.Cons(new Stuff(head.Weight / 2, node.Tree1), List<Stuff>.Cons(new Stuff(head.Weight / 2, node.Tree2), List<Stuff>.Tail(ts)));
-            throw new Exception();
+            throw new ArgumentException("head.Tree as Node is null", nameof(ts));
         }
 
         private static T LookupTree(int w, int i, Tree t)

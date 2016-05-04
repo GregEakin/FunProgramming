@@ -7,6 +7,9 @@
 // All Rights Reserved.
 //
 
+using System.Text;
+using static FunProgTests.utilities.ExpectedException;
+
 namespace FunProgTests.lists
 {
     using System;
@@ -19,6 +22,77 @@ namespace FunProgTests.lists
     [TestClass]
     public class AltBinaryRandomAccessListTests
     {
+        private static string DumpTree<T>(AltBinaryRandomAccessList<T>.DataType tree) where T : IComparable<T>
+        {
+            if (tree == null)
+                return "null";
+
+            var zero = tree as AltBinaryRandomAccessList<T>.Zero;
+            if (zero != null)
+            {
+                var result = new StringBuilder();
+                result.Append("[Zero: ");
+                result.Append(DumpList(zero.RList));
+                result.Append("]");
+                return result.ToString();
+            }
+
+            var one = tree as AltBinaryRandomAccessList<T>.One;
+            if (one != null)
+            {
+                var result = new StringBuilder();
+                result.Append("[One: ");
+                result.Append(one.Alpha);
+                result.Append(", ");
+                result.Append(DumpList(one.RList));
+                result.Append("]");
+                return result.ToString();
+            }
+
+            throw new ArgumentException();
+        }
+
+        private static string DumpList<T>(RList<Tuple<T, T>>.Node list)
+        {
+            var result = new StringBuilder();
+            result.Append("{");
+            var seperator = "";
+            while (true)
+            {
+                if (list == null) break;
+                result.Append(seperator);
+                seperator = ", ";
+                var head = RList<Tuple<T, T>>.Head(list);
+                result.Append(head);
+                list = RList<Tuple<T, T>>.Tail(list);
+            }
+            result.Append("}");
+            return result.ToString();
+        }
+
+        [TestMethod]
+        public void DumpEmptyTree()
+        {
+            var list = AltBinaryRandomAccessList<string>.Empty;
+            Assert.AreEqual("null", DumpTree(list));
+        }
+
+        [TestMethod]
+        public void DumpOddTree()
+        {
+            const string data = "a b c";
+            var tree = data.Split().Aggregate(AltBinaryRandomAccessList<string>.Empty, (current, word) => AltBinaryRandomAccessList<string>.Cons(word, current));
+            Assert.AreEqual("[One: c, {(b, a)}]", DumpTree(tree));
+        }
+
+        [TestMethod]
+        public void DumpEvenTree()
+        {
+            const string data = "a b c d";
+            var tree = data.Split().Aggregate(AltBinaryRandomAccessList<string>.Empty, (current, word) => AltBinaryRandomAccessList<string>.Cons(word, current));
+            Assert.AreEqual("[Zero: {(d, c), (b, a)}]", DumpTree(tree));
+        }
+
         [TestMethod]
         public void IsEmptyTest()
         {
@@ -29,37 +103,44 @@ namespace FunProgTests.lists
         }
 
         [TestMethod]
-        [ExpectedException(typeof(ArgumentException))]
+        public void ConsEmptyTest()
+        {
+            var list = AltBinaryRandomAccessList<string>.Empty;
+            list = AltBinaryRandomAccessList<string>.Cons("A", list);
+            Assert.AreEqual("[One: A, {}]", DumpTree(list));
+        }
+
+        [TestMethod]
+        public void ConsOneTest()
+        {
+            var list = AltBinaryRandomAccessList<string>.Empty;
+            list = AltBinaryRandomAccessList<string>.Cons("A", list);
+            list = AltBinaryRandomAccessList<string>.Cons("B", list);
+            Assert.AreEqual("[Zero: {(B, A)}]", DumpTree(list));
+        }
+
+        [TestMethod]
+        public void ConsTwoTest()
+        {
+            var list = AltBinaryRandomAccessList<string>.Empty;
+            list = AltBinaryRandomAccessList<string>.Cons("A", list);
+            list = AltBinaryRandomAccessList<string>.Cons("B", list);
+            list = AltBinaryRandomAccessList<string>.Cons("C", list);
+            Assert.AreEqual("[One: C, {(B, A)}]", DumpTree(list));
+        }
+
+        [TestMethod]
         public void EmptyHeadTest()
         {
             var list = AltBinaryRandomAccessList<string>.Empty;
-            var hd = AltBinaryRandomAccessList<string>.Head(list);
+            AssertThrows<ArgumentException>(() => AltBinaryRandomAccessList<string>.Head(list));
         }
 
         [TestMethod]
-        [ExpectedException(typeof(ArgumentException))]
         public void EmptyTailTest()
         {
             var list = AltBinaryRandomAccessList<string>.Empty;
-            var tl = AltBinaryRandomAccessList<string>.Tail(list);
-        }
-
-        [TestMethod]
-        public void LookupTest()
-        {
-            const string Data = "How now, brown cow?";
-            var data = Data.Split().Aggregate(AltBinaryRandomAccessList<string>.Empty, (current, word) => AltBinaryRandomAccessList<string>.Cons(word, current));
-
-            Assert.AreEqual("now,", AltBinaryRandomAccessList<string>.Lookup(2, data));
-        }
-
-        [TestMethod]
-        public void UpdateTest()
-        {
-            const string Data = "How now, brown cow?";
-            var data = Data.Split().Aggregate(AltBinaryRandomAccessList<string>.Empty, (current, word) => AltBinaryRandomAccessList<string>.Cons(word, current));
-            data = AltBinaryRandomAccessList<string>.Update(1, "green", data);
-            Assert.AreEqual("green", AltBinaryRandomAccessList<string>.Lookup(1, data));
+            AssertThrows<ArgumentException>(() => AltBinaryRandomAccessList<string>.Tail(list));
         }
 
         [TestMethod]
@@ -68,9 +149,6 @@ namespace FunProgTests.lists
             const string Data = "How now, brown cow?";
             var data = Data.Split().Aggregate(AltBinaryRandomAccessList<string>.Empty, (current, word) => AltBinaryRandomAccessList<string>.Cons(word, current));
             Assert.AreEqual("cow?", AltBinaryRandomAccessList<string>.Head(data));
-
-            data = AltBinaryRandomAccessList<string>.Update(0, "dog?", data);
-            Assert.AreEqual("dog?", AltBinaryRandomAccessList<string>.Head(data));
         }
 
         [TestMethod]
@@ -79,9 +157,44 @@ namespace FunProgTests.lists
             const string Data = "How now, brown cow?";
             var data = Data.Split().Aggregate(AltBinaryRandomAccessList<string>.Empty, (current, word) => AltBinaryRandomAccessList<string>.Cons(word, current));
             data = AltBinaryRandomAccessList<string>.Tail(data);
-            Assert.AreEqual("brown", AltBinaryRandomAccessList<string>.Lookup(0, data));
-            Assert.AreEqual("now,", AltBinaryRandomAccessList<string>.Lookup(1, data));
-            Assert.AreEqual("How", AltBinaryRandomAccessList<string>.Lookup(2, data));
+            Assert.AreEqual("[One: brown, {(now,, How)}]", DumpTree(data));
+        }
+
+        [TestMethod]
+        public void LookupNullTest()
+        {
+            var list = AltBinaryRandomAccessList<string>.Empty;
+            var ex = AssertThrows<ArgumentException>(() => AltBinaryRandomAccessList<string>.Lookup(0, list));
+            // Assert.AreEqual("must be Zero or One\r\nParameter name: ts", ex.Message);
+        }
+
+        [TestMethod]
+        public void LookupSingleTest()
+        {
+            var list = AltBinaryRandomAccessList<string>.Empty;
+            list = AltBinaryRandomAccessList<string>.Cons("A", list);
+            Assert.AreEqual("A", AltBinaryRandomAccessList<string>.Lookup(0, list));
+        }
+
+        [TestMethod]
+        public void LookupDoubleTest()
+        {
+            var list = AltBinaryRandomAccessList<string>.Empty;
+            list = AltBinaryRandomAccessList<string>.Cons("A", list);
+            list = AltBinaryRandomAccessList<string>.Cons("B", list);
+            Assert.AreEqual("[Zero: {(B, A)}]", DumpTree(list));
+
+            Assert.AreEqual("B", AltBinaryRandomAccessList<string>.Lookup(0, list));
+        }
+
+        [TestMethod]
+        public void UpdateTest()
+        {
+            const string Data = "How now, brown cow?";
+            var data = Data.Split().Aggregate(AltBinaryRandomAccessList<string>.Empty, (current, word) => AltBinaryRandomAccessList<string>.Cons(word, current));
+            data = AltBinaryRandomAccessList<string>.Update(1, "green", data);
+            Assert.AreEqual("[Zero: {(cow?, green), (now,, How)}]", DumpTree(data));
+            Assert.AreEqual("green", AltBinaryRandomAccessList<string>.Lookup(1, data));
         }
 
         [TestMethod]
@@ -89,8 +202,18 @@ namespace FunProgTests.lists
         {
             const string Data = "What's in a name? That which we call a rose by any other name would smell as sweet.";
             var data = Data.Split().Aggregate(AltBinaryRandomAccessList<string>.Empty, (current, word) => AltBinaryRandomAccessList<string>.Cons(word, current));
+            Assert.AreEqual("[Zero: {(sweet., as), (smell, would), (name, other), (any, by), (rose, a), (call, we), (which, That), (name?, a), (in, What's)}]", DumpTree(data));
             Assert.AreEqual("sweet.", AltBinaryRandomAccessList<string>.Lookup(0, data));
             Assert.AreEqual("What's", AltBinaryRandomAccessList<string>.Lookup(17, data));
+        }
+
+        [TestMethod]
+        public void Test1()
+        {
+            var data = AltBinaryRandomAccessList<int>.Empty;
+            for (var i = 0; i < 11; i++)
+                data = AltBinaryRandomAccessList<int>.Cons(i, data);
+            Assert.AreEqual("One (0, One ((1, 2), Zero (One ((((3, 4), (5, 6)), ((7, 8), (9, 10))), Nil))))", DumpTree(data));
         }
     }
 }

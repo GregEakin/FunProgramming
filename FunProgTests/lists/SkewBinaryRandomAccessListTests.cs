@@ -15,6 +15,7 @@ namespace FunProgTests.lists
     using FunProgLib.lists;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using static FunProgTests.utilities.ExpectedException;
 
     [TestClass]
     public class SkewBinaryRandomAccessListTests
@@ -29,19 +30,17 @@ namespace FunProgTests.lists
         }
 
         [TestMethod]
-        [ExpectedException(typeof(ArgumentException))]
         public void EmptyHeadTest()
         {
             var list = SkewBinaryRandomAccessList<string>.Empty;
-            var hd = SkewBinaryRandomAccessList<string>.Head(list);
+            AssertThrows<ArgumentException>(() => SkewBinaryRandomAccessList<string>.Head(list));
         }
 
         [TestMethod]
-        [ExpectedException(typeof(ArgumentException))]
         public void EmptyTailTest()
         {
             var list = SkewBinaryRandomAccessList<string>.Empty;
-            var tl = SkewBinaryRandomAccessList<string>.Tail(list);
+            AssertThrows<ArgumentException>(() => SkewBinaryRandomAccessList<string>.Tail(list));
         }
 
         [TestMethod]

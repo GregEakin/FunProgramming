@@ -15,6 +15,7 @@ namespace FunProgTests.lists
     using FunProgLib.lists;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using static FunProgTests.utilities.ExpectedException;
 
     [TestClass]
     public class ListTests
@@ -29,19 +30,17 @@ namespace FunProgTests.lists
         }
 
         [TestMethod]
-        [ExpectedException(typeof(ArgumentException))]
         public void EmptyHeadTest()
         {
             var list = List<string>.Empty;
-            var hd = List<string>.Head(list);
+            AssertThrows<ArgumentException>(() => List<string>.Head(list));
         }
 
         [TestMethod]
-        [ExpectedException(typeof(ArgumentException))]
         public void EmptyTailTest()
         {
             var list = List<string>.Empty;
-            var tl = List<string>.Tail(list);
+            AssertThrows<ArgumentException>(() => List<string>.Tail(list));
         }
 
         [TestMethod]

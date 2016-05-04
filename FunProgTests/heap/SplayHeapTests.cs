@@ -16,6 +16,7 @@ namespace FunProgTests.heap
     using FunProgLib.heap;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using static FunProgTests.utilities.ExpectedException;
 
     [TestClass]
     public class SplayHeapTests
@@ -87,11 +88,10 @@ namespace FunProgTests.heap
         }
 
         [TestMethod]
-        [ExpectedException(typeof(ArgumentException))]
         public void FindMinTest1()
         {
             var t = SplayHeap<int>.Empty;
-            SplayHeap<int>.FindMin(t);
+            AssertThrows<ArgumentException>(() => SplayHeap<int>.FindMin(t));
         }
 
         [TestMethod]
@@ -124,11 +124,10 @@ namespace FunProgTests.heap
         }
 
         [TestMethod]
-        [ExpectedException(typeof(ArgumentException))]
         public void DeleteMinTest1()
         {
             var t = SplayHeap<int>.Empty;
-            SplayHeap<int>.DeleteMin(t);
+            AssertThrows<ArgumentException>(() => SplayHeap<int>.DeleteMin(t));
         }
 
         [TestMethod]

@@ -16,6 +16,7 @@ namespace FunProgTests.heap
     using FunProgLib.heap;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using static FunProgTests.utilities.ExpectedException;
 
     [TestClass]
     public class LeftistHeapTests
@@ -60,19 +61,17 @@ namespace FunProgTests.heap
         }
 
         [TestMethod]
-        [ExpectedException(typeof(ArgumentException))]
         public void EmptyMinTest()
         {
             var heap = LeftistHeap<int>.Empty;
-            var x = LeftistHeap<int>.FindMin(heap);
+            AssertThrows<ArgumentException>(() => LeftistHeap<int>.FindMin(heap));
         }
 
         [TestMethod]
-        [ExpectedException(typeof(ArgumentException))]
         public void EmptyDeleteMinTest()
         {
             var heap = LeftistHeap<int>.Empty;
-            heap = LeftistHeap<int>.DeleteMin(heap);
+            AssertThrows<ArgumentException>(() => LeftistHeap<int>.DeleteMin(heap));
         }
 
         [TestMethod]

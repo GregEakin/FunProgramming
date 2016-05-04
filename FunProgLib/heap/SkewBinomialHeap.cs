@@ -20,64 +20,45 @@ namespace FunProgLib.heap
     {
         public sealed class Tree
         {
-            private readonly int rank;
-
-            private readonly T node;
-
-            private readonly List<T>.Node list;
-
-            private readonly List<Tree>.Node treeList;
-
-            public Tree(int rank, T node, List<T>.Node list, List<Tree>.Node treeList)
+            public Tree(int rank, T root, List<T>.Node list, List<Tree>.Node treeList)
             {
-                this.rank = rank;
-                this.node = node;
-                this.list = list;
-                this.treeList = treeList;
+                this.Rank = rank;
+                this.Root = root;
+                this.List = list;
+                this.TreeList = treeList;
             }
 
-            public int Rank
-            {
-                get { return rank; }
-            }
+            public int Rank { get; }
 
-            public T Node
-            {
-                get { return node; }
-            }
+            public T Root { get; }
 
-            public List<T>.Node List
-            {
-                get { return list; }
-            }
+            public List<T>.Node List { get; }
 
-            public List<Tree>.Node TreeList
-            {
-                get { return treeList; }
-            }
+            public List<Tree>.Node TreeList { get; }
         }
 
-        public static List<Tree>.Node Empty
-        {
-            get { return List<Tree>.Empty; }
-        }
+        public static List<Tree>.Node Empty => List<Tree>.Empty;
 
         public static bool IsEmpty(List<Tree>.Node heap)
         {
             return List<Tree>.IsEmpty(heap);
         }
 
+        // rank
+
+        // root
+
         private static Tree Link(Tree t1, Tree t2)
         {
-            if (t1.Node.CompareTo(t2.Node) <= 0) return new Tree(t1.Rank + 1, t1.Node, t1.List, List<Tree>.Cons(t2, t1.TreeList));
-            return new Tree(t1.Rank + 1, t2.Node, t2.List, List<Tree>.Cons(t1, t2.TreeList));
+            if (t1.Root.CompareTo(t2.Root) <= 0) return new Tree(t1.Rank + 1, t1.Root, t1.List, List<Tree>.Cons(t2, t1.TreeList));
+            return new Tree(t1.Rank + 1, t2.Root, t2.List, List<Tree>.Cons(t1, t2.TreeList));
         }
 
         private static Tree SkewLink(T element, Tree t1, Tree t2)
         {
             var node = Link(t1, t2);
-            if (element.CompareTo(node.Node) <= 0) return new Tree(node.Rank, element, List<T>.Cons(node.Node, node.List), node.TreeList);
-            return new Tree(node.Rank + 1, node.Node, List<T>.Cons(element, node.List), node.TreeList);
+            if (element.CompareTo(node.Root) <= 0) return new Tree(node.Rank, element, List<T>.Cons(node.Root, node.List), node.TreeList);
+            return new Tree(node.Rank, node.Root, List<T>.Cons(element, node.List), node.TreeList);
         }
 
         private static List<Tree>.Node InsTree(Tree t1, List<Tree>.Node treeList)
@@ -158,7 +139,7 @@ namespace FunProgLib.heap
             if (List<Tree>.IsEmpty(ts)) return new TreeParts(t, ts);
             var val = RemoveMinTree(ts);
             var tp = val.Tree;
-            if (t.Node.CompareTo(tp.Node) <= 0) return new TreeParts(t, ts);
+            if (t.Root.CompareTo(tp.Root) <= 0) return new TreeParts(t, ts);
             var tsp = val.List;
             return new TreeParts(tp, List<Tree>.Cons(t, tsp));
         }
@@ -166,7 +147,7 @@ namespace FunProgLib.heap
         public static T FindMin(List<Tree>.Node ts)
         {
             var val = RemoveMinTree(ts);
-            return val.Tree.Node;
+            return val.Tree.Root;
         }
 
         private static List<Tree>.Node InsertAll(List<T>.Node xsp, List<Tree>.Node ts)

@@ -16,6 +16,7 @@ namespace FunProgTests.heap
     using FunProgLib.heap;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using static FunProgTests.utilities.ExpectedException;
 
     [TestClass]
     public class ParingHeapTests
@@ -129,17 +130,15 @@ namespace FunProgTests.heap
         }
 
         [TestMethod]
-        [ExpectedException(typeof(ArgumentException))]
         public void FindMinNullTest()
         {
-            ParingHeap<int>.FindMin(ParingHeap<int>.Empty);
+            AssertThrows<ArgumentException>(() => ParingHeap<int>.FindMin(ParingHeap<int>.Empty));
         }
 
         [TestMethod]
-        [ExpectedException(typeof(ArgumentException))]
         public void DeleteMinNullTest()
         {
-            ParingHeap<int>.DeleteMin(ParingHeap<int>.Empty);
+            AssertThrows<ArgumentException>(() => ParingHeap<int>.DeleteMin(ParingHeap<int>.Empty));
         }
     }
 }

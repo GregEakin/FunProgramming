@@ -41,7 +41,7 @@ namespace FunProgTests.heap
             result.Append("[");
             //result.Append(tree.Rank);
             //result.Append(", ");
-            result.Append(tree.Node);
+            result.Append(tree.Root);
             result.Append(DumpList(tree.List));
             if (!FunProgLib.lists.List<SkewBinomialHeap<T>.Tree>.IsEmpty(tree.TreeList))
                 result.Append(DumpHeap(tree.TreeList));

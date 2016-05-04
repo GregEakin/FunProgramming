@@ -7,15 +7,16 @@
 // All Rights Reserved.
 //
 
+using System;
+using System.Text;
+
+using FunProgLib.binary;
+using FunProgLib.lists;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using static FunProgTests.utilities.ExpectedException;
+
 namespace FunProgTests.binary
 {
-    using System.Text;
-
-    using FunProgLib.binary;
-    using FunProgLib.lists;
-
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
-
     [TestClass]
     public class DenseTests
     {
@@ -30,13 +31,12 @@ namespace FunProgTests.binary
         {
             if (number == null) return "0";
             var result = new StringBuilder();
-            var digit = number;
-            while (digit != null)
+            while (number != null)
             {
-                if (digit.Element == Dense.Digit.Zero) result.Insert(0, "0");
-                else if (digit.Element == Dense.Digit.One) result.Insert(0, "1");
+                if (number.Element == Dense.Digit.Zero) result.Insert(0, "0");
+                else if (number.Element == Dense.Digit.One) result.Insert(0, "1");
                 else result.Insert(0, "*");
-                digit = digit.Next;
+                number = number.Next;
             }
             return result.ToString();
         }
@@ -45,6 +45,21 @@ namespace FunProgTests.binary
         public void ZeroTest()
         {
             Assert.AreEqual("0", DumpNat(Zero));
+            Assert.IsTrue(List<Dense.Digit>.IsEmpty(Zero));
+        }
+
+        [TestMethod]
+        public void DecerementOneTest()
+        {
+            var zero = Dense.Dec(One);
+            Assert.AreEqual("0", DumpNat(zero));
+            Assert.IsTrue(List<Dense.Digit>.IsEmpty(zero));
+        }
+
+        [TestMethod]
+        public void NegativeTest()
+        {
+            AssertThrows<ArgumentException>(() => Dense.Dec(Zero));
         }
 
         [TestMethod]

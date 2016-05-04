@@ -131,7 +131,6 @@ namespace FunProgLib.heap
         {
             var t = RemoveMinTree(ts.Value);
             return t.Tree.Root;
-
         }
 
         public static Lazy<List<Tree>.Node> DeleteMin(Lazy<List<Tree>.Node> ts)

@@ -7,66 +7,46 @@
 // All Rights Reserved.
 //
 
+using FunProgLib.tree;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
+using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
+
 namespace FunProgTests.ephemeral
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Text;
-    using System.Threading;
-    using System.Threading.Tasks;
-
-    using FunProgLib.tree;
-
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
-
     [TestClass]
-    public class MultiReaderMapTests
+    public class MultiReaderMapTests : DictionaryTests
     {
-        private readonly Random random = new Random();
-
+        private readonly object lockObject = new object();
         private volatile RedBlackSet<string>.Tree set = RedBlackSet<string>.EmptyTree;
 
-        private string NextWord()
-        {
-            var stringBuilder = new StringBuilder();
-            for (var i = 0; i < 10; i++)
-            {
-                var x = random.Next(32, 126);
-                stringBuilder.Append((char)x);
-            }
-            return stringBuilder.ToString();
-        }
-
-        private readonly Action<object> writeAction = (object obj) =>
+        private readonly Action<object> writeAction = obj =>
         {
             var map = (MultiReaderMapTests)obj;
-            for (var i = 0; i < 200; i++)
+            for (var i = 0; i < 2 * count; i++)
             {
-                var word = map.NextWord();
-                lock (map)
+                var word = map.NextWord(1);
+                lock (map.lockObject)
                 {
-                    Thread.Yield();
                     map.set = RedBlackSet<string>.Insert(word, map.set);
                 }
             }
-            //Console.WriteLine("Task={0}, obj={1}, Thread={2} : 100 words added",
-            //                  Task.CurrentId, obj.ToString(),
-            //                  Thread.CurrentThread.ManagedThreadId);
         };
 
-        private readonly Action<object> readAction = (object obj) =>
+        private readonly Action<object> readAction = obj =>
         {
             var map = (MultiReaderMapTests)obj;
-            var count = 0;
-            for (var i = 0; i < 100; i++)
+            var hits = 0;
+            for (var i = 0; i < count; i++)
             {
-                var word = map.NextWord();
-                if (RedBlackSet<string>.Member(word, map.set)) count++;
+                var word = map.NextWord(1);
+                if (RedBlackSet<string>.Member(word, map.set)) hits++;
             }
-            if (count > 0)
-                Console.WriteLine("Task={0}, obj={1}, Thread={2} : {3} words found",
-                              Task.CurrentId, obj.ToString(),
-                              Thread.CurrentThread.ManagedThreadId, count);
+
+            Console.WriteLine("Task={0}, Thread={1} : {2} words found",
+                            Task.CurrentId, Thread.CurrentThread.ManagedThreadId, hits);
         };
 
         [TestMethod]
@@ -75,7 +55,7 @@ namespace FunProgTests.ephemeral
             var map = new MultiReaderMapTests();
 
             var taskList = new List<Task>();
-            for (var i = 0; i < 10; i++)
+            for (var i = 0; i < threads; i += 3)
             {
                 taskList.Add(Task.Factory.StartNew(writeAction, map));
                 taskList.Add(Task.Factory.StartNew(readAction, map));

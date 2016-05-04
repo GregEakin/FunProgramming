@@ -183,7 +183,7 @@ namespace FunProgLib.lists
                 return LookupTree(i - node.Index / 2, node.Tree2);
             }
 
-            throw new Exception();
+            throw new ArgumentException("Argument t needs to be a Leaf or None.", nameof(t));
         }
 
         private static Tree UpdateTree(int i, T x, Tree t)
@@ -202,7 +202,7 @@ namespace FunProgLib.lists
                 return new Node(node.Index, node.Tree1, UpdateTree(i - node.Index / 2, x, node.Tree2));
             }
 
-            throw new Exception();
+            throw new ArgumentException("Argument t needs to be a Leaf or None.", nameof(t));
         }
 
         public static T Lookup(int i, List<Digit>.Node ts)

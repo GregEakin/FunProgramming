@@ -15,6 +15,7 @@ namespace FunProgTests.queue
     using FunProgLib.queue;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using static FunProgTests.utilities.ExpectedException;
 
     [TestClass]
     public class BankersDequeTests
@@ -98,35 +99,31 @@ namespace FunProgTests.queue
         }
 
         [TestMethod]
-        [ExpectedException(typeof(ArgumentException))]
         public void EmptyHeadTest()
         {
             var queue = BankersDeque<string>.Empty;
-            var head = BankersDeque<string>.Head(queue);
+            AssertThrows<ArgumentException>(() => BankersDeque<string>.Head(queue));
         }
 
         [TestMethod]
-        [ExpectedException(typeof(ArgumentException))]
         public void EmptyTailTest()
         {
             var queue = BankersDeque<string>.Empty;
-            queue = BankersDeque<string>.Tail(queue);
+            AssertThrows<ArgumentException>(() => BankersDeque<string>.Tail(queue));
         }
 
         [TestMethod]
-        [ExpectedException(typeof(ArgumentException))]
         public void EmptyLastTest()
         {
             var queue = BankersDeque<string>.Empty;
-            var head = BankersDeque<string>.Last(queue);
+            AssertThrows<ArgumentException>(() => BankersDeque<string>.Last(queue));
         }
 
         [TestMethod]
-        [ExpectedException(typeof(ArgumentException))]
         public void EmptyInitTest()
         {
             var queue = BankersDeque<string>.Empty;
-            queue = BankersDeque<string>.Init(queue);
+            AssertThrows<ArgumentException>(() => BankersDeque<string>.Init(queue));
         }
     }
 }

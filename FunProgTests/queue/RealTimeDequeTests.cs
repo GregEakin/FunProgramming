@@ -15,6 +15,7 @@ namespace FunProgTests.queue
     using FunProgLib.queue;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using static FunProgTests.utilities.ExpectedException;
 
     [TestClass]
     public class RealTimeDequeTests
@@ -98,35 +99,31 @@ namespace FunProgTests.queue
         }
 
         [TestMethod]
-        [ExpectedException(typeof(ArgumentException))]
         public void EmptyHeadTest()
         {
             var queue = RealTimeDeque<string>.Empty;
-            var head = RealTimeDeque<string>.Head(queue);
+            AssertThrows<ArgumentException>(() => RealTimeDeque<string>.Head(queue));
         }
 
         [TestMethod]
-        [ExpectedException(typeof(ArgumentException))]
         public void EmptyTailTest()
         {
             var queue = RealTimeDeque<string>.Empty;
-            queue = RealTimeDeque<string>.Tail(queue);
+            AssertThrows<ArgumentException>(() => RealTimeDeque<string>.Tail(queue));
         }
 
         [TestMethod]
-        [ExpectedException(typeof(ArgumentException))]
         public void EmptyLastTest()
         {
             var queue = RealTimeDeque<string>.Empty;
-            var head = RealTimeDeque<string>.Last(queue);
+            AssertThrows<ArgumentException>(() => RealTimeDeque<string>.Last(queue));
         }
 
         [TestMethod]
-        [ExpectedException(typeof(ArgumentException))]
         public void EmptyInitTest()
         {
             var queue = RealTimeDeque<string>.Empty;
-            queue = RealTimeDeque<string>.Init(queue);
+            AssertThrows<ArgumentException>(() => RealTimeDeque<string>.Init(queue));
         }
     }
 }
