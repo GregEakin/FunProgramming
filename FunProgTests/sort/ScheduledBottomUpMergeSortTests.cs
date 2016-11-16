@@ -36,9 +36,9 @@ namespace FunProgTests.sort
             var list = ScheduledBottomUpMergeSort<string>.Empty;
             list = ScheduledBottomUpMergeSort<string>.Add("One", list);
 
-            Assert.IsFalse(list.Segs.Element.ElementStream.IsValueCreated);
-            Assert.AreEqual("One", list.Segs.Element.ElementStream.Value.Element);
-            Assert.IsTrue(list.Segs.Element.ElementStream.IsValueCreated);
+            Assert.IsFalse(list.Segs.Element.Stream.IsValueCreated);
+            Assert.AreEqual("One", list.Segs.Element.Stream.Value.Element);
+            Assert.IsTrue(list.Segs.Element.Stream.IsValueCreated);
         }
 
         [TestMethod]
@@ -46,9 +46,9 @@ namespace FunProgTests.sort
         {
             const string Data = "How now, brown cow?";
             var list = Data.Split().Aggregate(ScheduledBottomUpMergeSort<string>.Empty, (ts, x) => ScheduledBottomUpMergeSort<string>.Add(x, ts));
-            Assert.IsFalse(list.Segs.Element.ElementStream.IsValueCreated);
+            Assert.IsFalse(list.Segs.Element.Stream.IsValueCreated);
             var sorted = ScheduledBottomUpMergeSort<string>.Sort(list);
-            Assert.IsTrue(list.Segs.Element.ElementStream.IsValueCreated);
+            Assert.IsTrue(list.Segs.Element.Stream.IsValueCreated);
         }
 
         [TestMethod]

@@ -17,22 +17,22 @@ namespace FunProgLib.sort
 
     public static class ScheduledBottomUpMergeSort<T> where T : IComparable<T>
     {
-        public sealed class Stuff
+        public sealed class Schedule
         {
-            public Stuff(Lazy<Stream<T>.StreamCell> elementStream, List<Lazy<Stream<T>.StreamCell>>.Node schedule)
+            public Schedule(Lazy<Stream<T>.StreamCell> stream, List<Lazy<Stream<T>.StreamCell>>.Node scheduleList)
             {
-                ElementStream = elementStream;
-                Schedule = schedule;
+                Stream = stream;
+                ScheduleList = scheduleList;
             }
 
-            public Lazy<Stream<T>.StreamCell> ElementStream { get; }
+            public Lazy<Stream<T>.StreamCell> Stream { get; }
 
-            public List<Lazy<Stream<T>.StreamCell>>.Node Schedule { get; }
+            public List<Lazy<Stream<T>.StreamCell>>.Node ScheduleList { get; }
         }
 
         public sealed class Sortable
         {
-            public Sortable(int size, List<Stuff>.Node segs)
+            public Sortable(int size, List<Schedule>.Node segs)
             {
                 Size = size;
                 Segs = segs;
@@ -40,7 +40,7 @@ namespace FunProgLib.sort
 
             public int Size { get; }
 
-            public List<Stuff>.Node Segs { get; }
+            public List<Schedule>.Node Segs { get; }
         }
 
         private static Lazy<Stream<T>.StreamCell> Mrg(Lazy<Stream<T>.StreamCell> xs, Lazy<Stream<T>.StreamCell> ys)
@@ -58,26 +58,26 @@ namespace FunProgLib.sort
             return List<Lazy<Stream<T>.StreamCell>>.Cons(list.Element.Value.Next, list.Next);
         }
 
-        private static Stuff Exec2(Stuff x)
+        private static Schedule Exec2(Schedule x)
         {
-            return new Stuff(x.ElementStream, Exec1(Exec1(x.Schedule)));
+            return new Schedule(x.Stream, Exec1(Exec1(x.ScheduleList)));
         }
 
         public static Sortable Empty { get; } = new Sortable(0, null);
 
-        private static List<Stuff>.Node AddSeg(Lazy<Stream<T>.StreamCell> xs, List<Stuff>.Node segs, int size, List<Lazy<Stream<T>.StreamCell>>.Node rsched)
+        private static List<Schedule>.Node AddSeg(Lazy<Stream<T>.StreamCell> xs, List<Schedule>.Node segs, int size, List<Lazy<Stream<T>.StreamCell>>.Node rsched)
         {
-            if (size % 2 == 0) return List<Stuff>.Cons(new Stuff(xs, List<Lazy<Stream<T>.StreamCell>>.Reverse(rsched)), segs);
-            var xsp = segs.Element.ElementStream;
+            if (size % 2 == 0) return List<Schedule>.Cons(new Schedule(xs, List<Lazy<Stream<T>.StreamCell>>.Reverse(rsched)), segs);
+            var xsp = segs.Element.Stream;
             var xspp = Mrg(xs, xsp);
             var w = List<Lazy<Stream<T>.StreamCell>>.Cons(xspp, rsched);
             return AddSeg(xspp, segs.Next, size / 2, w);
         }
 
-        private static List<Stuff>.Node MapExec2(List<Stuff>.Node segsp)
+        private static List<Schedule>.Node MapExec2(List<Schedule>.Node segsp)
         {
             if (segsp == null) return null;
-            return List<Stuff>.Cons(Exec2(segsp.Element), MapExec2(segsp.Next));
+            return List<Schedule>.Cons(Exec2(segsp.Element), MapExec2(segsp.Next));
         }
 
         public static Sortable Add(T x, Sortable sortable)
@@ -87,10 +87,10 @@ namespace FunProgLib.sort
             return new Sortable(sortable.Size + 1, MapExec2(segsp));
         }
 
-        private static Lazy<Stream<T>.StreamCell> MrgAll(Lazy<Stream<T>.StreamCell> xs, List<Stuff>.Node ys)
+        private static Lazy<Stream<T>.StreamCell> MrgAll(Lazy<Stream<T>.StreamCell> xs, List<Schedule>.Node ys)
         {
             if (ys == null) return xs;
-            var xsp = ys.Element.ElementStream;
+            var xsp = ys.Element.Stream;
             var segs = ys.Next;
             return MrgAll(Mrg(xs, xsp), segs);
         }

@@ -51,7 +51,7 @@ namespace FunProgTests.queue
         [TestMethod]
         public void NullTest()
         {
-            AssertThrows<ArgumentNullException>(() => BankersQueue<string>.IsEmpty(null));
+            AssertThrows<NullReferenceException>(() => BankersQueue<string>.IsEmpty(null));
         }
 
         [TestMethod]
@@ -70,7 +70,7 @@ namespace FunProgTests.queue
         [TestMethod]
         public void NullSnocTest()
         {
-            AssertThrows<ArgumentNullException>(() => BankersQueue<string>.Snoc(null, "one"));
+            AssertThrows<NullReferenceException>(() => BankersQueue<string>.Snoc(null, "one"));
         }
 
         [TestMethod]
@@ -91,7 +91,7 @@ namespace FunProgTests.queue
         [TestMethod]
         public void NullHeadTest()
         {
-            AssertThrows<ArgumentNullException>(() => BankersQueue<string>.Head(null));
+            AssertThrows<NullReferenceException>(() => BankersQueue<string>.Head(null));
         }
 
         [TestMethod]
@@ -113,7 +113,7 @@ namespace FunProgTests.queue
         [TestMethod]
         public void NullTailTest()
         {
-            AssertThrows<ArgumentNullException>(() => BankersQueue<string>.Tail(null));
+            AssertThrows<NullReferenceException>(() => BankersQueue<string>.Tail(null));
         }
 
         [TestMethod]
