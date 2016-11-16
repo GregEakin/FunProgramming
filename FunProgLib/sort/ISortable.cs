@@ -13,7 +13,7 @@ namespace FunProgLib.sort
 {
     using System;
 
-    using FunProgLib.lists;
+    using lists;
 
     public interface ISortable<T> where T : IComparable<T>
     {

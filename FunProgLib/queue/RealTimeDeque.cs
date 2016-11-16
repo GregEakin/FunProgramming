@@ -13,7 +13,7 @@ namespace FunProgLib.queue
 {
     using System;
 
-    using FunProgLib.streams;
+    using streams;
 
     public static class RealTimeDeque<T> // : IDeque<T>
     {
@@ -21,13 +21,6 @@ namespace FunProgLib.queue
 
         public class Queue
         {
-            private readonly int lenF;
-            private readonly Lazy<Stream<T>.StreamCell> f;
-            private readonly Lazy<Stream<T>.StreamCell> sf;
-            private readonly int lenR;
-            private readonly Lazy<Stream<T>.StreamCell> r;
-            private readonly Lazy<Stream<T>.StreamCell> sr;
-
             public Queue(
                 int lenF,
                 Lazy<Stream<T>.StreamCell> f,
@@ -36,31 +29,23 @@ namespace FunProgLib.queue
                 Lazy<Stream<T>.StreamCell> r,
                 Lazy<Stream<T>.StreamCell> sr)
             {
-                this.lenF = lenF;
-                this.f = f;
-                this.sf = sf;
-                this.lenR = lenR;
-                this.sr = sr;
-                this.r = r;
+                LenF = lenF;
+                F = f;
+                Sf = sf;
+                LenR = lenR;
+                Sr = sr;
+                R = r;
             }
 
-            public int LenF { get { return lenF; } }
-            public Lazy<Stream<T>.StreamCell> F { get { return f; } }
-            public Lazy<Stream<T>.StreamCell> Sf { get { return sf; } }
-            public int LenR { get { return lenR; } }
-            public Lazy<Stream<T>.StreamCell> R { get { return r; } }
-            public Lazy<Stream<T>.StreamCell> Sr { get { return sr; } }
+            public int LenF { get; }
+            public Lazy<Stream<T>.StreamCell> F { get; }
+            public Lazy<Stream<T>.StreamCell> Sf { get; }
+            public int LenR { get; }
+            public Lazy<Stream<T>.StreamCell> R { get; }
+            public Lazy<Stream<T>.StreamCell> Sr { get; }
         }
 
-        private static readonly Queue EmptyQueue = new Queue(0, Stream<T>.DollarNil, Stream<T>.DollarNil, 0, Stream<T>.DollarNil, Stream<T>.DollarNil);
-
-        public static Queue Empty
-        {
-            get
-            {
-                return EmptyQueue;
-            }
-        }
+        public static Queue Empty { get; } = new Queue(0, Stream<T>.DollarNil, Stream<T>.DollarNil, 0, Stream<T>.DollarNil, Stream<T>.DollarNil);
 
         public static bool IsEmpty(Queue q)
         {
@@ -130,7 +115,7 @@ namespace FunProgLib.queue
         public static Queue Tail(Queue q)
         {
             if (q.F == Stream<T>.DollarNil && q.R == Stream<T>.DollarNil) throw new ArgumentException("Empty", nameof(q));
-            if (q.F == Stream<T>.DollarNil) return EmptyQueue;
+            if (q.F == Stream<T>.DollarNil) return Empty;
             var fp = q.F.Value.Next;
             return Check(q.LenF - 1, fp, Exec2(q.Sf), q.LenR, q.R, Exec2(q.Sr));
         }
@@ -151,7 +136,7 @@ namespace FunProgLib.queue
         public static Queue Init(Queue q)
         {
             if (q.R == Stream<T>.DollarNil && q.F == Stream<T>.DollarNil) throw new ArgumentException("Empty", nameof(q));
-            if (q.R == Stream<T>.DollarNil) return EmptyQueue;
+            if (q.R == Stream<T>.DollarNil) return Empty;
             var rp = q.R.Value.Next;
             return Check(q.LenF, q.F, Exec2(q.Sf), q.LenR - 1, rp, Exec2(q.Sr));
         }

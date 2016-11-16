@@ -19,53 +19,28 @@ namespace FunProgLib.tree
 
         public sealed class Tree
         {
-            private readonly Color color;
-
-            private readonly Tree tree1;
-
-            private readonly T elem;
-
-            private readonly Tree tree2;
-
             public Tree(Color color, Tree tree1, T elem, Tree tree2)
             {
-                this.color = color;
-                this.tree1 = tree1;
-                this.elem = elem;
-                this.tree2 = tree2;
+                Color = color;
+                Tree1 = tree1;
+                Elem = elem;
+                Tree2 = tree2;
             }
 
-            public Color Color
-            {
-                get { return color; }
-            }
+            public Color Color { get; }
 
-            public Tree Tree1
-            {
-                get { return tree1; }
-            }
+            public Tree Tree1 { get; }
 
-            public T Elem
-            {
-                get { return elem; }
-            }
+            public T Elem { get; }
 
-            public Tree Tree2
-            {
-                get { return tree2; }
-            }
+            public Tree Tree2 { get; }
         }
 
-        private static readonly Tree Empty = null;
-
-        public static Tree EmptyTree
-        {
-            get { return Empty; }
-        }
+        public static Tree EmptyTree { get; } = null;
 
         public static bool Member(T x, Tree t)
         {
-            if (t == Empty) return false;
+            if (t == EmptyTree) return false;
             if (x.CompareTo(t.Elem) < 0) return Member(x, t.Tree1);
             if (t.Elem.CompareTo(x) < 0) return Member(x, t.Tree2);
             return true;
@@ -75,21 +50,21 @@ namespace FunProgLib.tree
         {
             if (color == Color.B)
             {
-                if (tree1 != Empty && tree1.Color == Color.R)
+                if (tree1 != EmptyTree && tree1.Color == Color.R)
                 {
-                    if (tree1.Tree1 != Empty && tree1.Tree1.Color == Color.R)
+                    if (tree1.Tree1 != EmptyTree && tree1.Tree1.Color == Color.R)
                         return new Tree(Color.R, new Tree(Color.B, tree1.Tree1.Tree1, tree1.Tree1.Elem, tree1.Tree1.Tree2), tree1.Elem, new Tree(Color.B, tree1.Tree2, x, tree2));
 
-                    if (tree1.Tree2 != Empty && tree1.Tree2.Color == Color.R)
+                    if (tree1.Tree2 != EmptyTree && tree1.Tree2.Color == Color.R)
                         return new Tree(Color.R, new Tree(Color.B, tree1.Tree1, tree1.Elem, tree1.Tree2.Tree1), tree1.Tree2.Elem, new Tree(Color.B, tree1.Tree2.Tree2, x, tree2));
                 }
 
-                if (tree2 != Empty && tree2.Color == Color.R)
+                if (tree2 != EmptyTree && tree2.Color == Color.R)
                 {
-                    if (tree2.Tree1 != Empty && tree2.Tree1.Color == Color.R)
+                    if (tree2.Tree1 != EmptyTree && tree2.Tree1.Color == Color.R)
                         return new Tree(Color.R, new Tree(Color.B, tree1, x, tree2.Tree1.Tree1), tree2.Tree1.Elem, new Tree(Color.B, tree2.Tree1.Tree2, tree2.Elem, tree2.Tree2));
 
-                    if (tree2.Tree2 != Empty && tree2.Tree2.Color == Color.R)
+                    if (tree2.Tree2 != EmptyTree && tree2.Tree2.Color == Color.R)
                         return new Tree(Color.R, new Tree(Color.B, tree1, x, tree2.Tree1), tree2.Elem, new Tree(Color.B, tree2.Tree2.Tree2, tree2.Tree2.Elem, tree2.Tree2.Tree2));
                 }
             }
@@ -105,7 +80,7 @@ namespace FunProgLib.tree
 
         private static Tree Ins(T x, Tree s)
         {
-            if (s == Empty) return new Tree(Color.R, Empty, x, Empty);
+            if (s == EmptyTree) return new Tree(Color.R, EmptyTree, x, EmptyTree);
             if (x.CompareTo(s.Elem) < 0) return Balance(s.Color, Ins(x, s.Tree1), s.Elem, s.Tree2);
             if (s.Elem.CompareTo(x) < 0) return Balance(s.Color, s.Tree1, s.Elem, Ins(x, s.Tree2));
             return s;

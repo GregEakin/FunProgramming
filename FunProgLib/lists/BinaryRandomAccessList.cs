@@ -16,99 +16,60 @@ namespace FunProgLib.lists
     public static class BinaryRandomAccessList<T> // : IRandomAccessList<T>
     {
         public abstract class Tree
-        {
-        }
+        {}
 
         private sealed class Leaf : Tree
         {
-            private readonly T alpha;
-
             public Leaf(T alpha)
             {
-                this.alpha = alpha;
+                Alpha = alpha;
             }
 
-            public T Alpha
-            {
-                get { return alpha; }
-            }
+            public T Alpha { get; }
         }
 
         private sealed class Node : Tree
         {
-            private readonly int index;
-
-            private readonly Tree tree1;
-
-            private readonly Tree tree2;
-
             public Node(int index, Tree tree1, Tree tree2)
             {
-                this.index = index;
-                this.tree1 = tree1;
-                this.tree2 = tree2;
+                Index = index;
+                Tree1 = tree1;
+                Tree2 = tree2;
             }
 
-            public int Index
-            {
-                get { return index; }
-            }
+            public int Index { get; }
 
-            public Tree Tree1
-            {
-                get { return tree1; }
-            }
+            public Tree Tree1 { get; }
 
-            public Tree Tree2
-            {
-                get { return tree2; }
-            }
+            public Tree Tree2 { get; }
         }
 
         public sealed class Digit
         {
-            private readonly Tree one;
-
             public Digit(Tree tree)
             {
-                one = tree;
+                One = tree;
             }
 
-            public Tree One
-            {
-                get { return one; }
-            }
+            public Tree One { get; }
         }
 
         private static readonly Digit Zero = new Digit(null);
 
         private sealed class Stuff
         {
-            private readonly Tree tree;
-
-            private readonly List<Digit>.Node list;
-
             public Stuff(Tree tree, List<Digit>.Node list)
             {
-                this.tree = tree;
-                this.list = list;
+                Tree = tree;
+                List = list;
             }
 
-            public Tree Tree
-            {
-                get { return tree; }
-            }
+            public Tree Tree { get; }
 
-            public List<Digit>.Node List
-            {
-                get { return list; }
-            }
+            public List<Digit>.Node List { get; }
         }
 
-        public static List<Digit>.Node Empty
-        {
-            get { return List<Digit>.Empty; }
-        }
+        public static List<Digit>.Node Empty => List<Digit>.Empty;
 
         public static bool IsEmpty(List<Digit>.Node list)
         {

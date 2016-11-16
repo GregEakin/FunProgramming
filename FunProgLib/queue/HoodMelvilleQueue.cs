@@ -13,7 +13,7 @@ namespace FunProgLib.queue
 {
     using System;
 
-    using FunProgLib.lists;
+    using lists;
 
     public static class HoodMelvilleQueue<T>
     {
@@ -25,80 +25,62 @@ namespace FunProgLib.queue
 
         private sealed class Reversing : RotationState
         {
-            private readonly int ok;
-            private readonly List<T>.Node f;
-            private readonly List<T>.Node fp;
-            private readonly List<T>.Node r;
-            private readonly List<T>.Node rp;
-
             public Reversing(int ok, List<T>.Node f, List<T>.Node fp, List<T>.Node r, List<T>.Node rp)
             {
-                this.ok = ok;
-                this.f = f;
-                this.fp = fp;
-                this.r = r;
-                this.rp = rp;
+                Ok = ok;
+                F = f;
+                Fp = fp;
+                R = r;
+                Rp = rp;
             }
 
-            public int Ok { get { return ok; } }
-            public List<T>.Node F { get { return f; } }
-            public List<T>.Node Fp { get { return fp; } }
-            public List<T>.Node R { get { return r; } }
-            public List<T>.Node Rp { get { return rp; } }
+            public int Ok { get; }
+            public List<T>.Node F { get; }
+            public List<T>.Node Fp { get; }
+            public List<T>.Node R { get; }
+            public List<T>.Node Rp { get; }
         }
 
         private sealed class Appending : RotationState
         {
-            private readonly int ok;
-            private readonly List<T>.Node fp;
-            private readonly List<T>.Node rp;
-
             public Appending(int ok, List<T>.Node fp, List<T>.Node rp)
             {
-                this.ok = ok;
-                this.fp = fp;
-                this.rp = rp;
+                Ok = ok;
+                Fp = fp;
+                Rp = rp;
             }
 
-            public int Ok { get { return ok; } }
-            public List<T>.Node Fp { get { return fp; } }
-            public List<T>.Node Rp { get { return rp; } }
+            public int Ok { get; }
+            public List<T>.Node Fp { get; }
+            public List<T>.Node Rp { get; }
         }
 
         private sealed class Done : RotationState
         {
-            private readonly List<T>.Node f;
-
             public Done(List<T>.Node f)
             {
-                this.f = f;
+                F = f;
             }
 
-            public List<T>.Node F { get { return f; } }
+            public List<T>.Node F { get; }
         }
 
         public sealed class Queue
         {
-            private readonly int lenF;
-            private readonly List<T>.Node f;
-            private readonly RotationState state;
-            private readonly int lenR;
-            private readonly List<T>.Node r;
-
             public Queue(int lenF, List<T>.Node f, RotationState state, int lenR, List<T>.Node r)
             {
-                this.lenF = lenF;
-                this.f = f;
-                this.state = state;
-                this.lenR = lenR;
-                this.r = r;
+                LenF = lenF;
+                F = f;
+                State = state;
+                LenR = lenR;
+                R = r;
             }
 
-            public int LenF { get { return lenF; } }
-            public List<T>.Node F { get { return f; } }
-            public RotationState State { get { return state; } }
-            public int LenR { get { return lenR; } }
-            public List<T>.Node R { get { return r; } }
+            public int LenF { get; }
+            public List<T>.Node F { get; }
+            public RotationState State { get; }
+            public int LenR { get; }
+            public List<T>.Node R { get; }
         }
 
         private static RotationState Exec(RotationState state)
@@ -167,12 +149,7 @@ namespace FunProgLib.queue
             return Exec2(lenF + lenR, f, newState, 0, List<T>.Empty);
         }
 
-        private static readonly Queue EmptyQueue = new Queue(0, List<T>.Empty, new Idle(), 0, List<T>.Empty);
-
-        public static Queue Empty
-        {
-            get { return EmptyQueue; }
-        }
+        public static Queue Empty { get; } = new Queue(0, List<T>.Empty, new Idle(), 0, List<T>.Empty);
 
         public static bool IsEmpty(Queue queue)
         {

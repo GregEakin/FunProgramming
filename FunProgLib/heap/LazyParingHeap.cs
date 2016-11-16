@@ -17,47 +17,27 @@ namespace FunProgLib.heap
     {
         public sealed class Heap
         {
-            private readonly T root;
-
-            private readonly Heap list;
-
-            private readonly Lazy<Heap> lazyList;
-
             public Heap(T root, Heap list, Lazy<Heap> lazyList)
             {
-                this.root = root;
-                this.list = list;
-                this.lazyList = lazyList;
+                Root = root;
+                List = list;
+                LazyList = lazyList;
             }
 
-            public T Root
-            {
-                get { return root; }
-            }
+            public T Root { get; }
 
-            public Heap List
-            {
-                get { return list; }
-            }
+            public Heap List { get; }
 
-            public Lazy<Heap> LazyList
-            {
-                get { return lazyList; }
-            }
+            public Lazy<Heap> LazyList { get; }
         }
 
         private static readonly Lazy<Heap> EmptyHeapSusp = new Lazy<Heap>(() => null);
 
-        private static readonly Heap EmptyHeap = null;
-
-        public static Heap Empty
-        {
-            get { return EmptyHeap; }
-        }
+        public static Heap Empty { get; } = null;
 
         public static bool IsEmpty(Heap list)
         {
-            return list == EmptyHeap;
+            return list == Empty;
         }
 
         public static Heap Merge(Heap h1, Heap h2)
@@ -72,12 +52,12 @@ namespace FunProgLib.heap
         private static Heap Link(Heap h1, Heap h2)
         {
             if (IsEmpty(h1.List)) return new Heap(h1.Root, h2, h1.LazyList);
-            return new Heap(h1.Root, EmptyHeap, new Lazy<Heap>(() => Merge(Merge(h2, h1.List), h1.LazyList.Value)));
+            return new Heap(h1.Root, Empty, new Lazy<Heap>(() => Merge(Merge(h2, h1.List), h1.LazyList.Value)));
         }
 
         public static Heap Insert(T x, Heap h)
         {
-            return Merge(new Heap(x, EmptyHeap, EmptyHeapSusp), h);
+            return Merge(new Heap(x, Empty, EmptyHeapSusp), h);
         }
 
         public static T FindMin(Heap h)

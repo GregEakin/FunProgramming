@@ -30,16 +30,16 @@ namespace FunProgTests.binary
         private static string DumpNat(List<int>.Node number)
         {
             if (List<int>.IsEmpty(number)) return "0";
-            var result = new StringBuilder();
-            var digit = number;
-            while (!List<int>.IsEmpty(digit))
-            {
-                result.Insert(0, digit.Element.ToString(CultureInfo.InvariantCulture));
-                result.Insert(0, ',');
-                digit = digit.Next;
-            }
-            result = result.Remove(0, 1);
 
+            var result = new StringBuilder();
+            while (!List<int>.IsEmpty(number))
+            {
+                result.Insert(0, number.Element.ToString(CultureInfo.InvariantCulture));
+                result.Insert(0, ',');
+                number = number.Next;
+            }
+
+            result = result.Remove(0, 1);
             return result.ToString();
         }
 

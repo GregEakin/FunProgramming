@@ -17,25 +17,15 @@ namespace FunProgLib.lists
     {
         public sealed class Node // : IEnumerable<T>
         {
-            private readonly T element;
-
-            private readonly Node next;
-
             public Node(T element, Node next)
             {
-                this.element = element;
-                this.next = next;
+                Element = element;
+                Next = next;
             }
 
-            public T Element
-            {
-                get { return element; }
-            }
+            public T Element { get; }
 
-            public Node Next
-            {
-                get { return next; }
-            }
+            public Node Next { get; }
 
             //public IEnumerator<T> GetEnumerator()
             //{
@@ -86,16 +76,11 @@ namespace FunProgLib.lists
             //}
         }
 
-        private static readonly Node EmptyStack = null;
-
-        public static Node Empty
-        {
-            get { return EmptyStack; }
-        }
+        public static Node Empty { get; } = null;
 
         public static bool IsEmpty(Node list)
         {
-            return list == EmptyStack;
+            return list == Empty;
         }
 
         public static Node Cons(T element, Node list)

@@ -19,90 +19,62 @@ namespace FunProgLib.queue
     {
         public sealed class Queue
         {
-            private readonly int lenfm;
-
-            private readonly List<T>.Node f;
-
-            // alpha list susp Queue m
-            private readonly BootstrappedQueue<Lazy<List<T>.Node>>.Queue m;
-
-            private readonly int lenr;
-
-            private readonly List<T>.Node r;
-
             public Queue(int lenfm, List<T>.Node f, BootstrappedQueue<Lazy<List<T>.Node>>.Queue m, int lenr, List<T>.Node r)
             {
-                this.lenfm = lenfm;
-                this.f = f;
-                this.m = m;
-                this.lenr = lenr;
-                this.r = r;
+                LenFM = lenfm;
+                F = f;
+                M = m;
+                LenR = lenr;
+                R = r;
             }
 
-            public int LenFM
-            {
-                get { return lenfm; }
-            }
+            public int LenFM { get; }
 
-            public List<T>.Node F
-            {
-                get { return f; }
-            }
+            public List<T>.Node F { get; }
 
-            public BootstrappedQueue<Lazy<List<T>.Node>>.Queue M
-            {
-                get { return m; }
-            }
+            public BootstrappedQueue<Lazy<List<T>.Node>>.Queue M { get; }
 
-            public int LenR
-            {
-                get { return lenr; }
-            }
+            public int LenR { get; }
 
-            public List<T>.Node R
-            {
-                get { return r; }
-            }
+            public List<T>.Node R { get; }
         }
 
-        // private static readonly List<T>.Node EmptyList = null;
-        private static readonly Queue EmptyQueue = null;
-
-        public static Queue Empty
-        {
-            get { return EmptyQueue; }
-        }
+        public static Queue Empty { get; } = null;
 
         public static bool IsEmpty(Queue queue)
         {
-            return queue == null;
+            return queue == Empty;
         }
 
-        private static Queue CheckQ(Queue q)
+        private static Queue CheckQ(int lenfm, List<T>.Node f, BootstrappedQueue<Lazy<List<T>.Node>>.Queue m, int lenr, List<T>.Node r)
         {
-            if (q.LenR <= q.LenFM) return CheckF(q);
-            // return CheckF(new Queue(q.LenFM + q.LenR, q.F, Snoc(q.M, List<T>.Reverse(q.R)), 0, EmptyList));
-            throw new System.NotImplementedException();
+            if (lenr <= lenfm) return CheckF(lenfm, f, m, lenr, r);
+            return CheckF(lenfm + lenr, f, BootstrappedQueue<Lazy<List<T>.Node>>.Snoc(m, new Lazy<List<T>.Node>(() => List<T>.Reverse(r))), 0, List<T>.Empty);
         }
 
-        private static Queue CheckF(Queue q)
+        private static Queue CheckF(int lenfm, List<T>.Node f, BootstrappedQueue<Lazy<List<T>.Node>>.Queue m, int lenr, List<T>.Node r)
         {
-            throw new System.NotImplementedException();
+            if (List<T>.IsEmpty(f) && m == null) return Empty;
+            if (List<T>.IsEmpty(f)) return new Queue(lenfm, BootstrappedQueue<Lazy<List<T>.Node>>.Head(m).Value, BootstrappedQueue<Lazy<List<T>.Node>>.Tail(m), lenr, r);
+            return new Queue(lenfm, f, m, lenr, r);
         }
 
         public static Queue Snoc(Queue queue, T item)
         {
-            throw new System.NotImplementedException();
+            if (queue == Empty) return new Queue(1, new List<T>.Node(item, List<T>.Empty), null, 0, List<T>.Empty);
+            return CheckQ(queue.LenFM, queue.F, queue.M, queue.LenR + 1, List<T>.Cons(item, queue.R));
         }
 
         public static T Head(Queue queue)
         {
-            throw new System.NotImplementedException();
+            if (queue == Empty) throw new ArgumentNullException(nameof(queue));
+            return List<T>.Head(queue.F);
         }
 
         public static Queue Tail(Queue queue)
         {
-            throw new System.NotImplementedException();
+            if (queue == Empty) throw new ArgumentNullException(nameof(queue));
+            return CheckQ(queue.LenFM - 1, List<T>.Tail(queue.F), queue.M, queue.LenR, queue.R);
         }
     }
 }

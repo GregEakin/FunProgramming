@@ -13,7 +13,7 @@ namespace FunProgLib.heap
 {
     using System;
 
-    using FunProgLib.lists;
+    using lists;
 
     public static class SkewBinomialHeap<T>
         where T : IComparable<T> // : IHeap<T>
@@ -22,10 +22,10 @@ namespace FunProgLib.heap
         {
             public Tree(int rank, T root, List<T>.Node list, List<Tree>.Node treeList)
             {
-                this.Rank = rank;
-                this.Root = root;
-                this.List = list;
-                this.TreeList = treeList;
+                Rank = rank;
+                Root = root;
+                List = list;
+                TreeList = treeList;
             }
 
             public int Rank { get; }
@@ -110,25 +110,15 @@ namespace FunProgLib.heap
 
         private class TreeParts
         {
-            private readonly Tree tree;
-
-            private readonly List<Tree>.Node list;
-
             public TreeParts(Tree tree, List<Tree>.Node list)
             {
-                this.tree = tree;
-                this.list = list;
+                Tree = tree;
+                List = list;
             }
 
-            public Tree Tree
-            {
-                get { return tree; }
-            }
+            public Tree Tree { get; }
 
-            public List<Tree>.Node List
-            {
-                get { return list; }
-            }
+            public List<Tree>.Node List { get; }
         }
 
         private static TreeParts RemoveMinTree(List<Tree>.Node ds)

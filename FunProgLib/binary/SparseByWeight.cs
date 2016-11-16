@@ -11,7 +11,7 @@
 
 namespace FunProgLib.binary
 {
-    using FunProgLib.lists;
+    using lists;
 
     public static class SparseByWeight
     {

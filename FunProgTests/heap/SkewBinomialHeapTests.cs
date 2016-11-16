@@ -102,7 +102,7 @@ namespace FunProgTests.heap
         {
             const string Words = "What's in a name? That which we call a rose by any other name would smell as sweet.";
             var t = Words.Split().Aggregate(SkewBinomialHeap<string>.Empty, (current, word) => SkewBinomialHeap<string>.Insert(word, current));
-            Assert.AreEqual("[[sweet.][as][name, smell[[would]]][a, other, call[[any, by[[rose]]][we]]][name?, which[[That]]][a, in[[What's]]]]", DumpHeap(t));
+            Assert.AreEqual("[[as, sweet.[[smell]]][a, would, name, rose[[a, we, in[[name?, which[[That]]][What's]]][any, other[[by]]][call]]]]", DumpHeap(t));
         }
 
         [TestMethod]
@@ -115,7 +115,7 @@ namespace FunProgTests.heap
             var ts2 = Data2.Split().Aggregate(SkewBinomialHeap<string>.Empty, (current, word) => SkewBinomialHeap<string>.Insert(word, current));
 
             var t = SkewBinomialHeap<string>.Merge(ts1, ts2);
-            Assert.AreEqual("[[name?[[sweet]]][a, in[[any, name[[other]]][as, smell[[would]]][What's]]][a, by, rose[[That, we[[which]]][call]]]]", DumpHeap(t));
+            Assert.AreEqual("[[name?][a, in[[What's]]][a, by, rose[[any, sweet, name[[as, smell[[would]]][other]]][That, we[[which]]][call]]]]", DumpHeap(t));
         }
 
         [TestMethod]

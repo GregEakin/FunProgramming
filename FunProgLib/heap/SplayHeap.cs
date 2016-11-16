@@ -17,73 +17,46 @@ namespace FunProgLib.heap
     {
         public sealed class Heap
         {
-            private readonly Heap a;
-            private readonly T x;
-            private readonly Heap b;
-
             public Heap(Heap a, T x, Heap b)
             {
-                this.a = a;
-                this.x = x;
-                this.b = b;
+                A = a;
+                X = x;
+                B = b;
             }
 
-            public Heap A
-            {
-                get { return a; }
-            }
+            public Heap A { get; }
 
-            public T X
-            {
-                get { return x; }
-            }
+            public T X { get; }
 
-            public Heap B
-            {
-                get { return b; }
-            }
+            public Heap B { get; }
         }
 
         private sealed class Pair
         {
-            private readonly Heap a;
-            private readonly Heap b;
-
             public Pair(Heap a, Heap b)
             {
-                this.a = a;
-                this.b = b;
+                A = a;
+                B = b;
             }
 
-            public Heap A
-            {
-                get { return a; }
-            }
+            public Heap A { get; }
 
-            public Heap B
-            {
-                get { return b; }
-            }
+            public Heap B { get; }
         }
 
-        private static readonly Heap EmptyHeap = null;
-
-        public static Heap Empty
-        {
-            get { return EmptyHeap; }
-        }
+        public static Heap Empty { get; } = null;
 
         public static bool IsEmpty(Heap h)
         {
-            return h == EmptyHeap;
+            return h == Empty;
         }
 
         private static Pair Partition(T pivot, Heap t)
         {
-            if (IsEmpty(t)) return new Pair(EmptyHeap, EmptyHeap);
+            if (IsEmpty(t)) return new Pair(Empty, Empty);
             if (t.X.CompareTo(pivot) <= 0)
             {
-                if (IsEmpty(t.B)) return new Pair(t, EmptyHeap);
+                if (IsEmpty(t.B)) return new Pair(t, Empty);
                 if (t.B.X.CompareTo(pivot) <= 0)
                 {
                     var pair = Partition(pivot, t.B.B);
@@ -97,7 +70,7 @@ namespace FunProgLib.heap
             }
             else
             {
-                if (IsEmpty(t.A)) return new Pair(EmptyHeap, t);
+                if (IsEmpty(t.A)) return new Pair(Empty, t);
                 if (t.A.X.CompareTo(pivot) <= 0)
                 {
                     var pair = Partition(pivot, t.A.B);

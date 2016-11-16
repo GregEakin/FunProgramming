@@ -16,7 +16,7 @@ namespace FunProgTests.heap
     using FunProgLib.heap;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;
-    using static FunProgTests.utilities.ExpectedException;
+    using static utilities.ExpectedException;
 
     [TestClass]
     public class SplayHeapTests

@@ -12,55 +12,35 @@
 namespace FunProgLib.sort
 {
     using System;
-    using FunProgLib.lists;
-    using FunProgLib.streams;
+    using lists;
+    using streams;
 
     public static class ScheduledBottomUpMergeSort<T> where T : IComparable<T>
     {
         public sealed class Stuff
         {
-            private readonly Lazy<Stream<T>.StreamCell> elementStream;
-
-            private readonly List<Lazy<Stream<T>.StreamCell>>.Node schedule;
-
             public Stuff(Lazy<Stream<T>.StreamCell> elementStream, List<Lazy<Stream<T>.StreamCell>>.Node schedule)
             {
-                this.elementStream = elementStream;
-                this.schedule = schedule;
+                ElementStream = elementStream;
+                Schedule = schedule;
             }
 
-            public Lazy<Stream<T>.StreamCell> ElementStream
-            {
-                get { return elementStream; }
-            }
+            public Lazy<Stream<T>.StreamCell> ElementStream { get; }
 
-            public List<Lazy<Stream<T>.StreamCell>>.Node Schedule
-            {
-                get { return schedule; }
-            }
+            public List<Lazy<Stream<T>.StreamCell>>.Node Schedule { get; }
         }
 
         public sealed class Sortable
         {
-            private readonly int size;
-
-            private readonly List<Stuff>.Node segs;
-
             public Sortable(int size, List<Stuff>.Node segs)
             {
-                this.size = size;
-                this.segs = segs;
+                Size = size;
+                Segs = segs;
             }
 
-            public int Size
-            {
-                get { return size; }
-            }
+            public int Size { get; }
 
-            public List<Stuff>.Node Segs
-            {
-                get { return segs; }
-            }
+            public List<Stuff>.Node Segs { get; }
         }
 
         private static Lazy<Stream<T>.StreamCell> Mrg(Lazy<Stream<T>.StreamCell> xs, Lazy<Stream<T>.StreamCell> ys)
@@ -83,12 +63,7 @@ namespace FunProgLib.sort
             return new Stuff(x.ElementStream, Exec1(Exec1(x.Schedule)));
         }
 
-        private static readonly Sortable EmptySortable = new Sortable(0, null);
-
-        public static Sortable Empty
-        {
-            get { return EmptySortable; }
-        }
+        public static Sortable Empty { get; } = new Sortable(0, null);
 
         private static List<Stuff>.Node AddSeg(Lazy<Stream<T>.StreamCell> xs, List<Stuff>.Node segs, int size, List<Lazy<Stream<T>.StreamCell>>.Node rsched)
         {

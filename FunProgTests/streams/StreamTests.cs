@@ -15,7 +15,7 @@ namespace FunProgTests.streams
     using FunProgLib.streams;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;
-    using static FunProgTests.utilities.ExpectedException;
+    using static utilities.ExpectedException;
 
     [TestClass]
     public class StreamTests

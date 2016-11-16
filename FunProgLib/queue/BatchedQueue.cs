@@ -13,28 +13,23 @@ namespace FunProgLib.queue
 {
     using System;
 
-    using FunProgLib.lists;
+    using lists;
 
     public static class BatchedQueue<T>
     {
         public sealed class Queue
         {
-            private readonly List<T>.Node f;
-            private readonly List<T>.Node r;
-
             public Queue(List<T>.Node f, List<T>.Node r)
             {
-                this.f = f;
-                this.r = r;
+                F = f;
+                R = r;
             }
 
-            public List<T>.Node F { get { return f; } }
-            public List<T>.Node R { get { return r; } }
+            public List<T>.Node F { get; }
+            public List<T>.Node R { get; }
         }
 
-        private static readonly Queue EmptyQueue = new Queue(List<T>.Empty, List<T>.Empty);
-
-        public static Queue Empty { get { return EmptyQueue; } }
+        public static Queue Empty { get; } = new Queue(List<T>.Empty, List<T>.Empty);
 
         public static bool IsEmpty(Queue q)
         {

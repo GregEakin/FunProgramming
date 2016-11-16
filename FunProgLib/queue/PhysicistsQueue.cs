@@ -18,34 +18,23 @@ namespace FunProgLib.queue
     {
         public sealed class Queue
         {
-            private readonly List<T>.Node w;
-            private readonly int lenf;
-            private readonly Lazy<List<T>.Node> f;
-            private readonly int lenr;
-            private readonly List<T>.Node r;
-
             public Queue(List<T>.Node w, int lenf, Lazy<List<T>.Node> f, int lenr, List<T>.Node r)
             {
-                this.w = w;
-                this.lenf = lenf;
-                this.f = f;
-                this.lenr = lenr;
-                this.r = r;
+                W = w;
+                Lenf = lenf;
+                F = f;
+                Lenr = lenr;
+                R = r;
             }
 
-            public List<T>.Node W { get { return w; } }
-            public int Lenf { get { return lenf; } }
-            public Lazy<List<T>.Node> F { get { return f; } }
-            public int Lenr { get { return lenr; } }
-            public List<T>.Node R { get { return r; } }
+            public List<T>.Node W { get; }
+            public int Lenf { get; }
+            public Lazy<List<T>.Node> F { get; }
+            public int Lenr { get; }
+            public List<T>.Node R { get; }
         }
 
-        private static readonly Queue EmptyQueue = new Queue(List<T>.Empty, 0, new Lazy<List<T>.Node>(() => List<T>.Empty), 0, List<T>.Empty);
-
-        public static Queue Empty
-        {
-            get { return EmptyQueue; }
-        }
+        public static Queue Empty { get; } = new Queue(List<T>.Empty, 0, new Lazy<List<T>.Node>(() => List<T>.Empty), 0, List<T>.Empty);
 
         public static bool IsEmpty(Queue queue)
         {

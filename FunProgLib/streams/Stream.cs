@@ -17,23 +17,18 @@ namespace FunProgLib.streams
     {
         public sealed class StreamCell
         {
-            private readonly T element;
-            private readonly Lazy<StreamCell> next;
-
             public StreamCell(T element, Lazy<StreamCell> next)
             {
                 if (next == null) throw new ArgumentException("Can't be null, use Stream<T>.DollarNil instead.", nameof(next));
-                this.element = element;
-                this.next = next;
+                Element = element;
+                Next = next;
             }
 
-            public T Element { get { return element; } }
-            public Lazy<StreamCell> Next { get { return next; } }
+            public T Element { get; }
+            public Lazy<StreamCell> Next { get; }
         }
 
-        private static readonly Lazy<StreamCell> NilStreamCell = new Lazy<StreamCell>(() => null);
-
-        public static Lazy<StreamCell> DollarNil { get { return NilStreamCell; } }
+        public static Lazy<StreamCell> DollarNil { get; } = new Lazy<StreamCell>(() => null);
 
         public static Lazy<StreamCell> Append(Lazy<StreamCell> s1, Lazy<StreamCell> t)
         {

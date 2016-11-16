@@ -17,46 +17,24 @@ namespace FunProgLib.heap
     {
         public sealed class Heap
         {
-            private readonly int r;
-            private readonly T x;
-            private readonly Heap a;
-            private readonly Heap b;
-
             public Heap(int r, T x, Heap a, Heap b)
             {
-                this.r = r;
-                this.x = x;
-                this.a = a;
-                this.b = b;
+                R = r;
+                X = x;
+                A = a;
+                B = b;
             }
 
-            public int R
-            {
-                get { return r; }
-            }
+            public int R { get; }
 
-            public T X
-            {
-                get { return x; }
-            }
+            public T X { get; }
 
-            public Heap A
-            {
-                get { return a; }
-            }
+            public Heap A { get; }
 
-            public Heap B
-            {
-                get { return b; }
-            }
+            public Heap B { get; }
         }
 
-        private static readonly Heap EmptyHeap = null;
-
-        public static Heap Empty
-        {
-            get { return EmptyHeap; }
-        }
+        public static Heap Empty { get; } = null;
 
         private static int Rank(Heap h)
         {
@@ -72,7 +50,7 @@ namespace FunProgLib.heap
 
         public static bool IsEmpty(Heap h)
         {
-            return h == EmptyHeap;
+            return h == Empty;
         }
 
         public static Heap Merge(Heap h1, Heap h2)
@@ -85,7 +63,7 @@ namespace FunProgLib.heap
 
         public static Heap Insert(T x, Heap h)
         {
-            return Merge(new Heap(1, x, EmptyHeap, EmptyHeap), h);
+            return Merge(new Heap(1, x, Empty, Empty), h);
         }
 
         public static T FindMin(Heap h)

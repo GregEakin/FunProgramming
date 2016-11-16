@@ -14,7 +14,7 @@ namespace FunProgTests.heap
     using System.Text;
     using FunProgLib.heap;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
-    using static FunProgTests.utilities.ExpectedException;
+    using static utilities.ExpectedException;
 
     [TestClass]
     public class LazyParingHeapTests

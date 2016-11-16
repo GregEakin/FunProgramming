@@ -13,37 +13,27 @@ namespace FunProgLib.queue
 {
     using System;
 
-    using FunProgLib.streams;
+    using streams;
 
     public static class BankersQueue<T>
     {
         public sealed class Queue
         {
-            private readonly int lenf;
-            private readonly Lazy<Stream<T>.StreamCell> f;
-            private readonly int lenr;
-            private readonly Lazy<Stream<T>.StreamCell> r;
-
             public Queue(int lenf, Lazy<Stream<T>.StreamCell> f, int lenr, Lazy<Stream<T>.StreamCell> r)
             {
-                this.lenf = lenf;
-                this.f = f;
-                this.lenr = lenr;
-                this.r = r;
+                LenF = lenf;
+                F = f;
+                LenR = lenr;
+                R = r;
             }
 
-            public int LenF { get { return lenf; } }
-            public Lazy<Stream<T>.StreamCell> F { get { return f; } }
-            public int LenR { get { return lenr; } }
-            public Lazy<Stream<T>.StreamCell> R { get { return r; } }
+            public int LenF { get; }
+            public Lazy<Stream<T>.StreamCell> F { get; }
+            public int LenR { get; }
+            public Lazy<Stream<T>.StreamCell> R { get; }
         }
 
-        private static readonly Queue EmptyQueue = new Queue(0, Stream<T>.DollarNil, 0, Stream<T>.DollarNil);
-
-        public static Queue Empty
-        {
-            get { return EmptyQueue; }
-        }
+        public static Queue Empty { get; } = new Queue(0, Stream<T>.DollarNil, 0, Stream<T>.DollarNil);
 
         public static bool IsEmpty(Queue queue)
         {

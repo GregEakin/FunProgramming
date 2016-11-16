@@ -11,17 +11,12 @@ namespace FunProgTests.streams
     {
         private sealed class Stuff
         {
-            private readonly int _key;
-
             public Stuff(int key)
             {
-                _key = key;
+                Key = key;
             }
 
-            public int Key
-            {
-                get { return _key; }
-            }
+            public int Key { get; }
         }
 
         private static Stream<Stuff>.StreamCell Factory(int index)

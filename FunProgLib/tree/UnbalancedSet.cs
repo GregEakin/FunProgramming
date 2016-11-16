@@ -17,45 +17,27 @@ namespace FunProgLib.tree
     {
         public sealed class Tree // : IOrdered<T>
         {
-            private readonly Tree a;
-            private readonly T y;
-            private readonly Tree b;
-
             public Tree(Tree a, T y, Tree b)
             {
-                this.a = a;
-                this.y = y;
-                this.b = b;
+                A = a;
+                Y = y;
+                B = b;
             }
 
-            public Tree A
-            {
-                get { return a; }
-            }
+            public Tree A { get; }
 
-            public T Y
-            {
-                get { return y; }
-            }
+            public T Y { get; }
 
-            public Tree B
-            {
-                get { return b; }
-            }
+            public Tree B { get; }
         }
 
         // type Set = Tree
 
-        private static readonly Tree EmptyTree = null;
-
-        public static Tree Empty
-        {
-            get { return EmptyTree; }
-        }
+        public static Tree Empty { get; } = null;
 
         public static bool Member(T x, Tree s)
         {
-            if (s == EmptyTree) return false;
+            if (s == Empty) return false;
             if (x.CompareTo(s.Y) < 0) return Member(x, s.A);
             if (s.Y.CompareTo(x) < 0) return Member(x, s.B);
             return true;
@@ -63,7 +45,7 @@ namespace FunProgLib.tree
 
         public static Tree Insert(T x, Tree s)
         {
-            if (s == EmptyTree) return new Tree(EmptyTree, x, EmptyTree);
+            if (s == Empty) return new Tree(Empty, x, Empty);
             if (x.CompareTo(s.Y) < 0) return new Tree(Insert(x, s.A), s.Y, s.B);
             if (s.Y.CompareTo(x) < 0) return new Tree(s.A, s.Y, Insert(x, s.B));
             return s;

@@ -15,7 +15,7 @@ namespace FunProgTests.lists
     using FunProgLib.lists;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;
-    using static FunProgTests.utilities.ExpectedException;
+    using static utilities.ExpectedException;
 
     [TestClass]
     public class SkewBinaryRandomAccessListTests

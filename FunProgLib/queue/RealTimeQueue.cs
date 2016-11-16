@@ -13,35 +13,26 @@ namespace FunProgLib.queue
 {
     using System;
 
-    using FunProgLib.lists;
-    using FunProgLib.streams;
+    using lists;
+    using streams;
 
     public static class RealTimeQueue<T>
     {
         public sealed class Queue
         {
-            private readonly Lazy<Stream<T>.StreamCell> f;
-            private readonly List<T>.Node r;
-            private readonly Lazy<Stream<T>.StreamCell> s;
-
             public Queue(Lazy<Stream<T>.StreamCell> f, List<T>.Node r, Lazy<Stream<T>.StreamCell> s)
             {
-                this.f = f;
-                this.r = r;
-                this.s = s;
+                F = f;
+                R = r;
+                S = s;
             }
 
-            public Lazy<Stream<T>.StreamCell> F { get { return f; } }
-            public List<T>.Node R { get { return r; } }
-            public Lazy<Stream<T>.StreamCell> S { get { return s; } }
+            public Lazy<Stream<T>.StreamCell> F { get; }
+            public List<T>.Node R { get; }
+            public Lazy<Stream<T>.StreamCell> S { get; }
         }
 
-        private static readonly Queue EmptyQueue = new Queue(Stream<T>.DollarNil, List<T>.Empty, Stream<T>.DollarNil);
-
-        public static Queue Empty
-        {
-            get { return EmptyQueue; }
-        }
+        public static Queue Empty { get; } = new Queue(Stream<T>.DollarNil, List<T>.Empty, Stream<T>.DollarNil);
 
         public static bool IsEmpty(Queue queue)
         {

@@ -13,99 +13,64 @@ namespace FunProgLib.heap
 {
     using System;
 
-    using FunProgLib.lists;
-    using FunProgLib.streams;
+    using lists;
+    using streams;
 
     public static class ScheduledBinomialHeap<T> where T : IComparable<T>
     {
         public sealed class Tree
         {
-            private readonly T node;
-
-            private readonly List<Tree>.Node treeList;
-
             public Tree(T node, List<Tree>.Node treeList)
             {
-                this.node = node;
-                this.treeList = treeList;
+                Node = node;
+                TreeList = treeList;
             }
 
-            public T Node
-            {
-                get { return node; }
-            }
+            public T Node { get; }
 
-            public List<Tree>.Node TreeList
-            {
-                get { return treeList; }
-            }
+            public List<Tree>.Node TreeList { get; }
         }
 
         public sealed class Digit
         {
-            private readonly Tree one;
-
             public Digit(Tree tree)
             {
-                one = tree;
+                One = tree;
             }
 
-            public Tree One
-            {
-                get { return one; }
-            }
+            public Tree One { get; }
         }
 
         private static readonly Digit Zero = new Digit(null);
 
         public sealed class Schedule
         {
-            private readonly List<Lazy<Stream<Digit>.StreamCell>>.Node digitStreamList;
-
             public Schedule(List<Lazy<Stream<Digit>.StreamCell>>.Node digitStreamList)
             {
-                this.digitStreamList = digitStreamList;
+                DigitStreamList = digitStreamList;
             }
 
-            public List<Lazy<Stream<Digit>.StreamCell>>.Node DigitStreamList
-            {
-                get { return digitStreamList; }
-            }
+            public List<Lazy<Stream<Digit>.StreamCell>>.Node DigitStreamList { get; }
         }
 
         public sealed class Heap
         {
-            private readonly Lazy<Stream<Digit>.StreamCell> digitStream;
-
-            private readonly Schedule schedule;
-
             public Heap(Lazy<Stream<Digit>.StreamCell> ds, Schedule schedule)
             {
-                digitStream = ds;
-                this.schedule = schedule;
+                DigitStream = ds;
+                Schedule = schedule;
             }
 
-            public Lazy<Stream<Digit>.StreamCell> DigitStream
-            {
-                get { return digitStream; }
-            }
+            public Lazy<Stream<Digit>.StreamCell> DigitStream { get; }
 
-            public Schedule Schedule
-            {
-                get { return schedule; }
-            }
+            public Schedule Schedule { get; }
         }
 
         private static readonly Schedule EmptySchedule = new Schedule(null);
 
         public static readonly Lazy<Stream<Digit>.StreamCell> EmptyStream = Stream<Digit>.DollarNil;
 
-        private static readonly Heap EmptyHeap = new Heap(EmptyStream, EmptySchedule);
-
-        public static Heap Empty
-        {
-            get { return EmptyHeap; }
-        }
+        public static Heap Empty { get; } = new Heap(EmptyStream, EmptySchedule);
 
         public static bool IsEmpty(Heap heap)
         {
@@ -164,25 +129,15 @@ namespace FunProgLib.heap
 
         private sealed class Stuff
         {
-            private readonly Tree tree;
-
-            private readonly Lazy<Stream<Digit>.StreamCell> stream;
-
             public Stuff(Tree tree, Lazy<Stream<Digit>.StreamCell> stream)
             {
-                this.tree = tree;
-                this.stream = stream;
+                Tree = tree;
+                Stream = stream;
             }
 
-            public Tree Tree
-            {
-                get { return tree; }
-            }
+            public Tree Tree { get; }
 
-            public Lazy<Stream<Digit>.StreamCell> Stream
-            {
-                get { return stream; }
-            }
+            public Lazy<Stream<Digit>.StreamCell> Stream { get; }
         }
 
         private static Stuff RemoveMinTree(Lazy<Stream<Digit>.StreamCell> dsc)

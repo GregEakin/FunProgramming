@@ -13,45 +13,27 @@ namespace FunProgLib.heap
 {
     using System;
 
-    using FunProgLib.lists;
+    using lists;
 
     public static class BinomialHeap<T> where T : IComparable<T>
     {
         public sealed class Tree
         {
-            private readonly int rank;
-
-            private readonly T root;
-
-            private readonly List<Tree>.Node list;
-
             public Tree(int rank, T root, List<Tree>.Node list)
             {
-                this.rank = rank;
-                this.root = root;
-                this.list = list;
+                Rank = rank;
+                Root = root;
+                List = list;
             }
 
-            public int Rank
-            {
-                get { return rank; }
-            }
+            public int Rank { get; }
 
-            public T Root
-            {
-                get { return root; }
-            }
+            public T Root { get; }
 
-            public List<Tree>.Node List
-            {
-                get { return list; }
-            }
+            public List<Tree>.Node List { get; }
         }
 
-        public static List<Tree>.Node Empty
-        {
-            get { return List<Tree>.Empty; }
-        }
+        public static List<Tree>.Node Empty => List<Tree>.Empty;
 
         public static bool IsEmpty(List<Tree>.Node list)
         {
@@ -88,25 +70,15 @@ namespace FunProgLib.heap
 
         private class TreeParts
         {
-            private readonly Tree tree;
-
-            private readonly List<Tree>.Node list;
-
             public TreeParts(Tree tree, List<Tree>.Node list)
             {
-                this.tree = tree;
-                this.list = list;
+                Tree = tree;
+                List = list;
             }
 
-            public Tree Tree
-            {
-                get { return tree; }
-            }
+            public Tree Tree { get; }
 
-            public List<Tree>.Node List
-            {
-                get { return list; }
-            }
+            public List<Tree>.Node List { get; }
         }
 
         private static TreeParts RemoveMinTree(List<Tree>.Node list)

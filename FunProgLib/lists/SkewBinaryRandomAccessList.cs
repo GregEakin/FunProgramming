@@ -17,17 +17,12 @@ namespace FunProgLib.lists
     {
         public abstract class Tree
         {
-            private readonly T alpha;
-
             protected Tree(T alpha)
             {
-                this.alpha = alpha;
+                Alpha = alpha;
             }
 
-            public T Alpha
-            {
-                get { return alpha; }
-            }
+            public T Alpha { get; }
         }
 
         private sealed class Leaf : Tree
@@ -40,55 +35,32 @@ namespace FunProgLib.lists
 
         private sealed class Node : Tree
         {
-            private readonly Tree tree1;
-
-            private readonly Tree tree2;
-
             public Node(T alpha, Tree tree1, Tree tree2)
                 : base(alpha)
             {
-                this.tree1 = tree1;
-                this.tree2 = tree2;
+                Tree1 = tree1;
+                Tree2 = tree2;
             }
 
-            public Tree Tree1
-            {
-                get { return tree1; }
-            }
+            public Tree Tree1 { get; }
 
-            public Tree Tree2
-            {
-                get { return tree2; }
-            }
+            public Tree Tree2 { get; }
         }
 
         public sealed class Stuff
         {
-            private readonly int weight;
-
-            private readonly Tree tree;
-
             public Stuff(int weight, Tree tree)
             {
-                this.weight = weight;
-                this.tree = tree;
+                Weight = weight;
+                Tree = tree;
             }
 
-            public int Weight
-            {
-                get { return weight; }
-            }
+            public int Weight { get; }
 
-            public Tree Tree
-            {
-                get { return tree; }
-            }
+            public Tree Tree { get; }
         }
 
-        public static List<Stuff>.Node Empty
-        {
-            get { return List<Stuff>.Empty; }
-        }
+        public static List<Stuff>.Node Empty => List<Stuff>.Empty;
 
         public static bool IsEmpty(List<Stuff>.Node list)
         {

@@ -13,7 +13,7 @@ namespace FunProgLib.queue
 {
     using System;
 
-    using FunProgLib.streams;
+    using streams;
 
     public static class BankersDeque<T> // : IDeque<T>
     {
@@ -21,28 +21,21 @@ namespace FunProgLib.queue
 
         public class Queue
         {
-            private readonly int lenF;
-            private readonly Lazy<Stream<T>.StreamCell> f;
-            private readonly int lenR;
-            private readonly Lazy<Stream<T>.StreamCell> r;
-
             public Queue(int lenF, Lazy<Stream<T>.StreamCell> f, int lenR, Lazy<Stream<T>.StreamCell> r)
             {
-                this.lenF = lenF;
-                this.f = f;
-                this.lenR = lenR;
-                this.r = r;
+                LenF = lenF;
+                F = f;
+                LenR = lenR;
+                R = r;
             }
 
-            public int LenF { get { return lenF; } }
-            public Lazy<Stream<T>.StreamCell> F { get { return f; } }
-            public int LenR { get { return lenR; } }
-            public Lazy<Stream<T>.StreamCell> R { get { return r; } }
+            public int LenF { get; }
+            public Lazy<Stream<T>.StreamCell> F { get; }
+            public int LenR { get; }
+            public Lazy<Stream<T>.StreamCell> R { get; }
         }
 
-        private static readonly Queue EmptyQueue = new Queue(0, Stream<T>.DollarNil, 0, Stream<T>.DollarNil);
-
-        public static Queue Empty { get { return EmptyQueue; } }
+        public static Queue Empty { get; } = new Queue(0, Stream<T>.DollarNil, 0, Stream<T>.DollarNil);
 
         public static bool IsEmpty(Queue q)
         {
@@ -88,7 +81,7 @@ namespace FunProgLib.queue
         public static Queue Tail(Queue q)
         {
             if (q.F == Stream<T>.DollarNil && q.R == Stream<T>.DollarNil) throw new ArgumentException("Empty", nameof(q));
-            if (q.F == Stream<T>.DollarNil) return EmptyQueue;
+            if (q.F == Stream<T>.DollarNil) return Empty;
             return Check(q.LenF - 1, q.F.Value.Next, q.LenR, q.R);
         }
 
@@ -108,7 +101,7 @@ namespace FunProgLib.queue
         public static Queue Init(Queue q)
         {
             if (q.R == Stream<T>.DollarNil && q.F == Stream<T>.DollarNil) throw new ArgumentException("Empty", nameof(q));
-            if (q.R == Stream<T>.DollarNil) return EmptyQueue;
+            if (q.R == Stream<T>.DollarNil) return Empty;
             var rp = q.R.Value.Next;
             return Check(q.LenF, q.F, q.LenR - 1, rp);
         }

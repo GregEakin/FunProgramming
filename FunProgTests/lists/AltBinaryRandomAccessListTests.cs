@@ -133,14 +133,16 @@ namespace FunProgTests.lists
         public void EmptyHeadTest()
         {
             var list = AltBinaryRandomAccessList<string>.Empty;
-            AssertThrows<ArgumentException>(() => AltBinaryRandomAccessList<string>.Head(list));
+            var ex = AssertThrows<ArgumentException>(() => AltBinaryRandomAccessList<string>.Head(list));
+            Assert.AreEqual("must be Zero or One\r\nParameter name: dataType", ex.Message);
         }
 
         [TestMethod]
         public void EmptyTailTest()
         {
             var list = AltBinaryRandomAccessList<string>.Empty;
-            AssertThrows<ArgumentException>(() => AltBinaryRandomAccessList<string>.Tail(list));
+            var ex = AssertThrows<ArgumentException>(() => AltBinaryRandomAccessList<string>.Tail(list));
+            Assert.AreEqual("must be Zero or One\r\nParameter name: dataType", ex.Message);
         }
 
         [TestMethod]
@@ -165,7 +167,7 @@ namespace FunProgTests.lists
         {
             var list = AltBinaryRandomAccessList<string>.Empty;
             var ex = AssertThrows<ArgumentException>(() => AltBinaryRandomAccessList<string>.Lookup(0, list));
-            // Assert.AreEqual("must be Zero or One\r\nParameter name: ts", ex.Message);
+            Assert.AreEqual("must be Zero or One\r\nParameter name: ts", ex.Message);
         }
 
         [TestMethod]
@@ -198,6 +200,17 @@ namespace FunProgTests.lists
         }
 
         [TestMethod]
+        public void FupdateTest()
+        {
+            const string Data = "How now, brown cow?";
+            var data = Data.Split().Aggregate(AltBinaryRandomAccessList<string>.Empty, (current, word) => AltBinaryRandomAccessList<string>.Cons(word, current));
+
+            data = AltBinaryRandomAccessList<string>.Fupdate(value => value + "-" + value, 1, data);
+            Assert.AreEqual("[Zero: {(cow?, brown-brown), (now,, How)}]", DumpTree(data));
+            Assert.AreEqual("brown-brown", AltBinaryRandomAccessList<string>.Lookup(1, data));
+        }
+
+        [TestMethod]
         public void RoseTest()
         {
             const string Data = "What's in a name? That which we call a rose by any other name would smell as sweet.";
@@ -213,7 +226,7 @@ namespace FunProgTests.lists
             var data = AltBinaryRandomAccessList<int>.Empty;
             for (var i = 0; i < 11; i++)
                 data = AltBinaryRandomAccessList<int>.Cons(i, data);
-            Assert.AreEqual("One (0, One ((1, 2), Zero (One ((((3, 4), (5, 6)), ((7, 8), (9, 10))), Nil))))", DumpTree(data));
+            Assert.AreEqual("[One: 10, {(9, 8), (7, 6), (5, 4), (3, 2), (1, 0)}]", DumpTree(data));
         }
     }
 }

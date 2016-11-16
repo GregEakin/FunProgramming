@@ -12,31 +12,21 @@
 namespace FunProgLib.sort
 {
     using System;
-    using FunProgLib.lists;
+    using lists;
 
     public static class BottomUpMergeSort<T> where T : IComparable<T>
     {
         public sealed class Sortable
         {
-            private readonly int size;
-
-            private readonly Lazy<List<List<T>.Node>.Node> segs;
-
             public Sortable(int size, Lazy<List<List<T>.Node>.Node> segs)
             {
-                this.size = size;
-                this.segs = segs;
+                Size = size;
+                Segs = segs;
             }
 
-            public int Size
-            {
-                get { return size; }
-            }
+            public int Size { get; }
 
-            public Lazy<List<List<T>.Node>.Node> Segs
-            {
-                get { return segs; }
-            }
+            public Lazy<List<List<T>.Node>.Node> Segs { get; }
         }
 
         private static List<T>.Node Mrg(List<T>.Node xs, List<T>.Node ys)
@@ -47,12 +37,7 @@ namespace FunProgLib.sort
             return List<T>.Cons(ys.Element, Mrg(xs, ys.Next));
         }
 
-        private static readonly Sortable EmptySortable = new Sortable(0, new Lazy<List<List<T>.Node>.Node>(() => List<List<T>.Node>.Empty));
-
-        public static Sortable Empty
-        {
-            get { return EmptySortable; }
-        }
+        public static Sortable Empty { get; } = new Sortable(0, new Lazy<List<List<T>.Node>.Node>(() => List<List<T>.Node>.Empty));
 
         public static Sortable Add(T x, Sortable segs)
         {
