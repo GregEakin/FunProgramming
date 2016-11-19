@@ -92,7 +92,7 @@ namespace FunProgTests.streams
             Assert.AreEqual(2, t.Value.Next.Value.Next.Value.Element);
             Assert.IsFalse(t.Value.Next.Value.Next.Value.Next.IsValueCreated);
             Assert.AreEqual(1, t.Value.Next.Value.Next.Value.Next.Value.Element);
-            Assert.AreEqual(Stream<int>.DollarNil, t.Value.Next.Value.Next.Value.Next.Value.Next);
+            Assert.AreSame(Stream<int>.DollarNil, t.Value.Next.Value.Next.Value.Next.Value.Next);
 
             Assert.AreNotSame(s3, t);
             Assert.AreEqual(s3.Value.Element, t.Value.Element);
@@ -152,7 +152,8 @@ namespace FunProgTests.streams
             {
                 var j = 0;
                 var s1 = Stream<string>.Take(i, stream);
-                while (s1 != Stream<string>.DollarNil)
+                // while (s1 != Stream<string>.DollarNil)
+                while (s1.Value != null)
                 {
                     Assert.AreSame(data[j], s1.Value.Element);
                     s1 = s1.Value.Next;

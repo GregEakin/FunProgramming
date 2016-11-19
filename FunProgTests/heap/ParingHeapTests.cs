@@ -28,11 +28,9 @@ namespace FunProgTests.heap
             result.Append(node.Root);
             if (!FunProgLib.lists.List<ParingHeap<T>.Heap>.IsEmpty(node.List) && node.List.Any())
             {
-                result.Append(", ");
+                result.Append(": ");
                 foreach (var node1 in node.List)
-                {
                     result.Append(DumpHeap(node1));
-                }
             }
             result.Append("]");
             return result.ToString();
@@ -71,15 +69,15 @@ namespace FunProgTests.heap
             var t = ParingHeap<string>.Empty;
             var x1 = ParingHeap<string>.Insert("C", t);
             var x2 = ParingHeap<string>.Insert("B", x1);
-            Assert.AreEqual("[B, [C]]", DumpHeap(x2));
+            Assert.AreEqual("[B: [C]]", DumpHeap(x2));
         }
 
         [TestMethod]
         public void Test2()
         {
-            const string Words = "What's in a name? That which we call a rose by any other name would smell as sweet";
+            const string Words = "What's in a name? That which we call a rose by any other name would smell as sweet.";
             var ts = Words.Split().Aggregate(ParingHeap<string>.Empty, (current, word) => ParingHeap<string>.Insert(word, current));
-            Assert.AreEqual("[a, [sweet][as][smell][would][name][other][any][by][rose][a, [call][we][which][That][name?][in, [What's]]]]", DumpHeap(ts));
+            Assert.AreEqual("[a: [sweet.][as][smell][would][name][other][any][by][rose][a: [call][we][which][That][name?][in: [What's]]]]", DumpHeap(ts));
         }
 
         [TestMethod]
@@ -88,11 +86,11 @@ namespace FunProgTests.heap
             const string Data1 = "What's in a name?";
             var ts1 = Data1.Split().Aggregate(ParingHeap<string>.Empty, (current, word) => ParingHeap<string>.Insert(word, current));
 
-            const string Data2 = "That which we call a rose by any other name would smell as sweet";
+            const string Data2 = "That which we call a rose by any other name would smell as sweet.";
             var ts2 = Data2.Split().Aggregate(ParingHeap<string>.Empty, (current, word) => ParingHeap<string>.Insert(word, current));
 
             var t = ParingHeap<string>.Merge(ts1, ts2);
-            Assert.AreEqual("[a, [a, [sweet][as][smell][would][name][other][any][by][rose][call, [That, [we][which]]]][name?][in, [What's]]]", DumpHeap(t));
+            Assert.AreEqual("[a: [a: [sweet.][as][smell][would][name][other][any][by][rose][call: [That: [we][which]]]][name?][in: [What's]]]", DumpHeap(t));
 
         }
 
@@ -104,7 +102,7 @@ namespace FunProgTests.heap
             var t2 = ParingHeap<int>.Insert(3, t1);
             var t3 = ParingHeap<int>.Insert(6, t2);
             var t4 = ParingHeap<int>.DeleteMin(t3);
-            Assert.AreEqual("[5, [6]]", DumpHeap(t4));
+            Assert.AreEqual("[5: [6]]", DumpHeap(t4));
             Assert.AreEqual(5, ParingHeap<int>.FindMin(t4));
 
             Assert.AreEqual(3, ParingHeap<int>.FindMin(t3));
@@ -113,9 +111,10 @@ namespace FunProgTests.heap
         [TestMethod]
         public void DeleteLotsOfMinsTest()
         {
+            const int size = 100;
             var random = new Random(3456);
             var heap = ParingHeap<int>.Empty;
-            for (var i = 0; i < 100; i++) heap = ParingHeap<int>.Insert(random.Next(100), heap);
+            for (var i = 0; i < size; i++) heap = ParingHeap<int>.Insert(random.Next(size), heap);
             var last = 0;
             var count = 0;
             while (!ParingHeap<int>.IsEmpty(heap))
@@ -126,7 +125,7 @@ namespace FunProgTests.heap
                 last = next;
                 count++;
             }
-            Assert.AreEqual(100, count);
+            Assert.AreEqual(size, count);
         }
 
         [TestMethod]

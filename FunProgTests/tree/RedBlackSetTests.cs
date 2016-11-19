@@ -73,6 +73,7 @@ namespace FunProgTests.tree
             var x1 = RedBlackSet<string>.Insert("C", t);
             var x2 = RedBlackSet<string>.Insert("C", x1);
             Assert.AreEqual("(B: C)", DumpSet(x2));
+            Assert.AreNotSame(x1, x2);
         }
 
         [TestMethod]

@@ -54,7 +54,7 @@ namespace FunProgLib.lists
 
         public static DataType Cons(T x, DataType ts)
         {
-            if (ts == null) return new One(x, null);
+            if (IsEmpty(ts)) return new One(x, RList<Tuple<T, T>>.Empty);
 
             var zero = ts as Zero;
             if (zero != null) return new One(x, zero.RList);
@@ -70,7 +70,7 @@ namespace FunProgLib.lists
             var one = dataType as One;
             if (one != null)
             {
-                if (one.RList == null) return new Tuple<T, DataType>(one.Alpha, null);
+                if (RList<Tuple<T, T>>.IsEmpty(one.RList)) return new Tuple<T, DataType>(one.Alpha, Empty);
                 return new Tuple<T, DataType>(one.Alpha, new Zero(one.RList));
             }
 

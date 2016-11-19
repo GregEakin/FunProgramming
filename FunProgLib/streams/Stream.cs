@@ -34,6 +34,12 @@ namespace FunProgLib.streams
         {
             if (s1 == DollarNil) return t;
             return new Lazy<StreamCell>(() => new StreamCell(s1.Value.Element, Append(s1.Value.Next, t)));
+
+            //return new Lazy<StreamCell>(() =>
+            //{
+            //    if (s1.Value == null) return t.Value;
+            //    return new StreamCell(s1.Value.Element, Append(s1.Value.Next, t));
+            //});
         }
 
         public static Lazy<StreamCell> Take(int n, Lazy<StreamCell> s)
@@ -41,6 +47,13 @@ namespace FunProgLib.streams
             if (n == 0) return DollarNil;
             if (s == DollarNil) return DollarNil;
             return new Lazy<StreamCell>(() => new StreamCell(s.Value.Element, Take(n - 1, s.Value.Next)));
+
+            //return new Lazy<StreamCell>(() =>
+            //{
+            //    if (n == 0) return null;
+            //    if (s.Value == null) return null;
+            //    return new StreamCell(s.Value.Element, Take(n-1, s.Value.Next));
+            //});
         }
 
         private static Lazy<StreamCell> DropPrime(int n, Lazy<StreamCell> s)
