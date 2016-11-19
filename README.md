@@ -5,5 +5,6 @@ These are meant to be used as a companion when reading the book. This allows one
 
 From the book:
 >Okasaki, Chris. *Purely Functional Data Structures.* 
->Cambridge, U.K.: Cambridge UP, 1998. 34-37. Print.
+>Cambridge, U.K.: Cambridge UP, 1998. Print.
+
 [Amazon.com](https://www.amazon.com/Purely-Functional-Structures-Chris-Okasaki/dp/0521663504/)
