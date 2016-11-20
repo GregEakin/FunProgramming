@@ -7,6 +7,14 @@ These are meant to be used as a companion when reading the book. This allows one
 >Okasaki, Chris. *Purely Functional Data Structures.* 
 >Cambridge, U.K.: Cambridge UP, 1998. Print.
 
+##Features:
+- Abstract Data Types ==> templates
+- Immutable data structures ==> readonly data members
+- Lazy evaluation ==> class Lazy<T>
+- Polymorphic recursion ==> Static membor functions
+- Structure dumping ==> Only implemented in test code
+- Recursive structures ==> Not supported (cut and paste for now)
+
 ##Links:
 - [Community Edition of Visual Studio (Free)](https://www.visualstudio.com/vs/community/)
 - [ReShaper, Extensions for .NET Developers](https://www.jetbrains.com/resharper/)
