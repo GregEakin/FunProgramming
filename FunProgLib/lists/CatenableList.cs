@@ -6,7 +6,7 @@
 //
 // All Rights Reserved.
 //
-// Okasaki, Chris. "!0.2.1 Lists With Efficient Catenation." Purely Functional Data Structures. 
+// Okasaki, Chris. "10.2.1 Lists With Efficient Catenation." Purely Functional Data Structures. 
 //     Cambridge, U.K.: Cambridge UP, 1998. 153-8. Print.
 
 using System;
@@ -42,10 +42,10 @@ namespace FunProgLib.lists
 
         private static C LinkAll(BootstrappedQueue<Lazy<C>>.Queue q)
         {
-            var t = BootstrappedQueue<Lazy<C>>.Head(q);
+            var t = BootstrappedQueue<Lazy<C>>.Head(q).Value;
             var qp = BootstrappedQueue<Lazy<C>>.Tail(q);
-            if (BootstrappedQueue<Lazy<C>>.IsEmpty(qp)) return t.Value;
-            return Link(t.Value, new Lazy<C>(() => LinkAll(qp)));
+            if (BootstrappedQueue<Lazy<C>>.IsEmpty(qp)) return t;
+            return Link(t, new Lazy<C>(() => LinkAll(qp)));
         }
 
 
