@@ -8,6 +8,8 @@ These are meant to be used as a companion when reading the book. This allows one
 >Cambridge, U.K.: Cambridge UP, 1998. Print.
 
 ##Links:
+- [Community Edition of Visual Studio (Free)](https://www.visualstudio.com/vs/community/)
+- [ReShaper, Extensions for .NET Developers](https://www.jetbrains.com/resharper/)
 - [A retrospective from Chris Okasaki](http://okasaki.blogspot.com/2008/02/ten-years-of-purely-functional-data.html)
 - [Amazon.com](https://www.amazon.com/Purely-Functional-Structures-Chris-Okasaki/dp/0521663504/)
 - [Google Books](https://books.google.com/books?id=SxPzSTcTalAC)
