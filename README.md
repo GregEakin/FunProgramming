@@ -11,7 +11,7 @@ These are meant to be used as a companion when reading the book. This allows one
 - Abstract Data Types --&gt; templates
 - Immutable data structures --&gt; readonly data members
 - Lazy evaluation --&gt; `class Lazy<T>`
-- Polymorphic recursion --&gt; Static membor functions
+- Polymorphic recursion --&gt; Static member functions
 - Structure dumping --&gt; Only implemented in test code
 - Recursive structures --&gt; Not supported (cut and paste for now)
 
