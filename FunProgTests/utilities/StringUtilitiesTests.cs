@@ -1,4 +1,13 @@
-﻿using FunProgLib.Utilities;
+﻿// Fun Programming Data Structures 1.0
+// 
+// Copyright © 2014 Greg Eakin. 
+//
+// Greg Eakin <greg@gdbtech.info>
+//
+// All Rights Reserved.
+//
+
+using FunProgLib.Utilities;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace FunProgTests.utilities
