@@ -59,10 +59,12 @@
     <Compile Include="binary\SparseByWeightTests.cs" />
     <Compile Include="ephemeral\BlockingQueue.cs" />
     <Compile Include="ephemeral\DictionaryInterlockTests.cs" />
+    <Compile Include="ephemeral\DictionaryRwLockTests.cs" />
     <Compile Include="ephemeral\DictionarySemaphoreTests.cs" />
     <Compile Include="ephemeral\DictionaryLockTests.cs" />
     <Compile Include="ephemeral\MultiReaderMapTests.cs" />
     <Compile Include="ephemeral\DictionaryTests.cs" />
+    <Compile Include="ephemeral\MultiRwLockMapTests.cs" />
     <Compile Include="heap\BootstrappedHeapTests.cs" />
     <Compile Include="heap\ScheduledBinomialHeapTest.cs" />
     <Compile Include="heap\SkewBinomialHeapTests.cs" />

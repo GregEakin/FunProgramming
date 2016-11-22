@@ -23,4 +23,4 @@ It also allows one to test the performance to see how they stack up with other d
 - [A retrospective from Chris Okasaki](http://okasaki.blogspot.com/2008/02/ten-years-of-purely-functional-data.html)
 - [Amazon.com](https://www.amazon.com/Purely-Functional-Structures-Chris-Okasaki/dp/0521663504/)
 - [Google Books](https://books.google.com/books?id=SxPzSTcTalAC)
-- [The original PhD dissertation](http://www.cs.cmu.edu/~rwh/theses/okasaki.pdf)
+- [Chris Okasaki’s original PhD dissertation](http://www.cs.cmu.edu/~rwh/theses/okasaki.pdf)

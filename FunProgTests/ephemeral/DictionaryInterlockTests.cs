@@ -29,8 +29,8 @@ namespace FunProgTests.ephemeral
                 var word = NextWord(10);
                 while (true)
                 {
-                    Interlocked.MemoryBarrier();
                     var workingSet = _set;
+                    Thread.MemoryBarrier();
                     // 99 ms, 13,072 calls
                     var newSet = SplayHeap<string>.Insert(word, workingSet);
                     // 3 ms, 13,072 calls
@@ -51,8 +51,8 @@ namespace FunProgTests.ephemeral
             {
                 while (true)
                 {
-                    Interlocked.MemoryBarrier();
                     var workingSet = _set;
+                    Thread.MemoryBarrier();
                     // 13 ms, 66,042 calls
                     if (SplayHeap<string>.IsEmpty(workingSet))
                     {
