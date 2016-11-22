@@ -19,28 +19,28 @@ namespace FunProgTests.ephemeral
     [TestClass]
     public class MultiReaderMapTests : DictionaryTests
     {
-        private readonly object lockObject = new object();
-        private volatile RedBlackSet<string>.Tree set = RedBlackSet<string>.EmptyTree;
+        private readonly object _lockObject = new object();
+        private volatile RedBlackSet<string>.Tree _set = RedBlackSet<string>.EmptyTree;
 
-        private void writeAction()
+        private void WriteAction()
         {
-            for (var i = 0; i < 2 * count; i++)
+            for (var i = 0; i < 2 * Count; i++)
             {
                 var word = NextWord(1);
-                lock (lockObject)
+                lock (_lockObject)
                 {
-                    set = RedBlackSet<string>.Insert(word, set);
+                    _set = RedBlackSet<string>.Insert(word, _set);
                 }
             }
         }
 
-        private void readAction()
+        private void ReadAction()
         {
             var hits = 0;
-            for (var i = 0; i < count; i++)
+            for (var i = 0; i < Count; i++)
             {
                 var word = NextWord(1);
-                if (RedBlackSet<string>.Member(word, set)) hits++;
+                if (RedBlackSet<string>.Member(word, _set)) hits++;
             }
 
             Console.WriteLine("Task={0}, Thread={1} : {2} words found",
@@ -51,11 +51,11 @@ namespace FunProgTests.ephemeral
         public void Test1()
         {
             var taskList = new List<Task>();
-            for (var i = 0; i < threads; i += 3)
+            for (var i = 0; i < Threads; i += 3)
             {
-                taskList.Add(Task.Factory.StartNew(map => writeAction(), this));
-                taskList.Add(Task.Factory.StartNew(map => readAction(), this));
-                taskList.Add(Task.Factory.StartNew(map => readAction(), this));
+                taskList.Add(Task.Factory.StartNew(map => WriteAction(), this));
+                taskList.Add(Task.Factory.StartNew(map => ReadAction(), this));
+                taskList.Add(Task.Factory.StartNew(map => ReadAction(), this));
             }
             Task.WaitAll(taskList.ToArray());
             Console.WriteLine("Done....");

@@ -19,31 +19,31 @@ namespace FunProgTests.ephemeral
     [TestClass]
     public sealed class DictionarySemaphoreTests : DictionaryTests, IDisposable
     {
-        private readonly SemaphoreSlim semaphore = new SemaphoreSlim(1);
-        private SplayHeap<string>.Heap set = SplayHeap<string>.Empty;
+        private readonly SemaphoreSlim _semaphore = new SemaphoreSlim(1);
+        private SplayHeap<string>.Heap _set = SplayHeap<string>.Empty;
 
         // 158 ms, 10 calls
         private void InsertAction()
         {
-            for (var i = 0; i < count; i++)
+            for (var i = 0; i < Count; i++)
             {
                 // 4 ms, 3,000 calls
                 var word = NextWord(10);
 
                 // 106 ms, 3,000 calls
-                semaphore.Wait();
+                _semaphore.Wait();
                 try
                 {
                     // 0 ms, 3,000 calls
                     Interlocked.MemoryBarrier();
                     // 43 ms, 3,000 calls
-                    var newSet = SplayHeap<string>.Insert(word, set);
+                    var newSet = SplayHeap<string>.Insert(word, _set);
                     // 0 ms, 3,000 calls
-                    Interlocked.Exchange(ref set, newSet);
+                    Interlocked.Exchange(ref _set, newSet);
                 }
                 finally
                 {
-                    semaphore.Release();
+                    _semaphore.Release();
                 }
             }
         }
@@ -51,12 +51,12 @@ namespace FunProgTests.ephemeral
         // 329 ms, 10 calls
         private void RemoveAction()
         {
-            for (var i = 0; i < count; i++)
+            for (var i = 0; i < Count; i++)
             {
                 while (true)
                 {
                     Interlocked.MemoryBarrier();
-                    if (SplayHeap<string>.IsEmpty(set))
+                    if (SplayHeap<string>.IsEmpty(_set))
                     {
                         // 14 ms, 17,011 calls
                         Thread.Yield();
@@ -64,11 +64,11 @@ namespace FunProgTests.ephemeral
                     }
 
                     // 294 ms, 3,000 calls
-                    semaphore.Wait();
+                    _semaphore.Wait();
                     try
                     {
                         Interlocked.MemoryBarrier();
-                        var localSet = set;
+                        var localSet = _set;
                         if (SplayHeap<string>.IsEmpty(localSet))
                         {
                             continue;
@@ -78,12 +78,12 @@ namespace FunProgTests.ephemeral
                         var word = SplayHeap<string>.FindMin(localSet);
                         // 4 ms, 3,000 calls
                         var newSet = SplayHeap<string>.DeleteMin(localSet);
-                        Interlocked.Exchange(ref set, newSet);
+                        Interlocked.Exchange(ref _set, newSet);
                         break;
                     }
                     finally
                     {
-                        semaphore.Release();
+                        _semaphore.Release();
                     }
                 }
             }
@@ -93,7 +93,7 @@ namespace FunProgTests.ephemeral
         public void Test1()
         {
             var taskList = new List<Task>();
-            for (var i = 0; i < threads; i += 2)
+            for (var i = 0; i < Threads; i += 2)
             {
                 taskList.Add(Task.Factory.StartNew(map => InsertAction(), this));
                 taskList.Add(Task.Factory.StartNew(map => RemoveAction(), this));
@@ -102,7 +102,7 @@ namespace FunProgTests.ephemeral
             Task.WaitAll(taskList.ToArray());
         }
 
-        private bool disposed;
+        private bool _disposed;
 
         ~DictionarySemaphoreTests()
         {
@@ -118,15 +118,15 @@ namespace FunProgTests.ephemeral
         // Protected implementation of Dispose pattern.
         private void Dispose(bool disposing)
         {
-            if (disposed) return;
+            if (_disposed) return;
             if (disposing)
             {
-                semaphore.Dispose();
+                _semaphore.Dispose();
                 // Free any other managed objects here.
             }
 
             // Free any unmanaged objects here.
-            disposed = true;
+            _disposed = true;
         }
     }
 }

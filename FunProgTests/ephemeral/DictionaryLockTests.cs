@@ -18,24 +18,24 @@ namespace FunProgTests.ephemeral
     [TestClass]
     public class DictionaryLockTests : DictionaryTests
     {
-        private readonly object lockObject = new object();
-        private SplayHeap<string>.Heap set = SplayHeap<string>.Empty;
+        private readonly object _lockObject = new object();
+        private SplayHeap<string>.Heap _set = SplayHeap<string>.Empty;
 
-        // 157 ms, 1o calls
+        // 157 ms, 10 calls
         private void InsertAction()
         {
-            for (var i = 0; i < count; i++)
+            for (var i = 0; i < Count; i++)
             {
                 // 5 ms, 3,000 calls
                 var word = NextWord(10);
                 // 132 ms, 3,000 calls
-                lock (lockObject)
+                lock (_lockObject)
                 {
                     // 13 ms, 3,000 calls
-                    set = SplayHeap<string>.Insert(word, set);
+                    _set = SplayHeap<string>.Insert(word, _set);
 
                     // 2 ms, 3,000 calls
-                    Monitor.Pulse(lockObject);
+                    Monitor.Pulse(_lockObject);
                 }
             }
         }
@@ -43,21 +43,21 @@ namespace FunProgTests.ephemeral
         // 98 ms, 10 calls
         private void RemoveAction()
         {
-            for (var i = 0; i < count; i++)
+            for (var i = 0; i < Count; i++)
             {
                 // 58 ms, 3,000 calls
-                lock (lockObject)
+                lock (_lockObject)
                 {
-                    while (SplayHeap<string>.IsEmpty(set))
+                    while (SplayHeap<string>.IsEmpty(_set))
                     {
                         // 33 ms, 1,609 calls
-                        Monitor.Wait(lockObject);
+                        Monitor.Wait(_lockObject);
                     }
 
                     // 2 ms, 3,000 calls
-                    var word = SplayHeap<string>.FindMin(set);
+                    var word = SplayHeap<string>.FindMin(_set);
                     // 2 ms, 3,000 calls
-                    set = SplayHeap<string>.DeleteMin(set);
+                    _set = SplayHeap<string>.DeleteMin(_set);
                 }
             }
         }
@@ -66,7 +66,7 @@ namespace FunProgTests.ephemeral
         public void Test1()
         {
             var taskList = new List<Task>();
-            for (var i = 0; i < threads; i += 2)
+            for (var i = 0; i < Threads; i += 2)
             {
                 taskList.Add(Task.Factory.StartNew(map => InsertAction(), this));
                 taskList.Add(Task.Factory.StartNew(map => RemoveAction(), this));

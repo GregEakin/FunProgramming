@@ -18,23 +18,23 @@ namespace FunProgTests.ephemeral
     [TestClass]
     public class DictionaryInterlockTests : DictionaryTests
     {
-        private SplayHeap<string>.Heap set = SplayHeap<string>.Empty;
+        private SplayHeap<string>.Heap _set = SplayHeap<string>.Empty;
 
         // 132 ms, 10 calls
         private void InsertAction()
         {
-            for (var i = 0; i < count; i++)
+            for (var i = 0; i < Count; i++)
             {
                 // 18 ms, 3,000 calls
                 var word = NextWord(10);
                 while (true)
                 {
                     Interlocked.MemoryBarrier();
-                    var workingSet = set;
+                    var workingSet = _set;
                     // 99 ms, 13,072 calls
                     var newSet = SplayHeap<string>.Insert(word, workingSet);
                     // 3 ms, 13,072 calls
-                    var oldSet = Interlocked.CompareExchange(ref set, newSet, workingSet);
+                    var oldSet = Interlocked.CompareExchange(ref _set, newSet, workingSet);
                     if (ReferenceEquals(oldSet, workingSet))
                     {
                         // 3,000 calls
@@ -47,12 +47,12 @@ namespace FunProgTests.ephemeral
         // 91 ms, 10 calls
         private void RemoveAction()
         {
-            for (var i = 0; i < count; i++)
+            for (var i = 0; i < Count; i++)
             {
                 while (true)
                 {
                     Interlocked.MemoryBarrier();
-                    var workingSet = set;
+                    var workingSet = _set;
                     // 13 ms, 66,042 calls
                     if (SplayHeap<string>.IsEmpty(workingSet))
                     {
@@ -64,7 +64,7 @@ namespace FunProgTests.ephemeral
                     // 15 ms, 7,594 calls
                     var newSet = SplayHeap<string>.DeleteMin(workingSet);
                     // 2 ms, 7,594 calls
-                    var oldSet = Interlocked.CompareExchange(ref set, newSet, workingSet);
+                    var oldSet = Interlocked.CompareExchange(ref _set, newSet, workingSet);
                     if (ReferenceEquals(oldSet, workingSet))
                     {
                         // 3,000 calls
@@ -78,7 +78,7 @@ namespace FunProgTests.ephemeral
         public void Test1()
         {
             var taskList = new List<Task>();
-            for (var i = 0; i < threads; i += 2)
+            for (var i = 0; i < Threads; i += 2)
             {
                 taskList.Add(Task.Factory.StartNew(map => InsertAction(), this));
                 taskList.Add(Task.Factory.StartNew(map => RemoveAction(), this));

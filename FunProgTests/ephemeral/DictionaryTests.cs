@@ -13,8 +13,8 @@ namespace FunProgTests.ephemeral
 {
     public class DictionaryTests
     {
-        protected const int threads = 20;
-        protected const int count = 300;
+        protected const int Threads = 20;
+        protected const int Count = 300;
         private readonly Random _random = new Random();
 
         protected string NextWord(int length)
