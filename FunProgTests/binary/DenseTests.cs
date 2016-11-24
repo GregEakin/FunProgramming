@@ -59,7 +59,8 @@ namespace FunProgTests.binary
         [TestMethod]
         public void NegativeTest()
         {
-            AssertThrows<ArgumentException>(() => Dense.Dec(Zero));
+            var exception = AssertThrows<ArgumentException>(() => Dense.Dec(Zero));
+            Assert.AreEqual("Can't go negative\r\nParameter name: ds", exception.Message);
         }
 
         [TestMethod]

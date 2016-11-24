@@ -41,30 +41,30 @@ namespace FunProgLib.lists
 
             private sealed class ListEnum : IEnumerator<T>
             {
-                private readonly Node start;
-                private Node list;
+                private readonly Node _start;
+                private Node _list;
 
                 public ListEnum(Node list)
                 {
-                    start = new Node(default(T), list);
-                    this.list = start;
+                    _start = new Node(default(T), list);
+                    _list = _start;
                 }
 
                 public bool MoveNext()
                 {
-                    if (IsEmpty(list)) return false;
-                    list = list.Next;
-                    return !IsEmpty(list);
+                    if (IsEmpty(_list)) return false;
+                    _list = _list.Next;
+                    return !IsEmpty(_list);
                 }
 
                 public void Reset()
                 {
-                    list = start;
+                    _list = _start;
                 }
 
-                object IEnumerator.Current => list.Element;
+                object IEnumerator.Current => _list.Element;
 
-                public T Current => list.Element;
+                public T Current => _list.Element;
 
                 public void Dispose()
                 {

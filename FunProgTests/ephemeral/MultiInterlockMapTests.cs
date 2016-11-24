@@ -17,9 +17,8 @@ using System.Threading.Tasks;
 namespace FunProgTests.ephemeral
 {
     [TestClass]
-    public class MultiRwLockMapTests : DictionaryTests, IDisposable
+    public class MultiInterlockMapTests : DictionaryTests
     {
-        private readonly ReaderWriterLockSlim _lockObject = new ReaderWriterLockSlim();
         private RedBlackSet<string>.Tree _set = RedBlackSet<string>.EmptyTree;
 
         private void WriteAction()
@@ -27,14 +26,14 @@ namespace FunProgTests.ephemeral
             for (var i = 0; i < 2 * Count; i++)
             {
                 var word = NextWord(1);
-                _lockObject.EnterWriteLock();
-                try
+                while (true)
                 {
-                    _set = RedBlackSet<string>.Insert(word, _set);
-                }
-                finally
-                {
-                    _lockObject.ExitWriteLock();
+                    var workingSet = _set;
+                    Thread.MemoryBarrier();
+                    var newSet = RedBlackSet<string>.Insert(word, workingSet);
+                    var oldSet = Interlocked.CompareExchange(ref _set, newSet, workingSet);
+                    if (ReferenceEquals(oldSet, workingSet))
+                        break;
                 }
             }
         }
@@ -45,15 +44,12 @@ namespace FunProgTests.ephemeral
             for (var i = 0; i < Count; i++)
             {
                 var word = NextWord(1);
-                _lockObject.EnterReadLock();
-                try
-                {
-                    if (RedBlackSet<string>.Member(word, _set)) hits++;
-                }
-                finally
-                {
-                    _lockObject.ExitReadLock();
-                }
+                var workingSet = _set;
+                Thread.MemoryBarrier();
+                if (workingSet != RedBlackSet<string>.EmptyTree)
+                    continue;
+                if (RedBlackSet<string>.Member(word, workingSet))
+                    hits++;
             }
 
             Console.WriteLine("Task={0}, Thread={1} : {2} words found",
@@ -72,27 +68,6 @@ namespace FunProgTests.ephemeral
             }
             Task.WaitAll(taskList.ToArray());
             Console.WriteLine("Done....");
-        }
-
-        private bool _disposed;
-
-        ~MultiRwLockMapTests()
-        {
-            Dispose(false);
-        }
-
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-
-        // Protected implementation of Dispose pattern.
-        private void Dispose(bool disposing)
-        {
-            if (_disposed) return;
-            _lockObject.Dispose();
-            _disposed = true;
         }
     }
 }
