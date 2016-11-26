@@ -78,6 +78,7 @@
     <Compile Include="lists\CustomStackTests.cs" />
     <Compile Include="lists\SkewBinaryRandomAccessListTests.cs" />
     <Compile Include="lists\ListTests.cs" />
+    <Compile Include="map\TrieTests.cs" />
     <Compile Include="queue\BankersDequeTests.cs" />
     <Compile Include="queue\BankersQueueTests.cs" />
     <Compile Include="queue\BootstrappedQueueTests.cs" />
@@ -109,6 +110,7 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
       <ItemGroup>
