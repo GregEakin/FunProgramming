@@ -11,11 +11,11 @@ using System;
 using System.Linq;
 using System.Text;
 using FunProgLib.lists;
-using FunProgLib.map;
+using FunProgLib.tree;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using static FunProgTests.utilities.ExpectedException;
 
-namespace FunProgTests.map
+namespace FunProgTests.tree
 {
     [TestClass]
     public class TrieTests

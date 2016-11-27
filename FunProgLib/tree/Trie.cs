@@ -12,7 +12,7 @@
 using System;
 using FunProgLib.lists;
 
-namespace FunProgLib.map
+namespace FunProgLib.tree
 {
     public class NotFound : Exception { }
 

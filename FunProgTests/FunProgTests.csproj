@@ -78,7 +78,7 @@
     <Compile Include="lists\CustomStackTests.cs" />
     <Compile Include="lists\SkewBinaryRandomAccessListTests.cs" />
     <Compile Include="lists\ListTests.cs" />
-    <Compile Include="map\TrieTests.cs" />
+    <Compile Include="tree\TrieTests.cs" />
     <Compile Include="queue\BankersDequeTests.cs" />
     <Compile Include="queue\BankersQueueTests.cs" />
     <Compile Include="queue\BootstrappedQueueTests.cs" />

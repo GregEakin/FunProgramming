@@ -83,7 +83,7 @@
     <Compile Include="tree\RedBlackSet.cs" />
     <Compile Include="heap\SplayHeap.cs" />
     <Compile Include="tree\UnbalancedSet.cs" />
-    <Compile Include="map\Trie.cs" />
+    <Compile Include="tree\Trie.cs" />
     <Compile Include="utilities\StringUtilities.cs" />
   </ItemGroup>
   <ItemGroup />
