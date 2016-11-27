@@ -44,29 +44,308 @@ namespace FunProgTests.map
             return buffer.ToString();
         }
 
+        // Map Tests
+
         [TestMethod]
-        public void EmptyTest()
+        public void MapLookupNullTest()
+        {
+            AssertThrows<NotFound>(() => Trie<char, string>.Map.Lookup('A', null));
+        }
+
+        [TestMethod]
+        public void MapLookupSiblingTest()
+        {
+            var mm1 = new Trie<char, string>.MMap('A', null);
+            var list1 = new Trie<char, string>.Map("A", null, mm1);
+
+            var mm2 = new Trie<char, string>.MMap('B', list1);
+            var list2 = new Trie<char, string>.Map("B", null, mm2);
+
+            var aa = Trie<char, string>.Map.Lookup('A', list2);
+            Assert.AreSame(list1, aa);
+
+            var bb = Trie<char, string>.Map.Lookup('B', list2);
+            Assert.AreSame(list2, bb);
+        }
+
+        [TestMethod]
+        public void MapLookupChildTest()
+        {
+            var mm1 = new Trie<char, string>.MMap('A', null);
+            var list1 = new Trie<char, string>.Map("BA", null, mm1);
+
+            var mm2 = new Trie<char, string>.MMap('B', null);
+            var list2 = new Trie<char, string>.Map("B", list1, mm2);
+
+            AssertThrows<NotFound>(() => Trie<char, string>.Map.Lookup('A', list2));
+
+            var bb = Trie<char, string>.Map.Lookup('B', list2);
+            Assert.AreSame(list2, bb);
+        }
+
+        [TestMethod]
+        public void MapBindSiblingTest()
+        {
+            var mapA = new Trie<char, string>.Map("A", null, null);
+            var listA = new Trie<char, string>.Map(null, null, null);
+            var list1 = Trie<char, string>.Map.Bind('A', mapA, listA);
+
+            Assert.AreEqual("A", list1.V);
+            Assert.IsInstanceOfType(list1.MM, typeof(Trie<char, string>.MMap));
+            Assert.AreEqual('A', list1.MM.V);
+
+            var mapB = new Trie<char, string>.Map("B", null, null);
+            var list2 = Trie<char, string>.Map.Bind('B', mapB, list1);
+
+            Assert.AreEqual("B", list2.V);
+            Assert.IsInstanceOfType(list2.MM, typeof(Trie<char, string>.MMap));
+            Assert.AreEqual('B', list2.MM.V);
+
+            var aa = Trie<char, string>.Map.Lookup('A', list2);
+            Assert.AreSame(list1, aa);
+
+            var bb = Trie<char, string>.Map.Lookup('B', list2);
+            Assert.AreSame(list2, bb);
+        }
+
+        [TestMethod]
+        public void MapBindChildTest()
+        {
+            var mapA = new Trie<char, string>.Map("BA", null, null);
+            var listA = new Trie<char, string>.Map(null, null, null);
+            var list1 = Trie<char, string>.Map.Bind('A', mapA, listA);
+
+            Assert.AreEqual("BA", list1.V);
+            Assert.IsInstanceOfType(list1.MM, typeof(Trie<char, string>.MMap));
+            Assert.AreEqual('A', list1.MM.V);
+
+            var mapB = new Trie<char, string>.Map("B", list1, null);
+            var list2 = Trie<char, string>.Map.Bind('B', mapB, null);
+
+            Assert.AreEqual("B", list2.V);
+            Assert.IsInstanceOfType(list2.MM, typeof(Trie<char, string>.MMap));
+            Assert.AreEqual('B', list2.MM.V);
+
+            AssertThrows<NotFound>(() => Trie<char, string>.Map.Lookup('A', list2));
+
+            var bb = Trie<char, string>.Map.Lookup('B', list2);
+            Assert.AreSame(list2, bb);
+        }
+
+        // Trie Tests
+
+        [TestMethod]
+        public void TrieEmptyTest()
         {
             var trie = Trie<char, string>.Empty;
         }
 
         [TestMethod]
-        public void BindTest()
+        public void TrieLookupNullTest()
         {
-            var trie = Trie<char, string>.Empty;
-            trie = Trie<char, string>.Bind(List<char>.Empty, "Dog", trie);
-            Assert.AreEqual("{ 2 \"Dog\": ;  }", DumpMap<char, string>(trie));
+            var trie = new Trie<char, string>.Map(null, null);
+            AssertThrows<NotFound>(() => Trie<char, string>.Lookup(null, trie));
         }
 
         [TestMethod]
-        public void NullLookupTest()
+        public void TrieLookupEmptyTest()
         {
             var trie = Trie<char, string>.Empty;
             AssertThrows<NotFound>(() => Trie<char, string>.Lookup(List<char>.Empty, trie));
         }
 
         [TestMethod]
-        public void LookupTest()
+        public void TrieLookupSiblingTest()
+        {
+            var mm1 = new Trie<char, string>.MMap('A', null);
+            var list1 = new Trie<char, string>.Map("A", null, mm1);
+
+            var mm2 = new Trie<char, string>.MMap('B', list1);
+            var list2 = new Trie<char, string>.Map("B", null, mm2);
+
+            var list3 = new Trie<char, string>.Map(null, list2, null);
+
+            var a = "A".ToCharArray().Aggregate(List<char>.Empty, (current, letter) => List<char>.Cons(letter, current));
+            var aa = Trie<char, string>.Lookup(a, list3);
+            Assert.AreEqual("A", aa);
+
+            var b = "B".ToCharArray().Aggregate(List<char>.Empty, (current, letter) => List<char>.Cons(letter, current));
+            var bb = Trie<char, string>.Lookup(b, list3);
+            Assert.AreEqual("B", bb);
+        }
+
+        [TestMethod]
+        public void TrieLookupChildTest()
+        {
+            var mm1 = new Trie<char, string>.MMap('A', null);
+            var list1 = new Trie<char, string>.Map("BA", null, mm1);
+
+            var mm2 = new Trie<char, string>.MMap('B', null);
+            var list2 = new Trie<char, string>.Map("B", list1, mm2);
+
+            var list3 = new Trie<char, string>.Map(null, list2, null);
+
+            var b = "B".ToCharArray().Aggregate(List<char>.Empty, (current, letter) => List<char>.Cons(letter, current));
+            var bb = Trie<char, string>.Lookup(b, list3);
+            Assert.AreEqual("B", bb);
+
+            var a = "AB".ToCharArray().Aggregate(List<char>.Empty, (current, letter) => List<char>.Cons(letter, current));
+            var ab = Trie<char, string>.Lookup(a, list3);
+            Assert.AreEqual("BA", ab);
+        }
+
+        [TestMethod]
+        public void TrieBindSiblingTest()
+        {
+            var a = "A".ToCharArray().Aggregate(List<char>.Empty, (current, letter) => List<char>.Cons(letter, current));
+            var list01 = Trie<char, string>.Bind(a, "A", Trie<char,string>.Empty);
+            var list1 = list01.M;
+            Assert.AreEqual("A", list1.V);
+            Assert.IsNull(list1.M);
+            Assert.IsInstanceOfType(list1.MM, typeof(Trie<char, string>.MMap));
+            Assert.AreEqual('A', list1.MM.V);
+            Assert.IsNull(list1.MM.Map);
+
+            var b = "B".ToCharArray().Aggregate(List<char>.Empty, (current, letter) => List<char>.Cons(letter, current));
+            var list02 = Trie<char, string>.Bind(b, "B", list01);
+            var list2 = list02.M;
+            Assert.AreEqual("B", list2.V);
+            Assert.IsNull(list2.M);
+            Assert.IsInstanceOfType(list2.MM, typeof(Trie<char, string>.MMap));
+            Assert.AreEqual('B', list2.MM.V);
+            Assert.AreSame(list1, list2.MM.Map);
+
+            var list3 = new Trie<char, string>.Map(null, list2, null);
+
+            var aa = Trie<char, string>.Lookup(a, list3);
+            Assert.AreEqual("A", aa);
+
+            var bb = Trie<char, string>.Lookup(b, list3);
+            Assert.AreEqual("B", bb);
+        }
+
+        [TestMethod]
+        public void TrieBindChildTest()
+        {
+            var b = "B".ToCharArray().Aggregate(List<char>.Empty, (current, letter) => List<char>.Cons(letter, current));
+            var list02 = Trie<char, string>.Bind(b, "B", Trie<char, string>.Empty);
+            {
+                var list2 = list02.M;
+                Assert.AreEqual("B", list2.V);
+                Assert.IsNull(list2.M);
+                Assert.IsInstanceOfType(list2.MM, typeof(Trie<char, string>.MMap));
+                Assert.AreEqual('B', list2.MM.V);
+            }
+
+            var a = "AB".ToCharArray().Aggregate(List<char>.Empty, (current, letter) => List<char>.Cons(letter, current));
+            var list01 = Trie<char, string>.Bind(a, "BA", list02);
+            {
+                Assert.AreEqual("B", list01.M.V);
+                var list1 = list01.M.M;
+                Assert.AreEqual("BA", list1.V);
+                Assert.IsNull(list1.M);
+                Assert.IsInstanceOfType(list1.MM, typeof(Trie<char, string>.MMap));
+                Assert.AreEqual('A', list1.MM.V);
+                Assert.IsNull(list1.MM.Map);
+            }
+
+            var bb = Trie<char, string>.Lookup(b, list01);
+            Assert.AreEqual("B", bb);
+
+            var ab = Trie<char, string>.Lookup(a, list01);
+            Assert.AreEqual("BA", ab);
+        }
+
+        [TestMethod]
+        public void TrieLookupATest()
+        {
+            var trie = new Trie<char, string>.Map("a", null);
+            var result = Trie<char, string>.Lookup(null, trie);
+            Assert.AreEqual("a", result);
+        }
+
+        [TestMethod]
+        public void TrieLookupAaTest()
+        {
+            var mm1 = new Trie<char, string>.MMap('a', null);
+            var list1 = new Trie<char, string>.Map("a", null, mm1);
+            var list2 = new Trie<char, string>.Map(null, list1, null);
+
+            var aNode = new List<char>.Node('a', null);
+            var result = Trie<char, string>.Lookup(aNode, list2);
+            Assert.AreEqual("a", result);
+        }
+
+        [TestMethod]
+        public void TrieLookupAbTest()
+        {
+            var mm1 = new Trie<char, string>.MMap('a', null);
+            var list1 = new Trie<char, string>.Map("a", null, mm1);
+            var mm2 = new Trie<char, string>.MMap('b', null);
+            var list2 = new Trie<char, string>.Map(null, list1, mm2);
+            var list3 = new Trie<char, string>.Map(null, list2, null);
+
+            var aNode = new List<char>.Node('b', new List<char>.Node('a', null));
+            var result = Trie<char, string>.Lookup(aNode, list3);
+            Assert.AreEqual("a", result);
+        }
+
+        [TestMethod]
+        public void TrieLookupCTest()
+        {
+            var trie = Trie<char, string>.Empty;
+
+            var c = "C".ToCharArray().Aggregate(List<char>.Empty, (current, letter) => List<char>.Cons(letter, current));
+            trie = Trie<char, string>.Bind(c, "C", trie);
+
+            Console.WriteLine(DumpMap(trie));
+
+            var findC = Trie<char, string>.Lookup(c, trie);
+            Assert.AreEqual("C", findC);
+        }
+
+        [TestMethod]
+        public void TrieLookupDTest()
+        {
+            var trie = Trie<char, string>.Empty;
+
+            var c = "C".ToCharArray().Aggregate(List<char>.Empty, (current, letter) => List<char>.Cons(letter, current));
+            trie = Trie<char, string>.Bind(c, "C", trie);
+
+            var d = "D".ToCharArray().Aggregate(List<char>.Empty, (current, letter) => List<char>.Cons(letter, current));
+            trie = Trie<char, string>.Bind(d, "D", trie);
+
+            Console.WriteLine(DumpMap(trie));
+
+            var findC = Trie<char, string>.Lookup(c, trie);
+            Assert.AreEqual("C", findC);
+
+            var findD = Trie<char, string>.Lookup(d, trie);
+            Assert.AreEqual("D", findD);
+        }
+
+        [TestMethod]
+        public void TrieLookupCbTest()
+        {
+            var trie = Trie<char, string>.Empty;
+
+            var c = "C".ToCharArray().Aggregate(List<char>.Empty, (current, letter) => List<char>.Cons(letter, current));
+            trie = Trie<char, string>.Bind(c, "C", trie);
+
+            var cb = "BC".ToCharArray().Aggregate(List<char>.Empty, (current, letter) => List<char>.Cons(letter, current));
+            trie = Trie<char, string>.Bind(cb, "CB", trie);
+
+            Console.WriteLine(DumpMap(trie));
+
+            var findC = Trie<char, string>.Lookup(c, trie);
+            Assert.AreEqual("C", findC);
+
+            var findCb = Trie<char, string>.Lookup(cb, trie);
+            Assert.AreEqual("CB", findCb);
+        }
+
+        [TestMethod]
+        public void TrieLookupDogTest()
         {
             var dog = "GOD".ToCharArray().Aggregate(List<char>.Empty, (current, letter) => List<char>.Cons(letter, current));
 
@@ -76,6 +355,19 @@ namespace FunProgTests.map
             var findDog = Trie<char, string>.Lookup(dog, trie);
             Assert.AreEqual("Dog", findDog);
         }
+
+        [TestMethod]
+        public void TrieBindDogTest()
+        {
+            var trie1 = Trie<char, string>.Empty;
+            var trie2 = Trie<char, string>.Bind(List<char>.Empty, "Dog", trie1);
+            Assert.AreEqual("Dog", trie2.V);
+            // Assert.AreSame(trie1, trie2.M);
+            Assert.IsNull(trie2.MM);
+            Assert.AreEqual("{ \"Dog\": ;  }", DumpMap(trie2));
+        }
+
+        // Others
 
         [TestMethod]
         public void Test()
@@ -99,178 +391,8 @@ namespace FunProgTests.map
 
             var findCart = Trie<char, string>.Lookup(cart, trie);
             Assert.AreEqual("cart", findCart);
-        }
-
-        [TestMethod]
-        public void Test2()
-        {
-            var trie = Trie<char, string>.Empty;
-            var dog = "GOD".ToCharArray().Aggregate(List<char>.Empty, (current, letter) => List<char>.Cons(letter, current));
-            trie = Trie<char, string>.Bind(dog, "Dog", trie);
-
-            var findDog = Trie<char, string>.Lookup(dog, trie);
-            Assert.AreEqual("Dog", findDog);
-
-            var result = DumpMap(trie);
-            Console.WriteLine(result);
-        }
-
-        [TestMethod]
-        public void Test3()
-        {
-            var trie = Trie<char, string>.Empty;
-            Console.WriteLine($"1: {DumpMap(trie)}");
-
-            var c = "C".ToCharArray().Aggregate(List<char>.Empty, (current, letter) => List<char>.Cons(letter, current));
-            trie = Trie<char, string>.Bind(c, "C", trie);
-            Console.WriteLine($"2: {DumpMap(trie)}");
-
-            var d = "D".ToCharArray().Aggregate(List<char>.Empty, (current, letter) => List<char>.Cons(letter, current));
-            trie = Trie<char, string>.Bind(d, "D", trie);
-            Console.WriteLine($"3: {DumpMap(trie)}");
-
-            var ce = "EC".ToCharArray().Aggregate(List<char>.Empty, (current, letter) => List<char>.Cons(letter, current));
-            trie = Trie<char, string>.Bind(ce, "CE", trie);
-            Console.WriteLine($"4: {DumpMap(trie)}");
-        }
-
-        [TestMethod]
-        public void FindCTest()
-        {
-            var trie = Trie<char, string>.Empty;
-
-            var c = "C".ToCharArray().Aggregate(List<char>.Empty, (current, letter) => List<char>.Cons(letter, current));
-            trie = Trie<char, string>.Bind(c, "C", trie);
 
             Console.WriteLine(DumpMap(trie));
-
-            var findC = Trie<char, string>.Lookup(c, trie);
-            Assert.AreEqual("C", findC);
-        }
-
-        [TestMethod]
-        public void FindDTest()
-        {
-            var trie = Trie<char, string>.Empty;
-
-            var c = "C".ToCharArray().Aggregate(List<char>.Empty, (current, letter) => List<char>.Cons(letter, current));
-            trie = Trie<char, string>.Bind(c, "C", trie);
-
-            var d = "D".ToCharArray().Aggregate(List<char>.Empty, (current, letter) => List<char>.Cons(letter, current));
-            trie = Trie<char, string>.Bind(d, "D", trie);
-
-            Console.WriteLine(DumpMap(trie));
-
-            var findC = Trie<char, string>.Lookup(c, trie);
-            Assert.AreEqual("C", findC);
-
-            var findD = Trie<char, string>.Lookup(d, trie);
-            Assert.AreEqual("D", findD);
-        }
-
-        [TestMethod]
-        public void FindCbTest()
-        {
-            var trie = Trie<char, string>.Empty;
-
-            var c = "C".ToCharArray().Aggregate(List<char>.Empty, (current, letter) => List<char>.Cons(letter, current));
-            trie = Trie<char, string>.Bind(c, "C", trie);
-
-            var cb = "BC".ToCharArray().Aggregate(List<char>.Empty, (current, letter) => List<char>.Cons(letter, current));
-            trie = Trie<char, string>.Bind(cb, "CB", trie);
-
-            Console.WriteLine(DumpMap(trie));
-
-            var findC = Trie<char, string>.Lookup(c, trie);
-            Assert.AreEqual("C", findC);
-
-            var findCb = Trie<char, string>.Lookup(cb, trie);
-            Assert.AreEqual("CB", findCb);
-        }
-
-        [TestMethod]
-        public void LookupEmptyMap()
-        {
-            AssertThrows<NotFound>(() => Trie<char, string>.Map.Lookup('A', null));
-        }
-
-        [TestMethod]
-        public void LookupMap()
-        {
-            var mm1 = new Trie<char, string>.MMap('A');
-            var list1 = new Trie<char, string>.Map(null, null, mm1);
-
-            var mm2 = new Trie<char, string>.MMap('B');
-            var list2 = new Trie<char, string>.Map(null, list1, mm2);
-
-            var aa = Trie<char, string>.Map.Lookup('A', list2);
-            Assert.AreSame(list1, aa);
-
-            var bb = Trie<char, string>.Map.Lookup('B', list2);
-            Assert.AreSame(list2, bb);
-
-            AssertThrows<NotFound>(() => Trie<char, string>.Map.Lookup('C', list2));
-        }
-
-        [TestMethod]
-        public void LookupTrie()
-        {
-            var mm1 = new Trie<char, string>.MMap('a');
-            var list1 = new Trie<char, string>.Map("a", null, mm1);
-            var list2 = new Trie<char, string>.Map(null, list1, null);
-
-            var aNode = new List<char>.Node('a', null);
-            var result = Trie<char, string>.Lookup(aNode, list2);
-            Assert.AreEqual("a", result);
-        }
-
-        [TestMethod]
-        public void Lookup2Trie()
-        {
-            var mm1 = new Trie<char, string>.MMap('a');
-            var list1 = new Trie<char, string>.Map("a", null, mm1);
-            var mm2 = new Trie<char, string>.MMap('b');
-            var list2 = new Trie<char, string>.Map(null, list1, mm2);
-            var list3 = new Trie<char, string>.Map(null, list2, null);
-
-            var aNode = new List<char>.Node('b', new List<char>.Node('a', null));
-            var result = Trie<char, string>.Lookup(aNode, list3);
-            Assert.AreEqual("a", result);
-        }
-
-        [TestMethod]
-        public void LookupNullTrie()
-        {
-            var trie = new Trie<char, string>.Map(null, null);
-            AssertThrows<NotFound>(() => Trie<char, string>.Lookup(null, trie));
-        }
-
-        [TestMethod]
-        public void LookupEmptyTrie()
-        {
-            var trie = new Trie<char, string>.Map("a", null);
-            var result = Trie<char, string>.Lookup(null, trie);
-            Assert.AreEqual("a", result);
-        }
-
-        [TestMethod]
-        public void Lookup1Trie()
-        {
-            var mm1 = new Trie<char, string>.MMap('A');
-            var list1 = new Trie<char, string>.Map(null, null, mm1);
-
-            var mm2 = new Trie<char, string>.MMap('B');
-            var list2 = new Trie<char, string>.Map(null, null, mm2);
-
-            var aNode = new List<char>.Node('A', null);
-            var aa = Trie<char, string>.Lookup(aNode, list1);
-
-            //var bNode = new List<char>.Node('B', null);
-            //var bb = Trie<char, string>.Lookup('B', list2);
-            //Assert.AreSame(list2, bb);
-
-            //var cNode = new List<char>.Node('C', null);
-            //AssertThrows<NotFound>(() => Trie<char, string>.Lookup('C', list2));
         }
     }
 }

@@ -62,14 +62,14 @@ namespace FunProgLib.map
 
             public static Map Lookup(K item, Map list)
             {
-                if (list == null) throw new NotFound(); // return null;  // Not Found
+                if (list?.MM == null) throw new NotFound(); // return null;  // Not Found
                 if (item.CompareTo(list.MM.V) == 0) return list;
-                return Lookup(item, list.M);
+                return Lookup(item, list.MM.Map);
             }
 
             public static Map Bind(K item, Map map, Map list)
             {
-                var mm = new MMap(item);
+                var mm = new MMap(item, list);
                 var m = new Map(map.V, map.M, mm);
                 return m;
             }
@@ -77,12 +77,14 @@ namespace FunProgLib.map
 
         public sealed class MMap
         {
-            public MMap(K item)
+            public MMap(K item, Map map)
             {
                 V = item;
+                Map = map;
             }
 
             public K V { get; }
+            public Map Map { get; }
         }
 
         public static Map Empty { get; } = new Map(null, null, null);
@@ -94,7 +96,8 @@ namespace FunProgLib.map
         {
             if (List<K>.IsEmpty(mKey) && trie.V == null) throw new NotFound(); // return null;  // not found
             if (List<K>.IsEmpty(mKey)) return trie.V;
-            return Lookup(List<K>.Tail(mKey), Map.Lookup(List<K>.Head(mKey), trie.M));
+            var xxx = Map.Lookup(List<K>.Head(mKey), trie.M);
+            return Lookup(List<K>.Tail(mKey), xxx);
         }
 
         // fun bind([], x, Trie(_, m)) = Trie(Some x, m)
@@ -108,7 +111,8 @@ namespace FunProgLib.map
             Map t;
             try { t = Map.Lookup(List<K>.Head(mKey), trie.M); } catch (NotFound) { t = Empty; }
             var tp = Bind(List<K>.Tail(mKey), x, t);
-            return new Map(trie.V, Map.Bind(List<K>.Head(mKey), tp, trie.M));
+            var xxx = Map.Bind(List<K>.Head(mKey), tp, trie.M);
+            return new Map(trie.V, xxx);
         }
     }
 }
