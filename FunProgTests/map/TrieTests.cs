@@ -29,7 +29,7 @@ namespace FunProgTests.map
             buffer.Append("\": ");
             buffer.Append(DumpMap(map.M));
             buffer.Append("; ");
-            buffer.Append(DumpMMap(map.MM));
+            buffer.Append(DumpMMap(map.Option));
             buffer.Append(" }");
             return buffer.ToString();
         }
@@ -91,15 +91,15 @@ namespace FunProgTests.map
             var list1 = Trie<char, string>.Map.Bind('A', mapA, listA);
 
             Assert.AreEqual("A", list1.V);
-            Assert.IsInstanceOfType(list1.MM, typeof(Trie<char, string>.Option));
-            Assert.AreEqual('A', list1.MM.V);
+            Assert.IsInstanceOfType(list1.Option, typeof(Trie<char, string>.Option));
+            Assert.AreEqual('A', list1.Option.V);
 
             var mapB = new Trie<char, string>.Map("B", null, null, null);
             var list2 = Trie<char, string>.Map.Bind('B', mapB, list1);
 
             Assert.AreEqual("B", list2.V);
-            Assert.IsInstanceOfType(list2.MM, typeof(Trie<char, string>.Option));
-            Assert.AreEqual('B', list2.MM.V);
+            Assert.IsInstanceOfType(list2.Option, typeof(Trie<char, string>.Option));
+            Assert.AreEqual('B', list2.Option.V);
 
             var aa = Trie<char, string>.Map.Lookup('A', list2);
             Assert.AreSame(list1, aa);
@@ -116,15 +116,15 @@ namespace FunProgTests.map
             var list1 = Trie<char, string>.Map.Bind('A', mapA, listA);
 
             Assert.AreEqual("BA", list1.V);
-            Assert.IsInstanceOfType(list1.MM, typeof(Trie<char, string>.Option));
-            Assert.AreEqual('A', list1.MM.V);
+            Assert.IsInstanceOfType(list1.Option, typeof(Trie<char, string>.Option));
+            Assert.AreEqual('A', list1.Option.V);
 
             var mapB = new Trie<char, string>.Map("B", list1, null, null);
             var list2 = Trie<char, string>.Map.Bind('B', mapB, null);
 
             Assert.AreEqual("B", list2.V);
-            Assert.IsInstanceOfType(list2.MM, typeof(Trie<char, string>.Option));
-            Assert.AreEqual('B', list2.MM.V);
+            Assert.IsInstanceOfType(list2.Option, typeof(Trie<char, string>.Option));
+            Assert.AreEqual('B', list2.Option.V);
 
             AssertThrows<NotFound>(() => Trie<char, string>.Map.Lookup('A', list2));
 
@@ -202,8 +202,8 @@ namespace FunProgTests.map
             var list1 = list01.M;
             Assert.AreEqual("A", list1.V);
             Assert.IsNull(list1.M);
-            Assert.IsInstanceOfType(list1.MM, typeof(Trie<char, string>.Option));
-            Assert.AreEqual('A', list1.MM.V);
+            Assert.IsInstanceOfType(list1.Option, typeof(Trie<char, string>.Option));
+            Assert.AreEqual('A', list1.Option.V);
             Assert.IsNull(list1.List);
 
             var b = "B".ToCharArray().Aggregate(List<char>.Empty, (current, letter) => List<char>.Cons(letter, current));
@@ -211,8 +211,8 @@ namespace FunProgTests.map
             var list2 = list02.M;
             Assert.AreEqual("B", list2.V);
             Assert.IsNull(list2.M);
-            Assert.IsInstanceOfType(list2.MM, typeof(Trie<char, string>.Option));
-            Assert.AreEqual('B', list2.MM.V);
+            Assert.IsInstanceOfType(list2.Option, typeof(Trie<char, string>.Option));
+            Assert.AreEqual('B', list2.Option.V);
             Assert.AreSame(list1, list2.List);
 
             var list3 = new Trie<char, string>.Map(null, list2, null, null);
@@ -233,8 +233,8 @@ namespace FunProgTests.map
                 var list2 = list02.M;
                 Assert.AreEqual("B", list2.V);
                 Assert.IsNull(list2.M);
-                Assert.IsInstanceOfType(list2.MM, typeof(Trie<char, string>.Option));
-                Assert.AreEqual('B', list2.MM.V);
+                Assert.IsInstanceOfType(list2.Option, typeof(Trie<char, string>.Option));
+                Assert.AreEqual('B', list2.Option.V);
             }
 
             var a = "AB".ToCharArray().Aggregate(List<char>.Empty, (current, letter) => List<char>.Cons(letter, current));
@@ -244,8 +244,8 @@ namespace FunProgTests.map
                 var list1 = list01.M.M;
                 Assert.AreEqual("BA", list1.V);
                 Assert.IsNull(list1.M);
-                Assert.IsInstanceOfType(list1.MM, typeof(Trie<char, string>.Option));
-                Assert.AreEqual('A', list1.MM.V);
+                Assert.IsInstanceOfType(list1.Option, typeof(Trie<char, string>.Option));
+                Assert.AreEqual('A', list1.Option.V);
                 Assert.IsNull(list1.List);
             }
 
@@ -363,7 +363,7 @@ namespace FunProgTests.map
             var trie2 = Trie<char, string>.Bind(List<char>.Empty, "Dog", trie1);
             Assert.AreEqual("Dog", trie2.V);
             // Assert.AreSame(trie1, trie2.M);
-            Assert.IsNull(trie2.MM);
+            Assert.IsNull(trie2.Option);
             Assert.AreEqual("{ \"Dog\": ;  }", DumpMap(trie2));
         }
 

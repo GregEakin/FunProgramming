@@ -36,15 +36,15 @@ namespace FunProgLib.map
             {
                 V = v;
                 M = m;
-                MM = null;
+                Option = null;
                 List = null;
             }
 
-            public Map(T v, Map m, Option mm, Map list)
+            public Map(T v, Map m, Option option, Map list)
             {
                 V = v;
                 M = m;
-                MM = mm;
+                Option = option;
                 List = list;
             }
 
@@ -52,14 +52,14 @@ namespace FunProgLib.map
 
             public Map M { get; }
 
-            public Option MM { get; }
+            public Option Option { get; }
 
             public Map List { get; }
 
             public static Map Lookup(K item, Map list)
             {
-                if (list?.MM == null) throw new NotFound();
-                if (item.CompareTo(list.MM.V) == 0) return list;
+                if (list?.Option == null) throw new NotFound();
+                if (item.CompareTo(list.Option.V) == 0) return list;
                 return Lookup(item, list.List);
             }
 
