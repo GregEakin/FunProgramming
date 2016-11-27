@@ -329,6 +329,27 @@ namespace FunProgTests.map
         }
 
         [TestMethod]
+        public void TrieLookupBcTest()
+        {
+            var trie = Trie<char, string>.Empty;
+
+            var cb = ToList("CB".ToCharArray());
+            trie = Trie<char, string>.Bind(cb, "CB", trie);
+
+            var c = ToList("C".ToCharArray());
+            trie = Trie<char, string>.Bind(c, "C", trie);
+
+            var findC = Trie<char, string>.Lookup(c, trie);
+            Assert.AreEqual("C", findC);
+
+            var findCb = Trie<char, string>.Lookup(cb, trie);
+            Assert.AreEqual("CB", findCb);
+
+          //Assert.AreEqual("{'\0', {'C', {'B', , , \"CB\"}, {'C', , , \"C\"}, \"C\"}, , \"\"}", DumpMap(trie));
+            Assert.AreEqual("{'\0', {'C', {'B', , , \"CB\"}, {'C', {'B', , , \"CB\"}, , \"\"}, \"C\"}, , \"\"}", DumpMap(trie));
+        }
+
+        [TestMethod]
         public void TrieLookupCbTest()
         {
             var trie = Trie<char, string>.Empty;
