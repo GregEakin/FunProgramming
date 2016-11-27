@@ -204,7 +204,7 @@ namespace FunProgTests.map
             Assert.IsNull(list1.M);
             Assert.IsInstanceOfType(list1.MM, typeof(Trie<char, string>.Option));
             Assert.AreEqual('A', list1.MM.V);
-            Assert.IsNull(list1.MW);
+            Assert.IsNull(list1.List);
 
             var b = "B".ToCharArray().Aggregate(List<char>.Empty, (current, letter) => List<char>.Cons(letter, current));
             var list02 = Trie<char, string>.Bind(b, "B", list01);
@@ -213,7 +213,7 @@ namespace FunProgTests.map
             Assert.IsNull(list2.M);
             Assert.IsInstanceOfType(list2.MM, typeof(Trie<char, string>.Option));
             Assert.AreEqual('B', list2.MM.V);
-            Assert.AreSame(list1, list2.MW);
+            Assert.AreSame(list1, list2.List);
 
             var list3 = new Trie<char, string>.Map(null, list2, null, null);
 
@@ -246,7 +246,7 @@ namespace FunProgTests.map
                 Assert.IsNull(list1.M);
                 Assert.IsInstanceOfType(list1.MM, typeof(Trie<char, string>.Option));
                 Assert.AreEqual('A', list1.MM.V);
-                Assert.IsNull(list1.MW);
+                Assert.IsNull(list1.List);
             }
 
             var bb = Trie<char, string>.Lookup(b, list01);
