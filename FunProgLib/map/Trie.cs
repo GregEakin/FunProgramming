@@ -20,6 +20,16 @@ namespace FunProgLib.map
         where K : IComparable<K>
         where T : class
     {
+        public sealed class Option
+        {
+            public Option(K item)
+            {
+                V = item;
+            }
+
+            public K V { get; }
+        }
+
         public sealed class Map
         {
             public Map(T v, Map m)
@@ -30,15 +40,7 @@ namespace FunProgLib.map
                 MW = null;
             }
 
-            public Map(T v, Map m, MMap mm)
-            {
-                V = v;
-                M = m;
-                MM = mm;
-                MW = null;
-            }
-
-            public Map(T v, Map m, MMap mm, Map mw)
+            public Map(T v, Map m, Option mm, Map mw)
             {
                 V = v;
                 M = m;
@@ -50,7 +52,7 @@ namespace FunProgLib.map
 
             public Map M { get; }
 
-            public MMap MM { get; }
+            public Option MM { get; }
 
             public Map MW { get; }
 
@@ -63,20 +65,10 @@ namespace FunProgLib.map
 
             public static Map Bind(K item, Map map, Map list)
             {
-                var mm = new MMap(item);
+                var mm = new Option(item);
                 var m = new Map(map.V, map.M, mm, list);
                 return m;
             }
-        }
-
-        public sealed class MMap
-        {
-            public MMap(K item)
-            {
-                V = item;
-            }
-
-            public K V { get; }
         }
 
         public static Map Empty { get; } = new Map(null, null);
