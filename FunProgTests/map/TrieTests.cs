@@ -31,7 +31,7 @@ namespace FunProgTests.map
             buffer.Append(", ");
             buffer.Append(DumpMMap(map.Option));
             buffer.Append(", ");
-            buffer.Append(DumpMap(map.List));
+            buffer.Append(DumpMap(map.Sibling));
             buffer.Append("}");
             return buffer.ToString();
         }
@@ -206,7 +206,7 @@ namespace FunProgTests.map
             Assert.IsNull(list1.M);
             Assert.IsInstanceOfType(list1.Option, typeof(Trie<char, string>.Option));
             Assert.AreEqual('A', list1.Option.V);
-            Assert.IsNull(list1.List);
+            Assert.IsNull(list1.Sibling);
 
             var b = "B".ToCharArray().Aggregate(List<char>.Empty, (current, letter) => List<char>.Cons(letter, current));
             var list02 = Trie<char, string>.Bind(b, "B", list01);
@@ -215,7 +215,7 @@ namespace FunProgTests.map
             Assert.IsNull(list2.M);
             Assert.IsInstanceOfType(list2.Option, typeof(Trie<char, string>.Option));
             Assert.AreEqual('B', list2.Option.V);
-            Assert.AreSame(list1, list2.List);
+            Assert.AreSame(list1, list2.Sibling);
 
             var list3 = new Trie<char, string>.Map(null, list2, null, null);
 
@@ -248,7 +248,7 @@ namespace FunProgTests.map
                 Assert.IsNull(list1.M);
                 Assert.IsInstanceOfType(list1.Option, typeof(Trie<char, string>.Option));
                 Assert.AreEqual('A', list1.Option.V);
-                Assert.IsNull(list1.List);
+                Assert.IsNull(list1.Sibling);
             }
 
             var bb = Trie<char, string>.Lookup(b, list01);
@@ -270,7 +270,7 @@ namespace FunProgTests.map
                 Assert.IsNull(list1.M);
                 Assert.IsInstanceOfType(list1.Option, typeof(Trie<char, string>.Option));
                 Assert.AreEqual('A', list1.Option.V);
-                Assert.IsNull(list1.List);
+                Assert.IsNull(list1.Sibling);
             }
 
             var b = "B".ToCharArray().Aggregate(List<char>.Empty, (current, letter) => List<char>.Cons(letter, current));

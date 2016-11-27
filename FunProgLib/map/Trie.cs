@@ -18,7 +18,6 @@ namespace FunProgLib.map
 
     public static class Trie<K, T>
         where K : IComparable<K>
-        where T : class
     {
         public sealed class Option
         {
@@ -37,15 +36,15 @@ namespace FunProgLib.map
                 V = v;
                 M = m;
                 Option = null;
-                List = null;
+                Sibling = null;
             }
 
-            public Map(T v, Map m, Option option, Map list)
+            public Map(T v, Map m, Option option, Map sibling)
             {
                 V = v;
                 M = m;
                 Option = option;
-                List = list;
+                Sibling = sibling;
             }
 
             public T V { get; }
@@ -54,22 +53,22 @@ namespace FunProgLib.map
 
             public Option Option { get; }
 
-            public Map List { get; }
+            public Map Sibling { get; }
 
-            public static Map Lookup(K item, Map list)
+            public static Map Lookup(K item, Map sibling)
             {
-                if (list?.Option == null) throw new NotFound();
-                if (item.CompareTo(list.Option.V) == 0) return list;
-                return Lookup(item, list.List);
+                if (sibling?.Option == null) throw new NotFound();
+                if (item.CompareTo(sibling.Option.V) == 0) return sibling;
+                return Lookup(item, sibling.Sibling);
             }
 
-            public static Map Bind(K item, Map map, Map list)
+            public static Map Bind(K item, Map child, Map sibling)
             {
-                return new Map(map.V, map.M, new Option(item), list);
+                return new Map(child.V, child.M, new Option(item), sibling);
             }
         }
 
-        public static Map Empty { get; } = new Map(null, null);
+        public static Map Empty { get; } = new Map(default(T), null);
 
         public static T Lookup(List<K>.Node mKey, Map trie)
         {
