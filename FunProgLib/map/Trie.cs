@@ -14,6 +14,8 @@ using FunProgLib.lists;
 
 namespace FunProgLib.map
 {
+    public class NotFound : Exception { }
+
     public static class Trie<K, T>
         where K : IComparable<K>
         where T : class
@@ -58,33 +60,29 @@ namespace FunProgLib.map
 
             public MMap MM { get; }
 
-            public Map Lookup(K item, Map list)
+            public static Map Lookup(K item, Map list)
             {
-                if (list == null) return null;  // Not Found
-                if (item.CompareTo(list.MM.V) == 0) return list.M;
+                if (list == null) throw new NotFound(); // return null;  // Not Found
+                if (item.CompareTo(list.MM.V) == 0) return list;
                 return Lookup(item, list.M);
             }
 
-            public Map Bind(K item, Map list, Map map)
+            public static Map Bind(K item, Map map, Map list)
             {
-                var mm = new MMap(item, list, map.MM);
-                var m = new Map(null, list, mm);
+                var mm = new MMap(item);
+                var m = new Map(map.V, map.M, mm);
                 return m;
             }
         }
 
         public sealed class MMap
         {
-            public MMap(K item, Map list, MMap map)
+            public MMap(K item)
             {
                 V = item;
-                ML = list;
-                MM = map;
             }
 
             public K V { get; }
-            public Map ML { get; }
-            public MMap MM { get; }
         }
 
         public static Map Empty { get; } = new Map(null, null, null);
@@ -94,9 +92,9 @@ namespace FunProgLib.map
         //   | lookup(k :: ks, Trie(v, m)) = lookup(ks, M.Lookup(k, m))
         public static T Lookup(List<K>.Node mKey, Map trie)
         {
-            if (List<K>.IsEmpty(mKey) && trie.V == null) return null;  // not found
+            if (List<K>.IsEmpty(mKey) && trie.V == null) throw new NotFound(); // return null;  // not found
             if (List<K>.IsEmpty(mKey)) return trie.V;
-            return Lookup(List<K>.Tail(mKey), trie.Lookup(List<K>.Head(mKey), trie.M));
+            return Lookup(List<K>.Tail(mKey), Map.Lookup(List<K>.Head(mKey), trie.M));
         }
 
         // fun bind([], x, Trie(_, m)) = Trie(Some x, m)
@@ -107,9 +105,10 @@ namespace FunProgLib.map
         public static Map Bind(List<K>.Node mKey, T x, Map trie)
         {
             if (List<K>.IsEmpty(mKey)) return new Map(x, trie.M);
-            var t = trie.Lookup(List<K>.Head(mKey), trie.M);
+            Map t;
+            try { t = Map.Lookup(List<K>.Head(mKey), trie.M); } catch (NotFound) { t = Empty; }
             var tp = Bind(List<K>.Tail(mKey), x, t);
-            return new Map(trie.V, trie.Bind(List<K>.Head(mKey), tp, trie.M));
+            return new Map(trie.V, Map.Bind(List<K>.Head(mKey), tp, trie.M));
         }
     }
 }
