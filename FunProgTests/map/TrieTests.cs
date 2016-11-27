@@ -20,29 +20,32 @@ namespace FunProgTests.map
     [TestClass]
     public class TrieTests
     {
+        private static List<K>.Node ToList<K>(K[] value)
+        {
+            var car = value.Aggregate(List<K>.Empty, (current, letter) => List<K>.Cons(letter, current));
+            return List<K>.Reverse(car);
+
+        }
+
         private static string DumpMap<K, T>(Trie<K, T>.Map map) where K : IComparable<K> where T : class
         {
             if (map == null) return "";
             var buffer = new StringBuilder();
-            buffer.Append("{\"");
-            buffer.Append(map.V);
-            buffer.Append("\": ");
+            buffer.Append("{");
+            if (map.Option != null)
+            {
+                buffer.Append('\'');
+                buffer.Append(map.Option.V);
+                buffer.Append('\'');
+            }
+            buffer.Append(", ");
             buffer.Append(DumpMap(map.M));
             buffer.Append(", ");
-            buffer.Append(DumpMMap(map.Option));
-            buffer.Append(", ");
             buffer.Append(DumpMap(map.Sibling));
-            buffer.Append("}");
-            return buffer.ToString();
-        }
-
-        private static string DumpMMap<K, T>(Trie<K, T>.Option map) where K : IComparable<K> where T : class
-        {
-            if (map == null) return "";
-            var buffer = new StringBuilder();
-            buffer.Append("'");
+            buffer.Append(", ");
+            buffer.Append("\"");
             buffer.Append(map.V);
-            buffer.Append("'");
+            buffer.Append("\"}");
             return buffer.ToString();
         }
 
@@ -167,11 +170,11 @@ namespace FunProgTests.map
 
             var list3 = new Trie<char, string>.Map(null, list2, null, null);
 
-            var a = "A".ToCharArray().Aggregate(List<char>.Empty, (current, letter) => List<char>.Cons(letter, current));
+            var a = ToList("A".ToCharArray());
             var aa = Trie<char, string>.Lookup(a, list3);
             Assert.AreEqual("A", aa);
 
-            var b = "B".ToCharArray().Aggregate(List<char>.Empty, (current, letter) => List<char>.Cons(letter, current));
+            var b = ToList("B".ToCharArray());
             var bb = Trie<char, string>.Lookup(b, list3);
             Assert.AreEqual("B", bb);
         }
@@ -187,11 +190,11 @@ namespace FunProgTests.map
 
             var list3 = new Trie<char, string>.Map(null, list2, null, null);
 
-            var b = "B".ToCharArray().Aggregate(List<char>.Empty, (current, letter) => List<char>.Cons(letter, current));
+            var b = ToList("B".ToCharArray());
             var bb = Trie<char, string>.Lookup(b, list3);
             Assert.AreEqual("B", bb);
 
-            var a = "AB".ToCharArray().Aggregate(List<char>.Empty, (current, letter) => List<char>.Cons(letter, current));
+            var a = ToList("BA".ToCharArray());
             var ab = Trie<char, string>.Lookup(a, list3);
             Assert.AreEqual("BA", ab);
         }
@@ -199,7 +202,7 @@ namespace FunProgTests.map
         [TestMethod]
         public void TrieBindSiblingTest()
         {
-            var a = "A".ToCharArray().Aggregate(List<char>.Empty, (current, letter) => List<char>.Cons(letter, current));
+            var a = ToList("A".ToCharArray());
             var list01 = Trie<char, string>.Bind(a, "A", Trie<char, string>.Empty);
             var list1 = list01.M;
             Assert.AreEqual("A", list1.V);
@@ -208,7 +211,7 @@ namespace FunProgTests.map
             Assert.AreEqual('A', list1.Option.V);
             Assert.IsNull(list1.Sibling);
 
-            var b = "B".ToCharArray().Aggregate(List<char>.Empty, (current, letter) => List<char>.Cons(letter, current));
+            var b = ToList("B".ToCharArray());
             var list02 = Trie<char, string>.Bind(b, "B", list01);
             var list2 = list02.M;
             Assert.AreEqual("B", list2.V);
@@ -229,7 +232,7 @@ namespace FunProgTests.map
         [TestMethod]
         public void TrieBindChildTest()
         {
-            var b = "B".ToCharArray().Aggregate(List<char>.Empty, (current, letter) => List<char>.Cons(letter, current));
+            var b = ToList("B".ToCharArray());
             var list02 = Trie<char, string>.Bind(b, "B", Trie<char, string>.Empty);
             {
                 var list2 = list02.M;
@@ -239,7 +242,7 @@ namespace FunProgTests.map
                 Assert.AreEqual('B', list2.Option.V);
             }
 
-            var a = "AB".ToCharArray().Aggregate(List<char>.Empty, (current, letter) => List<char>.Cons(letter, current));
+            var a = ToList("BA".ToCharArray());
             var list01 = Trie<char, string>.Bind(a, "BA", list02);
             {
                 Assert.AreEqual("B", list01.M.V);
@@ -261,7 +264,7 @@ namespace FunProgTests.map
         [TestMethod]
         public void TrieBindTest()
         {
-            var a = "AB".ToCharArray().Aggregate(List<char>.Empty, (current, letter) => List<char>.Cons(letter, current));
+            var a = ToList("BA".ToCharArray());
             var list01 = Trie<char, string>.Bind(a, "BA", Trie<char, string>.Empty);
             {
                 Assert.IsNull(list01.M.V);
@@ -273,7 +276,7 @@ namespace FunProgTests.map
                 Assert.IsNull(list1.Sibling);
             }
 
-            var b = "B".ToCharArray().Aggregate(List<char>.Empty, (current, letter) => List<char>.Cons(letter, current));
+            var b = ToList("B".ToCharArray());
             AssertThrows<NotFound>(() => Trie<char, string>.Lookup(b, list01));
 
             var ab = Trie<char, string>.Lookup(a, list01);
@@ -319,13 +322,13 @@ namespace FunProgTests.map
         {
             var trie = Trie<char, string>.Empty;
 
-            var c = "C".ToCharArray().Aggregate(List<char>.Empty, (current, letter) => List<char>.Cons(letter, current));
+            var c = ToList("C".ToCharArray());
             trie = Trie<char, string>.Bind(c, "C", trie);
-
-            Console.WriteLine(DumpMap(trie));
 
             var findC = Trie<char, string>.Lookup(c, trie);
             Assert.AreEqual("C", findC);
+
+            Assert.AreEqual("{, {'C', , , \"C\"}, , \"\"}", DumpMap(trie));
         }
 
         [TestMethod]
@@ -333,19 +336,19 @@ namespace FunProgTests.map
         {
             var trie = Trie<char, string>.Empty;
 
-            var c = "C".ToCharArray().Aggregate(List<char>.Empty, (current, letter) => List<char>.Cons(letter, current));
+            var c = ToList("C".ToCharArray());
             trie = Trie<char, string>.Bind(c, "C", trie);
 
-            var d = "D".ToCharArray().Aggregate(List<char>.Empty, (current, letter) => List<char>.Cons(letter, current));
+            var d = ToList("D".ToCharArray());
             trie = Trie<char, string>.Bind(d, "D", trie);
-
-            Console.WriteLine(DumpMap(trie));
 
             var findC = Trie<char, string>.Lookup(c, trie);
             Assert.AreEqual("C", findC);
 
             var findD = Trie<char, string>.Lookup(d, trie);
             Assert.AreEqual("D", findD);
+
+            Assert.AreEqual("{, {'D', , {'C', , , \"C\"}, \"D\"}, , \"\"}", DumpMap(trie));
         }
 
         [TestMethod]
@@ -353,25 +356,25 @@ namespace FunProgTests.map
         {
             var trie = Trie<char, string>.Empty;
 
-            var c = "C".ToCharArray().Aggregate(List<char>.Empty, (current, letter) => List<char>.Cons(letter, current));
+            var c = ToList("C".ToCharArray());
             trie = Trie<char, string>.Bind(c, "C", trie);
 
-            var cb = "BC".ToCharArray().Aggregate(List<char>.Empty, (current, letter) => List<char>.Cons(letter, current));
+            var cb = ToList("CB".ToCharArray());
             trie = Trie<char, string>.Bind(cb, "CB", trie);
-
-            Console.WriteLine(DumpMap(trie));
 
             var findC = Trie<char, string>.Lookup(c, trie);
             Assert.AreEqual("C", findC);
 
             var findCb = Trie<char, string>.Lookup(cb, trie);
             Assert.AreEqual("CB", findCb);
+
+            Assert.AreEqual("{, {'C', {'B', , , \"CB\"}, {'C', , , \"C\"}, \"C\"}, , \"\"}", DumpMap(trie));
         }
 
         [TestMethod]
         public void TrieLookupDogTest()
         {
-            var dog = "GOD".ToCharArray().Aggregate(List<char>.Empty, (current, letter) => List<char>.Cons(letter, current));
+            var dog = ToList("DOG".ToCharArray());
 
             var trie = Trie<char, string>.Empty;
             trie = Trie<char, string>.Bind(dog, "Dog", trie);
@@ -388,7 +391,7 @@ namespace FunProgTests.map
             Assert.AreEqual("Dog", trie2.V);
             // Assert.AreSame(trie1, trie2.M);
             Assert.IsNull(trie2.Option);
-            Assert.AreEqual("{\"Dog\": , , }", DumpMap(trie2));
+            Assert.AreEqual("{, , , \"Dog\"}", DumpMap(trie2));
         }
 
         // Others
@@ -396,27 +399,30 @@ namespace FunProgTests.map
         [TestMethod]
         public void Test()
         {
-            var car = "RAC".ToCharArray().Aggregate(List<char>.Empty, (current, letter) => List<char>.Cons(letter, current));
-            var cart = "TARC".ToCharArray().Aggregate(List<char>.Empty, (current, letter) => List<char>.Cons(letter, current));
-            var dog = "GOD".ToCharArray().Aggregate(List<char>.Empty, (current, letter) => List<char>.Cons(letter, current));
-            var trie = Trie<char, string>.Empty;
-            trie = Trie<char, string>.Bind(cart, "cart", trie);
-            trie = Trie<char, string>.Bind(car, "car", trie);
-            trie = Trie<char, string>.Bind(dog, "dog", trie);
+            var trie1 = Trie<char, string>.Empty;
+            Assert.AreEqual("{, , , \"\"}", DumpMap(trie1));
 
-            var result = DumpMap(trie);
-            Console.Write(result);
+            var cart = ToList("CART".ToCharArray());
+            var trie2 = Trie<char, string>.Bind(cart, "cart", trie1);
+            Assert.AreEqual("{, {'C', {'A', {'R', {'T', , , \"cart\"}, , \"\"}, , \"\"}, , \"\"}, , \"\"}", DumpMap(trie2));
 
-            var findCar = Trie<char, string>.Lookup(car, trie);
+            var car = ToList("CAR".ToCharArray());
+            var trie3 = Trie<char, string>.Bind(car, "car", trie2);
+            Assert.AreEqual("{, {'C', {'A', {'R', {'T', , , \"cart\"}, {'R', {'T', , , \"cart\"}, , \"\"}, \"car\"}, {'A', {'R', {'T', , , \"cart\"}, , \"\"}, , \"\"}, \"\"}, {'C', {'A', {'R', {'T', , , \"cart\"}, , \"\"}, , \"\"}, , \"\"}, \"\"}, , \"\"}", DumpMap(trie3));
+
+            var dog = ToList("DOG".ToCharArray());
+            var trie4 = Trie<char, string>.Bind(dog, "dog", trie3);
+
+            var findCar = Trie<char, string>.Lookup(car, trie4);
             Assert.AreEqual("car", findCar);
 
-            var findDog = Trie<char, string>.Lookup(dog, trie);
+            var findDog = Trie<char, string>.Lookup(dog, trie4);
             Assert.AreEqual("dog", findDog);
 
-            var findCart = Trie<char, string>.Lookup(cart, trie);
+            var findCart = Trie<char, string>.Lookup(cart, trie4);
             Assert.AreEqual("cart", findCart);
 
-            Console.WriteLine(DumpMap(trie));
+            Console.WriteLine(DumpMap(trie3));
         }
     }
 }
