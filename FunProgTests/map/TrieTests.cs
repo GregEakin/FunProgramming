@@ -200,7 +200,7 @@ namespace FunProgTests.map
         public void TrieBindSiblingTest()
         {
             var a = "A".ToCharArray().Aggregate(List<char>.Empty, (current, letter) => List<char>.Cons(letter, current));
-            var list01 = Trie<char, string>.Bind(a, "A", Trie<char,string>.Empty);
+            var list01 = Trie<char, string>.Bind(a, "A", Trie<char, string>.Empty);
             var list1 = list01.M;
             Assert.AreEqual("A", list1.V);
             Assert.IsNull(list1.M);
@@ -253,6 +253,28 @@ namespace FunProgTests.map
 
             var bb = Trie<char, string>.Lookup(b, list01);
             Assert.AreEqual("B", bb);
+
+            var ab = Trie<char, string>.Lookup(a, list01);
+            Assert.AreEqual("BA", ab);
+        }
+
+        [TestMethod]
+        public void TrieBindTest()
+        {
+            var a = "AB".ToCharArray().Aggregate(List<char>.Empty, (current, letter) => List<char>.Cons(letter, current));
+            var list01 = Trie<char, string>.Bind(a, "BA", Trie<char, string>.Empty);
+            {
+                Assert.IsNull(list01.M.V);
+                var list1 = list01.M.M;
+                Assert.AreEqual("BA", list1.V);
+                Assert.IsNull(list1.M);
+                Assert.IsInstanceOfType(list1.Option, typeof(Trie<char, string>.Option));
+                Assert.AreEqual('A', list1.Option.V);
+                Assert.IsNull(list1.List);
+            }
+
+            var b = "B".ToCharArray().Aggregate(List<char>.Empty, (current, letter) => List<char>.Cons(letter, current));
+            AssertThrows<NotFound>(() => Trie<char, string>.Lookup(b, list01));
 
             var ab = Trie<char, string>.Lookup(a, list01);
             Assert.AreEqual("BA", ab);
