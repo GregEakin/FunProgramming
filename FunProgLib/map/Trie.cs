@@ -65,9 +65,7 @@ namespace FunProgLib.map
 
             public static Map Bind(K item, Map map, Map list)
             {
-                var mm = new Option(item);
-                var m = new Map(map.V, map.M, mm, list);
-                return m;
+                return new Map(map.V, map.M, new Option(item), list);
             }
         }
 

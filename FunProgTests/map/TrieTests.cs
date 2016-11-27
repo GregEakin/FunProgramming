@@ -24,13 +24,15 @@ namespace FunProgTests.map
         {
             if (map == null) return "";
             var buffer = new StringBuilder();
-            buffer.Append("{ \"");
+            buffer.Append("{\"");
             buffer.Append(map.V);
             buffer.Append("\": ");
             buffer.Append(DumpMap(map.M));
-            buffer.Append("; ");
+            buffer.Append(", ");
             buffer.Append(DumpMMap(map.Option));
-            buffer.Append(" }");
+            buffer.Append(", ");
+            buffer.Append(DumpMap(map.List));
+            buffer.Append("}");
             return buffer.ToString();
         }
 
@@ -364,7 +366,7 @@ namespace FunProgTests.map
             Assert.AreEqual("Dog", trie2.V);
             // Assert.AreSame(trie1, trie2.M);
             Assert.IsNull(trie2.Option);
-            Assert.AreEqual("{ \"Dog\": ;  }", DumpMap(trie2));
+            Assert.AreEqual("{\"Dog\": , , }", DumpMap(trie2));
         }
 
         // Others
