@@ -27,6 +27,7 @@ namespace FunProgLib.map
                 V = v;
                 M = m;
                 MM = null;
+                MW = null;
             }
 
             public Map(T v, Map m, MMap mm)
@@ -34,6 +35,15 @@ namespace FunProgLib.map
                 V = v;
                 M = m;
                 MM = mm;
+                MW = null;
+            }
+
+            public Map(T v, Map m, MMap mm, Map mw)
+            {
+                V = v;
+                M = m;
+                MM = mm;
+                MW = mw;
             }
 
             public T V { get; }
@@ -42,34 +52,34 @@ namespace FunProgLib.map
 
             public MMap MM { get; }
 
+            public Map MW { get; }
+
             public static Map Lookup(K item, Map list)
             {
                 if (list?.MM == null) throw new NotFound(); // return null;  // Not Found
                 if (item.CompareTo(list.MM.V) == 0) return list;
-                return Lookup(item, list.MM.Map);
+                return Lookup(item, list.MW);
             }
 
             public static Map Bind(K item, Map map, Map list)
             {
-                var mm = new MMap(item, list);
-                var m = new Map(map.V, map.M, mm);
+                var mm = new MMap(item);
+                var m = new Map(map.V, map.M, mm, list);
                 return m;
             }
         }
 
         public sealed class MMap
         {
-            public MMap(K item, Map map)
+            public MMap(K item)
             {
                 V = item;
-                Map = map;
             }
 
             public K V { get; }
-            public Map Map { get; }
         }
 
-        public static Map Empty { get; } = new Map(null, null, null);
+        public static Map Empty { get; } = new Map(null, null);
 
         public static T Lookup(List<K>.Node mKey, Map trie)
         {

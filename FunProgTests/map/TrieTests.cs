@@ -55,11 +55,11 @@ namespace FunProgTests.map
         [TestMethod]
         public void MapLookupSiblingTest()
         {
-            var mm1 = new Trie<char, string>.MMap('A', null);
-            var list1 = new Trie<char, string>.Map("A", null, mm1);
+            var mm1 = new Trie<char, string>.MMap('A');
+            var list1 = new Trie<char, string>.Map("A", null, mm1, null);
 
-            var mm2 = new Trie<char, string>.MMap('B', list1);
-            var list2 = new Trie<char, string>.Map("B", null, mm2);
+            var mm2 = new Trie<char, string>.MMap('B');
+            var list2 = new Trie<char, string>.Map("B", null, mm2, list1);
 
             var aa = Trie<char, string>.Map.Lookup('A', list2);
             Assert.AreSame(list1, aa);
@@ -71,11 +71,11 @@ namespace FunProgTests.map
         [TestMethod]
         public void MapLookupChildTest()
         {
-            var mm1 = new Trie<char, string>.MMap('A', null);
-            var list1 = new Trie<char, string>.Map("BA", null, mm1);
+            var mm1 = new Trie<char, string>.MMap('A');
+            var list1 = new Trie<char, string>.Map("BA", null, mm1, null);
 
-            var mm2 = new Trie<char, string>.MMap('B', null);
-            var list2 = new Trie<char, string>.Map("B", list1, mm2);
+            var mm2 = new Trie<char, string>.MMap('B');
+            var list2 = new Trie<char, string>.Map("B", list1, mm2, null);
 
             AssertThrows<NotFound>(() => Trie<char, string>.Map.Lookup('A', list2));
 
@@ -157,11 +157,11 @@ namespace FunProgTests.map
         [TestMethod]
         public void TrieLookupSiblingTest()
         {
-            var mm1 = new Trie<char, string>.MMap('A', null);
-            var list1 = new Trie<char, string>.Map("A", null, mm1);
+            var mm1 = new Trie<char, string>.MMap('A');
+            var list1 = new Trie<char, string>.Map("A", null, mm1, null);
 
-            var mm2 = new Trie<char, string>.MMap('B', list1);
-            var list2 = new Trie<char, string>.Map("B", null, mm2);
+            var mm2 = new Trie<char, string>.MMap('B');
+            var list2 = new Trie<char, string>.Map("B", null, mm2, list1);
 
             var list3 = new Trie<char, string>.Map(null, list2, null);
 
@@ -177,11 +177,11 @@ namespace FunProgTests.map
         [TestMethod]
         public void TrieLookupChildTest()
         {
-            var mm1 = new Trie<char, string>.MMap('A', null);
-            var list1 = new Trie<char, string>.Map("BA", null, mm1);
+            var mm1 = new Trie<char, string>.MMap('A');
+            var list1 = new Trie<char, string>.Map("BA", null, mm1, null);
 
-            var mm2 = new Trie<char, string>.MMap('B', null);
-            var list2 = new Trie<char, string>.Map("B", list1, mm2);
+            var mm2 = new Trie<char, string>.MMap('B');
+            var list2 = new Trie<char, string>.Map("B", list1, mm2, null);
 
             var list3 = new Trie<char, string>.Map(null, list2, null);
 
@@ -204,7 +204,7 @@ namespace FunProgTests.map
             Assert.IsNull(list1.M);
             Assert.IsInstanceOfType(list1.MM, typeof(Trie<char, string>.MMap));
             Assert.AreEqual('A', list1.MM.V);
-            Assert.IsNull(list1.MM.Map);
+            Assert.IsNull(list1.MW);
 
             var b = "B".ToCharArray().Aggregate(List<char>.Empty, (current, letter) => List<char>.Cons(letter, current));
             var list02 = Trie<char, string>.Bind(b, "B", list01);
@@ -213,7 +213,7 @@ namespace FunProgTests.map
             Assert.IsNull(list2.M);
             Assert.IsInstanceOfType(list2.MM, typeof(Trie<char, string>.MMap));
             Assert.AreEqual('B', list2.MM.V);
-            Assert.AreSame(list1, list2.MM.Map);
+            Assert.AreSame(list1, list2.MW);
 
             var list3 = new Trie<char, string>.Map(null, list2, null);
 
@@ -246,7 +246,7 @@ namespace FunProgTests.map
                 Assert.IsNull(list1.M);
                 Assert.IsInstanceOfType(list1.MM, typeof(Trie<char, string>.MMap));
                 Assert.AreEqual('A', list1.MM.V);
-                Assert.IsNull(list1.MM.Map);
+                Assert.IsNull(list1.MW);
             }
 
             var bb = Trie<char, string>.Lookup(b, list01);
@@ -267,9 +267,9 @@ namespace FunProgTests.map
         [TestMethod]
         public void TrieLookupAaTest()
         {
-            var mm1 = new Trie<char, string>.MMap('a', null);
-            var list1 = new Trie<char, string>.Map("a", null, mm1);
-            var list2 = new Trie<char, string>.Map(null, list1, null);
+            var mm1 = new Trie<char, string>.MMap('a');
+            var list1 = new Trie<char, string>.Map("a", null, mm1, null);
+            var list2 = new Trie<char, string>.Map(null, list1, null, null);
 
             var aNode = new List<char>.Node('a', null);
             var result = Trie<char, string>.Lookup(aNode, list2);
@@ -279,11 +279,11 @@ namespace FunProgTests.map
         [TestMethod]
         public void TrieLookupAbTest()
         {
-            var mm1 = new Trie<char, string>.MMap('a', null);
-            var list1 = new Trie<char, string>.Map("a", null, mm1);
-            var mm2 = new Trie<char, string>.MMap('b', null);
-            var list2 = new Trie<char, string>.Map(null, list1, mm2);
-            var list3 = new Trie<char, string>.Map(null, list2, null);
+            var mm1 = new Trie<char, string>.MMap('a');
+            var list1 = new Trie<char, string>.Map("a", null, mm1, null);
+            var mm2 = new Trie<char, string>.MMap('b');
+            var list2 = new Trie<char, string>.Map(null, list1, mm2, null);
+            var list3 = new Trie<char, string>.Map(null, list2, null, null);
 
             var aNode = new List<char>.Node('b', new List<char>.Node('a', null));
             var result = Trie<char, string>.Lookup(aNode, list3);
