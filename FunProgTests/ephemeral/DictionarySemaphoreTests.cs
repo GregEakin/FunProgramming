@@ -34,11 +34,10 @@ namespace FunProgTests.ephemeral
                 _semaphore.Wait();
                 try
                 {
-                    // 0 ms, 3,000 calls
+                    var localSet = _set;
                     Interlocked.MemoryBarrier();
                     // 43 ms, 3,000 calls
-                    var newSet = SplayHeap<string>.Insert(word, _set);
-                    // 0 ms, 3,000 calls
+                    var newSet = SplayHeap<string>.Insert(word, localSet);
                     Interlocked.Exchange(ref _set, newSet);
                 }
                 finally
@@ -55,24 +54,14 @@ namespace FunProgTests.ephemeral
             {
                 while (true)
                 {
-                    Interlocked.MemoryBarrier();
-                    if (SplayHeap<string>.IsEmpty(_set))
-                    {
-                        // 14 ms, 17,011 calls
-                        Thread.Yield();
-                        continue;
-                    }
-
                     // 294 ms, 3,000 calls
                     _semaphore.Wait();
                     try
                     {
-                        Interlocked.MemoryBarrier();
                         var localSet = _set;
+                        Interlocked.MemoryBarrier();
                         if (SplayHeap<string>.IsEmpty(localSet))
-                        {
                             continue;
-                        }
 
                         // 3 ms, 3,000 calls
                         var word = SplayHeap<string>.FindMin(localSet);

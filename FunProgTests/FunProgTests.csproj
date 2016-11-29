@@ -62,6 +62,7 @@
     <Compile Include="ephemeral\DictionaryRwLockTests.cs" />
     <Compile Include="ephemeral\DictionarySemaphoreTests.cs" />
     <Compile Include="ephemeral\DictionaryLockTests.cs" />
+    <Compile Include="ephemeral\DictionarySingleThreadTests.cs" />
     <Compile Include="ephemeral\MultiInterlockMapTests.cs" />
     <Compile Include="ephemeral\MultiReaderMapTests.cs" />
     <Compile Include="ephemeral\DictionaryTests.cs" />
