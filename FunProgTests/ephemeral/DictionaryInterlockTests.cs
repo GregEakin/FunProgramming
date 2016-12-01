@@ -18,7 +18,7 @@ namespace FunProgTests.ephemeral
     [TestClass]
     public class DictionaryInterlockTests : DictionaryTests
     {
-        private SplayHeap<string>.Heap _set = SplayHeap<string>.Empty;
+        private volatile SplayHeap<string>.Heap _set = SplayHeap<string>.Empty;
 
         // 132 ms, 10 calls
         private void InsertAction()
