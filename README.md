@@ -27,7 +27,7 @@ It also allows one to test the performance to see how they stack up with other d
 - [Chris Okasaki’s original PhD dissertation](http://www.cs.cmu.edu/~rwh/theses/okasaki.pdf)
 
 ## Sample code
-To update a shared ['_set'](blob/master/FunProgLib/heap/SplayHeap.cs) across multiple threads, 
+To update a shared ['_set'](FunProgLib/heap/SplayHeap.cs) across multiple threads, 
 we can use an Interlocked.CompareExchange() to only update the pointer, when it hasn't changed.
 ```C#
 var word = NextWord(10);
