@@ -26,5 +26,22 @@ It also allows one to test the performance to see how they stack up with other d
 - [Google Books](https://books.google.com/books?id=SxPzSTcTalAC)
 - [Chris Okasaki’s original PhD dissertation](http://www.cs.cmu.edu/~rwh/theses/okasaki.pdf)
 
+## Sample code
+To update a shared ['_set'](GregEakin/FunProgramming/blob/master/FunProgLib/heap/SplayHeap.cs) across multiple threads, 
+we can use an Interlocked.CompareExchange() to only update the pointer, when it hasn't changed.
+```C#
+var word = NextWord(10);
+while (true)
+{
+    var workingSet = _set;
+    Thread.MemoryBarrier();
+    var newSet = SplayHeap<string>.Insert(word, workingSet);
+    var oldSet = Interlocked.CompareExchange(ref _set, newSet, workingSet);
+    if (ReferenceEquals(oldSet, workingSet))
+        break;
+}
+```
+
 ## Author
-[Greg Eakin](https://www.linkedin.com/in/gregeakin)
+:fire: [Greg Eakin](https://www.linkedin.com/in/gregeakin)
+
