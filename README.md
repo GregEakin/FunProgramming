@@ -27,4 +27,4 @@ It also allows one to test the performance to see how they stack up with other d
 - [Chris Okasaki’s original PhD dissertation](http://www.cs.cmu.edu/~rwh/theses/okasaki.pdf)
 
 ## Author
-[Greg Eakin](http://gdbtech.info)
+[Greg Eakin](https://www.linkedin.com/in/gregeakin)
