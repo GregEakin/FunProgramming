@@ -28,7 +28,8 @@ It also allows one to test the performance to see how they stack up with other d
 
 ## Sample code
 To update a shared ['_set'](FunProgLib/heap/SplayHeap.cs) across multiple threads, 
-we can use an Interlocked.CompareExchange() to only update the pointer, when it hasn't changed.
+we can use an ['Interlocked.CompareExchange()'](https://msdn.microsoft.com/en-us/library/system.threading.interlocked.exchange) 
+to only update the pointer, when it hasn't changed.
 ```C#
 var word = NextWord(10);
 while (true)
