@@ -32,9 +32,9 @@ namespace FunProgTests.tree
             if (map == null) return "";
             var buffer = new StringBuilder();
             buffer.Append("{");
-                buffer.Append('\'');
-                buffer.Append(map.Option);
-                buffer.Append('\'');
+            buffer.Append('\'');
+            buffer.Append(map.Option);
+            buffer.Append('\'');
             buffer.Append(", ");
             buffer.Append(DumpMap(map.M));
             buffer.Append(", ");
@@ -345,7 +345,7 @@ namespace FunProgTests.tree
             var findCb = Trie<char, string>.Lookup(cb, trie);
             Assert.AreEqual("CB", findCb);
 
-          //Assert.AreEqual("{'\0', {'C', {'B', , , \"CB\"}, {'C', , , \"C\"}, \"C\"}, , \"\"}", DumpMap(trie));
+            //Assert.AreEqual("{'\0', {'C', {'B', , , \"CB\"}, {'C', , , \"C\"}, \"C\"}, , \"\"}", DumpMap(trie));
             Assert.AreEqual("{'\0', {'C', {'B', , , \"CB\"}, {'C', {'B', , , \"CB\"}, , \"\"}, \"C\"}, , \"\"}", DumpMap(trie));
         }
 

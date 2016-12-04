@@ -19,7 +19,7 @@ namespace FunProgTests.ephemeral
     [TestClass]
     public class MultiInterlockMapTests : DictionaryTests
     {
-        private RedBlackSet<string>.Tree _set = RedBlackSet<string>.EmptyTree;
+        private volatile RedBlackSet<string>.Tree _set = RedBlackSet<string>.EmptyTree;
 
         private void WriteAction()
         {
@@ -44,11 +44,7 @@ namespace FunProgTests.ephemeral
             for (var i = 0; i < Count; i++)
             {
                 var word = NextWord(1);
-                var workingSet = _set;
-                Thread.MemoryBarrier();
-                if (workingSet != RedBlackSet<string>.EmptyTree)
-                    continue;
-                if (RedBlackSet<string>.Member(word, workingSet))
+                if (RedBlackSet<string>.Member(word, _set))
                     hits++;
             }
 

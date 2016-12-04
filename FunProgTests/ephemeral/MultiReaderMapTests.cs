@@ -40,7 +40,8 @@ namespace FunProgTests.ephemeral
             for (var i = 0; i < Count; i++)
             {
                 var word = NextWord(1);
-                if (RedBlackSet<string>.Member(word, _set)) hits++;
+                if (RedBlackSet<string>.Member(word, _set))
+                    hits++;
             }
 
             Console.WriteLine("Task={0}, Thread={1} : {2} words found",

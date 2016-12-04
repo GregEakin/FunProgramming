@@ -10,9 +10,6 @@
 using System;
 using FunProgLib.heap;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace FunProgTests.ephemeral
 {

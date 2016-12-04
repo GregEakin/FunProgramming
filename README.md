@@ -5,6 +5,7 @@ These are meant to be used as a companion when reading the book. This allows one
 It also allows one to test the performance to see how they stack up with other data structures.
 
 ##From the book:
+[![Purely Functional Data Structures.](http://gdbtech.info/wp-content/uploads/2016/11/pfds-180x245.jpg)](http://gdbtech.info/purely-functional-data-structures-in-csharp)
 >Okasaki, Chris. *Purely Functional Data Structures.* 
 >Cambridge, U.K.: Cambridge UP, 1998. Print.
 
@@ -24,3 +25,6 @@ It also allows one to test the performance to see how they stack up with other d
 - [Amazon.com](https://www.amazon.com/Purely-Functional-Structures-Chris-Okasaki/dp/0521663504/)
 - [Google Books](https://books.google.com/books?id=SxPzSTcTalAC)
 - [Chris Okasaki’s original PhD dissertation](http://www.cs.cmu.edu/~rwh/theses/okasaki.pdf)
+
+## Author
+[Greg Eakin](http://gdbtech.info)
