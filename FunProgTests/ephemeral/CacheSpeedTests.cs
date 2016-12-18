@@ -1,8 +1,8 @@
-﻿using System;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace FunProgTests.ephemeral
 {
@@ -34,7 +34,7 @@ namespace FunProgTests.ephemeral
                 memory[i] = new byte[length];
             }
 
-            // Let the system settle a bit
+            // Let the system settle a bit.
             RandomAccessMemory(memory[20], 100);
             RandomAccessMemory(memory[10], 100);
 
@@ -42,7 +42,7 @@ namespace FunProgTests.ephemeral
             Console.WriteLine("Test\tSize\tTime");
             for (var i = 0; i < memory.Length; i++)
             {
-                // Do each step three times, to find the fastest
+                // Do each step three times, to find the fastest.
                 var time = double.MaxValue;
                 for (var j = 0; j < 3; j++)
                 {
@@ -59,10 +59,10 @@ namespace FunProgTests.ephemeral
             for (var i = 0; i < memory.Count; i++)
                 memory[i] = (byte)(i & 0xFF);
 
-            // Separate the writes from the reads
+            // Separate the writes from the reads.
             Interlocked.MemoryBarrier();
 
-            // read the data randomly
+            // read the data randomly.
             var count = 0;
             var watch = new Stopwatch();
             watch.Start();
