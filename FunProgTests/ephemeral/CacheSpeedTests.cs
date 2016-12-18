@@ -15,7 +15,7 @@ namespace FunProgTests.ephemeral
         public void SingleTest()
         {
             var memory = new byte[25];
-            var count = PokeMemory(memory, 1000);
+            var count = RandomAccessMemory(memory, 1000);
             Console.WriteLine($"Test took {count:n0}");
         }
 
@@ -35,8 +35,8 @@ namespace FunProgTests.ephemeral
             }
 
             // Let the system settle a bit
-            PokeMemory(memory[20], 100);
-            PokeMemory(memory[10], 100);
+            RandomAccessMemory(memory[20], 100);
+            RandomAccessMemory(memory[10], 100);
 
             // Measrue the performance.
             Console.WriteLine("Test\tSize\tTime");
@@ -46,14 +46,14 @@ namespace FunProgTests.ephemeral
                 var time = double.MaxValue;
                 for (var j = 0; j < 3; j++)
                 {
-                    var count = PokeMemory(memory[i], duration);
+                    var count = RandomAccessMemory(memory[i], duration);
                     time = Math.Min(1.0e6 * duration / count, time);
                 }
                 Console.WriteLine($"{i}\t{memory[i].Length}\t{time}");
             }
         }
 
-        private static int PokeMemory(IList<byte> memory, long time)
+        private static int RandomAccessMemory(IList<byte> memory, long time)
         {
             // bring all the memory into the cache.
             for (var i = 0; i < memory.Count; i++)
