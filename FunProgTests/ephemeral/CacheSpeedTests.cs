@@ -26,7 +26,7 @@ namespace FunProgTests.ephemeral
             const int samples = 50;
             const int duration = 333;
 
-            // setup the data structers before taking measurments.
+            // setup the data structures before taking measurements.
             var memory = new byte[samples][];
             for (var i = 0; i < memory.Length; i++)
             {
@@ -38,7 +38,7 @@ namespace FunProgTests.ephemeral
             RandomAccessMemory(memory[20], 100);
             RandomAccessMemory(memory[10], 100);
 
-            // Measrue the performance.
+            // Measure the performance.
             Console.WriteLine("Test\tSize\tTime");
             for (var i = 0; i < memory.Length; i++)
             {
@@ -59,7 +59,7 @@ namespace FunProgTests.ephemeral
             for (var i = 0; i < memory.Count; i++)
                 memory[i] = (byte)(i & 0xFF);
 
-            // flush the cach to main memory
+            // Separate the writes from the reads
             Interlocked.MemoryBarrier();
 
             // read the data randomly
