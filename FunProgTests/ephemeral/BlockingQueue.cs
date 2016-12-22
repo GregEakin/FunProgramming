@@ -16,38 +16,38 @@ namespace FunProgTests.ephemeral
 
     class BlockingQueue<T>
     {
-        private readonly object key = new object();
-        private readonly int size;
-        private int count;
-        private volatile RealTimeQueue<T>.Queue queue = RealTimeQueue<T>.Empty;
-        private volatile bool quit;
+        private readonly object _key = new object();
+        private readonly int _size;
+        private int _count;
+        private volatile RealTimeQueue<T>.Queue _queue = RealTimeQueue<T>.Empty;
+        private volatile bool _quit;
 
         public BlockingQueue(int size)
         {
-            this.size = size;
+            _size = size;
         }
 
         public void Quit()
         {
-            lock (key)
+            lock (_key)
             {
-                quit = true;
-                Monitor.PulseAll(key);
+                _quit = true;
+                Monitor.PulseAll(_key);
             }
         }
 
         public bool Enqueue(T t)
         {
-            lock (key)
+            lock (_key)
             {
-                while (!quit && count >= size) Monitor.Wait(key);
+                while (!_quit && _count >= _size) Monitor.Wait(_key);
 
-                if (quit) return false;
+                if (_quit) return false;
 
-                Interlocked.Increment(ref count);
-                queue = RealTimeQueue<T>.Snoc(queue, t);
+                Interlocked.Increment(ref _count);
+                _queue = RealTimeQueue<T>.Snoc(_queue, t);
 
-                Monitor.PulseAll(key);
+                Monitor.PulseAll(_key);
             }
 
             return true;
@@ -57,17 +57,17 @@ namespace FunProgTests.ephemeral
         {
             t = default(T);
 
-            lock (key)
+            lock (_key)
             {
-                while (!quit && RealTimeQueue<T>.IsEmpty(queue)) Monitor.Wait(key);
+                while (!_quit && RealTimeQueue<T>.IsEmpty(_queue)) Monitor.Wait(_key);
 
-                if (RealTimeQueue<T>.IsEmpty(queue)) return false;
+                if (RealTimeQueue<T>.IsEmpty(_queue)) return false;
 
-                Interlocked.Decrement(ref count);
-                t = RealTimeQueue<T>.Head(queue);
-                queue = RealTimeQueue<T>.Tail(queue);
+                Interlocked.Decrement(ref _count);
+                t = RealTimeQueue<T>.Head(_queue);
+                _queue = RealTimeQueue<T>.Tail(_queue);
 
-                Monitor.PulseAll(key);
+                Monitor.PulseAll(_key);
             }
 
             return true;
@@ -91,7 +91,7 @@ namespace FunProgTests.ephemeral
                 for (var x = 0; ; x++)
                 {
                     if (!q.Enqueue(x)) break;
-                    var msg = string.Format("{0,3}: {1,14} {2,4} >", Thread.CurrentThread.ManagedThreadId, watch.Elapsed, x.ToString("0000"));
+                    var msg = $"{Thread.CurrentThread.ManagedThreadId,3}: {watch.Elapsed,14} {x,4:0000} >";
                     Trace.WriteLine(msg);
                 }
                 Trace.WriteLine("Producer quitting");
@@ -109,7 +109,7 @@ namespace FunProgTests.ephemeral
                         Thread.Sleep(10);
                         int x;
                         if (!q.Dequeue(out x)) break;
-                        var msg = string.Format("{0,3}: {1,14}      < {2,4}", Thread.CurrentThread.ManagedThreadId, watch.Elapsed, x.ToString("0000"));
+                        var msg = $"{Thread.CurrentThread.ManagedThreadId,3}: {watch.Elapsed,14}      < {x,4:0000}";
                         Trace.WriteLine(msg);
                     }
                     Trace.WriteLine("Consumer quitting");

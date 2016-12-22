@@ -47,12 +47,12 @@ namespace FunProgTests.queue
         {
             var result = new StringBuilder();
             result.Append("{");
-            var seperator = "";
+            var separator = "";
             while (true)
             {
                 if (list == null) break;
-                result.Append(seperator);
-                seperator = ", ";
+                result.Append(separator);
+                separator = ", ";
                 var head = List<T>.Head(list);
                 result.Append(head);
                 list = List<T>.Tail(list);

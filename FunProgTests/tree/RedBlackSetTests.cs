@@ -88,7 +88,7 @@ namespace FunProgTests.tree
         }
 
         [TestMethod]
-        public void BlanceTest1()
+        public void BalanceTest1()
         {
             const string Data = "z y x";
             var t = Data.Split().Aggregate(RedBlackSet<string>.EmptyTree, (current, word) => RedBlackSet<string>.Insert(word, current));
@@ -96,7 +96,7 @@ namespace FunProgTests.tree
         }
 
         [TestMethod]
-        public void BlanceTest2()
+        public void BalanceTest2()
         {
             const string Data = "z x y";
             var t = Data.Split().Aggregate(RedBlackSet<string>.EmptyTree, (current, word) => RedBlackSet<string>.Insert(word, current));
@@ -104,7 +104,7 @@ namespace FunProgTests.tree
         }
 
         [TestMethod]
-        public void BlanceTest3()
+        public void BalanceTest3()
         {
             const string Data = "x z y";
             var t = Data.Split().Aggregate(RedBlackSet<string>.EmptyTree, (current, word) => RedBlackSet<string>.Insert(word, current));
@@ -112,7 +112,7 @@ namespace FunProgTests.tree
         }
 
         [TestMethod]
-        public void BlanceTest4()
+        public void BalanceTest4()
         {
             const string Data = "x y z";
             var t = Data.Split().Aggregate(RedBlackSet<string>.EmptyTree, (current, word) => RedBlackSet<string>.Insert(word, current));
@@ -120,7 +120,7 @@ namespace FunProgTests.tree
         }
 
         [TestMethod]
-        public void BlanceTest5()
+        public void BalanceTest5()
         {
             const string Data = "y x z";
             var t = Data.Split().Aggregate(RedBlackSet<string>.EmptyTree, (current, word) => RedBlackSet<string>.Insert(word, current));
@@ -128,7 +128,7 @@ namespace FunProgTests.tree
         }
 
         [TestMethod]
-        public void BlanceTest6()
+        public void BalanceTest6()
         {
             const string Data = "y z x";
             var t = Data.Split().Aggregate(RedBlackSet<string>.EmptyTree, (current, word) => RedBlackSet<string>.Insert(word, current));

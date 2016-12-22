@@ -7,15 +7,14 @@
 // All Rights Reserved.
 //
 
-using System.Collections.Generic;
 using System.Text;
 
 namespace FunProgTests.heap
 {
-    using System;
-    using System.Linq;
     using FunProgLib.heap;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using System;
+    using System.Linq;
     using static utilities.ExpectedException;
 
     [TestClass]

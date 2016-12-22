@@ -7,11 +7,10 @@
 // All Rights Reserved.
 //
 
-using System;
-using System.Threading;
-using System.Threading.Tasks;
 using FunProgLib.streams;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
+using System.Threading;
 
 namespace FunProgTests.streams
 {

@@ -16,7 +16,7 @@ namespace FunProgTests.utilities
     public class StringUtilitiesTests
     {
         [TestMethod]
-        public void EnumberableToReadableStringEmptyTest()
+        public void EnumerableToReadableStringEmptyTest()
         {
             var data = new string[0];
             Assert.AreEqual("[]", data.ToReadableString());
