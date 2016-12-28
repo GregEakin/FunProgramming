@@ -15,8 +15,10 @@ namespace FunProgTests.ephemeral
         public void SingleTest()
         {
             var memory = new byte[25];
-            var count = RandomAccessMemory(memory, 1000);
-            Console.WriteLine($"Test took {count:n0}");
+            const int duration = 1000;  // ms
+            var count = RandomAccessMemory(memory, duration, false);
+            var time = 1.0e6 * duration / count;
+            Console.WriteLine($"Test took {count:n0} times, for an average of {time} nanoseconds");
         }
 
         [TestMethod]
@@ -24,7 +26,7 @@ namespace FunProgTests.ephemeral
         {
             const int start = 18;
             const int samples = 50;
-            const int duration = 333;
+            const int duration = 333;   // ms
 
             // setup the data structures before taking measurements.
             var memory = new byte[samples][];
@@ -35,25 +37,29 @@ namespace FunProgTests.ephemeral
             }
 
             // Let the system settle a bit.
-            RandomAccessMemory(memory[20], 100);
-            RandomAccessMemory(memory[10], 100);
+            RandomAccessMemory(memory[20], 100, true);
+            RandomAccessMemory(memory[10], 100, true);
 
             // Measure the performance.
-            Console.WriteLine("Test\tSize\tTime");
+            Console.WriteLine("Test\tSize\tWithout\tWith");
             for (var i = 0; i < memory.Length; i++)
             {
                 // Do each step three times, to find the fastest.
-                var time = double.MaxValue;
+                var time1 = double.MaxValue;
+                var time2 = double.MaxValue;
                 for (var j = 0; j < 3; j++)
                 {
-                    var count = RandomAccessMemory(memory[i], duration);
-                    time = Math.Min(1.0e6 * duration / count, time);
+                    var count1 = RandomAccessMemory(memory[i], duration, false);
+                    time1 = Math.Min(1.0e6 * duration / count1, time1);
+
+                    var count2 = RandomAccessMemory(memory[i], duration, true);
+                    time2 = Math.Min(1.0e6 * duration / count2, time2);
                 }
-                Console.WriteLine($"{i}\t{memory[i].Length}\t{time}");
+                Console.WriteLine($"{i}\t{memory[i].Length}\t{time1}\t{time2}");
             }
         }
 
-        private static int RandomAccessMemory(IList<byte> memory, long time)
+        private static int RandomAccessMemory(IList<byte> memory, long time, bool measure)
         {
             // bring all the memory into the cache.
             for (var i = 0; i < memory.Count; i++)
@@ -68,9 +74,10 @@ namespace FunProgTests.ephemeral
             watch.Start();
             while (watch.ElapsedMilliseconds < time)
             {
-                var index = RandomNum.Next(memory.Count);
-                var data = memory[index];
                 ++count;
+                var index = RandomNum.Next(memory.Count);
+                if (!measure) continue;
+                var data = memory[index];
             }
             return count;
         }
