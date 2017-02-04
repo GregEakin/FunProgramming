@@ -9,10 +9,10 @@
 // Okasaki, Chris. "2.1 Lists." Purely Functional Data Structures. 
 //     Cambridge, U.K.: Cambridge UP, 1998. 7-11. Print.
 
-using System;
-
 namespace FunProgLib.lists
 {
+    using System;
+
     public static class CustomStack<T> // : IStack<T>
     {
         public sealed class Node // : IEnumerable<T>
@@ -27,15 +27,9 @@ namespace FunProgLib.lists
 
             public Node Next { get; }
 
-            //public IEnumerator<T> GetEnumerator()
-            //{
-            //    return new StackEnum(this);
-            //}
+            //public IEnumerator<T> GetEnumerator() => new StackEnum(this);
 
-            //IEnumerator IEnumerable.GetEnumerator()
-            //{
-            //    return GetEnumerator();
-            //}
+            //IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
             //private sealed class StackEnum : IEnumerator<T>
             //{
@@ -55,20 +49,11 @@ namespace FunProgLib.lists
             //        return !IsEmpty(this.stack);
             //    }
 
-            //    public void Reset()
-            //    {
-            //        this.stack = this.start;
-            //    }
+            //    public void Reset() => this.stack = this.start;
 
-            //    object IEnumerator.Current
-            //    {
-            //        get { return stack.element; }
-            //    }
+            //    object IEnumerator.Current => stack.element;
 
-            //    public T Current
-            //    {
-            //        get { return stack.element; }
-            //    }
+            //    public T Current => stack.element;
 
             //    public void Dispose()
             //    {
@@ -78,15 +63,9 @@ namespace FunProgLib.lists
 
         public static Node Empty { get; } = null;
 
-        public static bool IsEmpty(Node list)
-        {
-            return list == Empty;
-        }
+        public static bool IsEmpty(Node list) => list == Empty;
 
-        public static Node Cons(T element, Node list)
-        {
-            return new Node(element, list);
-        }
+        public static Node Cons(T element, Node list) => new Node(element, list);
 
         public static T Head(Node list)
         {

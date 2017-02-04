@@ -9,11 +9,11 @@
 // Okasaki, Chris. "10.3.1 Tries." Purely Functional Data Structures. 
 //     Cambridge, U.K.: Cambridge UP, 1998. 163-6. Print.
 
-using System;
-using FunProgLib.lists;
-
 namespace FunProgLib.tree
 {
+    using lists;
+    using System;
+
     public class NotFound : Exception { }
 
     public static class Trie<K, T>
@@ -52,10 +52,7 @@ namespace FunProgLib.tree
                 return Lookup(item, sibling.Sibling);
             }
 
-            public static Map Bind(K item, Map child, Map sibling)
-            {
-                return new Map(child.V, child.M, item, sibling);
-            }
+            public static Map Bind(K item, Map child, Map sibling) => new Map(child.V, child.M, item, sibling);
         }
 
         public static Map Empty { get; } = new Map(default(T), null);

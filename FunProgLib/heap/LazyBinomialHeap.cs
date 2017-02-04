@@ -11,9 +11,8 @@
 
 namespace FunProgLib.heap
 {
-    using System;
-
     using lists;
+    using System;
 
     public static class LazyBinomialHeap<T> where T : IComparable<T>
     {
@@ -37,10 +36,7 @@ namespace FunProgLib.heap
 
         public static Lazy<List<Tree>.Node> Empty { get; } = new Lazy<List<Tree>.Node>(() => List<Tree>.Empty);
 
-        public static bool IsEmpty(Lazy<List<Tree>.Node> heap)
-        {
-            return List<Tree>.IsEmpty(heap.Value);
-        }
+        public static bool IsEmpty(Lazy<List<Tree>.Node> heap) => List<Tree>.IsEmpty(heap.Value);
 
         private static Tree Link(Tree t1, Tree t2)
         {

@@ -47,10 +47,7 @@ namespace FunProgLib.queue
 
         public static Queue Empty { get; } = new Queue(0, Stream<T>.DollarNil, Stream<T>.DollarNil, 0, Stream<T>.DollarNil, Stream<T>.DollarNil);
 
-        public static bool IsEmpty(Queue q)
-        {
-            return q.LenF + q.LenR == 0;
-        }
+        public static bool IsEmpty(Queue q) => q.LenF + q.LenR == 0;
 
         private static Lazy<Stream<T>.StreamCell> Exec1(Lazy<Stream<T>.StreamCell> s)
         {

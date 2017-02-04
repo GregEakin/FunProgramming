@@ -11,9 +11,8 @@
 
 namespace FunProgLib.queue
 {
-    using System;
-
     using streams;
+    using System;
 
     public static class BankersDeque<T> // : IDeque<T>
     {
@@ -37,10 +36,7 @@ namespace FunProgLib.queue
 
         public static Queue Empty { get; } = new Queue(0, Stream<T>.DollarNil, 0, Stream<T>.DollarNil);
 
-        public static bool IsEmpty(Queue q)
-        {
-            return q.LenF + q.LenR == 0;
-        }
+        public static bool IsEmpty(Queue q) => q.LenF + q.LenR == 0;
 
         private static Queue Check(int lenF, Lazy<Stream<T>.StreamCell> f, int lenR, Lazy<Stream<T>.StreamCell> r)
         {

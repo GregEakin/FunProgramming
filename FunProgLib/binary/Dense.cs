@@ -11,8 +11,8 @@
 
 namespace FunProgLib.binary
 {
-    using System;
     using lists;
+    using System;
 
     public static class Dense
     {

@@ -11,10 +11,9 @@
 
 namespace FunProgLib.heap
 {
-    using System;
-
     using lists;
     using streams;
+    using System;
 
     public static class ScheduledBinomialHeap<T> where T : IComparable<T>
     {
@@ -72,10 +71,7 @@ namespace FunProgLib.heap
 
         public static Heap Empty { get; } = new Heap(EmptyStream, EmptySchedule);
 
-        public static bool IsEmpty(Heap heap)
-        {
-            return heap.DigitStream == Stream<Digit>.DollarNil;
-        }
+        public static bool IsEmpty(Heap heap) => heap.DigitStream == Stream<Digit>.DollarNil;
 
         private static Tree Link(Tree t1, Tree t2)
         {
@@ -149,6 +145,7 @@ namespace FunProgLib.heap
                 var lazy3 = new Lazy<Stream<Digit>.StreamCell>(() => new Stream<Digit>.StreamCell(Zero, stuff.Stream));
                 return new Stuff(stuff.Tree, lazy3);
             }
+
             if (dsc.Value.Next == EmptyStream) return new Stuff(dsc.Value.Element.One, EmptyStream);
             var tp = RemoveMinTree(dsc.Value.Next);
             if (dsc.Value.Element.One.Node.CompareTo(tp.Tree.Node) <= 0)
@@ -156,6 +153,7 @@ namespace FunProgLib.heap
                 var lazy = new Lazy<Stream<Digit>.StreamCell>(() => new Stream<Digit>.StreamCell(Zero, dsc.Value.Next));
                 return new Stuff(dsc.Value.Element.One, lazy);
             }
+
             var lazy2 = new Lazy<Stream<Digit>.StreamCell>(() => new Stream<Digit>.StreamCell(new Digit(dsc.Value.Element.One), tp.Stream));
             return new Stuff(tp.Tree, lazy2);
         }

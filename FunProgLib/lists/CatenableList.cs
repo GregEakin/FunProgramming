@@ -9,11 +9,11 @@
 // Okasaki, Chris. "10.2.1 Lists With Efficient Catenation." Purely Functional Data Structures. 
 //     Cambridge, U.K.: Cambridge UP, 1998. 153-8. Print.
 
-using System;
-using FunProgLib.queue;
-
 namespace FunProgLib.lists
 {
+    using queue;
+    using System;
+
     public static class CatenableList<T>
     {
         public sealed class C
@@ -30,15 +30,9 @@ namespace FunProgLib.lists
 
         public static C Empty { get; } = null;
 
-        public static bool IsEmpty(C list)
-        {
-            return list == Empty;
-        }
+        public static bool IsEmpty(C list) => list == Empty;
 
-        private static C Link(C xs, Lazy<C> s)
-        {
-            return new C(xs.X, BootstrappedQueue<Lazy<C>>.Snoc(xs.Q, s));
-        }
+        private static C Link(C xs, Lazy<C> s) => new C(xs.X, BootstrappedQueue<Lazy<C>>.Snoc(xs.Q, s));
 
         private static C LinkAll(BootstrappedQueue<Lazy<C>>.Queue q)
         {
@@ -48,7 +42,6 @@ namespace FunProgLib.lists
             return Link(t, new Lazy<C>(() => LinkAll(qp)));
         }
 
-
         public static C Cat(C xs, C ys)
         {
             if (IsEmpty(ys)) return xs;
@@ -56,15 +49,9 @@ namespace FunProgLib.lists
             return Link(xs, new Lazy<C>(() => ys));
         }
 
-        public static C Cons(T x, C xs)
-        {
-            return Cat(new C(x, BootstrappedQueue<Lazy<C>>.Empty), xs);
-        }
+        public static C Cons(T x, C xs) => Cat(new C(x, BootstrappedQueue<Lazy<C>>.Empty), xs);
 
-        public static C Snoc(C xs, T x)
-        {
-            return Cat(xs, new C(x, BootstrappedQueue<Lazy<C>>.Empty));
-        }
+        public static C Snoc(C xs, T x) => Cat(xs, new C(x, BootstrappedQueue<Lazy<C>>.Empty));
 
         public static T Head(C c)
         {

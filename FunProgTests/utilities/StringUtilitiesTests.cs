@@ -28,11 +28,5 @@ namespace FunProgTests.utilities
             var data = new[] { "A", "B" };
             Assert.AreEqual("[A, B]", data.ToReadableString());
         }
-
-        [TestMethod]
-        public void StringFormatWithTest()
-        {
-            Assert.AreEqual("1, 2", "{0}, {1}".FormatWith(1, 2));
-        }
     }
 }

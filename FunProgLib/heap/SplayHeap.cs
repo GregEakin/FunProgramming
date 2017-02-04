@@ -46,10 +46,7 @@ namespace FunProgLib.heap
 
         public static Heap Empty { get; } = null;
 
-        public static bool IsEmpty(Heap h)
-        {
-            return h == Empty;
-        }
+        public static bool IsEmpty(Heap h) => h == Empty;
 
         private static Pair Partition(T pivot, Heap t)
         {

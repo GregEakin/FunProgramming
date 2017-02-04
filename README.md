@@ -1,12 +1,12 @@
 # Fun Programming
-This project includes C# versions of the data structures from Chris Okasaki’s book [*Purely Functional Data Structures*](http://www.cambridge.org/catalogue/catalogue.asp?isbn=0521663504").
+This project includes C# versions of the data structures from Chris Okasaki’s book [*Purely Functional Data Structures*](http://www.cambridge.org/catalogue/catalogue.asp?isbn=0521663504).
 These are implemented as static functions, to closely resemble the book’s version.
 These are meant to be used as a companion when reading the book. This allows one to fire up the samples, in a debugger, and see how they work. 
 It also allows one to test the performance to see how they stack up with other data structures.
 
 ## From the book:
 [![Purely Functional Data Structures](pictures/pfds-180x245.jpg)](http://gdbtech.info/purely-functional-data-structures-in-csharp)
->Okasaki, Chris. *Purely Functional Data Structures.* 
+>Okasaki, Chris. *Purely Functional Data Structures*. 
 >Cambridge, U.K.: Cambridge UP, 1998. Print.
 
 ## Features:

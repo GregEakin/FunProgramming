@@ -9,10 +9,10 @@
 // Okasaki, Chris. "10.2.2 Bootstrapped Queues." Purely Functional Data Structures. 
 //     Cambridge, U.K.: Cambridge UP, 1998. 158-62. Print.
 
-using System;
-
 namespace FunProgLib.heap
 {
+    using System;
+
     public static class BootstrappedHeap<T> where T : IComparable<T>
     {
         public sealed class Heap
@@ -46,10 +46,7 @@ namespace FunProgLib.heap
 
             public static Element Empty { get; } = null;
 
-            public static bool IsEmpty(Element h)
-            {
-                return h == Empty;
-            }
+            public static bool IsEmpty(Element h) => h == Empty;
 
             public static Element Merge(Element h1, Element h2)
             {
@@ -59,10 +56,7 @@ namespace FunProgLib.heap
                 return new Element(h2.H1, Insert(h1.H1, h2.H2));
             }
 
-            public static Element Insert(Heap e1, Element h2)
-            {
-                return Merge(new Element(e1, Empty), h2);
-            }
+            public static Element Insert(Heap e1, Element h2) => Merge(new Element(e1, Empty), h2);
 
             public static Heap FindMin(Element h)
             {
@@ -82,10 +76,7 @@ namespace FunProgLib.heap
 
         public static Heap Empty { get; } = null;
 
-        public static bool IsEmpty(Heap heap)
-        {
-            return heap == Empty;
-        }
+        public static bool IsEmpty(Heap heap) => heap == Empty;
 
         public static Heap Merge(Heap h1, Heap h2)
         {
@@ -95,10 +86,7 @@ namespace FunProgLib.heap
             return new Heap(h2.X, PrimH.Insert(h1, h2.P));
         }
 
-        public static Heap Insert(T x, Heap h)
-        {
-            return Merge(new Heap(x, PrimH.Empty), h);
-        }
+        public static Heap Insert(T x, Heap h) => Merge(new Heap(x, PrimH.Empty), h);
 
         public static T FindMin(Heap h)
         {

@@ -47,7 +47,8 @@ namespace FunProgLib.sort
         {
             if (xs == Stream<T>.DollarNil) return ys;
             if (ys == Stream<T>.DollarNil) return xs;
-            if (xs.Value.Element.CompareTo(ys.Value.Element) <= 0) return new Lazy<Stream<T>.StreamCell>(() => new Stream<T>.StreamCell(xs.Value.Element, Mrg(xs.Value.Next, ys)));
+            if (xs.Value.Element.CompareTo(ys.Value.Element) <= 0)
+                return new Lazy<Stream<T>.StreamCell>(() => new Stream<T>.StreamCell(xs.Value.Element, Mrg(xs.Value.Next, ys)));
             return new Lazy<Stream<T>.StreamCell>(() => new Stream<T>.StreamCell(ys.Value.Element, Mrg(xs, ys.Value.Next)));
         }
 

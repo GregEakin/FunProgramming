@@ -63,10 +63,7 @@ namespace FunProgLib.streams
             return DropPrime(n - 1, s.Value.Next);
         }
 
-        public static Lazy<StreamCell> Drop(int n, Lazy<StreamCell> s)
-        {
-            return DropPrime(n, s);
-        }
+        public static Lazy<StreamCell> Drop(int n, Lazy<StreamCell> s) => DropPrime(n, s);
 
         private static Lazy<StreamCell> ReversePrime(Lazy<StreamCell> s, Lazy<StreamCell> r)
         {
@@ -74,9 +71,6 @@ namespace FunProgLib.streams
             return ReversePrime(s.Value.Next, new Lazy<StreamCell>(() => new StreamCell(s.Value.Element, r)));
         }
 
-        public static Lazy<StreamCell> Reverse(Lazy<StreamCell> s)
-        {
-            return ReversePrime(s, DollarNil);
-        }
+        public static Lazy<StreamCell> Reverse(Lazy<StreamCell> s) => ReversePrime(s, DollarNil);
     }
 }

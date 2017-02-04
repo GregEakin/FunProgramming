@@ -29,15 +29,9 @@ namespace FunProgLib.lists
 
             public Node Next { get; }
 
-            public IEnumerator<T> GetEnumerator()
-            {
-                return new ListEnum(this);
-            }
+            public IEnumerator<T> GetEnumerator() => new ListEnum(this);
 
-            IEnumerator IEnumerable.GetEnumerator()
-            {
-                return GetEnumerator();
-            }
+            IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
             private sealed class ListEnum : IEnumerator<T>
             {
@@ -57,32 +51,22 @@ namespace FunProgLib.lists
                     return !IsEmpty(_list);
                 }
 
-                public void Reset()
-                {
-                    _list = _start;
-                }
+                public void Reset() => _list = _start;
 
                 object IEnumerator.Current => _list.Element;
 
                 public T Current => _list.Element;
 
                 public void Dispose()
-                {
-                }
+                { }
             }
         }
 
         public static Node Empty { get; } = null;
 
-        public static bool IsEmpty(Node list)
-        {
-            return list == Empty;
-        }
+        public static bool IsEmpty(Node list) => list == Empty;
 
-        public static Node Cons(T element, Node list)
-        {
-            return new Node(element, list);
-        }
+        public static Node Cons(T element, Node list) => new Node(element, list);
 
         public static T Head(Node list)
         {
@@ -140,7 +124,7 @@ namespace FunProgLib.lists
         public static Node Fupdate(Del f, int i, Node ts)
         {
             if (IsEmpty(ts)) throw new ArgumentException("Empty", nameof(ts));
-            if (i < 0) throw new ArgumentException("neg", nameof(i));
+            if (i < 0) throw new ArgumentException("Negative", nameof(i));
             var head = Head(ts);
             var tail = Tail(ts);
             return i == 0

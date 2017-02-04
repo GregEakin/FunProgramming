@@ -30,8 +30,7 @@ namespace FunProgLib.lists
         {
             public Zero(RList<Tuple<T, T>>.Node list)
                 : base(list)
-            {
-            }
+            { }
         }
 
         public sealed class One : DataType
@@ -47,35 +46,25 @@ namespace FunProgLib.lists
 
         public static DataType Empty => null;
 
-        public static bool IsEmpty(DataType list)
-        {
-            return list == null;
-        }
+        public static bool IsEmpty(DataType list) => list == null;
 
         public static DataType Cons(T x, DataType ts)
         {
             if (IsEmpty(ts)) return new One(x, RList<Tuple<T, T>>.Empty);
-
-            var zero = ts as Zero;
-            if (zero != null) return new One(x, zero.RList);
-
-            var one = ts as One;
-            if (one != null) return new Zero(RList<Tuple<T, T>>.Cons(new Tuple<T, T>(x, one.Alpha), one.RList));
-
+            if (ts is Zero zero) return new One(x, zero.RList);
+            if (ts is One one) return new Zero(RList<Tuple<T, T>>.Cons(new Tuple<T, T>(x, one.Alpha), one.RList));
             throw new ArgumentException("must be null, Zero or One", nameof(ts));
         }
 
         private static Tuple<T, DataType> Uncons(DataType dataType)
         {
-            var one = dataType as One;
-            if (one != null)
+            if (dataType is One one)
             {
                 if (RList<Tuple<T, T>>.IsEmpty(one.RList)) return new Tuple<T, DataType>(one.Alpha, Empty);
                 return new Tuple<T, DataType>(one.Alpha, new Zero(one.RList));
             }
 
-            var zero = dataType as Zero;
-            if (zero != null)
+            if (dataType is Zero zero)
             {
                 var xy = RList<Tuple<T, T>>.Head(zero.RList);
                 var psp = RList<Tuple<T, T>>.Tail(zero.RList);
@@ -85,29 +74,19 @@ namespace FunProgLib.lists
             throw new ArgumentException("must be Zero or One", nameof(dataType));
         }
 
-        public static T Head(DataType ts)
-        {
-            var x = Uncons(ts);
-            return x.Item1;
-        }
+        public static T Head(DataType ts) => Uncons(ts).Item1;
 
-        public static DataType Tail(DataType ts)
-        {
-            var x = Uncons(ts);
-            return x.Item2;
-        }
+        public static DataType Tail(DataType ts) => Uncons(ts).Item2;
 
         public static T Lookup(int i, DataType ts)
         {
-            var one = ts as One;
-            if (one != null)
+            if (ts is One one)
             {
                 if (i == 0) return one.Alpha;
                 return Lookup(i - 1, new Zero(one.RList));
             }
 
-            var zero = ts as Zero;
-            if (zero != null)
+            if (ts is Zero zero)
             {
                 var node = RList<Tuple<T, T>>.Lookup(i / 2, zero.RList);
                 if (i % 2 == 0) return node.Item1;
@@ -121,15 +100,13 @@ namespace FunProgLib.lists
 
         public static DataType Fupdate(Del f, int i, DataType ts)
         {
-            var one = ts as One;
-            if (one != null)
+            if (ts is One one)
             {
                 if (i == 0) return new One(f(one.Alpha), one.RList);
                 return Cons(one.Alpha, Fupdate(f, i - 1, new Zero(one.RList)));
             }
 
-            var zero = ts as Zero;
-            if (zero != null)
+            if (ts is Zero zero)
             {
                 RList<Tuple<T, T>>.Del fp0 = value => new Tuple<T, T>(f(value.Item1), value.Item2);
                 RList<Tuple<T, T>>.Del fp1 = value => new Tuple<T, T>(value.Item1, f(value.Item2));
@@ -140,9 +117,6 @@ namespace FunProgLib.lists
             throw new ArgumentException("must be Zero or One", nameof(ts));
         }
 
-        public static DataType Update(int i, T y, DataType xs)
-        {
-            return Fupdate(x => y, i, xs);
-        }
+        public static DataType Update(int i, T y, DataType xs) => Fupdate(x => y, i, xs);
     }
 }

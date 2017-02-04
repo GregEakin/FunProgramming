@@ -11,9 +11,8 @@
 
 namespace FunProgLib.queue
 {
-    using System;
-
     using lists;
+    using System;
 
     public static class HoodMelvilleQueue<T>
     {
@@ -85,8 +84,7 @@ namespace FunProgLib.queue
 
         private static RotationState Exec(RotationState state)
         {
-            var reversing = state as Reversing;
-            if (reversing != null)
+            if (state is Reversing reversing)
             {
                 if (!List<T>.IsEmpty(reversing.F)) // && !List<T>.IsEmpty(reversing.R))
                 {
@@ -101,8 +99,7 @@ namespace FunProgLib.queue
                 return new Appending(reversing.Ok, reversing.Fp, List<T>.Cons(y2, reversing.Rp));
             }
 
-            var appending = state as Appending;
-            if (appending != null)
+            if (state is Appending appending)
             {
                 if (appending.Ok == 0)
                     return new Done(appending.Rp);
@@ -117,14 +114,12 @@ namespace FunProgLib.queue
 
         private static RotationState Invalidate(RotationState state)
         {
-            var reversing = state as Reversing;
-            if (reversing != null)
+            if (state is Reversing reversing)
             {
                 return new Reversing(reversing.Ok - 1, reversing.F, reversing.Fp, reversing.R, reversing.Rp);
             }
 
-            var appending = state as Appending;
-            if (appending != null)
+            if (state is Appending appending)
             {
                 if (appending.Ok == 0) return new Done(List<T>.Tail(appending.Rp));
                 return new Appending(appending.Ok - 1, appending.Fp, appending.Rp);
@@ -136,8 +131,7 @@ namespace FunProgLib.queue
         private static Queue Exec2(int lenF, List<T>.Node f, RotationState state, int lenR, List<T>.Node r)
         {
             var newState = Exec(Exec(state));
-            var done = newState as Done;
-            if (done != null)
+            if (newState is Done done)
                 return new Queue(lenF, done.F, new Idle(), lenR, r);
             return new Queue(lenF, f, newState, lenR, r);
         }
@@ -151,10 +145,7 @@ namespace FunProgLib.queue
 
         public static Queue Empty { get; } = new Queue(0, List<T>.Empty, new Idle(), 0, List<T>.Empty);
 
-        public static bool IsEmpty(Queue queue)
-        {
-            return queue.LenF == 0;
-        }
+        public static bool IsEmpty(Queue queue) => queue.LenF == 0;
 
         public static Queue Snoc(Queue q, T x)
         {

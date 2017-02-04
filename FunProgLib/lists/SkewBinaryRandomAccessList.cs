@@ -62,10 +62,7 @@ namespace FunProgLib.lists
 
         public static List<Stuff>.Node Empty => List<Stuff>.Empty;
 
-        public static bool IsEmpty(List<Stuff>.Node list)
-        {
-            return List<Stuff>.IsEmpty(list);
-        }
+        public static bool IsEmpty(List<Stuff>.Node list) => List<Stuff>.IsEmpty(list);
 
         public static List<Stuff>.Node Cons(T x, List<Stuff>.Node ts)
         {
@@ -96,22 +93,19 @@ namespace FunProgLib.lists
             if (List<Stuff>.IsEmpty(ts)) throw new ArgumentException("Empty", nameof(ts));
             var head = List<Stuff>.Head(ts);
             if (head.Tree is Leaf) return List<Stuff>.Tail(ts);
-            var node = head.Tree as Node;
-            if (node != null) return List<Stuff>.Cons(new Stuff(head.Weight / 2, node.Tree1), List<Stuff>.Cons(new Stuff(head.Weight / 2, node.Tree2), List<Stuff>.Tail(ts)));
+            if (head.Tree is Node node) return List<Stuff>.Cons(new Stuff(head.Weight / 2, node.Tree1), List<Stuff>.Cons(new Stuff(head.Weight / 2, node.Tree2), List<Stuff>.Tail(ts)));
             throw new ArgumentException("head.Tree as Node is null", nameof(ts));
         }
 
         private static T LookupTree(int w, int i, Tree t)
         {
-            var leaf = t as Leaf;
-            if (leaf != null)
+            if (t is Leaf leaf)
             {
                 if (i == 0) return leaf.Alpha;
                 throw new Exception("Subscript");
             }
 
-            var node = t as Node;
-            if (node != null)
+            if (t is Node node)
             {
                 if (i == 0) return node.Alpha;
                 if (i <= w / 2) return LookupTree(w / 2, i - 1, node.Tree1);
@@ -130,8 +124,7 @@ namespace FunProgLib.lists
                 throw new Exception("Subscript");
             }
 
-            var node = t as Node;
-            if (node != null)
+            if (t is Node node)
             {
                 if (i == 0) return new Node(x, node.Tree1, node.Tree2);
                 if (i <= w / 2) return new Node(node.Alpha, UpdateTree(w / 2, i - 1, x, node.Tree1), node.Tree2);

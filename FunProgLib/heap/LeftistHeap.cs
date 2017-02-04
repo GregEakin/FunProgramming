@@ -48,10 +48,7 @@ namespace FunProgLib.heap
             return new Heap(Rank(a) + 1, x, b, a);
         }
 
-        public static bool IsEmpty(Heap h)
-        {
-            return h == Empty;
-        }
+        public static bool IsEmpty(Heap h) => h == Empty;
 
         public static Heap Merge(Heap h1, Heap h2)
         {
@@ -61,10 +58,7 @@ namespace FunProgLib.heap
             return MakeT(h2.X, h2.A, Merge(h1, h2.B));
         }
 
-        public static Heap Insert(T x, Heap h)
-        {
-            return Merge(new Heap(1, x, Empty, Empty), h);
-        }
+        public static Heap Insert(T x, Heap h) => Merge(new Heap(1, x, Empty, Empty), h);
 
         public static T FindMin(Heap h)
         {

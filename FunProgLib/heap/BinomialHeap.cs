@@ -11,9 +11,8 @@
 
 namespace FunProgLib.heap
 {
-    using System;
-
     using lists;
+    using System;
 
     public static class BinomialHeap<T> where T : IComparable<T>
     {
@@ -35,10 +34,11 @@ namespace FunProgLib.heap
 
         public static List<Tree>.Node Empty => List<Tree>.Empty;
 
-        public static bool IsEmpty(List<Tree>.Node list)
-        {
-            return List<Tree>.IsEmpty(list);
-        }
+        public static bool IsEmpty(List<Tree>.Node list) => List<Tree>.IsEmpty(list);
+
+        // public static int Rank(Tree t1) => t1.Rank;
+
+        // public static T Root(Tree t1) => t1.Root;
 
         private static Tree Link(Tree t1, Tree t2)
         {
@@ -53,10 +53,7 @@ namespace FunProgLib.heap
             return InsertTree(Link(t, ts.Element), ts.Next);
         }
 
-        public static List<Tree>.Node Insert(T x, List<Tree>.Node ts)
-        {
-            return InsertTree(new Tree(0, x, List<Tree>.Empty), ts);
-        }
+        public static List<Tree>.Node Insert(T x, List<Tree>.Node ts) => InsertTree(new Tree(0, x, List<Tree>.Empty), ts);
 
         public static List<Tree>.Node Merge(List<Tree>.Node ts1, List<Tree>.Node ts2)
         {

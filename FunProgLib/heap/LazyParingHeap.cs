@@ -35,10 +35,7 @@ namespace FunProgLib.heap
 
         public static Heap Empty { get; } = null;
 
-        public static bool IsEmpty(Heap list)
-        {
-            return list == Empty;
-        }
+        public static bool IsEmpty(Heap list) => list == Empty;
 
         public static Heap Merge(Heap h1, Heap h2)
         {
@@ -55,10 +52,7 @@ namespace FunProgLib.heap
             return new Heap(h1.Root, Empty, new Lazy<Heap>(() => Merge(Merge(h2, h1.List), h1.LazyList.Value)));
         }
 
-        public static Heap Insert(T x, Heap h)
-        {
-            return Merge(new Heap(x, Empty, EmptyHeapSusp), h);
-        }
+        public static Heap Insert(T x, Heap h) => Merge(new Heap(x, Empty, EmptyHeapSusp), h);
 
         public static T FindMin(Heap h)
         {

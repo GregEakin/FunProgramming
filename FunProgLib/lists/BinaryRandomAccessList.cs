@@ -71,22 +71,15 @@ namespace FunProgLib.lists
 
         public static List<Digit>.Node Empty => List<Digit>.Empty;
 
-        public static bool IsEmpty(List<Digit>.Node list)
-        {
-            return List<Digit>.IsEmpty(list);
-        }
+        public static bool IsEmpty(List<Digit>.Node list) => List<Digit>.IsEmpty(list);
 
         private static int Size(Tree tree)
         {
-            var node = tree as Node;
-            if (node != null) return node.Index;
+            if (tree is Node node) return node.Index;
             return 1;
         }
 
-        private static Tree Link(Tree t1, Tree t2)
-        {
-            return new Node(Size(t1) + Size(t2), t1, t2);
-        }
+        private static Tree Link(Tree t1, Tree t2) => new Node(Size(t1) + Size(t2), t1, t2);
 
         private static List<Digit>.Node ConsTree(Tree t, List<Digit>.Node ts)
         {
@@ -101,44 +94,32 @@ namespace FunProgLib.lists
             if (list.Element == Zero)
             {
                 var stuff = UnconsTree(list.Next);
-                var node = stuff.Tree as Node;
-                if (node != null) return new Stuff(node.Tree1, List<Digit>.Cons(new Digit(node.Tree2), stuff.List));
+                if (stuff.Tree is Node node) return new Stuff(node.Tree1, List<Digit>.Cons(new Digit(node.Tree2), stuff.List));
                 throw new Exception();
             }
             if (IsEmpty(list.Next)) return new Stuff(list.Element.One, List<Digit>.Empty);
             return new Stuff(list.Element.One, List<Digit>.Cons(Zero, list.Next));
         }
 
-        public static List<Digit>.Node Cons(T x, List<Digit>.Node ts)
-        {
-            return ConsTree(new Leaf(x), ts);
-        }
+        public static List<Digit>.Node Cons(T x, List<Digit>.Node ts) => ConsTree(new Leaf(x), ts);
 
         public static T Head(List<Digit>.Node ts)
         {
-            var stuff = UnconsTree(ts);
-            var leaf = stuff.Tree as Leaf;
-            if (leaf != null) return leaf.Alpha;
+            if (UnconsTree(ts).Tree is Leaf leaf) return leaf.Alpha;
             throw new Exception();
         }
 
-        public static List<Digit>.Node Tail(List<Digit>.Node ts)
-        {
-            var stuff = UnconsTree(ts);
-            return stuff.List;
-        }
+        public static List<Digit>.Node Tail(List<Digit>.Node ts) => UnconsTree(ts).List;
 
         private static T LookupTree(int i, Tree t)
         {
-            var leaf = t as Leaf;
-            if (leaf != null)
+            if (t is Leaf leaf)
             {
                 if (i == 0) return leaf.Alpha;
                 throw new Exception("Subscript");
             }
 
-            var node = t as Node;
-            if (node != null)
+            if (t is Node node)
             {
                 if (i < node.Index / 2) return LookupTree(i, node.Tree1);
                 return LookupTree(i - node.Index / 2, node.Tree2);
@@ -149,15 +130,13 @@ namespace FunProgLib.lists
 
         private static Tree UpdateTree(int i, T x, Tree t)
         {
-            var leaf = t as Leaf;
-            if (leaf != null)
+            if (t is Leaf leaf)
             {
                 if (i == 0) return new Leaf(x);
                 throw new Exception("Subscript");
             }
 
-            var node = t as Node;
-            if (node != null)
+            if (t is Node node)
             {
                 if (i < node.Index / 2) return new Node(node.Index, UpdateTree(i, x, node.Tree1), node.Tree2);
                 return new Node(node.Index, node.Tree1, UpdateTree(i - node.Index / 2, x, node.Tree2));

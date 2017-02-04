@@ -11,10 +11,9 @@
 
 namespace FunProgLib.queue
 {
-    using System;
-
     using lists;
     using streams;
+    using System;
 
     public static class RealTimeQueue<T>
     {
@@ -34,15 +33,13 @@ namespace FunProgLib.queue
 
         public static Queue Empty { get; } = new Queue(Stream<T>.DollarNil, List<T>.Empty, Stream<T>.DollarNil);
 
-        public static bool IsEmpty(Queue queue)
-        {
-            return queue.F == Stream<T>.DollarNil;
-        }
+        public static bool IsEmpty(Queue queue) => queue.F == Stream<T>.DollarNil;
 
         private static Lazy<Stream<T>.StreamCell> Rotate(Lazy<Stream<T>.StreamCell> xp, List<T>.Node yp, Lazy<Stream<T>.StreamCell> a)
         {
             if (xp == Stream<T>.DollarNil) return new Lazy<Stream<T>.StreamCell>(() => new Stream<T>.StreamCell(yp.Element, a));
-            return new Lazy<Stream<T>.StreamCell>(() => new Stream<T>.StreamCell(xp.Value.Element, Rotate(xp.Value.Next, yp.Next, new Lazy<Stream<T>.StreamCell>(() => new Stream<T>.StreamCell(yp.Element, a)))));
+            return new Lazy<Stream<T>.StreamCell>(() => new Stream<T>.StreamCell(xp.Value.Element, Rotate(xp.Value.Next, yp.Next, 
+                new Lazy<Stream<T>.StreamCell>(() => new Stream<T>.StreamCell(yp.Element, a)))));
         }
 
         private static Queue Exec(Lazy<Stream<T>.StreamCell> f, List<T>.Node r, Lazy<Stream<T>.StreamCell> sp)
@@ -52,10 +49,7 @@ namespace FunProgLib.queue
             return new Queue(fp, List<T>.Empty, fp);
         }
 
-        public static Queue Snoc(Queue q, T x)
-        {
-            return Exec(q.F, List<T>.Cons(x, q.R), q.S);
-        }
+        public static Queue Snoc(Queue q, T x) => Exec(q.F, List<T>.Cons(x, q.R), q.S);
 
         public static T Head(Queue q)
         {

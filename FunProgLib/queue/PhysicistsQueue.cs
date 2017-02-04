@@ -36,10 +36,7 @@ namespace FunProgLib.queue
 
         public static Queue Empty { get; } = new Queue(List<T>.Empty, 0, new Lazy<List<T>.Node>(() => List<T>.Empty), 0, List<T>.Empty);
 
-        public static bool IsEmpty(Queue queue)
-        {
-            return queue.Lenf == 0;
-        }
+        public static bool IsEmpty(Queue queue) => queue.Lenf == 0;
 
         private static Queue CheckW(List<T>.Node w, int lenf, Lazy<List<T>.Node> f, int lenr, List<T>.Node r)
         {

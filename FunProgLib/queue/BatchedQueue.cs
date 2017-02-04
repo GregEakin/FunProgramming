@@ -11,9 +11,8 @@
 
 namespace FunProgLib.queue
 {
-    using System;
-
     using lists;
+    using System;
 
     public static class BatchedQueue<T>
     {
@@ -31,10 +30,7 @@ namespace FunProgLib.queue
 
         public static Queue Empty { get; } = new Queue(List<T>.Empty, List<T>.Empty);
 
-        public static bool IsEmpty(Queue q)
-        {
-            return List<T>.IsEmpty(q.F);
-        }
+        public static bool IsEmpty(Queue q) => List<T>.IsEmpty(q.F);
 
         private static Queue CheckF(List<T>.Node f, List<T>.Node r)
         {
@@ -42,10 +38,7 @@ namespace FunProgLib.queue
             return new Queue(f, r);
         }
 
-        public static Queue Snoc(Queue q, T x)
-        {
-            return CheckF(q.F, List<T>.Cons(x, q.R));
-        }
+        public static Queue Snoc(Queue q, T x) => CheckF(q.F, List<T>.Cons(x, q.R));
 
         public static T Head(Queue q)
         {

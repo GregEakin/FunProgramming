@@ -41,10 +41,7 @@ namespace FunProgLib.queue
 
         public static Queue Empty { get; } = null;
 
-        public static bool IsEmpty(Queue queue)
-        {
-            return queue == Empty;
-        }
+        public static bool IsEmpty(Queue queue) => queue == Empty;
 
         private static Queue CheckQ(int lenfm, List<T>.Node f, BootstrappedQueue<Lazy<List<T>.Node>>.Queue m, int lenr, List<T>.Node r)
         {

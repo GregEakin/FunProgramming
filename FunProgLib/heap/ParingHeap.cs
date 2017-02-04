@@ -11,9 +11,8 @@
 
 namespace FunProgLib.heap
 {
-    using System;
-
     using lists;
+    using System;
 
     public static class ParingHeap<T> where T : IComparable<T>
     {
@@ -32,10 +31,7 @@ namespace FunProgLib.heap
 
         public static Heap Empty { get; } = null;
 
-        public static bool IsEmpty(Heap list)
-        {
-            return list == Empty;
-        }
+        public static bool IsEmpty(Heap list) => list == Empty;
 
         public static Heap Merge(Heap h1, Heap h2)
         {
@@ -46,10 +42,7 @@ namespace FunProgLib.heap
             return new Heap(h2.Root, List<Heap>.Cons(h1, h2.List));
         }
 
-        public static Heap Insert(T x, Heap h)
-        {
-            return Merge(new Heap(x, List<Heap>.Empty), h);
-        }
+        public static Heap Insert(T x, Heap h) => Merge(new Heap(x, List<Heap>.Empty), h);
 
         private static Heap MergePairs(List<Heap>.Node hs)
         {

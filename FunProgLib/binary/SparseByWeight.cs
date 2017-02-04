@@ -28,15 +28,9 @@ namespace FunProgLib.binary
             return List<int>.Cons(w, Borrow(2 * w, list));
         }
 
-        public static List<int>.Node Inc(List<int>.Node ws)
-        {
-            return Carry(1, ws);
-        }
+        public static List<int>.Node Inc(List<int>.Node ws) => Carry(1, ws);
 
-        public static List<int>.Node Dec(List<int>.Node ws)
-        {
-            return Borrow(1, ws);
-        }
+        public static List<int>.Node Dec(List<int>.Node ws) => Borrow(1, ws);
 
         public static List<int>.Node Add(List<int>.Node ds1, List<int>.Node ds2)
         {

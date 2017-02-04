@@ -11,9 +11,8 @@
 
 namespace FunProgLib.heap
 {
-    using System;
-
     using lists;
+    using System;
 
     public static class SkewBinomialHeap<T>
         where T : IComparable<T> // : IHeap<T>
@@ -39,10 +38,7 @@ namespace FunProgLib.heap
 
         public static List<Tree>.Node Empty => List<Tree>.Empty;
 
-        public static bool IsEmpty(List<Tree>.Node heap)
-        {
-            return List<Tree>.IsEmpty(heap);
-        }
+        public static bool IsEmpty(List<Tree>.Node heap) => List<Tree>.IsEmpty(heap);
 
         // rank
 
@@ -64,6 +60,7 @@ namespace FunProgLib.heap
         private static List<Tree>.Node InsTree(Tree t1, List<Tree>.Node treeList)
         {
             if (List<Tree>.IsEmpty(treeList)) return List<Tree>.Cons(t1, List<Tree>.Empty);
+
             var t2 = List<Tree>.Head(treeList);
             if (t1.Rank < t2.Rank) return List<Tree>.Cons(t1, treeList);
             var ts = List<Tree>.Tail(treeList);
@@ -74,6 +71,7 @@ namespace FunProgLib.heap
         {
             if (List<Tree>.IsEmpty(ts2)) return ts1;
             if (List<Tree>.IsEmpty(ts1)) return ts2;
+
             var t1 = List<Tree>.Head(ts1);
             var tsp1 = List<Tree>.Tail(ts1);
             var t2 = List<Tree>.Head(ts2);
@@ -103,10 +101,7 @@ namespace FunProgLib.heap
             return List<Tree>.Cons(new Tree(0, x, List<T>.Empty, List<Tree>.Empty), ts);
         }
 
-        public static List<Tree>.Node Merge(List<Tree>.Node ts1, List<Tree>.Node ts2)
-        {
-            return MergeTrees(Normalize(ts1), Normalize(ts2));
-        }
+        public static List<Tree>.Node Merge(List<Tree>.Node ts1, List<Tree>.Node ts2) => MergeTrees(Normalize(ts1), Normalize(ts2));
 
         private class TreeParts
         {
@@ -134,11 +129,7 @@ namespace FunProgLib.heap
             return new TreeParts(tp, List<Tree>.Cons(t, tsp));
         }
 
-        public static T FindMin(List<Tree>.Node ts)
-        {
-            var val = RemoveMinTree(ts);
-            return val.Tree.Root;
-        }
+        public static T FindMin(List<Tree>.Node ts) => RemoveMinTree(ts).Tree.Root;
 
         private static List<Tree>.Node InsertAll(List<T>.Node xsp, List<Tree>.Node ts)
         {

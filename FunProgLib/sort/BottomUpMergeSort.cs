@@ -11,8 +11,8 @@
 
 namespace FunProgLib.sort
 {
-    using System;
     using lists;
+    using System;
 
     public static class BottomUpMergeSort<T> where T : IComparable<T>
     {
@@ -51,10 +51,7 @@ namespace FunProgLib.sort
             return AddSeg(Mrg(seg, segs.Element), segs.Next, size / 2);
         }
 
-        public static List<T>.Node Sort(Sortable segs)
-        {
-            return MrgAll(List<T>.Empty, segs.Segs.Value);
-        }
+        public static List<T>.Node Sort(Sortable segs) => MrgAll(List<T>.Empty, segs.Segs.Value);
 
         private static List<T>.Node MrgAll(List<T>.Node xs, List<List<T>.Node>.Node ys)
         {
