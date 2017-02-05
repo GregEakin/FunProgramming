@@ -48,8 +48,8 @@ namespace FunProgLib.sort
             if (xs == Stream<T>.DollarNil) return ys;
             if (ys == Stream<T>.DollarNil) return xs;
             if (xs.Value.Element.CompareTo(ys.Value.Element) <= 0)
-                return new Lazy<Stream<T>.StreamCell>(() => new Stream<T>.StreamCell(xs.Value.Element, Mrg(xs.Value.Next, ys)));
-            return new Lazy<Stream<T>.StreamCell>(() => new Stream<T>.StreamCell(ys.Value.Element, Mrg(xs, ys.Value.Next)));
+                return Stream<T>.DollarCons(xs.Value.Element, Mrg(xs.Value.Next, ys));
+            return Stream<T>.DollarCons(ys.Value.Element, Mrg(xs, ys.Value.Next));
         }
 
         private static List<Lazy<Stream<T>.StreamCell>>.Node Exec1(List<Lazy<Stream<T>.StreamCell>>.Node list)
@@ -83,7 +83,7 @@ namespace FunProgLib.sort
 
         public static Sortable Add(T x, Sortable sortable)
         {
-            var stream = new Lazy<Stream<T>.StreamCell>(() => new Stream<T>.StreamCell(x, Stream<T>.DollarNil));
+            var stream = Stream<T>.DollarCons(x, Stream<T>.DollarNil);
             var segsp = AddSeg(stream, sortable.Segs, sortable.Size, null);
             return new Sortable(sortable.Size + 1, MapExec2(segsp));
         }

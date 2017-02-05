@@ -37,9 +37,8 @@ namespace FunProgLib.queue
 
         private static Lazy<Stream<T>.StreamCell> Rotate(Lazy<Stream<T>.StreamCell> xp, List<T>.Node yp, Lazy<Stream<T>.StreamCell> a)
         {
-            if (xp == Stream<T>.DollarNil) return new Lazy<Stream<T>.StreamCell>(() => new Stream<T>.StreamCell(yp.Element, a));
-            return new Lazy<Stream<T>.StreamCell>(() => new Stream<T>.StreamCell(xp.Value.Element, Rotate(xp.Value.Next, yp.Next, 
-                new Lazy<Stream<T>.StreamCell>(() => new Stream<T>.StreamCell(yp.Element, a)))));
+            if (xp == Stream<T>.DollarNil) return Stream<T>.DollarCons(yp.Element, a);
+            return Stream<T>.DollarCons(xp.Value.Element, Rotate(xp.Value.Next, yp.Next, Stream<T>.DollarCons(yp.Element, a)));
         }
 
         private static Queue Exec(Lazy<Stream<T>.StreamCell> f, List<T>.Node r, Lazy<Stream<T>.StreamCell> sp)
