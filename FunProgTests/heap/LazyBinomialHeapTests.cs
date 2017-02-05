@@ -64,6 +64,8 @@ namespace FunProgTests.heap
             var t = LazyBinomialHeap<string>.Empty;
             var x1 = LazyBinomialHeap<string>.Insert("C", t);
             var x2 = LazyBinomialHeap<string>.Insert("B", x1);
+            Assert.IsFalse(x1.IsValueCreated);
+            Assert.IsFalse(x2.IsValueCreated);
             Assert.AreEqual("[{B: {C}}]", DumpHeap(x2));
         }
 
@@ -77,6 +79,21 @@ namespace FunProgTests.heap
             Assert.AreEqual(
                 "[{as: {sweet.}}{a: {a: {call: {That: {which}}{we}}{in: {What's}}{name?}}{name: {smell: {would}}{other}}{any: {by}}{rose}}]",
                 DumpHeap(t));
+        }
+
+        [TestMethod]
+        public void MonolithicTest()
+        {
+            var t = LazyBinomialHeap<string>.Empty;
+            var x1 = LazyBinomialHeap<string>.Insert("C", t);
+            var x2 = LazyBinomialHeap<string>.Insert("B", x1);
+            Assert.IsFalse(x1.IsValueCreated);
+            Assert.IsFalse(x2.IsValueCreated);
+
+            // Once we look at one element, the entire list will be forced created.
+            Assert.IsNotNull(x2.Value);
+            Assert.IsTrue(x1.IsValueCreated);
+            Assert.IsTrue(x2.IsValueCreated);
         }
 
         [TestMethod]
@@ -118,6 +135,7 @@ namespace FunProgTests.heap
             var random = new Random(3456);
             var heap = LazyBinomialHeap<int>.Empty;
             for (var i = 0; i < size; i++) heap = LazyBinomialHeap<int>.Insert(random.Next(size), heap);
+            Assert.IsFalse(heap.IsValueCreated);
             var last = 0;
             var count = 0;
             while (!LazyBinomialHeap<int>.IsEmpty(heap))
