@@ -11,6 +11,7 @@ namespace FunProgTests.ephemeral
     {
         private static readonly Random RandomNum = new Random();
 
+        [Ignore]
         [TestMethod]
         public void SingleTest()
         {
@@ -21,6 +22,7 @@ namespace FunProgTests.ephemeral
             Console.WriteLine($"Test took {count:n0} times, for an average of {time} nanoseconds");
         }
 
+        [Ignore]
         [TestMethod]
         public void TimeVsBufferSize()
         {

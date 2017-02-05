@@ -7,48 +7,43 @@
 // All Rights Reserved.
 //
 
+
 namespace FunProgTests.heap
 {
-    using System;
-    using System.Linq;
-    using System.Text;
     using FunProgLib.heap;
     using FunProgLib.lists;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using System;
+    using System.Linq;
+    using System.Text;
 
     [TestClass]
     public class LazyBinomialHeapTests
     {
-        private static string DumpNode<T>(LazyBinomialHeap<T>.Tree tree) where T : IComparable<T>
+        public static string DumpNode<T>(LazyBinomialHeap<T>.Tree tree) where T : IComparable<T>
         {
             var result = new StringBuilder();
-            result.Append("[");
+            result.Append("{");
             result.Append(tree.Root);
             if (!List<LazyBinomialHeap<T>.Tree>.IsEmpty(tree.List))
             {
-                result.Append(", ");
+                result.Append(": ");
                 foreach (var node1 in tree.List)
-                {
                     result.Append(DumpNode(node1));
-                }
             }
-            result.Append("]");
+            result.Append("}");
             return result.ToString();
         }
 
-        private static string DumpHeap<T>(Lazy<List<LazyBinomialHeap<T>.Tree>.Node> list) where T : IComparable<T>
+        public static string DumpHeap<T>(Lazy<List<LazyBinomialHeap<T>.Tree>.Node> list) where T : IComparable<T>
         {
             var result = new StringBuilder();
             result.Append("[");
             if (!List<LazyBinomialHeap<T>.Tree>.IsEmpty(list.Value))
             {
                 foreach (var node in list.Value)
-                {
                     result.Append(DumpNode(node));
-                }
-                result.Append(", ");
             }
-            result.Remove(result.Length - 2, 2);
             result.Append("]");
             return result.ToString();
         }
@@ -69,29 +64,38 @@ namespace FunProgTests.heap
             var t = LazyBinomialHeap<string>.Empty;
             var x1 = LazyBinomialHeap<string>.Insert("C", t);
             var x2 = LazyBinomialHeap<string>.Insert("B", x1);
-            Assert.AreEqual("[[B, [C]]]", DumpHeap(x2));
+            Assert.AreEqual("[{B: {C}}]", DumpHeap(x2));
         }
 
         [TestMethod]
         public void Test2()
         {
-            const string Words = "What's in a name? That which we call a rose by any other name would smell as sweet.";
-            var t = Words.Split().Aggregate(LazyBinomialHeap<string>.Empty, (current, word) => LazyBinomialHeap<string>.Insert(word, current));
-            Assert.AreEqual("[[as, [sweet.]][a, [a, [call, [That, [which]][we]][in, [What's]][name?]][name, [smell, [would]][other]][any, [by]][rose]]]", DumpHeap(t));
+            const string words = "What's in a name? That which we call a rose by any other name would smell as sweet.";
+            var t = words.Split()
+                .Aggregate(LazyBinomialHeap<string>.Empty,
+                    (current, word) => LazyBinomialHeap<string>.Insert(word, current));
+            Assert.AreEqual(
+                "[{as: {sweet.}}{a: {a: {call: {That: {which}}{we}}{in: {What's}}{name?}}{name: {smell: {would}}{other}}{any: {by}}{rose}}]",
+                DumpHeap(t));
         }
 
         [TestMethod]
         public void MergeTest()
         {
-            const string Data1 = "What's in a name?";
-            var ts1 = Data1.Split().Aggregate(LazyBinomialHeap<string>.Empty, (current, word) => LazyBinomialHeap<string>.Insert(word, current));
+            const string data1 = "What's in a name?";
+            var ts1 = data1.Split()
+                .Aggregate(LazyBinomialHeap<string>.Empty,
+                    (current, word) => LazyBinomialHeap<string>.Insert(word, current));
 
-            const string Data2 = "That which we call a rose by any other name would smell as sweet";
-            var ts2 = Data2.Split().Aggregate(LazyBinomialHeap<string>.Empty, (current, word) => LazyBinomialHeap<string>.Insert(word, current));
+            const string data2 = "That which we call a rose by any other name would smell as sweet";
+            var ts2 = data2.Split()
+                .Aggregate(LazyBinomialHeap<string>.Empty,
+                    (current, word) => LazyBinomialHeap<string>.Insert(word, current));
 
             var t = LazyBinomialHeap<string>.Merge(ts1, ts2);
-            Assert.AreEqual("[[as, [sweet]][a, [a, [call, [That, [which]][we]][any, [by]][rose]][name, [smell, [would]][other]][in, [What's]][name?]]]", DumpHeap(t));
-
+            Assert.AreEqual(
+                "[{as: {sweet}}{a: {a: {call: {That: {which}}{we}}{any: {by}}{rose}}{name: {smell: {would}}{other}}{in: {What's}}{name?}}]",
+                DumpHeap(t));
         }
 
         [TestMethod]
@@ -101,19 +105,19 @@ namespace FunProgTests.heap
             var t1 = LazyBinomialHeap<int>.Insert(5, t);
             var t2 = LazyBinomialHeap<int>.Insert(3, t1);
             var t3 = LazyBinomialHeap<int>.Insert(6, t2);
-            var t4 = LazyBinomialHeap<int>.DeleteMin(t3);
-            Assert.AreEqual("[[5, [6]]]", DumpHeap(t4));
-            Assert.AreEqual(5, LazyBinomialHeap<int>.FindMin(t4));
+            Assert.AreEqual("[{6}{3: {5}}]", DumpHeap(t3));
 
-            Assert.AreEqual(3, LazyBinomialHeap<int>.FindMin(t3));
+            var t4 = LazyBinomialHeap<int>.DeleteMin(t3);
+            Assert.AreEqual("[{5: {6}}]", DumpHeap(t4));
         }
 
         [TestMethod]
         public void DeleteLotsOfMinsTest()
         {
+            const int size = 1000;
             var random = new Random(3456);
             var heap = LazyBinomialHeap<int>.Empty;
-            for (var i = 0; i < 100; i++) heap = LazyBinomialHeap<int>.Insert(random.Next(100), heap);
+            for (var i = 0; i < size; i++) heap = LazyBinomialHeap<int>.Insert(random.Next(size), heap);
             var last = 0;
             var count = 0;
             while (!LazyBinomialHeap<int>.IsEmpty(heap))
@@ -124,7 +128,7 @@ namespace FunProgTests.heap
                 last = next;
                 count++;
             }
-            Assert.AreEqual(100, count);
+            Assert.AreEqual(size, count);
         }
     }
 }

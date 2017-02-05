@@ -87,11 +87,7 @@ namespace FunProgLib.heap
             return new TreeParts(prime.Tree, List<Tree>.Cons(list.Element, prime.List));
         }
 
-        public static T FindMin(List<Tree>.Node ts)
-        {
-            var t = RemoveMinTree(ts);
-            return t.Tree.Root;
-        }
+        public static T FindMin(List<Tree>.Node ts) => RemoveMinTree(ts).Tree.Root;
 
         public static List<Tree>.Node DeleteMin(List<Tree>.Node ts)
         {

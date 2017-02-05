@@ -34,8 +34,6 @@ namespace FunProgLib.heap
             public Heap B { get; }
         }
 
-        public static Heap Empty { get; } = null;
-
         private static int Rank(Heap h)
         {
             if (IsEmpty(h)) return 0;
@@ -47,6 +45,8 @@ namespace FunProgLib.heap
             if (Rank(a) >= Rank(b)) return new Heap(Rank(b) + 1, x, a, b);
             return new Heap(Rank(a) + 1, x, b, a);
         }
+
+        public static Heap Empty { get; } = null;
 
         public static bool IsEmpty(Heap h) => h == Empty;
 

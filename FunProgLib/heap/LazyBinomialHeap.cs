@@ -38,6 +38,10 @@ namespace FunProgLib.heap
 
         public static bool IsEmpty(Lazy<List<Tree>.Node> heap) => List<Tree>.IsEmpty(heap.Value);
 
+        public static int Rank(Tree t) => t.Rank;
+
+        public static T Root(Tree t) => t.Root;
+
         private static Tree Link(Tree t1, Tree t2)
         {
             if (t1.Root.CompareTo(t2.Root) <= 0) return new Tree(t1.Rank + 1, t1.Root, List<Tree>.Cons(t2, t1.List));
@@ -61,15 +65,11 @@ namespace FunProgLib.heap
             return InsTree(Link(ts1.Element, ts2.Element), Mrg(ts1.Next, ts2.Next));
         }
 
-        public static Lazy<List<Tree>.Node> Insert(T x, Lazy<List<Tree>.Node> ts)
-        {
-            return new Lazy<List<Tree>.Node>(() => InsTree(new Tree(0, x, List<Tree>.Empty), ts.Value));
-        }
+        public static Lazy<List<Tree>.Node> Insert(T x, Lazy<List<Tree>.Node> ts) => 
+            new Lazy<List<Tree>.Node>(() => InsTree(new Tree(0, x, List<Tree>.Empty), ts.Value));
 
-        public static Lazy<List<Tree>.Node> Merge(Lazy<List<Tree>.Node> ts1, Lazy<List<Tree>.Node> ts2)
-        {
-            return new Lazy<List<Tree>.Node>(() => Mrg(ts1.Value, ts2.Value));
-        }
+        public static Lazy<List<Tree>.Node> Merge(Lazy<List<Tree>.Node> ts1, Lazy<List<Tree>.Node> ts2) => 
+            new Lazy<List<Tree>.Node>(() => Mrg(ts1.Value, ts2.Value));
 
         private class TreeParts
         {
@@ -86,23 +86,18 @@ namespace FunProgLib.heap
 
         private static TreeParts RemoveMinTree(List<Tree>.Node list)
         {
-            if (List<Tree>.IsEmpty(list)) throw new ArgumentException("Empty", nameof(list));
+            if (List<Tree>.IsEmpty(list)) throw new ArgumentNullException(nameof(list));
             if (List<Tree>.IsEmpty(list.Next)) return new TreeParts(list.Element, List<Tree>.Empty);
             var prime = RemoveMinTree(list.Next);
             if (list.Element.Root.CompareTo(prime.Tree.Root) <= 0) return new TreeParts(list.Element, list.Next);
             return new TreeParts(prime.Tree, List<Tree>.Cons(list.Element, prime.List));
         }
 
-        public static T FindMin(Lazy<List<Tree>.Node> ts)
-        {
-            var t = RemoveMinTree(ts.Value);
-            return t.Tree.Root;
-        }
+        public static T FindMin(Lazy<List<Tree>.Node> ts) => RemoveMinTree(ts.Value).Tree.Root;
 
         public static Lazy<List<Tree>.Node> DeleteMin(Lazy<List<Tree>.Node> ts)
         {
-            return new Lazy<List<Tree>.Node>(
-                () =>
+            return new Lazy<List<Tree>.Node>(() =>
                 {
                     var t = RemoveMinTree(ts.Value);
                     var x = List<Tree>.Reverse(t.Tree.List);

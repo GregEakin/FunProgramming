@@ -69,6 +69,7 @@
     <Compile Include="ephemeral\DictionaryTests.cs" />
     <Compile Include="ephemeral\MultiRwLockMapTests.cs" />
     <Compile Include="heap\BootstrappedHeapTests.cs" />
+    <Compile Include="heap\LazyBinomialHeapPerfTests.cs" />
     <Compile Include="heap\ScheduledBinomialHeapTest.cs" />
     <Compile Include="heap\SkewBinomialHeapTests.cs" />
     <Compile Include="heap\SplayHeapTests.cs" />
@@ -100,7 +101,11 @@
     <Compile Include="tree\RedBlackSetTests.cs" />
     <Compile Include="tree\UnbalancedSetTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="utilities\CodeTimer.cs" />
+    <Compile Include="utilities\CollectionCounters.cs" />
+    <Compile Include="utilities\CycleTime.cs" />
     <Compile Include="utilities\ExpectedException.cs" />
+    <Compile Include="utilities\Kernel32.cs" />
     <Compile Include="utilities\StringUtilitiesTests.cs" />
   </ItemGroup>
   <ItemGroup>

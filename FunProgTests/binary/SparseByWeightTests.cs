@@ -9,13 +9,11 @@
 
 namespace FunProgTests.binary
 {
-    using System.Globalization;
-    using System.Text;
-
     using FunProgLib.binary;
     using FunProgLib.lists;
-
     using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using System.Globalization;
+    using System.Text;
 
     [TestClass]
     public class SparseByWeightTests
