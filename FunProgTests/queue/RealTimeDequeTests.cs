@@ -9,12 +9,10 @@
 
 namespace FunProgTests.queue
 {
+    using FunProgLib.queue;
+    using Microsoft.VisualStudio.TestTools.UnitTesting;
     using System;
     using System.Linq;
-
-    using FunProgLib.queue;
-
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
     using static utilities.ExpectedException;
 
     [TestClass]
@@ -124,6 +122,28 @@ namespace FunProgTests.queue
         {
             var queue = RealTimeDeque<string>.Empty;
             AssertThrows<ArgumentNullException>(() => RealTimeDeque<string>.Init(queue));
+        }
+        
+        [TestMethod]
+        public void IncrementalTest()
+        {
+            const string data = "One Two Three Four Five";
+            var queue = data.Split().Aggregate(RealTimeDeque<string>.Empty, RealTimeDeque<string>.Snoc);
+            Assert.IsFalse(RealTimeDeque<string>.IsEmpty(queue));
+            Assert.IsFalse(queue.F.IsValueCreated);
+            Assert.IsFalse(queue.Sf.IsValueCreated);
+            Assert.IsFalse(queue.R.IsValueCreated);
+            Assert.IsFalse(queue.Sr.IsValueCreated);
+
+            // After looking at the first element, the rest of the queue should be not created.
+            var head = RealTimeDeque<string>.Head(queue);
+            Assert.AreEqual("One", head);
+            Assert.IsTrue(queue.F.IsValueCreated);
+            Assert.IsFalse(queue.F.Value.Next.IsValueCreated);
+            Assert.IsTrue(queue.Sf.IsValueCreated);
+            Assert.IsFalse(queue.Sf.Value.Next.IsValueCreated);
+            Assert.IsFalse(queue.R.IsValueCreated);
+            Assert.IsFalse(queue.Sr.IsValueCreated);
         }
     }
 }

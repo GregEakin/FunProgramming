@@ -11,9 +11,8 @@
 
 namespace FunProgLib.queue
 {
-    using System;
-
     using streams;
+    using System;
 
     public static class RealTimeDeque<T> // : IDeque<T>
     {
@@ -55,10 +54,7 @@ namespace FunProgLib.queue
             return s;
         }
 
-        private static Lazy<Stream<T>.StreamCell> Exec2(Lazy<Stream<T>.StreamCell> s)
-        {
-            return Exec1(Exec1(s));
-        }
+        private static Lazy<Stream<T>.StreamCell> Exec2(Lazy<Stream<T>.StreamCell> s) => Exec1(Exec1(s));
 
         private static Lazy<Stream<T>.StreamCell> RotateRev(Lazy<Stream<T>.StreamCell> fc, Lazy<Stream<T>.StreamCell> r, Lazy<Stream<T>.StreamCell> a)
         {

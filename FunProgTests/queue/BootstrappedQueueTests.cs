@@ -7,17 +7,15 @@
 // All Rights Reserved.
 //
 
-using System.Text;
 using FunProgLib.lists;
+using System.Text;
 
 namespace FunProgTests.queue
 {
+    using FunProgLib.queue;
+    using Microsoft.VisualStudio.TestTools.UnitTesting;
     using System;
     using System.Linq;
-
-    using FunProgLib.queue;
-
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
     using static utilities.ExpectedException;
 
     [TestClass]

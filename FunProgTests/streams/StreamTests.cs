@@ -23,7 +23,7 @@ namespace FunProgTests.streams
         [TestMethod]
         public void DollarNilTest()
         {
-            AssertThrows<ArgumentException>(() => new Stream<int>.StreamCell(3, null));
+            var ex = AssertThrows<ArgumentException>(() => new Stream<int>.StreamCell(3, null));
         }
 
         [TestMethod]

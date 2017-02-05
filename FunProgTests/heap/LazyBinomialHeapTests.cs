@@ -7,7 +7,6 @@
 // All Rights Reserved.
 //
 
-
 namespace FunProgTests.heap
 {
     using FunProgLib.heap;
@@ -136,6 +135,7 @@ namespace FunProgTests.heap
             var heap = LazyBinomialHeap<int>.Empty;
             for (var i = 0; i < size; i++) heap = LazyBinomialHeap<int>.Insert(random.Next(size), heap);
             Assert.IsFalse(heap.IsValueCreated);
+
             var last = 0;
             var count = 0;
             while (!LazyBinomialHeap<int>.IsEmpty(heap))
@@ -146,6 +146,7 @@ namespace FunProgTests.heap
                 last = next;
                 count++;
             }
+
             Assert.AreEqual(size, count);
         }
     }
