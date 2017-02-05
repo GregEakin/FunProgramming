@@ -32,7 +32,7 @@ namespace FunProgTests.heap
 
         private class ModelSimulator : IModel
         {
-            private const int Size = 2000;
+            private const int Size = 100000;
             private readonly Random _random = new Random(4432);
 
             public void RunModel(IModel obj)
@@ -45,23 +45,23 @@ namespace FunProgTests.heap
                     Assert.IsFalse(heap.IsValueCreated);
                 }
 
-                Console.WriteLine(LazyBinomialHeapTests.DumpHeap(heap));
+                //Console.WriteLine(LazyBinomialHeapTests.DumpHeap(heap));
 
-                var last = 0;
-                var count = 0;
-                while (!LazyBinomialHeap<int>.IsEmpty(heap))
-                {
-                    Assert.IsTrue(heap.IsValueCreated);
+                //var last = 0;
+                //var count = 0;
+                //while (!LazyBinomialHeap<int>.IsEmpty(heap))
+                //{
+                //    Assert.IsTrue(heap.IsValueCreated);
 
-                    var next = LazyBinomialHeap<int>.FindMin(heap);
-                    Assert.IsTrue(last <= next);
-                    last = next;
+                //    var next = LazyBinomialHeap<int>.FindMin(heap);
+                //    Assert.IsTrue(last <= next);
+                //    last = next;
 
-                    heap = LazyBinomialHeap<int>.DeleteMin(heap);
-                    count++;
-                }
+                //    heap = LazyBinomialHeap<int>.DeleteMin(heap);
+                //    count++;
+                //}
 
-                Assert.AreEqual(Size, count);
+                //Assert.AreEqual(Size, count);
             }
         }
     }
