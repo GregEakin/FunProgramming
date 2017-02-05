@@ -126,13 +126,13 @@ namespace FunProgTests.heap
         [TestMethod]
         public void FindMinNullTest()
         {
-            AssertThrows<ArgumentException>(() => LazyParingHeap<int>.FindMin(LazyParingHeap<int>.Empty));
+            AssertThrows<ArgumentNullException>(() => LazyParingHeap<int>.FindMin(LazyParingHeap<int>.Empty));
         }
 
         [TestMethod]
         public void DeleteMinNullTest()
         {
-            AssertThrows<ArgumentException>(() => LazyParingHeap<int>.DeleteMin(LazyParingHeap<int>.Empty));
+            AssertThrows<ArgumentNullException>(() => LazyParingHeap<int>.DeleteMin(LazyParingHeap<int>.Empty));
         }
     }
 }

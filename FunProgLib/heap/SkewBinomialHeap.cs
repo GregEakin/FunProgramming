@@ -118,7 +118,7 @@ namespace FunProgLib.heap
 
         private static TreeParts RemoveMinTree(List<Tree>.Node ds)
         {
-            if (List<Tree>.IsEmpty(ds)) throw new ArgumentException("Empty", nameof(ds));
+            if (List<Tree>.IsEmpty(ds)) throw new ArgumentNullException(nameof(ds));
             var t = List<Tree>.Head(ds);
             var ts = List<Tree>.Tail(ds);
             if (List<Tree>.IsEmpty(ts)) return new TreeParts(t, ts);

@@ -102,28 +102,28 @@ namespace FunProgTests.queue
         public void EmptyHeadTest()
         {
             var queue = BankersDeque<string>.Empty;
-            AssertThrows<ArgumentException>(() => BankersDeque<string>.Head(queue));
+            AssertThrows<ArgumentNullException>(() => BankersDeque<string>.Head(queue));
         }
 
         [TestMethod]
         public void EmptyTailTest()
         {
             var queue = BankersDeque<string>.Empty;
-            AssertThrows<ArgumentException>(() => BankersDeque<string>.Tail(queue));
+            AssertThrows<ArgumentNullException>(() => BankersDeque<string>.Tail(queue));
         }
 
         [TestMethod]
         public void EmptyLastTest()
         {
             var queue = BankersDeque<string>.Empty;
-            AssertThrows<ArgumentException>(() => BankersDeque<string>.Last(queue));
+            AssertThrows<ArgumentNullException>(() => BankersDeque<string>.Last(queue));
         }
 
         [TestMethod]
         public void EmptyInitTest()
         {
             var queue = BankersDeque<string>.Empty;
-            AssertThrows<ArgumentException>(() => BankersDeque<string>.Init(queue));
+            AssertThrows<ArgumentNullException>(() => BankersDeque<string>.Init(queue));
         }
     }
 }

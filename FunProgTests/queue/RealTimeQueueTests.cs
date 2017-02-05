@@ -35,14 +35,14 @@ namespace FunProgTests.queue
         public void EmptyHeadTest()
         {
             var queue = RealTimeQueue<string>.Empty;
-            AssertThrows<ArgumentException>(() => RealTimeQueue<string>.Head(queue));
+            AssertThrows<ArgumentNullException>(() => RealTimeQueue<string>.Head(queue));
         }
 
         [TestMethod]
         public void EmptyTailTest()
         {
             var queue = RealTimeQueue<string>.Empty;
-            AssertThrows<ArgumentException>(() => RealTimeQueue<string>.Tail(queue));
+            AssertThrows<ArgumentNullException>(() => RealTimeQueue<string>.Tail(queue));
         }
 
         [TestMethod]

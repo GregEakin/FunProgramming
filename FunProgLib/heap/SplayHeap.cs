@@ -96,14 +96,14 @@ namespace FunProgLib.heap
 
         public static T FindMin(Heap t)
         {
-            if (IsEmpty(t)) throw new ArgumentException("Empty", nameof(t));
+            if (IsEmpty(t)) throw new ArgumentNullException(nameof(t));
             if (IsEmpty(t.A)) return t.X;
             return FindMin(t.A);
         }
 
         public static Heap DeleteMin(Heap t)
         {
-            if (IsEmpty(t)) throw new ArgumentException("Empty", nameof(t));
+            if (IsEmpty(t)) throw new ArgumentNullException(nameof(t));
             if (IsEmpty(t.A)) return t.B;
             if (IsEmpty(t.A.A)) return new Heap(t.A.B, t.X, t.B);
             return new Heap(DeleteMin(t.A.A), t.A.X, new Heap(t.A.B, t.X, t.B));

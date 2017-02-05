@@ -102,28 +102,28 @@ namespace FunProgTests.queue
         public void EmptyHeadTest()
         {
             var queue = RealTimeDeque<string>.Empty;
-            AssertThrows<ArgumentException>(() => RealTimeDeque<string>.Head(queue));
+            AssertThrows<ArgumentNullException>(() => RealTimeDeque<string>.Head(queue));
         }
 
         [TestMethod]
         public void EmptyTailTest()
         {
             var queue = RealTimeDeque<string>.Empty;
-            AssertThrows<ArgumentException>(() => RealTimeDeque<string>.Tail(queue));
+            AssertThrows<ArgumentNullException>(() => RealTimeDeque<string>.Tail(queue));
         }
 
         [TestMethod]
         public void EmptyLastTest()
         {
             var queue = RealTimeDeque<string>.Empty;
-            AssertThrows<ArgumentException>(() => RealTimeDeque<string>.Last(queue));
+            AssertThrows<ArgumentNullException>(() => RealTimeDeque<string>.Last(queue));
         }
 
         [TestMethod]
         public void EmptyInitTest()
         {
             var queue = RealTimeDeque<string>.Empty;
-            AssertThrows<ArgumentException>(() => RealTimeDeque<string>.Init(queue));
+            AssertThrows<ArgumentNullException>(() => RealTimeDeque<string>.Init(queue));
         }
     }
 }

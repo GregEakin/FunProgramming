@@ -64,14 +64,14 @@ namespace FunProgTests.heap
         public void EmptyMinTest()
         {
             var heap = LeftistHeap<int>.Empty;
-            AssertThrows<ArgumentException>(() => LeftistHeap<int>.FindMin(heap));
+            AssertThrows<ArgumentNullException>(() => LeftistHeap<int>.FindMin(heap));
         }
 
         [TestMethod]
         public void EmptyDeleteMinTest()
         {
             var heap = LeftistHeap<int>.Empty;
-            AssertThrows<ArgumentException>(() => LeftistHeap<int>.DeleteMin(heap));
+            AssertThrows<ArgumentNullException>(() => LeftistHeap<int>.DeleteMin(heap));
         }
 
         [TestMethod]

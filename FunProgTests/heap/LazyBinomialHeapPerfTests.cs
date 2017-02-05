@@ -12,7 +12,6 @@ namespace FunProgTests.heap
     using FunProgLib.heap;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using System;
-    using System.Linq;
     using utilities;
 
     [TestClass]
@@ -32,7 +31,7 @@ namespace FunProgTests.heap
 
         private class ModelSimulator : IModel
         {
-            private const int Size = 100000;
+            private const int Size = 100;
             private readonly Random _random = new Random(4432);
 
             public void RunModel(IModel obj)
@@ -45,7 +44,7 @@ namespace FunProgTests.heap
                     Assert.IsFalse(heap.IsValueCreated);
                 }
 
-                //Console.WriteLine(LazyBinomialHeapTests.DumpHeap(heap));
+                Console.WriteLine(LazyBinomialHeapTests.DumpHeap(heap));
 
                 //var last = 0;
                 //var count = 0;

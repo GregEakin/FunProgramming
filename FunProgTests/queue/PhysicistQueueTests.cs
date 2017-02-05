@@ -35,14 +35,14 @@ namespace FunProgTests.queue
         public void EmptyHeadTest()
         {
             var queue = PhysicistsQueue<string>.Empty;
-            AssertThrows<ArgumentException>(() => PhysicistsQueue<string>.Head(queue));
+            AssertThrows<ArgumentNullException>(() => PhysicistsQueue<string>.Head(queue));
         }
 
         [TestMethod]
         public void EmptyTailTest()
         {
             var queue = PhysicistsQueue<string>.Empty;
-            AssertThrows<ArgumentException>(() => PhysicistsQueue<string>.Tail(queue));
+            AssertThrows<ArgumentNullException>(() => PhysicistsQueue<string>.Tail(queue));
         }
 
         [TestMethod]

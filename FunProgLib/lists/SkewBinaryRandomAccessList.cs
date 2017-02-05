@@ -83,14 +83,14 @@ namespace FunProgLib.lists
 
         public static T Head(List<Stuff>.Node ts)
         {
-            if (List<Stuff>.IsEmpty(ts)) throw new ArgumentException("Empty", nameof(ts));
+            if (List<Stuff>.IsEmpty(ts)) throw new ArgumentNullException(nameof(ts));
             var head = List<Stuff>.Head(ts);
             return head.Tree.Alpha;
         }
 
         public static List<Stuff>.Node Tail(List<Stuff>.Node ts)
         {
-            if (List<Stuff>.IsEmpty(ts)) throw new ArgumentException("Empty", nameof(ts));
+            if (List<Stuff>.IsEmpty(ts)) throw new ArgumentNullException(nameof(ts));
             var head = List<Stuff>.Head(ts);
             if (head.Tree is Leaf) return List<Stuff>.Tail(ts);
             if (head.Tree is Node node) return List<Stuff>.Cons(new Stuff(head.Weight / 2, node.Tree1), List<Stuff>.Cons(new Stuff(head.Weight / 2, node.Tree2), List<Stuff>.Tail(ts)));

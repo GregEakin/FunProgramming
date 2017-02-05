@@ -42,13 +42,13 @@ namespace FunProgLib.queue
 
         public static T Head(Queue q)
         {
-            if (List<T>.IsEmpty(q.F)) throw new ArgumentException("Empty", nameof(q));
+            if (List<T>.IsEmpty(q.F)) throw new ArgumentNullException(nameof(q));
             return q.F.Element;
         }
 
         public static Queue Tail(Queue q)
         {
-            if (List<T>.IsEmpty(q.F)) throw new ArgumentException("Empty", nameof(q));
+            if (List<T>.IsEmpty(q.F)) throw new ArgumentNullException(nameof(q));
             return CheckF(q.F.Next, q.R);
         }
     }

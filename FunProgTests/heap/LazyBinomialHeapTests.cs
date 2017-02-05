@@ -28,8 +28,8 @@ namespace FunProgTests.heap
             if (!List<LazyBinomialHeap<T>.Tree>.IsEmpty(tree.List))
             {
                 result.Append(": ");
-                foreach (var node1 in tree.List)
-                    result.Append(DumpNode(node1));
+                foreach (var node in tree.List)
+                    result.Append(DumpNode(node));
             }
             result.Append("}");
             return result.ToString();

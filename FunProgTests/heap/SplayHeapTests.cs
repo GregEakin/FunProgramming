@@ -91,7 +91,7 @@ namespace FunProgTests.heap
         public void FindMinTest1()
         {
             var t = SplayHeap<int>.Empty;
-            AssertThrows<ArgumentException>(() => SplayHeap<int>.FindMin(t));
+            AssertThrows<ArgumentNullException>(() => SplayHeap<int>.FindMin(t));
         }
 
         [TestMethod]
@@ -127,7 +127,7 @@ namespace FunProgTests.heap
         public void DeleteMinTest1()
         {
             var t = SplayHeap<int>.Empty;
-            AssertThrows<ArgumentException>(() => SplayHeap<int>.DeleteMin(t));
+            AssertThrows<ArgumentNullException>(() => SplayHeap<int>.DeleteMin(t));
         }
 
         [TestMethod]

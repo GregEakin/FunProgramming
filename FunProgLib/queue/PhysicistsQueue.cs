@@ -50,20 +50,18 @@ namespace FunProgLib.queue
             return CheckW(f.Value, lenf + lenr, new Lazy<List<T>.Node>(() => List<T>.Cat(f.Value, List<T>.Reverse(r))), 0, List<T>.Empty);
         }
 
-        public static Queue Snoc(Queue queue, T element)
-        {
-            return Check(queue.W, queue.Lenf, queue.F, queue.Lenr + 1, List<T>.Cons(element, queue.R));
-        }
+        public static Queue Snoc(Queue queue, T element) => 
+            Check(queue.W, queue.Lenf, queue.F, queue.Lenr + 1, List<T>.Cons(element, queue.R));
 
         public static T Head(Queue queue)
         {
-            if (List<T>.IsEmpty(queue.W)) throw new ArgumentException("Empty", nameof(queue));
+            if (List<T>.IsEmpty(queue.W)) throw new ArgumentNullException(nameof(queue));
             return queue.W.Element;
         }
 
         public static Queue Tail(Queue queue)
         {
-            if (List<T>.IsEmpty(queue.W)) throw new ArgumentException("Empty", nameof(queue));
+            if (List<T>.IsEmpty(queue.W)) throw new ArgumentNullException(nameof(queue));
             return Check(queue.W.Next, queue.Lenf - 1, new Lazy<List<T>.Node>(() => queue.F.Value.Next), queue.Lenr, queue.R);
         }
     }

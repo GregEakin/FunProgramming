@@ -60,13 +60,13 @@ namespace FunProgLib.heap
 
             public static Heap FindMin(Element h)
             {
-                if (IsEmpty(h)) throw new ArgumentException("Empty", nameof(h));
+                if (IsEmpty(h)) throw new ArgumentNullException(nameof(h));
                 return h.H1;
             }
 
             public static Element DeleteMin(Element h)
             {
-                if (IsEmpty(h)) throw new ArgumentException("Empty", nameof(h));
+                if (IsEmpty(h)) throw new ArgumentNullException(nameof(h));
                 if (IsEmpty(h.H2)) return Empty;
                 var p1 = FindMin(h.H2).P;
                 var p2 = DeleteMin(h.H2);
@@ -90,13 +90,13 @@ namespace FunProgLib.heap
 
         public static T FindMin(Heap h)
         {
-            if (IsEmpty(h)) throw new ArgumentException("Empty", nameof(h));
+            if (IsEmpty(h)) throw new ArgumentNullException(nameof(h));
             return h.X;
         }
 
         public static Heap DeleteMin(Heap h)
         {
-            if (IsEmpty(h)) throw new ArgumentException("Empty", nameof(h));
+            if (IsEmpty(h)) throw new ArgumentNullException(nameof(h));
             if (PrimH.IsEmpty(h.P)) return Empty;
             var p1 = PrimH.FindMin(h.P);
             var p2 = PrimH.DeleteMin(h.P);

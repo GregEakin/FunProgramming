@@ -35,7 +35,7 @@ namespace FunProgTests.lists
         public void EmptyHeadTest()
         {
             var stack = CustomStack<string>.Empty;
-            AssertThrows<ArgumentException>(() => CustomStack<string>.Head(stack));
+            AssertThrows<ArgumentNullException>(() => CustomStack<string>.Head(stack));
         }
 
         [TestMethod]

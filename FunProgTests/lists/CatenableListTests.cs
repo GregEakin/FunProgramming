@@ -91,7 +91,7 @@ namespace FunProgTests.lists
         public void EmptyHeadTest()
         {
             var list = CatenableList<string>.Empty;
-            AssertThrows<ArgumentException>(() => CatenableList<string>.Head(list));
+            AssertThrows<ArgumentNullException>(() => CatenableList<string>.Head(list));
         }
 
         [TestMethod]
@@ -108,7 +108,7 @@ namespace FunProgTests.lists
         public void EmptyTailTest()
         {
             var list = CatenableList<string>.Empty;
-            AssertThrows<ArgumentException>(() => CatenableList<string>.Tail(list));
+            AssertThrows<ArgumentNullException>(() => CatenableList<string>.Tail(list));
         }
 
         [TestMethod]

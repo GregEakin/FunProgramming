@@ -35,14 +35,14 @@ namespace FunProgTests.queue
         public void EmptyHeadTest()
         {
             var queue = BatchedQueue<string>.Empty;
-            AssertThrows<ArgumentException>(() => BatchedQueue<string>.Head(queue));
+            AssertThrows<ArgumentNullException>(() => BatchedQueue<string>.Head(queue));
         }
 
         [TestMethod]
         public void EmptyTailTest()
         {
             var queue = BatchedQueue<string>.Empty;
-            AssertThrows<ArgumentException>(() => BatchedQueue<string>.Tail(queue));
+            AssertThrows<ArgumentNullException>(() => BatchedQueue<string>.Tail(queue));
         }
         
         [TestMethod]

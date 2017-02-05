@@ -33,14 +33,14 @@ namespace FunProgTests.lists
         public void EmptyHeadTest()
         {
             var list = SkewBinaryRandomAccessList<string>.Empty;
-            AssertThrows<ArgumentException>(() => SkewBinaryRandomAccessList<string>.Head(list));
+            AssertThrows<ArgumentNullException>(() => SkewBinaryRandomAccessList<string>.Head(list));
         }
 
         [TestMethod]
         public void EmptyTailTest()
         {
             var list = SkewBinaryRandomAccessList<string>.Empty;
-            AssertThrows<ArgumentException>(() => SkewBinaryRandomAccessList<string>.Tail(list));
+            AssertThrows<ArgumentNullException>(() => SkewBinaryRandomAccessList<string>.Tail(list));
         }
 
         [TestMethod]

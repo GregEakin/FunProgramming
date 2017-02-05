@@ -70,13 +70,13 @@ namespace FunProgLib.lists
 
         public static T Head(Node list)
         {
-            if (IsEmpty(list)) throw new ArgumentException("Empty", nameof(list));
+            if (IsEmpty(list)) throw new ArgumentNullException(nameof(list));
             return list.Element;
         }
 
         public static Node Tail(Node list)
         {
-            if (IsEmpty(list)) throw new ArgumentException("Empty", nameof(list));
+            if (IsEmpty(list)) throw new ArgumentNullException(nameof(list));
             return list.Next;
         }
 
@@ -103,7 +103,7 @@ namespace FunProgLib.lists
 
         public static T Lookup(int i, Node list)
         {
-            if (IsEmpty(list)) throw new ArgumentException("Empty", nameof(list));
+            if (IsEmpty(list)) throw new ArgumentNullException(nameof(list));
             if (i < 0) throw new ArgumentException("neg", nameof(i));
             return i == 0
                 ? Head(list)
@@ -112,7 +112,7 @@ namespace FunProgLib.lists
 
         //public static Node Update(int i, T item, Node list)
         //{
-        //    if (IsEmpty(list)) throw new ArgumentException("Empty", nameof(list));
+        //    if (IsEmpty(list)) throw new ArgumentNullException(nameof(list));
         //    if (i < 0) throw new ArgumentException("neg", nameof(i));
         //    return i == 0
         //        ? Cons(item, Tail(list))
@@ -123,7 +123,7 @@ namespace FunProgLib.lists
 
         public static Node Fupdate(Del f, int i, Node ts)
         {
-            if (IsEmpty(ts)) throw new ArgumentException("Empty", nameof(ts));
+            if (IsEmpty(ts)) throw new ArgumentNullException(nameof(ts));
             if (i < 0) throw new ArgumentException("Negative", nameof(i));
             var head = Head(ts);
             var tail = Tail(ts);

@@ -33,14 +33,14 @@ namespace FunProgTests.lists
         public void EmptyHeadTest()
         {
             var list = BinaryRandomAccessList<string>.Empty;
-            AssertThrows<ArgumentException>(() => BinaryRandomAccessList<string>.Head(list));
+            AssertThrows<ArgumentNullException>(() => BinaryRandomAccessList<string>.Head(list));
         }
 
         [TestMethod]
         public void EmptyTailTest()
         {
             var list = BinaryRandomAccessList<string>.Empty;
-            AssertThrows<ArgumentException>(() => BinaryRandomAccessList<string>.Tail(list));
+            AssertThrows<ArgumentNullException>(() => BinaryRandomAccessList<string>.Tail(list));
         }
 
         [TestMethod]

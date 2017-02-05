@@ -35,14 +35,14 @@ namespace FunProgTests.queue
         public void EmptyHeadTest()
         {
             var queue = HoodMelvilleQueue<string>.Empty;
-            AssertThrows<ArgumentException>(() => HoodMelvilleQueue<string>.Head(queue));
+            AssertThrows<ArgumentNullException>(() => HoodMelvilleQueue<string>.Head(queue));
         }
 
         [TestMethod]
         public void EmptyTailTest()
         {
             var queue = HoodMelvilleQueue<string>.Empty;
-            AssertThrows<ArgumentException>(() => HoodMelvilleQueue<string>.Tail(queue));
+            AssertThrows<ArgumentNullException>(() => HoodMelvilleQueue<string>.Tail(queue));
         }
 
         [TestMethod]

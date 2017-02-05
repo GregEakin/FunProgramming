@@ -55,13 +55,13 @@ namespace FunProgLib.lists
 
         public static T Head(C c)
         {
-            if (IsEmpty(c)) throw new ArgumentException("Empty", nameof(c));
+            if (IsEmpty(c)) throw new ArgumentNullException(nameof(c));
             return c.X;
         }
 
         public static C Tail(C c)
         {
-            if (c == null) throw new ArgumentException("Empty", nameof(c));
+            if (c == null) throw new ArgumentNullException(nameof(c));
             if (BootstrappedQueue<Lazy<C>>.IsEmpty(c.Q)) return Empty;
             return LinkAll(c.Q);
         }

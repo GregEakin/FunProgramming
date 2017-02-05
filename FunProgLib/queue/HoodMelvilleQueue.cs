@@ -154,14 +154,14 @@ namespace FunProgLib.queue
 
         public static T Head(Queue q)
         {
-            if (IsEmpty(q)) throw new ArgumentException("Empty", nameof(q));
+            if (IsEmpty(q)) throw new ArgumentNullException(nameof(q));
             var x = List<T>.Head(q.F);
             return x;
         }
 
         public static Queue Tail(Queue q)
         {
-            if (List<T>.IsEmpty(q.F)) throw new ArgumentException("Empty", nameof(q));
+            if (List<T>.IsEmpty(q.F)) throw new ArgumentNullException(nameof(q));
             var f = List<T>.Tail(q.F);
             return Check(q.LenF - 1, f, Invalidate(q.State), q.LenR, q.R);
         }

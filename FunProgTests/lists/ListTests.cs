@@ -33,14 +33,14 @@ namespace FunProgTests.lists
         public void EmptyHeadTest()
         {
             var list = List<string>.Empty;
-            AssertThrows<ArgumentException>(() => List<string>.Head(list));
+            AssertThrows<ArgumentNullException>(() => List<string>.Head(list));
         }
 
         [TestMethod]
         public void EmptyTailTest()
         {
             var list = List<string>.Empty;
-            AssertThrows<ArgumentException>(() => List<string>.Tail(list));
+            AssertThrows<ArgumentNullException>(() => List<string>.Tail(list));
         }
 
         [TestMethod]

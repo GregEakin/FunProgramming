@@ -91,7 +91,7 @@ namespace FunProgTests.heap
         [TestMethod]
         public void FindEmptyMinTest()
         {
-            AssertThrows<ArgumentException>(() => BootstrappedHeap<string>.FindMin(BootstrappedHeap<string>.Empty));
+            AssertThrows<ArgumentNullException>(() => BootstrappedHeap<string>.FindMin(BootstrappedHeap<string>.Empty));
         }
 
         [TestMethod]
@@ -104,7 +104,7 @@ namespace FunProgTests.heap
         [TestMethod]
         public void DeleteEmptyMinTest()
         {
-            AssertThrows<ArgumentException>(() => BootstrappedHeap<string>.DeleteMin(BootstrappedHeap<string>.Empty));
+            AssertThrows<ArgumentNullException>(() => BootstrappedHeap<string>.DeleteMin(BootstrappedHeap<string>.Empty));
         }
 
         [TestMethod]

@@ -50,13 +50,13 @@ namespace FunProgLib.queue
 
         public static T Head(Queue queue)
         {
-            if (queue.F == Stream<T>.DollarNil) throw new ArgumentException("Empty", nameof(queue));
+            if (queue.F == Stream<T>.DollarNil) throw new ArgumentNullException(nameof(queue));
             return queue.F.Value.Element;
         }
 
         public static Queue Tail(Queue queue)
         {
-            if (queue.F == Stream<T>.DollarNil) throw new ArgumentException("Empty", nameof(queue));
+            if (queue.F == Stream<T>.DollarNil) throw new ArgumentNullException(nameof(queue));
             return Check(queue.LenF - 1, queue.F.Value.Next, queue.LenR, queue.R);
         }
     }

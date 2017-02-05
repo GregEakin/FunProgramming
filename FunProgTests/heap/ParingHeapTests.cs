@@ -131,13 +131,13 @@ namespace FunProgTests.heap
         [TestMethod]
         public void FindMinNullTest()
         {
-            AssertThrows<ArgumentException>(() => ParingHeap<int>.FindMin(ParingHeap<int>.Empty));
+            AssertThrows<ArgumentNullException>(() => ParingHeap<int>.FindMin(ParingHeap<int>.Empty));
         }
 
         [TestMethod]
         public void DeleteMinNullTest()
         {
-            AssertThrows<ArgumentException>(() => ParingHeap<int>.DeleteMin(ParingHeap<int>.Empty));
+            AssertThrows<ArgumentNullException>(() => ParingHeap<int>.DeleteMin(ParingHeap<int>.Empty));
         }
     }
 }

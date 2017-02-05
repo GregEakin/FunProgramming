@@ -90,7 +90,7 @@ namespace FunProgLib.lists
 
         private static Stuff UnconsTree(List<Digit>.Node list)
         {
-            if (IsEmpty(list)) throw new ArgumentException("Empty", nameof(list));
+            if (IsEmpty(list)) throw new ArgumentNullException(nameof(list));
             if (list.Element == Zero)
             {
                 var stuff = UnconsTree(list.Next);

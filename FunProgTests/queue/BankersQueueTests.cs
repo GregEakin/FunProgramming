@@ -98,7 +98,7 @@ namespace FunProgTests.queue
         public void EmptyHeadTest()
         {
             var queue = BankersQueue<string>.Empty;
-            AssertThrows<ArgumentException>(() => BankersQueue<string>.Head(queue));
+            AssertThrows<ArgumentNullException>(() => BankersQueue<string>.Head(queue));
         }
 
         [TestMethod]
@@ -120,7 +120,7 @@ namespace FunProgTests.queue
         public void EmptyTailTest()
         {
             var queue = BankersQueue<string>.Empty;
-            AssertThrows<ArgumentException>(() => BankersQueue<string>.Tail(queue));
+            AssertThrows<ArgumentNullException>(() => BankersQueue<string>.Tail(queue));
         }
 
         [TestMethod]
