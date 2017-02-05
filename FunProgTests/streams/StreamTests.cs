@@ -24,6 +24,7 @@ namespace FunProgTests.streams
         public void DollarNilTest()
         {
             var ex = AssertThrows<ArgumentException>(() => new Stream<int>.StreamCell(3, null));
+            Assert.AreEqual("Can't be null, use Stream<T>.DollarNil instead.\r\nParameter name: next", ex.Message);
         }
 
         [TestMethod]
