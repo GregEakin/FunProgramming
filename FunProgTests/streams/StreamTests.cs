@@ -7,30 +7,35 @@
 // All Rights Reserved.
 //
 
-using System.Text;
-
 namespace FunProgTests.streams
 {
     using FunProgLib.streams;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using System;
     using System.Linq;
+    using System.Text;
     using static utilities.ExpectedException;
 
     [TestClass]
     public class StreamTests
     {
-        public static string DumpStream<T>(Lazy<Stream<T>.StreamCell> lazyStream)
+        public static string DumpStream<T>(Lazy<Stream<T>.StreamCell> lazyStream, bool expandUnCreated)
         {
             if (lazyStream == Stream<T>.DollarNil) return string.Empty;
 
-            // if (!lazyStream.IsValueCreated)
-            //    return "Not Created.";
+            if (!expandUnCreated && !lazyStream.IsValueCreated)                
+               return "$";
 
             var result = new StringBuilder();
+            if (!lazyStream.IsValueCreated)
+                result.Append("$");
             result.Append(lazyStream.Value.Element);
+            var rest = DumpStream(lazyStream.Value.Next, expandUnCreated);
+            if (string.IsNullOrWhiteSpace(rest))
+                return result.ToString();
+
             result.Append(", ");
-            result.Append(DumpStream(lazyStream.Value.Next));
+            result.Append(rest);
             return result.ToString();
         }
 
@@ -39,9 +44,31 @@ namespace FunProgTests.streams
         {
             const string data = "One Two Three One Three";
             var stream = data.Split().Reverse().Aggregate(Stream<string>.DollarNil, (s1, t) => Stream<string>.DollarCons(t, s1));
-            var x = DumpStream<string>(stream);
-            Assert.AreEqual("One, Two, Three, One, Three, ", x);
+            Assert.AreEqual("$One, $Two, $Three, $One, $Three", DumpStream(stream, true));
         }
+
+        [TestMethod]
+        public void Test2()
+        {
+            const string data = "One Two Three One Three";
+            var stream = data.Split().Reverse().Aggregate(Stream<string>.DollarNil, (s1, t) => Stream<string>.DollarCons(t, s1));
+            Assert.IsNotNull(stream.Value);
+            Assert.IsNotNull(stream.Value.Next.Value);
+            Assert.AreEqual("One, Two, $Three, $One, $Three", DumpStream(stream, true));
+        }
+
+        [TestMethod]
+        public void Test3()
+        {
+            const string data = "One Two Three One Three";
+            var stream = data.Split().Reverse().Aggregate(Stream<string>.DollarNil, (s1, t) => Stream<string>.DollarCons(t, s1));
+            Assert.AreEqual("$", DumpStream(stream, false));
+
+            Assert.IsNotNull(stream.Value);
+            Assert.IsNotNull(stream.Value.Next.Value);
+            Assert.AreEqual("One, Two, $Three, $One, $Three", DumpStream(stream, true));
+        }
+
 
         [TestMethod]
         public void DollarNilTest()
@@ -53,21 +80,10 @@ namespace FunProgTests.streams
         [TestMethod]
         public void ConsTest()
         {
-            var s1 = Stream<int>.DollarNil;
-            var s2 = Stream<int>.DollarCons(3, s1);
-            var s3 = Stream<int>.DollarCons(2, s2);
-            var s4 = Stream<int>.DollarCons(1, s3);
+            var data = new[] { 3, 2, 1 };
+            var stream = data.Aggregate(Stream<int>.DollarNil, (s1, t) => Stream<int>.DollarCons(t, s1));
 
-            Assert.IsFalse(s4.IsValueCreated);
-            Assert.IsNotNull(s4.Value);
-            Assert.AreEqual(1, s4.Value.Element);
-            Assert.IsFalse(s4.Value.Next.IsValueCreated);
-            Assert.IsNotNull(s4.Value.Next.Value);
-            Assert.AreEqual(2, s4.Value.Next.Value.Element);
-            Assert.IsFalse(s4.Value.Next.Value.Next.IsValueCreated);
-            Assert.IsNotNull(s4.Value.Next.Value.Next.Value);
-            Assert.AreEqual(3, s4.Value.Next.Value.Next.Value.Element);
-            Assert.AreSame(Stream<int>.DollarNil, s4.Value.Next.Value.Next.Value.Next);
+            Assert.AreEqual("$1, $2, $3", DumpStream(stream, true));
         }
 
         [TestMethod]
@@ -75,68 +91,41 @@ namespace FunProgTests.streams
         {
             var data = new[] { 3, 2, 1 };
             var stream = data.Aggregate(Stream<int>.DollarNil, (s1, t) => Stream<int>.DollarCons(t, s1));
+            var reverse = Stream<int>.Reverse(stream);
 
-            var r = Stream<int>.Reverse(stream);
-
-            Assert.IsTrue(stream.IsValueCreated);
-            Assert.IsTrue(stream.Value.Next.IsValueCreated);
-            Assert.IsTrue(stream.Value.Next.Value.Next.IsValueCreated);
-
-            Assert.IsFalse(r.IsValueCreated);
-            Assert.AreEqual(3, r.Value.Element);
-            Assert.IsFalse(r.Value.Next.IsValueCreated);
-            Assert.AreEqual(2, r.Value.Next.Value.Element);
-            Assert.IsFalse(r.Value.Next.Value.Next.IsValueCreated);
-            Assert.AreEqual(1, r.Value.Next.Value.Next.Value.Element);
-            Assert.AreSame(Stream<int>.DollarNil, r.Value.Next.Value.Next.Value.Next);
+            Assert.AreEqual("1, 2, 3", DumpStream(stream, true));
+            Assert.AreEqual("$3, $2, $1", DumpStream(reverse, true));
         }
 
         [TestMethod]
         public void AppendTest()
         {
-            var data = new[] { 2, 1 };
-            var s3 = data.Aggregate(Stream<int>.DollarNil, (s1, t1) => Stream<int>.DollarCons(t1, s1));
+            var data = new[] { 3, 2, 1 };
+            var stream = data.Aggregate(Stream<int>.DollarNil, (s1, t1) => Stream<int>.DollarCons(t1, s1));
+            var reverse = Stream<int>.Reverse(stream);
+            var sum = Stream<int>.Append(stream, reverse);
 
-            var r = Stream<int>.Reverse(s3);
-            var t = Stream<int>.Append(s3, r);
+            Assert.AreEqual("1, 2, 3", DumpStream(stream, false));
+            Assert.AreEqual("$", DumpStream(reverse, false));
+            Assert.AreEqual("$1, $2, $3, $3, $2, $1", DumpStream(sum, true));
 
-            Assert.IsTrue(s3.IsValueCreated);
-            Assert.IsTrue(s3.Value.Next.IsValueCreated);
-
-            Assert.IsFalse(r.IsValueCreated);
-            Assert.IsFalse(r.Value.Next.IsValueCreated);
-
-            Assert.IsFalse(t.IsValueCreated);
-            Assert.AreEqual(1, t.Value.Element);
-            Assert.IsFalse(t.Value.Next.IsValueCreated);
-            Assert.AreEqual(2, t.Value.Next.Value.Element);
-            Assert.IsTrue(t.Value.Next.Value.Next.IsValueCreated);
-            Assert.AreEqual(2, t.Value.Next.Value.Next.Value.Element);
-            Assert.IsFalse(t.Value.Next.Value.Next.Value.Next.IsValueCreated);
-            Assert.AreEqual(1, t.Value.Next.Value.Next.Value.Next.Value.Element);
-            Assert.AreSame(Stream<int>.DollarNil, t.Value.Next.Value.Next.Value.Next.Value.Next);
-
-            Assert.AreNotSame(s3, t);
-            Assert.AreEqual(s3.Value.Element, t.Value.Element);
-            Assert.AreSame(r, t.Value.Next.Value.Next);
+            // the last have of Sum are the same elements in the reverse stream.
+            Assert.AreSame(reverse, sum.Value.Next.Value.Next.Value.Next);
         }
 
         [TestMethod]
         public void DropOneTest()
         {
             var data = new[] { 3, 2, 1 };
-            var s4 = data.Aggregate(Stream<int>.DollarNil, (s1, t1) => Stream<int>.DollarCons(t1, s1));
-            var r = Stream<int>.Drop(1, s4);
+            var stream = data.Aggregate(Stream<int>.DollarNil, (s1, t1) => Stream<int>.DollarCons(t1, s1));
+            var drop = Stream<int>.Drop(1, stream);
 
-            Assert.IsTrue(s4.IsValueCreated);
-            Assert.IsFalse(s4.Value.Next.IsValueCreated);
-            Assert.IsFalse(s4.Value.Next.Value.Next.IsValueCreated);
+            Assert.AreEqual("1, $", DumpStream(stream, false));
+            Assert.AreEqual("$2, $3", DumpStream(drop, true));
 
-            Assert.IsTrue(r.IsValueCreated);
-            Assert.AreEqual(2, r.Value.Element);
-            Assert.IsFalse(r.Value.Next.IsValueCreated);
-            Assert.AreEqual(3, r.Value.Next.Value.Element);
-            Assert.AreSame(Stream<int>.DollarNil, r.Value.Next.Value.Next);
+            // Now that we've displayed everything in the drop steam, 
+            // all the items in the first stream are new evaluated.
+            Assert.AreEqual("1, 2, 3", DumpStream(stream, false));
         }
 
         [TestMethod]
@@ -215,6 +204,40 @@ namespace FunProgTests.streams
 
             var empty = Stream<string>.Drop(data.Length, stream);
             Assert.AreSame(Stream<string>.DollarNil, empty);
+        }
+
+        [TestMethod]
+        public void IncrementalConsTest()
+        {
+            var data = new[] { 3, 2, 1 };
+            var stream = data.Aggregate(Stream<int>.DollarNil, (s1, t) => Stream<int>.DollarCons(t, s1));
+
+            // Each value has to be fetched, before its expanded
+            Assert.AreEqual("$", DumpStream(stream, false));
+            Assert.IsNotNull(stream.Value);
+            Assert.AreEqual("1, $", DumpStream(stream, false));
+            Assert.IsNotNull(stream.Value.Next.Value);
+            Assert.AreEqual("1, 2, $", DumpStream(stream, false));
+            Assert.IsNotNull(stream.Value.Next.Value.Next.Value);
+            Assert.AreEqual("1, 2, 3", DumpStream(stream, false));
+        }
+
+        [TestMethod]
+        public void IncrementalReverseTest()
+        {
+            var data = new[] { 3, 2, 1 };
+            var stream = data.Aggregate(Stream<int>.DollarNil, (s1, t) => Stream<int>.DollarCons(t, s1));
+            var reverse = Stream<int>.Reverse(stream);
+            Assert.AreEqual("1, 2, 3", DumpStream(stream, false));  // the input has to be expanded, to get its reverse
+
+            // Each value has to be fetched, before its expanded
+            Assert.AreEqual("$", DumpStream(reverse, false));
+            Assert.IsNotNull(reverse.Value);
+            Assert.AreEqual("3, $", DumpStream(reverse, false));
+            Assert.IsNotNull(reverse.Value.Next.Value);
+            Assert.AreEqual("3, 2, $", DumpStream(reverse, false));
+            Assert.IsNotNull(reverse.Value.Next.Value.Next.Value);
+            Assert.AreEqual("3, 2, 1", DumpStream(reverse, false));
         }
     }
 }
