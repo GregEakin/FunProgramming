@@ -13,11 +13,28 @@ namespace FunProgTests.queue
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using System;
     using System.Linq;
+    using System.Text;
+    using static streams.StreamTests;
     using static utilities.ExpectedException;
 
     [TestClass]
     public class BankersDequeTests
     {
+        private static string DumpQueue<T>(BankersDeque<T>.Queue queue, bool expandUnCreated)
+        {
+            var builder = new StringBuilder();
+            builder.Append("[");
+            builder.Append(queue.LenF);
+            builder.Append(", {");
+            builder.Append(DumpStream(queue.F, expandUnCreated));
+            builder.Append("}, ");
+            builder.Append(queue.LenR);
+            builder.Append(", {");
+            builder.Append(DumpStream(queue.R, expandUnCreated));
+            builder.Append("}]");
+            return builder.ToString();
+        }
+
         [TestMethod]
         public void EmptyTest()
         {
@@ -42,11 +59,7 @@ namespace FunProgTests.queue
             queue = BankersDeque<string>.Cons("Last", queue);
             queue = BankersDeque<string>.Cons("Head", queue);
 
-            var head = BankersDeque<string>.Head(queue);
-            Assert.AreEqual("Head", head);
-
-            var last = BankersDeque<string>.Last(queue);
-            Assert.AreEqual("Last", last);
+            Assert.AreEqual("[1, {$Head}, 1, {$Last}]", DumpQueue(queue, true));
         }
 
         [TestMethod]
@@ -72,11 +85,7 @@ namespace FunProgTests.queue
             queue = BankersDeque<string>.Snoc(queue, "Head");
             queue = BankersDeque<string>.Snoc(queue, "Last");
 
-            var head = BankersDeque<string>.Head(queue);
-            Assert.AreEqual("Head", head);
-
-            var last = BankersDeque<string>.Last(queue);
-            Assert.AreEqual("Last", last);
+            Assert.AreEqual("[1, {$Head}, 1, {$Last}]", DumpQueue(queue, true));
         }
 
         [TestMethod]

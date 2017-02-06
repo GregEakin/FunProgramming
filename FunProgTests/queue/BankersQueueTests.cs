@@ -10,41 +10,28 @@
 namespace FunProgTests.queue
 {
     using FunProgLib.queue;
-    using FunProgLib.streams;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using System;
     using System.Linq;
     using System.Text;
+    using static streams.StreamTests;
     using static utilities.ExpectedException;
 
     [TestClass]
     public class BankersQueueTests
     {
-        private static string DumpList<T>(Stream<T>.StreamCell list)
-        {
-            if (list == null) return "{}";
-
-            var builder = new StringBuilder();
-            builder.Append("{");
-            builder.Append(list.Element);
-            builder.Append(", ");
-            builder.Append(DumpList(list.Next.Value));
-            builder.Append("}");
-            return builder.ToString();
-        }
-
-        private static string DumpQueue<T>(BankersQueue<T>.Queue queue)
+        private static string DumpQueue<T>(BankersQueue<T>.Queue queue, bool expandUnCreated)
         {
             var builder = new StringBuilder();
             builder.Append("[");
             builder.Append(queue.LenF);
-            builder.Append(", ");
-            builder.Append(DumpList(queue.F.Value));
-            builder.Append(", ");
+            builder.Append(", {");
+            builder.Append(DumpStream(queue.F, expandUnCreated));
+            builder.Append("}, ");
             builder.Append(queue.LenR);
-            builder.Append(", ");
-            builder.Append(DumpList(queue.R.Value));
-            builder.Append("]");
+            builder.Append(", {");
+            builder.Append(DumpStream(queue.R, expandUnCreated));
+            builder.Append("}]");
             return builder.ToString();
         }
 
@@ -70,14 +57,15 @@ namespace FunProgTests.queue
         [TestMethod]
         public void NullSnocTest()
         {
-            AssertThrows<NullReferenceException>(() => BankersQueue<string>.Snoc(null, "one"));
+            var ex = AssertThrows<NullReferenceException>(() => BankersQueue<string>.Snoc(null, "one"));
+            Assert.AreEqual("Object reference not set to an instance of an object.", ex.Message);
         }
 
         [TestMethod]
         public void EmptySnocTest()
         {
             var queue = BankersQueue<string>.Snoc(BankersQueue<string>.Empty, "one");
-            Assert.AreEqual("[1, {one, {}}, 0, {}]", DumpQueue(queue));
+            Assert.AreEqual("[1, {$one}, 0, {}]", DumpQueue(queue, true));
         }
 
         [TestMethod]
@@ -85,27 +73,29 @@ namespace FunProgTests.queue
         {
             var queue = BankersQueue<string>.Snoc(BankersQueue<string>.Empty, "one");
             queue = BankersQueue<string>.Snoc(queue, "two");
-            Assert.AreEqual("[1, {one, {}}, 1, {two, {}}]", DumpQueue(queue));
+            Assert.AreEqual("[1, {$one}, 1, {$two}]", DumpQueue(queue, true));
         }
 
         [TestMethod]
         public void NullHeadTest()
         {
-            AssertThrows<NullReferenceException>(() => BankersQueue<string>.Head(null));
+            var ex = AssertThrows<NullReferenceException>(() => BankersQueue<string>.Head(null));
+            Assert.AreEqual("Object reference not set to an instance of an object.", ex.Message);
         }
 
         [TestMethod]
         public void EmptyHeadTest()
         {
             var queue = BankersQueue<string>.Empty;
-            AssertThrows<ArgumentNullException>(() => BankersQueue<string>.Head(queue));
+            var ex = AssertThrows<ArgumentNullException>(() => BankersQueue<string>.Head(queue));
+            Assert.AreEqual("Value cannot be null.\r\n" + "Parameter name: queue", ex.Message);
         }
 
         [TestMethod]
         public void HeadTest()
         {
-            const string Data = "One Two Three One Three";
-            var queue = Data.Split().Aggregate(BankersQueue<string>.Empty, BankersQueue<string>.Snoc);
+            const string data = "One Two Three One Three";
+            var queue = data.Split().Aggregate(BankersQueue<string>.Empty, BankersQueue<string>.Snoc);
             var item = BankersQueue<string>.Head(queue);
             Assert.AreEqual("One", item);
         }
@@ -113,32 +103,34 @@ namespace FunProgTests.queue
         [TestMethod]
         public void NullTailTest()
         {
-            AssertThrows<NullReferenceException>(() => BankersQueue<string>.Tail(null));
+            var ex = AssertThrows<NullReferenceException>(() => BankersQueue<string>.Tail(null));
+            Assert.AreEqual("Object reference not set to an instance of an object.", ex.Message);
         }
 
         [TestMethod]
         public void EmptyTailTest()
         {
             var queue = BankersQueue<string>.Empty;
-            AssertThrows<ArgumentNullException>(() => BankersQueue<string>.Tail(queue));
+            var ex = AssertThrows<ArgumentNullException>(() => BankersQueue<string>.Tail(queue));
+            Assert.AreEqual("Value cannot be null.\r\n" + "Parameter name: queue", ex.Message);
         }
 
         [TestMethod]
         public void TailTest()
         {
-            const string Data = "One Two Three One Three";
-            var queue = Data.Split().Aggregate(BankersQueue<string>.Empty, BankersQueue<string>.Snoc);
+            const string data = "One Two Three One Three";
+            var queue = data.Split().Aggregate(BankersQueue<string>.Empty, BankersQueue<string>.Snoc);
             var tail = BankersQueue<string>.Tail(queue);
-            Assert.AreEqual("[2, {Two, {Three, {}}}, 2, {Three, {One, {}}}]", DumpQueue(tail));
+            Assert.AreEqual("[2, {$Two, $Three}, 2, {$Three, $One}]", DumpQueue(tail, true));
         }
 
         [TestMethod]
         public void PushPopTest()
         {
-            const string Data = "One Two Three One Three";
-            var queue = Data.Split().Aggregate(BankersQueue<string>.Empty, BankersQueue<string>.Snoc);
+            const string data = "One Two Three One Three";
+            var queue = data.Split().Aggregate(BankersQueue<string>.Empty, BankersQueue<string>.Snoc);
 
-            foreach (var expected in Data.Split())
+            foreach (var expected in data.Split())
             {
                 var actual = BankersQueue<string>.Head(queue);
                 Assert.AreEqual(expected, actual);

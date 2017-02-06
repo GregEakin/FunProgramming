@@ -24,12 +24,13 @@ namespace FunProgTests.heap
         private static string DumpTree<T>(ScheduledBinomialHeap<T>.Tree tree) where T : IComparable<T>
         {
             if (tree == null) return string.Empty;
+
             var result = new StringBuilder();
             result.Append("[");
             result.Append(tree.Node);
             if (tree.TreeList != List<ScheduledBinomialHeap<T>.Tree>.Empty)
             {
-                result.Append(", ");
+                result.Append(": ");
                 foreach (var node1 in tree.TreeList)
                 {
                     result.Append(DumpTree(node1));
@@ -97,31 +98,31 @@ namespace FunProgTests.heap
             var t = ScheduledBinomialHeap<string>.Empty;
             var x1 = ScheduledBinomialHeap<string>.Insert("C", t);
             var x2 = ScheduledBinomialHeap<string>.Insert("B", x1);
-            Assert.AreEqual("[[B, [C]]]", DumpHeap(x2));
+            Assert.AreEqual("[[B: [C]]]", DumpHeap(x2));
         }
 
         [TestMethod]
         public void Test2()
         {
-            const string Words = "What's in a name? That which we call a rose by any other name would smell as sweet.";
-            var t = Words.Split().Aggregate(ScheduledBinomialHeap<string>.Empty, (current, word) => ScheduledBinomialHeap<string>.Insert(word, current));
-            Assert.AreEqual("[[as, [sweet.]] -$- ]", DumpHeap(t));
+            const string words = "What's in a name? That which we call a rose by any other name would smell as sweet.";
+            var t = words.Split().Aggregate(ScheduledBinomialHeap<string>.Empty, (current, word) => ScheduledBinomialHeap<string>.Insert(word, current));
+            Assert.AreEqual("[[as: [sweet.]] -$- ]", DumpHeap(t));
 
             var x = ScheduledBinomialHeap<string>.Merge(t, ScheduledBinomialHeap<string>.Empty);
-            Assert.AreEqual("[[as, [sweet.]][a, [a, [call, [That, [which]], [we]], [in, [What's]], [name?]], [name, [smell, [would]], [other]], [any, [by]], [rose]]]", DumpHeap(x));
+            Assert.AreEqual("[[as: [sweet.]][a: [a: [call: [That: [which]], [we]], [in: [What's]], [name?]], [name: [smell: [would]], [other]], [any: [by]], [rose]]]", DumpHeap(x));
         }
 
         [TestMethod]
         public void MergeTest()
         {
-            const string Data1 = "What's in a name?";
-            var ts1 = Data1.Split().Aggregate(ScheduledBinomialHeap<string>.Empty, (current, word) => ScheduledBinomialHeap<string>.Insert(word, current));
+            const string data1 = "What's in a name?";
+            var ts1 = data1.Split().Aggregate(ScheduledBinomialHeap<string>.Empty, (current, word) => ScheduledBinomialHeap<string>.Insert(word, current));
 
-            const string Data2 = "That which we call a rose by any other name would smell as sweet";
-            var ts2 = Data2.Split().Aggregate(ScheduledBinomialHeap<string>.Empty, (current, word) => ScheduledBinomialHeap<string>.Insert(word, current));
+            const string data2 = "That which we call a rose by any other name would smell as sweet";
+            var ts2 = data2.Split().Aggregate(ScheduledBinomialHeap<string>.Empty, (current, word) => ScheduledBinomialHeap<string>.Insert(word, current));
 
             var t = ScheduledBinomialHeap<string>.Merge(ts1, ts2);
-            Assert.AreEqual("[[as, [sweet]][a, [a, [call, [That, [which]], [we]], [any, [by]], [rose]], [name, [smell, [would]], [other]], [in, [What's]], [name?]]]", DumpHeap(t));
+            Assert.AreEqual("[[as: [sweet]][a: [a: [call: [That: [which]], [we]], [any: [by]], [rose]], [name: [smell: [would]], [other]], [in: [What's]], [name?]]]", DumpHeap(t));
         }
 
         [TestMethod]
@@ -133,7 +134,7 @@ namespace FunProgTests.heap
             var t3 = ScheduledBinomialHeap<int>.Insert(6, t2);
 
             var t4 = ScheduledBinomialHeap<int>.DeleteMin(t3);
-            Assert.AreEqual("[[5, [6]]]", DumpHeap(t4));
+            Assert.AreEqual("[[5: [6]]]", DumpHeap(t4));
             Assert.AreEqual(5, ScheduledBinomialHeap<int>.FindMin(t4));
 
             Assert.AreEqual(3, ScheduledBinomialHeap<int>.FindMin(t3));

@@ -13,11 +13,32 @@ namespace FunProgTests.queue
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using System;
     using System.Linq;
+    using System.Text;
+    using static streams.StreamTests;
     using static utilities.ExpectedException;
 
     [TestClass]
     public class RealTimeDequeTests
     {
+        private static string DumpQueue<T>(RealTimeDeque<T>.Queue queue, bool expandUnCreated)
+        {
+            var builder = new StringBuilder();
+            builder.Append("[");
+            builder.Append(queue.LenF);
+            builder.Append(", {");
+            builder.Append(DumpStream(queue.F, expandUnCreated));
+            builder.Append("}, {");
+            builder.Append(DumpStream(queue.Sf, expandUnCreated));
+            builder.Append("}, ");
+            builder.Append(queue.LenR);
+            builder.Append(", {");
+            builder.Append(DumpStream(queue.R, expandUnCreated));
+            builder.Append("}, {");
+            builder.Append(DumpStream(queue.Sr, expandUnCreated));
+            builder.Append("}]");
+            return builder.ToString();
+        }
+
         [TestMethod]
         public void EmptyTest()
         {
@@ -42,11 +63,7 @@ namespace FunProgTests.queue
             queue = RealTimeDeque<string>.Cons("Last", queue);
             queue = RealTimeDeque<string>.Cons("Head", queue);
 
-            var head = RealTimeDeque<string>.Head(queue);
-            Assert.AreEqual("Head", head);
-
-            var last = RealTimeDeque<string>.Last(queue);
-            Assert.AreEqual("Last", last);
+            Assert.AreEqual("[1, {$Head}, {Head}, 1, {$Last}, {Last}]", DumpQueue(queue, true));
         }
 
         [TestMethod]
@@ -72,11 +89,7 @@ namespace FunProgTests.queue
             queue = RealTimeDeque<string>.Snoc(queue, "Head");
             queue = RealTimeDeque<string>.Snoc(queue, "Last");
 
-            var head = RealTimeDeque<string>.Head(queue);
-            Assert.AreEqual("Head", head);
-
-            var last = RealTimeDeque<string>.Last(queue);
-            Assert.AreEqual("Last", last);
+            Assert.AreEqual("[1, {$Head}, {Head}, 1, {$Last}, {Last}]", DumpQueue(queue, true));
         }
 
         [TestMethod]
@@ -129,21 +142,12 @@ namespace FunProgTests.queue
         {
             const string data = "One Two Three Four Five";
             var queue = data.Split().Aggregate(RealTimeDeque<string>.Empty, RealTimeDeque<string>.Snoc);
-            Assert.IsFalse(RealTimeDeque<string>.IsEmpty(queue));
-            Assert.IsFalse(queue.F.IsValueCreated);
-            Assert.IsFalse(queue.Sf.IsValueCreated);
-            Assert.IsFalse(queue.R.IsValueCreated);
-            Assert.IsFalse(queue.Sr.IsValueCreated);
+            Assert.AreEqual("[3, {$}, {$}, 2, {$}, {$}]", DumpQueue(queue, false));
 
             // After looking at the first element, the rest of the queue should be not created.
             var head = RealTimeDeque<string>.Head(queue);
             Assert.AreEqual("One", head);
-            Assert.IsTrue(queue.F.IsValueCreated);
-            Assert.IsFalse(queue.F.Value.Next.IsValueCreated);
-            Assert.IsTrue(queue.Sf.IsValueCreated);
-            Assert.IsFalse(queue.Sf.Value.Next.IsValueCreated);
-            Assert.IsFalse(queue.R.IsValueCreated);
-            Assert.IsFalse(queue.Sr.IsValueCreated);
+            Assert.AreEqual("[3, {One, $}, {One, $}, 2, {$}, {$}]", DumpQueue(queue, false));
         }
     }
 }

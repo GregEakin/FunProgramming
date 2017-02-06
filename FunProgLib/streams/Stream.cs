@@ -9,8 +9,6 @@
 // Okasaki, Chris. "4.2 Streams." Purely Functional Data Structures. 
 //     Cambridge, U.K.: Cambridge UP, 1998. 34-37. Print.
 
-using System.Security.Cryptography.X509Certificates;
-
 namespace FunProgLib.streams
 {
     using System;
