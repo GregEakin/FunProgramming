@@ -56,20 +56,7 @@ namespace FunProgTests.streams
             Assert.IsNotNull(stream.Value.Next.Value);
             Assert.AreEqual("One, Two, $Three, $One, $Three", DumpStream(stream, true));
         }
-
-        [TestMethod]
-        public void Test3()
-        {
-            const string data = "One Two Three One Three";
-            var stream = data.Split().Reverse().Aggregate(Stream<string>.DollarNil, (s1, t) => Stream<string>.DollarCons(t, s1));
-            Assert.AreEqual("$", DumpStream(stream, false));
-
-            Assert.IsNotNull(stream.Value);
-            Assert.IsNotNull(stream.Value.Next.Value);
-            Assert.AreEqual("One, Two, $Three, $One, $Three", DumpStream(stream, true));
-        }
-
-
+        
         [TestMethod]
         public void DollarNilTest()
         {

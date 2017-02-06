@@ -124,8 +124,8 @@ namespace FunProgTests.queue
 
             foreach (var expected in data.Split())
             {
-                var actual = RealTimeQueue<string>.Head(queue);
-                Assert.AreEqual(expected, actual);
+                var head = RealTimeQueue<string>.Head(queue);
+                Assert.AreEqual(expected, head);
                 queue = RealTimeQueue<string>.Tail(queue);
             }
 
