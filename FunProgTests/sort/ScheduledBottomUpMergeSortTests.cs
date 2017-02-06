@@ -44,8 +44,8 @@ namespace FunProgTests.sort
         [TestMethod]
         public void SortLazyTest()
         {
-            const string Data = "How now, brown cow?";
-            var list = Data.Split().Aggregate(ScheduledBottomUpMergeSort<string>.Empty, (ts, x) => ScheduledBottomUpMergeSort<string>.Add(x, ts));
+            const string data = "How now, brown cow?";
+            var list = data.Split().Aggregate(ScheduledBottomUpMergeSort<string>.Empty, (ts, x) => ScheduledBottomUpMergeSort<string>.Add(x, ts));
             Assert.IsFalse(list.Segs.Element.Stream.IsValueCreated);
             var sorted = ScheduledBottomUpMergeSort<string>.Sort(list);
             Assert.IsTrue(list.Segs.Element.Stream.IsValueCreated);
@@ -79,8 +79,8 @@ namespace FunProgTests.sort
         [TestMethod]
         public void SimpleSortTest()
         {
-            const string Data = "How now, jack brown cow? zed";
-            var list = Data.Split().Aggregate(ScheduledBottomUpMergeSort<string>.Empty, (ts, x) => ScheduledBottomUpMergeSort<string>.Add(x, ts));
+            const string data = "How now, jack brown cow? zed";
+            var list = data.Split().Aggregate(ScheduledBottomUpMergeSort<string>.Empty, (ts, x) => ScheduledBottomUpMergeSort<string>.Add(x, ts));
             var xs = ScheduledBottomUpMergeSort<string>.Sort(list);
             CollectionAssert.AreEqual(new[] { "brown", "cow?", "How", "jack", "now,", "zed" }, xs.ToArray());
         }
@@ -88,8 +88,8 @@ namespace FunProgTests.sort
         [TestMethod]
         public void SortAlphabetically()
         {
-            const string Data = "Alpha Bravo Charlie Delta Echo Foxtrot Golf Hotel India Juliet Kilo Lima Mike November Oscar Papa Quebec Romeo Sierra Tango Uniform Victor Whiskey X-ray Yankee Zulu";
-            var list = Data.Split().Aggregate(ScheduledBottomUpMergeSort<string>.Empty, (ts, x) => ScheduledBottomUpMergeSort<string>.Add(x, ts));
+            const string data = "Alpha Bravo Charlie Delta Echo Foxtrot Golf Hotel India Juliet Kilo Lima Mike November Oscar Papa Quebec Romeo Sierra Tango Uniform Victor Whiskey X-ray Yankee Zulu";
+            var list = data.Split().Aggregate(ScheduledBottomUpMergeSort<string>.Empty, (ts, x) => ScheduledBottomUpMergeSort<string>.Add(x, ts));
             var xs = ScheduledBottomUpMergeSort<string>.Sort(list);
             CollectionAssert.AreEqual(new[] { "Alpha", "Bravo", "Charlie", "Delta", "Echo", "Foxtrot", "Golf", "Hotel", "India", "Juliet", "Kilo", "Lima", "Mike", "November", "Oscar", "Papa", "Quebec", "Romeo", "Sierra", "Tango", "Uniform", "Victor", "Whiskey", "X-ray", "Yankee", "Zulu" }, xs.ToArray());
         }
@@ -97,8 +97,8 @@ namespace FunProgTests.sort
         [TestMethod]
         public void SortReverseAlphabetically()
         {
-            const string Data = "Zulu Yankee X-ray Whiskey Victor Uniform Tango Sierra Romeo Quebec Papa Oscar November Mike Lima Kilo Juliet India Hotel Golf Foxtrot Echo Delta Charlie Bravo Alpha";
-            var list = Data.Split().Aggregate(ScheduledBottomUpMergeSort<string>.Empty, (ts, x) => ScheduledBottomUpMergeSort<string>.Add(x, ts));
+            const string data = "Zulu Yankee X-ray Whiskey Victor Uniform Tango Sierra Romeo Quebec Papa Oscar November Mike Lima Kilo Juliet India Hotel Golf Foxtrot Echo Delta Charlie Bravo Alpha";
+            var list = data.Split().Aggregate(ScheduledBottomUpMergeSort<string>.Empty, (ts, x) => ScheduledBottomUpMergeSort<string>.Add(x, ts));
             var xs = ScheduledBottomUpMergeSort<string>.Sort(list);
             CollectionAssert.AreEqual(new[] { "Alpha", "Bravo", "Charlie", "Delta", "Echo", "Foxtrot", "Golf", "Hotel", "India", "Juliet", "Kilo", "Lima", "Mike", "November", "Oscar", "Papa", "Quebec", "Romeo", "Sierra", "Tango", "Uniform", "Victor", "Whiskey", "X-ray", "Yankee", "Zulu" }, xs.ToArray());
         }

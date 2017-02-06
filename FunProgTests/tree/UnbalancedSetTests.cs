@@ -72,17 +72,17 @@ namespace FunProgTests.tree
         [TestMethod]
         public void DumpTreeTest()
         {
-            const string Data = "How now, brown cow?";
-            var tree = Data.Split().Aggregate(UnbalancedSet<string>.Empty, (current, word) => UnbalancedSet<string>.Insert(word, current));
+            const string data = "How now, brown cow?";
+            var tree = data.Split().Aggregate(UnbalancedSet<string>.Empty, (current, word) => UnbalancedSet<string>.Insert(word, current));
             Assert.AreEqual("[[brown,[cow?]],How,[now,]]", DumpTree(tree));
         }
 
         [TestMethod]
         public void ElementTest()
         {
-            const string Data = "How now, brown cow?";
-            var tree = Data.Split().Aggregate(UnbalancedSet<string>.Empty, (current, word) => UnbalancedSet<string>.Insert(word, current));
-            foreach (var word in Data.Split())
+            const string data = "How now, brown cow?";
+            var tree = data.Split().Aggregate(UnbalancedSet<string>.Empty, (current, word) => UnbalancedSet<string>.Insert(word, current));
+            foreach (var word in data.Split())
                 Assert.IsTrue(UnbalancedSet<string>.Member(word, tree));
             Assert.IsFalse(UnbalancedSet<string>.Member("wow", tree));
         }

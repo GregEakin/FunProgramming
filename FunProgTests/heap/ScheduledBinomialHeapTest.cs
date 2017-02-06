@@ -9,14 +9,13 @@
 
 namespace FunProgTests.heap
 {
-    using System;
-    using System.Linq;
-    using System.Text;
     using FunProgLib.heap;
     using FunProgLib.lists;
     using FunProgLib.streams;
-
     using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using System;
+    using System.Linq;
+    using System.Text;
 
     [TestClass]
     public class ScheduledBinomialHeapTests
@@ -143,9 +142,10 @@ namespace FunProgTests.heap
         [TestMethod]
         public void DeleteLotsOfMinsTest()
         {
+            const int size = 1000;
             var random = new Random(3456);
             var heap = ScheduledBinomialHeap<int>.Empty;
-            for (var i = 0; i < 100; i++) heap = ScheduledBinomialHeap<int>.Insert(random.Next(100), heap);
+            for (var i = 0; i < size; i++) heap = ScheduledBinomialHeap<int>.Insert(random.Next(size), heap);
             var last = 0;
             var count = 0;
             while (!ScheduledBinomialHeap<int>.IsEmpty(heap))
@@ -156,41 +156,42 @@ namespace FunProgTests.heap
                 last = next;
                 count++;
             }
-            Assert.AreEqual(100, count);
+            Assert.AreEqual(size, count);
         }
 
         [TestMethod]
         public void DeleteLotsOfMinsTest2()
         {
-            var random = new Random(1000);
-            var t = ScheduledBinomialHeap<int>.Empty;
+            const int size = 1000;
+            var random = new Random(6435);
+            var heap = ScheduledBinomialHeap<int>.Empty;
 
-            var min = 0;
-            for (var i = 0; i < 1000; i++)
+            var min = size;
+            for (var i = 0; i < size; i++)
             {
-                var j = random.Next(1000);
+                var j = random.Next(size);
                 min = Math.Min(j, min);
-                t = ScheduledBinomialHeap<int>.Insert(j, t);
+                heap = ScheduledBinomialHeap<int>.Insert(j, heap);
 
-                j = random.Next(1000);
+                j = random.Next(size);
                 min = Math.Min(j, min);
-                t = ScheduledBinomialHeap<int>.Insert(j, t);
+                heap = ScheduledBinomialHeap<int>.Insert(j, heap);
 
-                var k = ScheduledBinomialHeap<int>.FindMin(t);
-                t = ScheduledBinomialHeap<int>.DeleteMin(t);
+                var k = ScheduledBinomialHeap<int>.FindMin(heap);
+                heap = ScheduledBinomialHeap<int>.DeleteMin(heap);
                 Assert.IsTrue(min <= k);
                 min = k;
             }
 
-            for (var i = 0; i < 1000; i++)
+            for (var i = 0; i < size; i++)
             {
-                var j = ScheduledBinomialHeap<int>.FindMin(t);
-                t = ScheduledBinomialHeap<int>.DeleteMin(t);
+                var j = ScheduledBinomialHeap<int>.FindMin(heap);
+                heap = ScheduledBinomialHeap<int>.DeleteMin(heap);
                 Assert.IsTrue(min <= j);
                 min = j;
             }
 
-            Assert.IsTrue(ScheduledBinomialHeap<int>.IsEmpty(t));
+            Assert.IsTrue(ScheduledBinomialHeap<int>.IsEmpty(heap));
         }
     }
 }

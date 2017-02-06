@@ -65,10 +65,10 @@ namespace FunProgTests.queue
         [TestMethod]
         public void ConsHeadTailTest()
         {
-            const string Data = "One Two Three One Three";
-            var queue = Data.Split().Aggregate(BankersDeque<string>.Empty, (queue1, s) => BankersDeque<string>.Cons(s, queue1));
+            const string data = "One Two Three One Three";
+            var queue = data.Split().Aggregate(BankersDeque<string>.Empty, (queue1, s) => BankersDeque<string>.Cons(s, queue1));
 
-            foreach (var expected in Data.Split().Reverse())
+            foreach (var expected in data.Split().Reverse())
             {
                 var actual = BankersDeque<string>.Head(queue);
                 Assert.AreEqual(expected, actual);
@@ -91,10 +91,10 @@ namespace FunProgTests.queue
         [TestMethod]
         public void SnocLastInitTest()
         {
-            const string Data = "One Two Three One Three";
-            var queue = Data.Split().Aggregate(BankersDeque<string>.Empty, BankersDeque<string>.Snoc);
+            const string data = "One Two Three One Three";
+            var queue = data.Split().Aggregate(BankersDeque<string>.Empty, BankersDeque<string>.Snoc);
 
-            var dat = Data.Split().Reverse();
+            var dat = data.Split().Reverse();
             foreach (var expected in dat)
             {
                 var actual = BankersDeque<string>.Last(queue);

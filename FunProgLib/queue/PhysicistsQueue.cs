@@ -11,8 +11,8 @@
 
 namespace FunProgLib.queue
 {
-    using System;
     using lists;
+    using System;
 
     public static class PhysicistsQueue<T>
     {

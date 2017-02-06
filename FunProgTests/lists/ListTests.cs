@@ -46,8 +46,8 @@ namespace FunProgTests.lists
         [TestMethod]
         public void EnumeratorTest()
         {
-            const string Data = "a b c";
-            var list = Data.Split().Aggregate(List<string>.Empty, (current, word) => List<string>.Cons(word, current));
+            const string data = "a b c";
+            var list = data.Split().Aggregate(List<string>.Empty, (current, word) => List<string>.Cons(word, current));
             CollectionAssert.AreEqual(new[] { "c", "b", "a" }, list.ToArray());
         }
 
@@ -69,10 +69,10 @@ namespace FunProgTests.lists
         [TestMethod]
         public void ReverseListTest()
         {
-            const string Data = "How now, brown cow?";
-            var data = Data.Split().Aggregate(List<string>.Empty, (current, word) => List<string>.Cons(word, current));
-            var list = List<string>.Reverse(data);
-            CollectionAssert.AreEqual(new[] { "How", "now,", "brown", "cow?" }, list.ToArray());
+            const string data = "How now, brown cow?";
+            var list = data.Split().Aggregate(List<string>.Empty, (current, word) => List<string>.Cons(word, current));
+            var reverse = List<string>.Reverse(list);
+            CollectionAssert.AreEqual(new[] { "How", "now,", "brown", "cow?" }, reverse.ToArray());
         }
 
         [TestMethod]
@@ -85,34 +85,34 @@ namespace FunProgTests.lists
         [TestMethod]
         public void CatLeftEmptyTest()
         {
-            const string Data = "How now, brown cow?";
-            var data = Data.Split().Aggregate(List<string>.Empty, (current, word) => List<string>.Cons(word, current));
+            const string data = "How now, brown cow?";
+            var list = data.Split().Aggregate(List<string>.Empty, (current, word) => List<string>.Cons(word, current));
 
-            var list = List<string>.Cat(List<string>.Empty, data);
-            Assert.AreSame(data, list);
+            var list2 = List<string>.Cat(List<string>.Empty, list);
+            Assert.AreSame(list, list2);
         }
 
         [TestMethod]
         public void CatRightEmptyTest()
         {
-            const string Data = "How now, brown cow?";
-            var data = Data.Split().Aggregate(List<string>.Empty, (current, word) => List<string>.Cons(word, current));
+            const string data = "How now, brown cow?";
+            var list = data.Split().Aggregate(List<string>.Empty, (current, word) => List<string>.Cons(word, current));
 
-            var list = List<string>.Cat(data, List<string>.Empty);
-            Assert.AreSame(data, list);
+            var list2 = List<string>.Cat(list, List<string>.Empty);
+            Assert.AreSame(list, list2);
         }
 
         [TestMethod]
         public void CatTest()
         {
-            const string Data1 = "How now,";
-            var data1 = Data1.Split().Aggregate(List<string>.Empty, (current, word) => List<string>.Cons(word, current));
+            const string data1 = "How now,";
+            var list1 = data1.Split().Aggregate(List<string>.Empty, (current, word) => List<string>.Cons(word, current));
 
-            const string Data2 = "brown cow?";
-            var data2 = Data2.Split().Aggregate(List<string>.Empty, (current, word) => List<string>.Cons(word, current));
+            const string data2 = "brown cow?";
+            var list2 = data2.Split().Aggregate(List<string>.Empty, (current, word) => List<string>.Cons(word, current));
 
-            var list = List<string>.Cat(data1, data2);
-            CollectionAssert.AreEqual(new[] { "now,", "How", "cow?", "brown" }, list.ToArray());
+            var list3 = List<string>.Cat(list1, list2);
+            CollectionAssert.AreEqual(new[] { "now,", "How", "cow?", "brown" }, list3.ToArray());
         }
     }
 }

@@ -147,10 +147,7 @@ namespace FunProgLib.queue
 
         public static bool IsEmpty(Queue queue) => queue.LenF == 0;
 
-        public static Queue Snoc(Queue q, T x)
-        {
-            return Check(q.LenF, q.F, q.State, q.LenR + 1, List<T>.Cons(x, q.R));
-        }
+        public static Queue Snoc(Queue q, T x) => Check(q.LenF, q.F, q.State, q.LenR + 1, List<T>.Cons(x, q.R));
 
         public static T Head(Queue q)
         {

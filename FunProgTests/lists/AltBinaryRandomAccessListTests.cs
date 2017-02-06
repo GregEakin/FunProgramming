@@ -27,8 +27,7 @@ namespace FunProgTests.lists
             if (tree == null)
                 return "null";
 
-            var zero = tree as AltBinaryRandomAccessList<T>.Zero;
-            if (zero != null)
+            if (tree is AltBinaryRandomAccessList<T>.Zero zero)
             {
                 var result = new StringBuilder();
                 result.Append("[Zero: ");
@@ -37,8 +36,7 @@ namespace FunProgTests.lists
                 return result.ToString();
             }
 
-            var one = tree as AltBinaryRandomAccessList<T>.One;
-            if (one != null)
+            if (tree is AltBinaryRandomAccessList<T>.One one)
             {
                 var result = new StringBuilder();
                 result.Append("[One: ");
@@ -148,18 +146,18 @@ namespace FunProgTests.lists
         [TestMethod]
         public void HeadTest()
         {
-            const string Data = "How now, brown cow?";
-            var data = Data.Split().Aggregate(AltBinaryRandomAccessList<string>.Empty, (current, word) => AltBinaryRandomAccessList<string>.Cons(word, current));
-            Assert.AreEqual("cow?", AltBinaryRandomAccessList<string>.Head(data));
+            const string data = "How now, brown cow?";
+            var list = data.Split().Aggregate(AltBinaryRandomAccessList<string>.Empty, (current, word) => AltBinaryRandomAccessList<string>.Cons(word, current));
+            Assert.AreEqual("cow?", AltBinaryRandomAccessList<string>.Head(list));
         }
 
         [TestMethod]
         public void TailTest()
         {
-            const string Data = "How now, brown cow?";
-            var data = Data.Split().Aggregate(AltBinaryRandomAccessList<string>.Empty, (current, word) => AltBinaryRandomAccessList<string>.Cons(word, current));
-            data = AltBinaryRandomAccessList<string>.Tail(data);
-            Assert.AreEqual("[One: brown, {(now,, How)}]", DumpTree(data));
+            const string data = "How now, brown cow?";
+            var list = data.Split().Aggregate(AltBinaryRandomAccessList<string>.Empty, (current, word) => AltBinaryRandomAccessList<string>.Cons(word, current));
+            var tail = AltBinaryRandomAccessList<string>.Tail(list);
+            Assert.AreEqual("[One: brown, {(now,, How)}]", DumpTree(tail));
         }
 
         [TestMethod]
@@ -192,41 +190,41 @@ namespace FunProgTests.lists
         [TestMethod]
         public void UpdateTest()
         {
-            const string Data = "How now, brown cow?";
-            var data = Data.Split().Aggregate(AltBinaryRandomAccessList<string>.Empty, (current, word) => AltBinaryRandomAccessList<string>.Cons(word, current));
-            data = AltBinaryRandomAccessList<string>.Update(1, "green", data);
-            Assert.AreEqual("[Zero: {(cow?, green), (now,, How)}]", DumpTree(data));
-            Assert.AreEqual("green", AltBinaryRandomAccessList<string>.Lookup(1, data));
+            const string data = "How now, brown cow?";
+            var list = data.Split().Aggregate(AltBinaryRandomAccessList<string>.Empty, (current, word) => AltBinaryRandomAccessList<string>.Cons(word, current));
+            list = AltBinaryRandomAccessList<string>.Update(1, "green", list);
+            Assert.AreEqual("[Zero: {(cow?, green), (now,, How)}]", DumpTree(list));
+            Assert.AreEqual("green", AltBinaryRandomAccessList<string>.Lookup(1, list));
         }
 
         [TestMethod]
-        public void FupdateTest()
+        public void FUpdateTest()
         {
-            const string Data = "How now, brown cow?";
-            var data = Data.Split().Aggregate(AltBinaryRandomAccessList<string>.Empty, (current, word) => AltBinaryRandomAccessList<string>.Cons(word, current));
+            const string data = "How now, brown cow?";
+            var list = data.Split().Aggregate(AltBinaryRandomAccessList<string>.Empty, (current, word) => AltBinaryRandomAccessList<string>.Cons(word, current));
 
-            data = AltBinaryRandomAccessList<string>.Fupdate(value => value + "-" + value, 1, data);
-            Assert.AreEqual("[Zero: {(cow?, brown-brown), (now,, How)}]", DumpTree(data));
-            Assert.AreEqual("brown-brown", AltBinaryRandomAccessList<string>.Lookup(1, data));
+            list = AltBinaryRandomAccessList<string>.Fupdate(value => value + "-" + value, 1, list);
+            Assert.AreEqual("[Zero: {(cow?, brown-brown), (now,, How)}]", DumpTree(list));
+            Assert.AreEqual("brown-brown", AltBinaryRandomAccessList<string>.Lookup(1, list));
         }
 
         [TestMethod]
         public void RoseTest()
         {
-            const string Data = "What's in a name? That which we call a rose by any other name would smell as sweet.";
-            var data = Data.Split().Aggregate(AltBinaryRandomAccessList<string>.Empty, (current, word) => AltBinaryRandomAccessList<string>.Cons(word, current));
-            Assert.AreEqual("[Zero: {(sweet., as), (smell, would), (name, other), (any, by), (rose, a), (call, we), (which, That), (name?, a), (in, What's)}]", DumpTree(data));
-            Assert.AreEqual("sweet.", AltBinaryRandomAccessList<string>.Lookup(0, data));
-            Assert.AreEqual("What's", AltBinaryRandomAccessList<string>.Lookup(17, data));
+            const string data = "What's in a name? That which we call a rose by any other name would smell as sweet.";
+            var list = data.Split().Aggregate(AltBinaryRandomAccessList<string>.Empty, (current, word) => AltBinaryRandomAccessList<string>.Cons(word, current));
+            Assert.AreEqual("[Zero: {(sweet., as), (smell, would), (name, other), (any, by), (rose, a), (call, we), (which, That), (name?, a), (in, What's)}]", DumpTree(list));
+            Assert.AreEqual("sweet.", AltBinaryRandomAccessList<string>.Lookup(0, list));
+            Assert.AreEqual("What's", AltBinaryRandomAccessList<string>.Lookup(17, list));
         }
 
         [TestMethod]
         public void Test1()
         {
-            var data = AltBinaryRandomAccessList<int>.Empty;
+            var list = AltBinaryRandomAccessList<int>.Empty;
             for (var i = 0; i < 11; i++)
-                data = AltBinaryRandomAccessList<int>.Cons(i, data);
-            Assert.AreEqual("[One: 10, {(9, 8), (7, 6), (5, 4), (3, 2), (1, 0)}]", DumpTree(data));
+                list = AltBinaryRandomAccessList<int>.Cons(i, list);
+            Assert.AreEqual("[One: 10, {(9, 8), (7, 6), (5, 4), (3, 2), (1, 0)}]", DumpTree(list));
         }
     }
 }

@@ -90,48 +90,48 @@ namespace FunProgTests.tree
         [TestMethod]
         public void BalanceTest1()
         {
-            const string Data = "z y x";
-            var t = Data.Split().Aggregate(RedBlackSet<string>.EmptyTree, (current, word) => RedBlackSet<string>.Insert(word, current));
+            const string data = "z y x";
+            var t = data.Split().Aggregate(RedBlackSet<string>.EmptyTree, (current, word) => RedBlackSet<string>.Insert(word, current));
             Assert.AreEqual("(B: (B: x) y (B: z))", DumpSet(t));
         }
 
         [TestMethod]
         public void BalanceTest2()
         {
-            const string Data = "z x y";
-            var t = Data.Split().Aggregate(RedBlackSet<string>.EmptyTree, (current, word) => RedBlackSet<string>.Insert(word, current));
+            const string data = "z x y";
+            var t = data.Split().Aggregate(RedBlackSet<string>.EmptyTree, (current, word) => RedBlackSet<string>.Insert(word, current));
             Assert.AreEqual("(B: (B: x) y (B: z))", DumpSet(t));
         }
 
         [TestMethod]
         public void BalanceTest3()
         {
-            const string Data = "x z y";
-            var t = Data.Split().Aggregate(RedBlackSet<string>.EmptyTree, (current, word) => RedBlackSet<string>.Insert(word, current));
+            const string data = "x z y";
+            var t = data.Split().Aggregate(RedBlackSet<string>.EmptyTree, (current, word) => RedBlackSet<string>.Insert(word, current));
             Assert.AreEqual("(B: (B: x) y (B: z))", DumpSet(t));
         }
 
         [TestMethod]
         public void BalanceTest4()
         {
-            const string Data = "x y z";
-            var t = Data.Split().Aggregate(RedBlackSet<string>.EmptyTree, (current, word) => RedBlackSet<string>.Insert(word, current));
+            const string data = "x y z";
+            var t = data.Split().Aggregate(RedBlackSet<string>.EmptyTree, (current, word) => RedBlackSet<string>.Insert(word, current));
             Assert.AreEqual("(B: (B: x) y (B: z))", DumpSet(t));
         }
 
         [TestMethod]
         public void BalanceTest5()
         {
-            const string Data = "y x z";
-            var t = Data.Split().Aggregate(RedBlackSet<string>.EmptyTree, (current, word) => RedBlackSet<string>.Insert(word, current));
+            const string data = "y x z";
+            var t = data.Split().Aggregate(RedBlackSet<string>.EmptyTree, (current, word) => RedBlackSet<string>.Insert(word, current));
             Assert.AreEqual("(B: (R: x) y (R: z))", DumpSet(t));
         }
 
         [TestMethod]
         public void BalanceTest6()
         {
-            const string Data = "y z x";
-            var t = Data.Split().Aggregate(RedBlackSet<string>.EmptyTree, (current, word) => RedBlackSet<string>.Insert(word, current));
+            const string data = "y z x";
+            var t = data.Split().Aggregate(RedBlackSet<string>.EmptyTree, (current, word) => RedBlackSet<string>.Insert(word, current));
             Assert.AreEqual("(B: (R: x) y (R: z))", DumpSet(t));
         }
     }

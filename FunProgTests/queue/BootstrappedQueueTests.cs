@@ -82,9 +82,15 @@ namespace FunProgTests.queue
         [TestMethod]
         public void SnocTest()
         {
-            var queue = BootstrappedQueue<string>.Snoc(BootstrappedQueue<string>.Empty, "one");
-            queue = BootstrappedQueue<string>.Snoc(queue, "two");
-            Assert.AreEqual("[1, {one}, null, 1, {two}]", DumpQueue(queue));
+            var queue = BootstrappedQueue<string>.Empty;
+            queue = BootstrappedQueue<string>.Snoc(queue, "One");
+            Assert.AreEqual("[1, {One}, null, 0, {}]", DumpQueue(queue));
+
+            queue = BootstrappedQueue<string>.Snoc(queue, "Two");
+            Assert.AreEqual("[1, {One}, null, 1, {Two}]", DumpQueue(queue));
+
+            queue = BootstrappedQueue<string>.Snoc(queue, "Three");
+            Assert.AreEqual("[3, {One}, [1, {Value is not created.}, null, 0, {}], 0, {}]", DumpQueue(queue));
         }
 
         [TestMethod]
@@ -109,8 +115,8 @@ namespace FunProgTests.queue
         [TestMethod]
         public void HeadTest()
         {
-            const string Data = "One Two Three One Three";
-            var queue = Data.Split().Aggregate(BootstrappedQueue<string>.Empty, BootstrappedQueue<string>.Snoc);
+            const string data = "One Two Three One Three";
+            var queue = data.Split().Aggregate(BootstrappedQueue<string>.Empty, BootstrappedQueue<string>.Snoc);
             var x = BootstrappedQueue<string>.Head(queue);
             Assert.AreEqual("One", x);
         }
@@ -125,8 +131,8 @@ namespace FunProgTests.queue
         [TestMethod]
         public void TailTest()
         {
-            const string Data = "One Two Three One Three";
-            var queue = Data.Split().Aggregate(BootstrappedQueue<string>.Empty, BootstrappedQueue<string>.Snoc);
+            const string data = "One Two Three One Three";
+            var queue = data.Split().Aggregate(BootstrappedQueue<string>.Empty, BootstrappedQueue<string>.Snoc);
             queue = BootstrappedQueue<string>.Tail(queue);
             Assert.AreEqual("[2, {Two, Three}, null, 2, {Three, One}]", DumpQueue(queue));
         }
@@ -134,10 +140,10 @@ namespace FunProgTests.queue
         [TestMethod]
         public void PushPopTest()
         {
-            const string Data = "One Two Three One Three";
-            var queue = Data.Split().Aggregate(BootstrappedQueue<string>.Empty, BootstrappedQueue<string>.Snoc);
+            const string data = "One Two Three One Three";
+            var queue = data.Split().Aggregate(BootstrappedQueue<string>.Empty, BootstrappedQueue<string>.Snoc);
 
-            foreach (var expected in Data.Split())
+            foreach (var expected in data.Split())
             {
                 var actual = BootstrappedQueue<string>.Head(queue);
                 Assert.AreEqual(expected, actual);
