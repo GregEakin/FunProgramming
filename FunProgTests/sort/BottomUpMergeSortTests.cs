@@ -7,6 +7,8 @@
 // All Rights Reserved.
 //
 
+using FunProgLib.Utilities;
+
 namespace FunProgTests.sort
 {
     using FunProgLib.sort;
@@ -41,7 +43,7 @@ namespace FunProgTests.sort
             const string data = "How now, jack brown cow? zed";
             var list = data.Split().Aggregate(BottomUpMergeSort<string>.Empty, (ts, x) => BottomUpMergeSort<string>.Add(x, ts));
             var xs = BottomUpMergeSort<string>.Sort(list);
-            CollectionAssert.AreEqual(new[] { "brown", "cow?", "How", "jack", "now,", "zed" }, xs.ToArray());
+            Assert.AreEqual("[brown, cow?, How, jack, now,, zed]", xs.ToReadableString());
         }
 
         [TestMethod]
@@ -50,7 +52,7 @@ namespace FunProgTests.sort
             const string data = "Alpha Bravo Charlie Delta Echo Foxtrot Golf Hotel India Juliet Kilo Lima Mike November Oscar Papa Quebec Romeo Sierra Tango Uniform Victor Whiskey X-ray Yankee Zulu";
             var list = data.Split().Aggregate(BottomUpMergeSort<string>.Empty, (ts, x) => BottomUpMergeSort<string>.Add(x, ts));
             var xs = BottomUpMergeSort<string>.Sort(list);
-            CollectionAssert.AreEqual(new[] { "Alpha", "Bravo", "Charlie", "Delta", "Echo", "Foxtrot", "Golf", "Hotel", "India", "Juliet", "Kilo", "Lima", "Mike", "November", "Oscar", "Papa", "Quebec", "Romeo", "Sierra", "Tango", "Uniform", "Victor", "Whiskey", "X-ray", "Yankee", "Zulu" }, xs.ToArray());
+            Assert.AreEqual(data.Split().ToReadableString(), xs.ToReadableString());
         }
 
         [TestMethod]
@@ -59,7 +61,7 @@ namespace FunProgTests.sort
             const string data = "Zulu Yankee X-ray Whiskey Victor Uniform Tango Sierra Romeo Quebec Papa Oscar November Mike Lima Kilo Juliet India Hotel Golf Foxtrot Echo Delta Charlie Bravo Alpha";
             var list = data.Split().Aggregate(BottomUpMergeSort<string>.Empty, (ts, x) => BottomUpMergeSort<string>.Add(x, ts));
             var xs = BottomUpMergeSort<string>.Sort(list);
-            CollectionAssert.AreEqual(new[] { "Alpha", "Bravo", "Charlie", "Delta", "Echo", "Foxtrot", "Golf", "Hotel", "India", "Juliet", "Kilo", "Lima", "Mike", "November", "Oscar", "Papa", "Quebec", "Romeo", "Sierra", "Tango", "Uniform", "Victor", "Whiskey", "X-ray", "Yankee", "Zulu" }, xs.ToArray());
+            Assert.AreEqual(data.Split().Reverse().ToReadableString(), xs.ToReadableString());
         }
     }
 }

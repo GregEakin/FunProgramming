@@ -7,6 +7,8 @@
 // All Rights Reserved.
 //
 
+using FunProgLib.Utilities;
+
 namespace FunProgTests.lists
 {
     using System;
@@ -48,7 +50,7 @@ namespace FunProgTests.lists
         {
             const string data = "a b c";
             var list = data.Split().Aggregate(List<string>.Empty, (current, word) => List<string>.Cons(word, current));
-            CollectionAssert.AreEqual(new[] { "c", "b", "a" }, list.ToArray());
+            Assert.AreEqual("[c, b, a]", list.ToReadableString());
         }
 
         [TestMethod]
@@ -72,7 +74,7 @@ namespace FunProgTests.lists
             const string data = "How now, brown cow?";
             var list = data.Split().Aggregate(List<string>.Empty, (current, word) => List<string>.Cons(word, current));
             var reverse = List<string>.Reverse(list);
-            CollectionAssert.AreEqual(new[] { "How", "now,", "brown", "cow?" }, reverse.ToArray());
+            Assert.AreEqual("[How, now,, brown, cow?]", reverse.ToReadableString());
         }
 
         [TestMethod]
@@ -112,7 +114,7 @@ namespace FunProgTests.lists
             var list2 = data2.Split().Aggregate(List<string>.Empty, (current, word) => List<string>.Cons(word, current));
 
             var list3 = List<string>.Cat(list1, list2);
-            CollectionAssert.AreEqual(new[] { "now,", "How", "cow?", "brown" }, list3.ToArray());
+            Assert.AreEqual("[now,, How, cow?, brown]", list3.ToReadableString());
         }
     }
 }

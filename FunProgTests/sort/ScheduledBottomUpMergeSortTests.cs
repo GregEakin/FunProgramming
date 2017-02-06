@@ -7,6 +7,8 @@
 // All Rights Reserved.
 //
 
+using FunProgLib.Utilities;
+
 namespace FunProgTests.sort
 {
     using System.Linq;
@@ -58,22 +60,22 @@ namespace FunProgTests.sort
             list = ScheduledBottomUpMergeSort<string>.Add("One", list);
             Assert.AreEqual(1, list.Size);
             var xs = ScheduledBottomUpMergeSort<string>.Sort(list);
-            CollectionAssert.AreEqual(new[] { "One" }, xs.ToArray());
+            Assert.AreEqual("[One]", xs.ToReadableString());
 
             list = ScheduledBottomUpMergeSort<string>.Add("Two", list);
             Assert.AreEqual(2, list.Size);
             xs = ScheduledBottomUpMergeSort<string>.Sort(list);
-            CollectionAssert.AreEqual(new[] { "One", "Two" }, xs.ToArray());
+            Assert.AreEqual("[One, Two]", xs.ToReadableString());
 
             list = ScheduledBottomUpMergeSort<string>.Add("Three", list);
             Assert.AreEqual(3, list.Size);
             xs = ScheduledBottomUpMergeSort<string>.Sort(list);
-            CollectionAssert.AreEqual(new[] { "One", "Three", "Two" }, xs.ToArray());
+            Assert.AreEqual("[One, Three, Two]", xs.ToReadableString());
 
             list = ScheduledBottomUpMergeSort<string>.Add("Four", list);
             Assert.AreEqual(4, list.Size);
             xs = ScheduledBottomUpMergeSort<string>.Sort(list);
-            CollectionAssert.AreEqual(new[] { "Four", "One", "Three", "Two" }, xs.ToArray());
+            Assert.AreEqual("[Four, One, Three, Two]", xs.ToReadableString());
         }
 
         [TestMethod]
@@ -82,7 +84,7 @@ namespace FunProgTests.sort
             const string data = "How now, jack brown cow? zed";
             var list = data.Split().Aggregate(ScheduledBottomUpMergeSort<string>.Empty, (ts, x) => ScheduledBottomUpMergeSort<string>.Add(x, ts));
             var xs = ScheduledBottomUpMergeSort<string>.Sort(list);
-            CollectionAssert.AreEqual(new[] { "brown", "cow?", "How", "jack", "now,", "zed" }, xs.ToArray());
+            Assert.AreEqual("[brown, cow?, How, jack, now,, zed]", xs.ToReadableString());
         }
 
         [TestMethod]
@@ -91,7 +93,7 @@ namespace FunProgTests.sort
             const string data = "Alpha Bravo Charlie Delta Echo Foxtrot Golf Hotel India Juliet Kilo Lima Mike November Oscar Papa Quebec Romeo Sierra Tango Uniform Victor Whiskey X-ray Yankee Zulu";
             var list = data.Split().Aggregate(ScheduledBottomUpMergeSort<string>.Empty, (ts, x) => ScheduledBottomUpMergeSort<string>.Add(x, ts));
             var xs = ScheduledBottomUpMergeSort<string>.Sort(list);
-            CollectionAssert.AreEqual(new[] { "Alpha", "Bravo", "Charlie", "Delta", "Echo", "Foxtrot", "Golf", "Hotel", "India", "Juliet", "Kilo", "Lima", "Mike", "November", "Oscar", "Papa", "Quebec", "Romeo", "Sierra", "Tango", "Uniform", "Victor", "Whiskey", "X-ray", "Yankee", "Zulu" }, xs.ToArray());
+            Assert.AreEqual(data.Split().ToReadableString(), xs.ToReadableString());
         }
 
         [TestMethod]
@@ -100,7 +102,7 @@ namespace FunProgTests.sort
             const string data = "Zulu Yankee X-ray Whiskey Victor Uniform Tango Sierra Romeo Quebec Papa Oscar November Mike Lima Kilo Juliet India Hotel Golf Foxtrot Echo Delta Charlie Bravo Alpha";
             var list = data.Split().Aggregate(ScheduledBottomUpMergeSort<string>.Empty, (ts, x) => ScheduledBottomUpMergeSort<string>.Add(x, ts));
             var xs = ScheduledBottomUpMergeSort<string>.Sort(list);
-            CollectionAssert.AreEqual(new[] { "Alpha", "Bravo", "Charlie", "Delta", "Echo", "Foxtrot", "Golf", "Hotel", "India", "Juliet", "Kilo", "Lima", "Mike", "November", "Oscar", "Papa", "Quebec", "Romeo", "Sierra", "Tango", "Uniform", "Victor", "Whiskey", "X-ray", "Yankee", "Zulu" }, xs.ToArray());
+            Assert.AreEqual(data.Split().Reverse().ToReadableString(), xs.ToReadableString());
         }
     }
 }
