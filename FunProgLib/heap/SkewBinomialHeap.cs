@@ -40,9 +40,9 @@ namespace FunProgLib.heap
 
         public static bool IsEmpty(List<Tree>.Node heap) => List<Tree>.IsEmpty(heap);
 
-        // rank
+        public static int Rank(Tree t) => t.Rank;
 
-        // root
+        public static T Root(Tree t) => t.Root;
 
         private static Tree Link(Tree t1, Tree t2)
         {

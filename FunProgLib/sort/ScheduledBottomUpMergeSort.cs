@@ -59,10 +59,7 @@ namespace FunProgLib.sort
             return List<Lazy<Stream<T>.StreamCell>>.Cons(list.Element.Value.Next, list.Next);
         }
 
-        private static Schedule Exec2(Schedule x)
-        {
-            return new Schedule(x.Stream, Exec1(Exec1(x.ScheduleList)));
-        }
+        private static Schedule Exec2(Schedule x) => new Schedule(x.Stream, Exec1(Exec1(x.ScheduleList)));
 
         public static Sortable Empty { get; } = new Sortable(0, null);
 
