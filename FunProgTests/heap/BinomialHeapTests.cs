@@ -13,6 +13,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+// using Heap = FunProgLib.heap.BinomialHeap<int>;
 
 namespace FunProgTests.heap
 {
@@ -26,9 +27,9 @@ namespace FunProgTests.heap
             result.Append(tree.Root);
             if (!FunProgLib.lists.List<BinomialHeap<T>.Tree>.IsEmpty(tree.List))
             {
-                result.Append(", ");
                 foreach (var node1 in tree.List)
                 {
+                    result.Append(", ");
                     result.Append(DumpTree(node1));
                 }
             }
@@ -38,94 +39,174 @@ namespace FunProgTests.heap
 
         private static string DumpHeap<T>(IEnumerable<BinomialHeap<T>.Tree> list) where T : IComparable<T>
         {
+            if (Equals(list, FunProgLib.lists.List<BinomialHeap<T>.Tree>.Empty))
+                return string.Empty;
+
             var result = new StringBuilder();
-            result.Append("[");
-            if (!Equals(list, FunProgLib.lists.List<BinomialHeap<T>.Tree>.Empty))
+            foreach (var node in list)
             {
-                foreach (var node in list)
-                {
-                    result.Append(DumpTree(node));
-                }
-                result.Append(", ");
+                result.Append(DumpTree(node));
+                result.Append("; ");
             }
             result.Remove(result.Length - 2, 2);
-            result.Append("]");
             return result.ToString();
         }
 
-        [TestMethod]
-        public void EmptyTest()
+        private static int CountBinaryOnes(int n)
         {
-            var t = BinomialHeap<string>.Empty;
-            Assert.IsTrue(BinomialHeap<string>.IsEmpty(t));
+            var count = 0;
+            while (n != 0)
+            {
+                n = n & (n - 1);
+                count++;
+            }
 
-            var t1 = BinomialHeap<string>.Insert("C", t);
-            Assert.IsFalse(BinomialHeap<string>.IsEmpty(t1));
+            return count;
         }
+
+        private static int CountChar(string s, char c) => s.Split(c).Length;
 
         [TestMethod]
         public void Test1()
         {
-            var t = BinomialHeap<string>.Empty;
-            var x1 = BinomialHeap<string>.Insert("C", t);
-            var x2 = BinomialHeap<string>.Insert("B", x1);
-            Assert.AreEqual("[[B, [C]]]", DumpHeap(x2));
+            var heap = BinomialHeap<int>.Empty;
+            for (var i = 0; i < 16; i++)
+            {
+                heap = BinomialHeap<int>.Insert(i, heap);
+                var dumpHeap = DumpHeap(heap);
+                // Console.WriteLine(dumpHeap);
+
+                var semicolons = CountChar(dumpHeap, ';');
+                Assert.AreEqual(CountBinaryOnes(i + 1), semicolons);
+            }
         }
 
         [TestMethod]
         public void Test2()
         {
-            const string Words = "What's in a name? That which we call a rose, by any other name, would smell as sweet";
-            var ts = Words.Split().Aggregate(BinomialHeap<string>.Empty, (current, word) => BinomialHeap<string>.Insert(word, current));
-            Assert.AreEqual("[[as, [sweet]][a, [a, [call, [That, [which]][we]][in, [What's]][name?]][name,, [smell, [would]][other]][any, [by]][rose,]]]", DumpHeap(ts));
+            var heap = BinomialHeap<int>.Empty;
+            for (var i = 0; i < 0x100; i++)
+            {
+                heap = BinomialHeap<int>.Insert(1, heap);
+                var dumpHeap = DumpHeap(heap);
+                // Console.WriteLine(dumpHeap);
+                var blocks = dumpHeap.Split(';');
+
+                var j = 0;
+                var p = 0;
+                for (var k = i + 1; k > 0; k >>= 1, j++)
+                {
+                    if (k % 2 == 0) continue;
+                    var q = (int)Math.Pow(2, j);
+                    var block = blocks[p++];
+                    Assert.AreEqual(q, CountChar(block, '1') - 1);
+                }
+            }
+        }
+
+        [TestMethod]
+        public void EmptyTest()
+        {
+            var heap = BinomialHeap<int>.Empty;
+            Assert.IsTrue(BinomialHeap<int>.IsEmpty(heap));
+
+            heap = BinomialHeap<int>.Insert(0, heap);
+            Assert.IsFalse(BinomialHeap<int>.IsEmpty(heap));
+        }
+
+        [TestMethod]
+        public void InsertTest1()
+        {
+            var heap1 = BinomialHeap<int>.Empty;
+            var heap = BinomialHeap<int>.Insert(0, heap1);
+            Assert.AreEqual("[0]", DumpHeap(heap));
+        }
+
+        [TestMethod]
+        public void InsertTest2()
+        {
+            var heap1 = Enumerable.Range(0, 2).Aggregate(BinomialHeap<int>.Empty, (current, i) => BinomialHeap<int>.Insert(i, current));
+            var heap = BinomialHeap<int>.Insert(2, heap1);
+            Assert.AreEqual("[2]; [0, [1]]", DumpHeap(heap));
+        }
+
+        [TestMethod]
+        public void InsertTest3()
+        {
+            var heap1 = Enumerable.Range(0, 3).Aggregate(BinomialHeap<int>.Empty, (current, i) => BinomialHeap<int>.Insert(i, current));
+            var heap = BinomialHeap<int>.Insert(3, heap1);
+            Assert.AreEqual("[0, [2, [3]], [1]]", DumpHeap(heap));
         }
 
         [TestMethod]
         public void MergeTest1()
         {
-            const string Data1 = "What's in a name?";
-            var ts1 = Data1.Split().Aggregate(BinomialHeap<string>.Empty, (current, word) => BinomialHeap<string>.Insert(word, current));
-
-            const string Data2 = "That which we call a rose, by any other name, would smell as sweet";
-            var ts2 = Data2.Split().Aggregate(BinomialHeap<string>.Empty, (current, word) => BinomialHeap<string>.Insert(word, current));
-
-            var t = BinomialHeap<string>.Merge(ts1, ts2);
-            Assert.AreEqual("[[as, [sweet]][a, [a, [call, [That, [which]][we]][any, [by]][rose,]][name,, [smell, [would]][other]][in, [What's]][name?]]]", DumpHeap(t));
+            var heap1 = Enumerable.Range(0, 8).Aggregate(BinomialHeap<int>.Empty, (current, i) => BinomialHeap<int>.Insert(i, current));
+            var heap2 = BinomialHeap<int>.Empty;
+            var heap = BinomialHeap<int>.Merge(heap1, heap2);
+            Assert.AreSame(heap1, heap);
         }
 
         [TestMethod]
         public void MergeTest2()
         {
-            const string Data1 = "That which we call a rose, by any other name, would smell as sweet";
-            var ts1 = Data1.Split().Aggregate(BinomialHeap<string>.Empty, (current, word) => BinomialHeap<string>.Insert(word, current));
+            var heap1 = BinomialHeap<int>.Empty;
+            var heap2 = Enumerable.Range(0, 8).Aggregate(BinomialHeap<int>.Empty, (current, i) => BinomialHeap<int>.Insert(i, current));
+            var heap = BinomialHeap<int>.Merge(heap1, heap2);
+            Assert.AreSame(heap2, heap);
+        }
 
-            const string Data2 = "What's in a name?";
-            var ts2 = Data2.Split().Aggregate(BinomialHeap<string>.Empty, (current, word) => BinomialHeap<string>.Insert(word, current));
+        [TestMethod]
+        public void MergeTest3()
+        {
+            var heap1 = Enumerable.Range(0, 4).Aggregate(BinomialHeap<int>.Empty, (current, i) => BinomialHeap<int>.Insert(i, current));
+            var heap2 = Enumerable.Range(10, 3).Aggregate(BinomialHeap<int>.Empty, (current, i) => BinomialHeap<int>.Insert(i, current));
+            var heap = BinomialHeap<int>.Merge(heap1, heap2);
+            Assert.AreEqual("[12]; [10, [11]]; [0, [2, [3]], [1]]", DumpHeap(heap));
+        }
 
-            var t = BinomialHeap<string>.Merge(ts1, ts2);
-            Assert.AreEqual("[[as, [sweet]][a, [a, [call, [That, [which]][we]][any, [by]][rose,]][name,, [smell, [would]][other]][in, [What's]][name?]]]", DumpHeap(t));
+        [TestMethod]
+        public void MergeTest4()
+        {
+            var heap1 = Enumerable.Range(0, 3).Aggregate(BinomialHeap<int>.Empty, (current, i) => BinomialHeap<int>.Insert(i, current));
+            var heap2 = Enumerable.Range(10, 4).Aggregate(BinomialHeap<int>.Empty, (current, i) => BinomialHeap<int>.Insert(i, current));
+            var heap = BinomialHeap<int>.Merge(heap1, heap2);
+            Assert.AreEqual("[2]; [0, [1]]; [10, [12, [13]], [11]]", DumpHeap(heap));
+        }
+
+        [TestMethod]
+        public void MergeTest5()
+        {
+            var heap1 = Enumerable.Range(0, 4).Aggregate(BinomialHeap<int>.Empty, (current, i) => BinomialHeap<int>.Insert(i, current));
+            var heap2 = Enumerable.Range(10, 4).Aggregate(BinomialHeap<int>.Empty, (current, i) => BinomialHeap<int>.Insert(i, current));
+            var heap = BinomialHeap<int>.Merge(heap1, heap2);
+            Assert.AreEqual("[0, [10, [12, [13]], [11]], [2, [3]], [1]]", DumpHeap(heap));
+        }
+
+        [TestMethod]
+        public void FindMinTest()
+        {
+            var heap = Enumerable.Range(0, 8).Aggregate(BinomialHeap<int>.Empty, (current, i) => BinomialHeap<int>.Insert(i, current));
+            var min = BinomialHeap<int>.FindMin(heap);
+            Assert.AreEqual(0, min);
         }
 
         [TestMethod]
         public void DeleteMinTest()
         {
-            var t = BinomialHeap<int>.Empty;
-            var t1 = BinomialHeap<int>.Insert(5, t);
-            var t2 = BinomialHeap<int>.Insert(3, t1);
-            var t3 = BinomialHeap<int>.Insert(6, t2);
-            var t4 = BinomialHeap<int>.DeleteMin(t3);
-            Assert.AreEqual("[[5, [6]]]", DumpHeap(t4));
-            Assert.AreEqual(5, BinomialHeap<int>.FindMin(t4));
-
-            Assert.AreEqual(3, BinomialHeap<int>.FindMin(t3));
+            var heap = Enumerable.Range(0, 8).Aggregate(BinomialHeap<int>.Empty, (current, i) => BinomialHeap<int>.Insert(i, current));
+            heap = BinomialHeap<int>.DeleteMin(heap);
+            Assert.AreEqual("[1]; [2, [3]]; [4, [6, [7]], [5]]", DumpHeap(heap));
         }
 
         [TestMethod]
         public void DeleteLotsOfMinsTest()
         {
+            const int size = 1000;
             var random = new Random(3456);
             var heap = BinomialHeap<int>.Empty;
-            for (var i = 0; i < 100; i++) heap = BinomialHeap<int>.Insert(random.Next(100), heap);
+            for (var i = 0; i < size; i++) heap = BinomialHeap<int>.Insert(random.Next(size), heap);
+
             var last = 0;
             var count = 0;
             while (!BinomialHeap<int>.IsEmpty(heap))
@@ -136,7 +217,7 @@ namespace FunProgTests.heap
                 last = next;
                 count++;
             }
-            Assert.AreEqual(100, count);
+            Assert.AreEqual(size, count);
         }
     }
 }
