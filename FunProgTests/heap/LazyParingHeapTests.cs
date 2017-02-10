@@ -48,68 +48,119 @@ namespace FunProgTests.heap
         [TestMethod]
         public void EmptyTest()
         {
-            var empty = LazyParingHeap<string>.Empty;
-            Assert.IsTrue(LazyParingHeap<string>.IsEmpty(empty));
+            var empty = LazyParingHeap<int>.Empty;
+            Assert.IsTrue(LazyParingHeap<int>.IsEmpty(empty));
 
-            var heap = LazyParingHeap<string>.Insert("C", empty);
-            Assert.IsFalse(LazyParingHeap<string>.IsEmpty(heap));
+            var heap = LazyParingHeap<int>.Insert(3, empty);
+            Assert.IsFalse(LazyParingHeap<int>.IsEmpty(heap));
         }
 
         [TestMethod]
-        public void Test1()
+        public void MergeTest1()
         {
-            var empty = LazyParingHeap<string>.Empty;
-            var x1 = LazyParingHeap<string>.Insert("X", empty);
-            var x2 = LazyParingHeap<string>.Insert("Y", x1);
-            // Assert.AreEqual("[X, [Y; susp]; susp]", DumpHeap(x2, false));
-            Assert.AreEqual("[X, [Y]]", DumpHeap(x2, true));
+            var heap1 = Enumerable.Range(0, 8).Aggregate(LazyParingHeap<int>.Empty, (current, i) => LazyParingHeap<int>.Insert(i, current));
+            var empty = LazyParingHeap<int>.Empty;
+            var heap = LazyParingHeap<int>.Merge(heap1, empty);
+            Assert.AreSame(heap1, heap);
         }
 
         [TestMethod]
-        public void Test2()
+        public void MergeTest2()
         {
-            const string Words = "What's in a name? That which we call a rose by any other name would smell as sweet";
-            var ts = Words.Split().Aggregate(LazyParingHeap<string>.Empty, (current, word) => LazyParingHeap<string>.Insert(word, current));
-            Assert.AreEqual("[a; susp]", DumpHeap(ts, false));
-            Assert.AreEqual("[a; [a, [as, [sweet]]; [any; [by; [call; [in, [name, [rose]; [other, [smell, [would]]]]; [name?; [That, [What's]; [we, [which]]]]]]]]]]", DumpHeap(ts, true));
+            var empty = LazyParingHeap<int>.Empty;
+            var heap2 = Enumerable.Range(0, 8).Aggregate(LazyParingHeap<int>.Empty, (current, i) => LazyParingHeap<int>.Insert(i, current));
+            var heap = LazyParingHeap<int>.Merge(empty, heap2);
+            Assert.AreSame(heap2, heap);
         }
 
         [TestMethod]
-        public void MergeTest()
+        public void MergeTest3()
         {
-            const string Data1 = "What's in a name?";
-            var ts1 = Data1.Split().Aggregate(LazyParingHeap<string>.Empty, (current, word) => LazyParingHeap<string>.Insert(word, current));
+            var heap1 = Enumerable.Range(0, 4).Aggregate(LazyParingHeap<int>.Empty, (current, i) => LazyParingHeap<int>.Insert(i, current));
+            var heap2 = Enumerable.Range(10, 3).Aggregate(LazyParingHeap<int>.Empty, (current, i) => LazyParingHeap<int>.Insert(i, current));
+            var heap = LazyParingHeap<int>.Merge(heap1, heap2);
+            Assert.AreEqual("[0; [1; [2, [3, [10; [11, [12]]]]]]]", DumpHeap(heap, true));
+        }
 
-            const string Data2 = "That which we call a rose by any other name would smell as sweet";
-            var ts2 = Data2.Split().Aggregate(LazyParingHeap<string>.Empty, (current, word) => LazyParingHeap<string>.Insert(word, current));
+        [TestMethod]
+        public void MergeTest4()
+        {
+            var heap1 = Enumerable.Range(0, 3).Aggregate(LazyParingHeap<int>.Empty, (current, i) => LazyParingHeap<int>.Insert(i, current));
+            var heap2 = Enumerable.Range(10, 4).Aggregate(LazyParingHeap<int>.Empty, (current, i) => LazyParingHeap<int>.Insert(i, current));
+            var heap = LazyParingHeap<int>.Merge(heap1, heap2);
+            Assert.AreEqual("[0, [10, [13]; [11, [12]]]; [1, [2]]]", DumpHeap(heap, true));
+        }
 
-            var t = LazyParingHeap<string>.Merge(ts1, ts2);
-            Assert.AreEqual("[a, [a; susp]; susp]", DumpHeap(t, false));
-            Assert.AreEqual("[a, [a; [any, [as, [sweet]]; [by; [call, [name; [other, [smell, [would]]]]; [rose, [That; [we, [which]]]]]]]]; [in; [name?, [What's]]]]", DumpHeap(t, true));
+        [TestMethod]
+        public void MergeTest5()
+        {
+            var heap1 = Enumerable.Range(0, 4).Aggregate(LazyParingHeap<int>.Empty, (current, i) => LazyParingHeap<int>.Insert(i, current));
+            var heap2 = Enumerable.Range(10, 4).Aggregate(LazyParingHeap<int>.Empty, (current, i) => LazyParingHeap<int>.Insert(i, current));
+            var heap = LazyParingHeap<int>.Merge(heap1, heap2);
+            Assert.AreEqual("[0; [1; [2, [3, [10, [13]; [11, [12]]]]]]]", DumpHeap(heap, true));
+        }
 
+        [TestMethod]
+        public void InsertTest1()
+        {
+            var empty = LazyParingHeap<int>.Empty;
+            var heap = LazyParingHeap<int>.Insert(0, empty);
+            Assert.AreEqual("[0]", DumpHeap(heap, true));
+        }
+
+        [TestMethod]
+        public void InsertTest2()
+        {
+            var heap1 = Enumerable.Range(0, 2).Aggregate(LazyParingHeap<int>.Empty, (current, i) => LazyParingHeap<int>.Insert(i, current));
+            var heap = LazyParingHeap<int>.Insert(2, heap1);
+            Assert.AreEqual("[0; [1, [2]]]", DumpHeap(heap, true));
+        }
+
+        [TestMethod]
+        public void InsertTest3()
+        {
+            var heap1 = Enumerable.Range(0, 3).Aggregate(LazyParingHeap<int>.Empty, (current, i) => LazyParingHeap<int>.Insert(i, current));
+            var heap = LazyParingHeap<int>.Insert(3, heap1);
+            Assert.AreEqual("[0, [3]; [1, [2]]]", DumpHeap(heap, true));
+        }
+
+        [TestMethod]
+        public void FindMinEmptyTest()
+        {
+            var empty = LazyParingHeap<int>.Empty;
+            AssertThrows<ArgumentNullException>(() => LazyParingHeap<int>.FindMin(empty));
+        }
+
+        [TestMethod]
+        public void FindMinTest()
+        {
+            var heap = Enumerable.Range(0, 8).Aggregate(LazyParingHeap<int>.Empty, (current, i) => LazyParingHeap<int>.Insert(i, current));
+            var min = LazyParingHeap<int>.FindMin(heap);
+            Assert.AreEqual(0, min);
+        }
+
+        [TestMethod]
+        public void DeleteMinEmptyTest()
+        {
+            var empty = LazyParingHeap<int>.Empty;
+            AssertThrows<ArgumentNullException>(() => LazyParingHeap<int>.DeleteMin(empty));
         }
 
         [TestMethod]
         public void DeleteMinTest()
         {
-            var empty = LazyParingHeap<int>.Empty;
-            var t1 = LazyParingHeap<int>.Insert(5, empty);
-            var t2 = LazyParingHeap<int>.Insert(3, t1);
-            var t3 = LazyParingHeap<int>.Insert(6, t2);
-            var t4 = LazyParingHeap<int>.DeleteMin(t3);
-            Assert.AreEqual("[5, [6]]", DumpHeap(t4, false));
-            Assert.AreEqual("[5, [6]]", DumpHeap(t4, true));
-            Assert.AreEqual(5, LazyParingHeap<int>.FindMin(t4));
-
-            Assert.AreEqual(3, LazyParingHeap<int>.FindMin(t3));
+            var heap = Enumerable.Range(0, 8).Aggregate(LazyParingHeap<int>.Empty, (current, i) => LazyParingHeap<int>.Insert(i, current));
+            heap = LazyParingHeap<int>.DeleteMin(heap);
+            Assert.AreEqual("[1; [2; [3; [4, [5; [6, [7]]]]]]]", DumpHeap(heap, true));
         }
 
         [TestMethod]
         public void DeleteLotsOfMinsTest()
         {
+            const int size = 1000;
             var random = new Random(3456);
             var heap = LazyParingHeap<int>.Empty;
-            for (var i = 0; i < 100; i++) heap = LazyParingHeap<int>.Insert(random.Next(100), heap);
+            for (var i = 0; i < size; i++) heap = LazyParingHeap<int>.Insert(random.Next(size), heap);
             var last = 0;
             var count = 0;
             while (!LazyParingHeap<int>.IsEmpty(heap))
@@ -120,19 +171,7 @@ namespace FunProgTests.heap
                 last = next;
                 count++;
             }
-            Assert.AreEqual(100, count);
-        }
-
-        [TestMethod]
-        public void FindMinEmptyTest()
-        {
-            AssertThrows<ArgumentNullException>(() => LazyParingHeap<int>.FindMin(LazyParingHeap<int>.Empty));
-        }
-
-        [TestMethod]
-        public void DeleteMinEmptyTest()
-        {
-            AssertThrows<ArgumentNullException>(() => LazyParingHeap<int>.DeleteMin(LazyParingHeap<int>.Empty));
+            Assert.AreEqual(size, count);
         }
     }
 }

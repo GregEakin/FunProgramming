@@ -71,7 +71,7 @@ namespace FunProgTests.heap
         }
 
         [TestMethod]
-        public void Test2()
+        public void BinomialTest2()
         {
             var heap = BinomialHeap<int>.Empty;
             for (var i = 0; i < 0x100; i++)
