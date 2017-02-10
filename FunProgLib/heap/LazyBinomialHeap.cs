@@ -13,6 +13,7 @@ namespace FunProgLib.heap
 {
     using lists;
     using System;
+    // using Heap = System.Lazy<lists.List<LazyBinomialHeap<int>.Tree>.Node>;
 
     public static class LazyBinomialHeap<T> where T : IComparable<T>
     {
@@ -31,8 +32,6 @@ namespace FunProgLib.heap
 
             public List<Tree>.Node List { get; }
         }
-
-        // type Heap = Lazy<List<Tree>.Node>
 
         public static Lazy<List<Tree>.Node> Empty { get; } = new Lazy<List<Tree>.Node>(() => List<Tree>.Empty);
 

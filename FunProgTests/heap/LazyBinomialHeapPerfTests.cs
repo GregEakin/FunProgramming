@@ -44,7 +44,7 @@ namespace FunProgTests.heap
                     Assert.IsFalse(heap.IsValueCreated);
                 }
 
-                Console.WriteLine(LazyBinomialHeapTests.DumpHeap(heap));
+                Console.WriteLine(LazyBinomialHeapTests.DumpHeap(heap, true));
 
                 //var last = 0;
                 //var count = 0;

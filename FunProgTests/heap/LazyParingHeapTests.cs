@@ -48,18 +48,18 @@ namespace FunProgTests.heap
         [TestMethod]
         public void EmptyTest()
         {
-            var t = LazyParingHeap<string>.Empty;
-            Assert.IsTrue(LazyParingHeap<string>.IsEmpty(t));
+            var empty = LazyParingHeap<string>.Empty;
+            Assert.IsTrue(LazyParingHeap<string>.IsEmpty(empty));
 
-            var t1 = LazyParingHeap<string>.Insert("C", t);
-            Assert.IsFalse(LazyParingHeap<string>.IsEmpty(t1));
+            var heap = LazyParingHeap<string>.Insert("C", empty);
+            Assert.IsFalse(LazyParingHeap<string>.IsEmpty(heap));
         }
 
         [TestMethod]
         public void Test1()
         {
-            var t = LazyParingHeap<string>.Empty;
-            var x1 = LazyParingHeap<string>.Insert("X", t);
+            var empty = LazyParingHeap<string>.Empty;
+            var x1 = LazyParingHeap<string>.Insert("X", empty);
             var x2 = LazyParingHeap<string>.Insert("Y", x1);
             // Assert.AreEqual("[X, [Y; susp]; susp]", DumpHeap(x2, false));
             Assert.AreEqual("[X, [Y]]", DumpHeap(x2, true));
@@ -92,8 +92,8 @@ namespace FunProgTests.heap
         [TestMethod]
         public void DeleteMinTest()
         {
-            var t = LazyParingHeap<int>.Empty;
-            var t1 = LazyParingHeap<int>.Insert(5, t);
+            var empty = LazyParingHeap<int>.Empty;
+            var t1 = LazyParingHeap<int>.Insert(5, empty);
             var t2 = LazyParingHeap<int>.Insert(3, t1);
             var t3 = LazyParingHeap<int>.Insert(6, t2);
             var t4 = LazyParingHeap<int>.DeleteMin(t3);
@@ -124,13 +124,13 @@ namespace FunProgTests.heap
         }
 
         [TestMethod]
-        public void FindMinNullTest()
+        public void FindMinEmptyTest()
         {
             AssertThrows<ArgumentNullException>(() => LazyParingHeap<int>.FindMin(LazyParingHeap<int>.Empty));
         }
 
         [TestMethod]
-        public void DeleteMinNullTest()
+        public void DeleteMinEmptyTest()
         {
             AssertThrows<ArgumentNullException>(() => LazyParingHeap<int>.DeleteMin(LazyParingHeap<int>.Empty));
         }

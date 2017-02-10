@@ -1,4 +1,13 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿// Fun Programming Data Structures 1.0
+// 
+// Copyright © 2014 Greg Eakin. 
+//
+// Greg Eakin <greg@gdbtech.info>
+//
+// All Rights Reserved.
+//
+
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;

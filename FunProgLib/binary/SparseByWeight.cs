@@ -9,8 +9,6 @@
 // Okasaki, Chris. "9.1 Positional Number System." Purely Functional Data Structures. 
 //     Cambridge, U.K.: Cambridge UP, 1998. 116-17. Print.
 
-using System;
-
 namespace FunProgLib.binary
 {
     using lists;

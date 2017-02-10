@@ -7,18 +7,19 @@
 // All Rights Reserved.
 //
 
-using FunProgLib.heap;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using FunProgTests.utilities;
-
-// using Heap = FunProgLib.heap.BinomialHeap<int>;
-
 namespace FunProgTests.heap
 {
+    using FunProgLib.heap;
+    using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Text;
+    using utilities;
+    using static utilities.ExpectedException;
+
+    // using Heap = FunProgLib.heap.BinomialHeap<int>;
+
     [TestClass]
     public class BinomialHeapTests
     {
@@ -55,7 +56,7 @@ namespace FunProgTests.heap
         }
 
         [TestMethod]
-        public void Test1()
+        public void BinomialTest1()
         {
             var heap = BinomialHeap<int>.Empty;
             for (var i = 0; i < 16; i++)
@@ -95,18 +96,18 @@ namespace FunProgTests.heap
         [TestMethod]
         public void EmptyTest()
         {
-            var heap = BinomialHeap<int>.Empty;
-            Assert.IsTrue(BinomialHeap<int>.IsEmpty(heap));
+            var empty = BinomialHeap<int>.Empty;
+            Assert.IsTrue(BinomialHeap<int>.IsEmpty(empty));
 
-            heap = BinomialHeap<int>.Insert(0, heap);
+            var heap = BinomialHeap<int>.Insert(0, empty);
             Assert.IsFalse(BinomialHeap<int>.IsEmpty(heap));
         }
 
         [TestMethod]
         public void InsertTest1()
         {
-            var heap1 = BinomialHeap<int>.Empty;
-            var heap = BinomialHeap<int>.Insert(0, heap1);
+            var empty = BinomialHeap<int>.Empty;
+            var heap = BinomialHeap<int>.Insert(0, empty);
             Assert.AreEqual("[0]", DumpHeap(heap));
         }
 
@@ -130,17 +131,17 @@ namespace FunProgTests.heap
         public void MergeTest1()
         {
             var heap1 = Enumerable.Range(0, 8).Aggregate(BinomialHeap<int>.Empty, (current, i) => BinomialHeap<int>.Insert(i, current));
-            var heap2 = BinomialHeap<int>.Empty;
-            var heap = BinomialHeap<int>.Merge(heap1, heap2);
+            var empty = BinomialHeap<int>.Empty;
+            var heap = BinomialHeap<int>.Merge(heap1, empty);
             Assert.AreSame(heap1, heap);
         }
 
         [TestMethod]
         public void MergeTest2()
         {
-            var heap1 = BinomialHeap<int>.Empty;
+            var empty = BinomialHeap<int>.Empty;
             var heap2 = Enumerable.Range(0, 8).Aggregate(BinomialHeap<int>.Empty, (current, i) => BinomialHeap<int>.Insert(i, current));
-            var heap = BinomialHeap<int>.Merge(heap1, heap2);
+            var heap = BinomialHeap<int>.Merge(empty, heap2);
             Assert.AreSame(heap2, heap);
         }
 
@@ -172,11 +173,25 @@ namespace FunProgTests.heap
         }
 
         [TestMethod]
+        public void FindMinEmptyTest()
+        {
+            var empty = BinomialHeap<int>.Empty;
+            AssertThrows<ArgumentNullException>(() => BinomialHeap<int>.FindMin(empty));
+        }
+
+        [TestMethod]
         public void FindMinTest()
         {
             var heap = Enumerable.Range(0, 8).Aggregate(BinomialHeap<int>.Empty, (current, i) => BinomialHeap<int>.Insert(i, current));
             var min = BinomialHeap<int>.FindMin(heap);
             Assert.AreEqual(0, min);
+        }
+
+        [TestMethod]
+        public void DeleteMinEmptyTest()
+        {
+            var empty = BinomialHeap<int>.Empty;
+            AssertThrows<ArgumentNullException>(() => BinomialHeap<int>.DeleteMin(empty));
         }
 
         [TestMethod]
