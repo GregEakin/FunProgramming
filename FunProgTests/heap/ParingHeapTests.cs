@@ -56,62 +56,116 @@ namespace FunProgTests.heap
         [TestMethod]
         public void EmptyTest()
         {
-            var t = ParingHeap<string>.Empty;
-            Assert.IsTrue(ParingHeap<string>.IsEmpty(t));
+            var empty = ParingHeap<int>.Empty;
+            Assert.IsTrue(ParingHeap<int>.IsEmpty(empty));
 
-            var t1 = ParingHeap<string>.Insert("C", t);
-            Assert.IsFalse(ParingHeap<string>.IsEmpty(t1));
+            var heap = ParingHeap<int>.Insert(3, empty);
+            Assert.IsFalse(ParingHeap<int>.IsEmpty(heap));
         }
 
         [TestMethod]
-        public void Test1()
+        public void MergeTest1()
         {
-            var t = ParingHeap<string>.Empty;
-            var x1 = ParingHeap<string>.Insert("C", t);
-            var x2 = ParingHeap<string>.Insert("B", x1);
-            Assert.AreEqual("[B: [C]]", DumpHeap(x2));
+            var heap1 = Enumerable.Range(0, 8).Aggregate(ParingHeap<int>.Empty, (current, i) => ParingHeap<int>.Insert(i, current));
+            var empty = ParingHeap<int>.Empty;
+            var heap = ParingHeap<int>.Merge(heap1, empty);
+            Assert.AreSame(heap1, heap);
         }
 
         [TestMethod]
-        public void Test2()
+        public void MergeTest2()
         {
-            const string Words = "What's in a name? That which we call a rose by any other name would smell as sweet.";
-            var ts = Words.Split().Aggregate(ParingHeap<string>.Empty, (current, word) => ParingHeap<string>.Insert(word, current));
-            Assert.AreEqual("[a: [sweet.][as][smell][would][name][other][any][by][rose][a: [call][we][which][That][name?][in: [What's]]]]", DumpHeap(ts));
+            var empty = ParingHeap<int>.Empty;
+            var heap2 = Enumerable.Range(0, 8).Aggregate(ParingHeap<int>.Empty, (current, i) => ParingHeap<int>.Insert(i, current));
+            var heap = ParingHeap<int>.Merge(empty, heap2);
+            Assert.AreSame(heap2, heap);
         }
 
         [TestMethod]
-        public void MergeTest()
+        public void MergeTest3()
         {
-            const string Data1 = "What's in a name?";
-            var ts1 = Data1.Split().Aggregate(ParingHeap<string>.Empty, (current, word) => ParingHeap<string>.Insert(word, current));
+            var heap1 = Enumerable.Range(0, 4).Aggregate(ParingHeap<int>.Empty, (current, i) => ParingHeap<int>.Insert(i, current));
+            var heap2 = Enumerable.Range(10, 3).Aggregate(ParingHeap<int>.Empty, (current, i) => ParingHeap<int>.Insert(i, current));
+            var heap = ParingHeap<int>.Merge(heap1, heap2);
+            Assert.AreEqual("[0: [10: [12][11]][3][2][1]]", DumpHeap(heap));
+        }
 
-            const string Data2 = "That which we call a rose by any other name would smell as sweet.";
-            var ts2 = Data2.Split().Aggregate(ParingHeap<string>.Empty, (current, word) => ParingHeap<string>.Insert(word, current));
+        [TestMethod]
+        public void MergeTest4()
+        {
+            var heap1 = Enumerable.Range(0, 3).Aggregate(ParingHeap<int>.Empty, (current, i) => ParingHeap<int>.Insert(i, current));
+            var heap2 = Enumerable.Range(10, 4).Aggregate(ParingHeap<int>.Empty, (current, i) => ParingHeap<int>.Insert(i, current));
+            var heap = ParingHeap<int>.Merge(heap1, heap2);
+            Assert.AreEqual("[0: [10: [13][12][11]][2][1]]", DumpHeap(heap));
+        }
 
-            var t = ParingHeap<string>.Merge(ts1, ts2);
-            Assert.AreEqual("[a: [a: [sweet.][as][smell][would][name][other][any][by][rose][call: [That: [we][which]]]][name?][in: [What's]]]", DumpHeap(t));
+        [TestMethod]
+        public void MergeTest5()
+        {
+            var heap1 = Enumerable.Range(0, 4).Aggregate(ParingHeap<int>.Empty, (current, i) => ParingHeap<int>.Insert(i, current));
+            var heap2 = Enumerable.Range(10, 4).Aggregate(ParingHeap<int>.Empty, (current, i) => ParingHeap<int>.Insert(i, current));
+            var heap = ParingHeap<int>.Merge(heap1, heap2);
+            Assert.AreEqual("[0: [10: [13][12][11]][3][2][1]]", DumpHeap(heap));
+        }
 
+        [TestMethod]
+        public void InsertTest1()
+        {
+            var empty = ParingHeap<int>.Empty;
+            var heap = ParingHeap<int>.Insert(0, empty);
+            Assert.AreEqual("[0]", DumpHeap(heap));
+        }
+
+        [TestMethod]
+        public void InsertTest2()
+        {
+            var heap1 = Enumerable.Range(0, 2).Aggregate(ParingHeap<int>.Empty, (current, i) => ParingHeap<int>.Insert(i, current));
+            var heap = ParingHeap<int>.Insert(2, heap1);
+            Assert.AreEqual("[0: [2][1]]", DumpHeap(heap));
+        }
+
+        [TestMethod]
+        public void InsertTest3()
+        {
+            var heap1 = Enumerable.Range(0, 3).Aggregate(ParingHeap<int>.Empty, (current, i) => ParingHeap<int>.Insert(i, current));
+            var heap = ParingHeap<int>.Insert(3, heap1);
+            Assert.AreEqual("[0: [3][2][1]]", DumpHeap(heap));
+        }
+
+        [TestMethod]
+        public void FindMinEmptyTest()
+        {
+            var empty = ParingHeap<int>.Empty;
+            AssertThrows<ArgumentNullException>(() => ParingHeap<int>.FindMin(empty));
+        }
+
+        [TestMethod]
+        public void FindMinTest()
+        {
+            var heap = Enumerable.Range(0, 8).Aggregate(ParingHeap<int>.Empty, (current, i) => ParingHeap<int>.Insert(i, current));
+            var min = ParingHeap<int>.FindMin(heap);
+            Assert.AreEqual(0, min);
+        }
+
+        [TestMethod]
+        public void DeleteMinEmptyTest()
+        {
+            var empty = ParingHeap<int>.Empty;
+            AssertThrows<ArgumentNullException>(() => ParingHeap<int>.DeleteMin(empty));
         }
 
         [TestMethod]
         public void DeleteMinTest()
         {
-            var t = ParingHeap<int>.Empty;
-            var t1 = ParingHeap<int>.Insert(5, t);
-            var t2 = ParingHeap<int>.Insert(3, t1);
-            var t3 = ParingHeap<int>.Insert(6, t2);
-            var t4 = ParingHeap<int>.DeleteMin(t3);
-            Assert.AreEqual("[5: [6]]", DumpHeap(t4));
-            Assert.AreEqual(5, ParingHeap<int>.FindMin(t4));
-
-            Assert.AreEqual(3, ParingHeap<int>.FindMin(t3));
+            var heap = Enumerable.Range(0, 8).Aggregate(ParingHeap<int>.Empty, (current, i) => ParingHeap<int>.Insert(i, current));
+            heap = ParingHeap<int>.DeleteMin(heap);
+            Assert.AreEqual("[1: [6: [7]][4: [5]][2: [3]]]", DumpHeap(heap));
         }
 
         [TestMethod]
         public void DeleteLotsOfMinsTest()
         {
-            const int size = 100;
+            const int size = 1000;
             var random = new Random(3456);
             var heap = ParingHeap<int>.Empty;
             for (var i = 0; i < size; i++) heap = ParingHeap<int>.Insert(random.Next(size), heap);
@@ -126,18 +180,6 @@ namespace FunProgTests.heap
                 count++;
             }
             Assert.AreEqual(size, count);
-        }
-
-        [TestMethod]
-        public void FindMinNullTest()
-        {
-            AssertThrows<ArgumentNullException>(() => ParingHeap<int>.FindMin(ParingHeap<int>.Empty));
-        }
-
-        [TestMethod]
-        public void DeleteMinNullTest()
-        {
-            AssertThrows<ArgumentNullException>(() => ParingHeap<int>.DeleteMin(ParingHeap<int>.Empty));
         }
     }
 }
