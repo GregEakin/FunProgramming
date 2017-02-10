@@ -13,6 +13,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using FunProgTests.utilities;
+
 // using Heap = FunProgLib.heap.BinomialHeap<int>;
 
 namespace FunProgTests.heap
@@ -52,20 +54,6 @@ namespace FunProgTests.heap
             return result.ToString();
         }
 
-        private static int CountBinaryOnes(int n)
-        {
-            var count = 0;
-            while (n != 0)
-            {
-                n = n & (n - 1);
-                count++;
-            }
-
-            return count;
-        }
-
-        private static int CountChar(string s, char c) => s.Split(c).Length;
-
         [TestMethod]
         public void Test1()
         {
@@ -76,8 +64,8 @@ namespace FunProgTests.heap
                 var dumpHeap = DumpHeap(heap);
                 // Console.WriteLine(dumpHeap);
 
-                var semicolons = CountChar(dumpHeap, ';');
-                Assert.AreEqual(CountBinaryOnes(i + 1), semicolons);
+                var semicolons = Counters.CountChar(dumpHeap, ';');
+                Assert.AreEqual(Counters.CountBinaryOnes(i + 1), semicolons);
             }
         }
 
@@ -99,7 +87,7 @@ namespace FunProgTests.heap
                     if (k % 2 == 0) continue;
                     var q = (int)Math.Pow(2, j);
                     var block = blocks[p++];
-                    Assert.AreEqual(q, CountChar(block, '1') - 1);
+                    Assert.AreEqual(q, Counters.CountChar(block, '1') - 1);
                 }
             }
         }
