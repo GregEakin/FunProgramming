@@ -173,9 +173,10 @@ namespace FunProgTests.heap
         [TestMethod]
         public void DeleteLotsOfMinsTest()
         {
+            const int size = 1000;
             var random = new Random(3456);
             var heap = SplayHeap<int>.Empty;
-            for (var i = 0; i < 100; i++) heap = SplayHeap<int>.Insert(random.Next(100), heap);
+            for (var i = 0; i < size; i++) heap = SplayHeap<int>.Insert(random.Next(size), heap);
             var last = 0;
             var count = 0;
             while (!SplayHeap<int>.IsEmpty(heap))
@@ -186,7 +187,7 @@ namespace FunProgTests.heap
                 last = next;
                 count++;
             }
-            Assert.AreEqual(100, count);
+            Assert.AreEqual(size, count);
         }
 
         [TestMethod]
