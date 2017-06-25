@@ -46,10 +46,7 @@ namespace FunProgTests.heap
             if (stream == ScheduledBinomialHeap<T>.EmptyStream) return string.Empty;
             if (!stream.IsValueCreated) return " -$- ";
             if (stream == Stream<ScheduledBinomialHeap<T>.Digit>.DollarNil) return string.Empty;
-            var result = new StringBuilder();
-            result.Append(DumpTree(stream.Value.Element.One));
-            result.Append(DumpDigitStream(stream.Value.Next));
-            return result.ToString();
+            return $"{DumpTree(stream.Value.Element.One)}{DumpDigitStream(stream.Value.Next)}";
         }
 
         private static string DumpHeap<T>(ScheduledBinomialHeap<T>.Heap heap) where T : IComparable<T>

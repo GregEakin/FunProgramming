@@ -22,17 +22,7 @@ namespace FunProgTests.queue
     {
         private static string DumpQueue<T>(BankersQueue<T>.Queue queue, bool expandUnCreated)
         {
-            var builder = new StringBuilder();
-            builder.Append("[");
-            builder.Append(queue.LenF);
-            builder.Append(", {");
-            builder.Append(DumpStream(queue.F, expandUnCreated));
-            builder.Append("}, ");
-            builder.Append(queue.LenR);
-            builder.Append(", {");
-            builder.Append(DumpStream(queue.R, expandUnCreated));
-            builder.Append("}]");
-            return builder.ToString();
+            return $"[{queue.LenF}, {{{DumpStream(queue.F, expandUnCreated)}}}, {queue.LenR}, {{{DumpStream(queue.R, expandUnCreated)}}}]";
         }
 
         [TestMethod]

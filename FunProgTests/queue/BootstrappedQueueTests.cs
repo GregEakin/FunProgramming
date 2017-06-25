@@ -23,22 +23,9 @@ namespace FunProgTests.queue
     {
         private static string DumpQueue<T>(BootstrappedQueue<T>.Queue queue)
         {
-            if (queue == null)
-                return "null";
-
-            var result = new StringBuilder();
-            result.Append("[");
-            result.Append(queue.LenFM);
-            result.Append(", ");
-            result.Append(DumpList(queue.F));
-            result.Append(", ");
-            result.Append(DumpQueue(queue.M));
-            result.Append(", ");
-            result.Append(queue.LenR);
-            result.Append(", ");
-            result.Append(DumpList(queue.R));
-            result.Append("]");
-            return result.ToString();
+            return queue == null 
+                ? "null" 
+                : $"[{queue.LenFM}, {DumpList(queue.F)}, {DumpQueue(queue.M)}, {queue.LenR}, {DumpList(queue.R)}]";
         }
 
         private static string DumpList<T>(List<T>.Node list)

@@ -22,21 +22,8 @@ namespace FunProgTests.queue
     {
         private static string DumpQueue<T>(RealTimeDeque<T>.Queue queue, bool expandUnCreated)
         {
-            var builder = new StringBuilder();
-            builder.Append("[");
-            builder.Append(queue.LenF);
-            builder.Append(", {");
-            builder.Append(DumpStream(queue.F, expandUnCreated));
-            builder.Append("}, {");
-            builder.Append(DumpStream(queue.Sf, expandUnCreated));
-            builder.Append("}, ");
-            builder.Append(queue.LenR);
-            builder.Append(", {");
-            builder.Append(DumpStream(queue.R, expandUnCreated));
-            builder.Append("}, {");
-            builder.Append(DumpStream(queue.Sr, expandUnCreated));
-            builder.Append("}]");
-            return builder.ToString();
+            return $"[{queue.LenF}, {{{DumpStream(queue.F, expandUnCreated)}}}, {{{DumpStream(queue.Sf, expandUnCreated)}}}, "
+                + $"{queue.LenR}, {{{DumpStream(queue.R, expandUnCreated)}}}, {{{DumpStream(queue.Sr, expandUnCreated)}}}]";
         }
 
         [TestMethod]

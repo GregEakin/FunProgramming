@@ -177,6 +177,7 @@ namespace FunProgTests.heap
             var random = new Random(3456);
             var heap = SplayHeap<int>.Empty;
             for (var i = 0; i < size; i++) heap = SplayHeap<int>.Insert(random.Next(size), heap);
+
             var last = 0;
             var count = 0;
             while (!SplayHeap<int>.IsEmpty(heap))

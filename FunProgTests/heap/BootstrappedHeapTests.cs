@@ -22,27 +22,16 @@ namespace FunProgTests.heap
     {
         private static string DumpElement<T>(BootstrappedHeap<T>.PrimH.Element element) where T : IComparable<T>
         {
-            if (BootstrappedHeap<T>.PrimH.IsEmpty(element)) return "Empty";
-            var result = new StringBuilder();
-            result.Append("{");
-            result.Append(DumpHeap(element.H1));
-            result.Append(": ");
-            result.Append(DumpElement(element.H2));
-            result.Append("}");
-            return result.ToString();
+            return BootstrappedHeap<T>.PrimH.IsEmpty(element) 
+                ? "Empty" 
+                : $"{{{DumpHeap(element.H1)}: {DumpElement(element.H2)}}}";
         }
 
         private static string DumpHeap<T>(BootstrappedHeap<T>.Heap heap) where T : IComparable<T>
         {
-            if (BootstrappedHeap<T>.IsEmpty(heap)) return "Empty";
-
-            var result = new StringBuilder();
-            result.Append("[");
-            result.Append(heap.X);
-            result.Append(": ");
-            result.Append(DumpElement(heap.P));
-            result.Append("]");
-            return result.ToString();
+            return BootstrappedHeap<T>.IsEmpty(heap) 
+                ? "Empty" 
+                : $"[{heap.X}: {DumpElement(heap.P)}]";
         }
 
         [TestMethod]

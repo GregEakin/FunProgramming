@@ -7,12 +7,11 @@
 // All Rights Reserved.
 //
 
-using System;
-using System.Linq;
-using System.Text;
 using FunProgLib.lists;
 using FunProgLib.tree;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
+using System.Linq;
 using static FunProgTests.utilities.ExpectedException;
 
 namespace FunProgTests.tree
@@ -24,26 +23,13 @@ namespace FunProgTests.tree
         {
             var car = value.Aggregate(List<K>.Empty, (current, letter) => List<K>.Cons(letter, current));
             return List<K>.Reverse(car);
-
         }
 
         private static string DumpMap<K, T>(Trie<K, T>.Map map) where K : IComparable<K> where T : class
         {
-            if (map == null) return "";
-            var buffer = new StringBuilder();
-            buffer.Append("{");
-            buffer.Append('\'');
-            buffer.Append(map.Option);
-            buffer.Append('\'');
-            buffer.Append(", ");
-            buffer.Append(DumpMap(map.M));
-            buffer.Append(", ");
-            buffer.Append(DumpMap(map.Sibling));
-            buffer.Append(", ");
-            buffer.Append("\"");
-            buffer.Append(map.V);
-            buffer.Append("\"}");
-            return buffer.ToString();
+            return map == null 
+                ? string.Empty 
+                : $"{{'{map.Option}', {DumpMap(map.M)}, {DumpMap(map.Sibling)}, \"{map.V}\"}}";
         }
 
         // Map Tests

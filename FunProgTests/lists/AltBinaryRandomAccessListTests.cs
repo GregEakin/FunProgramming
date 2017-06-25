@@ -28,24 +28,10 @@ namespace FunProgTests.lists
                 return "null";
 
             if (tree is AltBinaryRandomAccessList<T>.Zero zero)
-            {
-                var result = new StringBuilder();
-                result.Append("[Zero: ");
-                result.Append(DumpList(zero.RList));
-                result.Append("]");
-                return result.ToString();
-            }
+                return $"[Zero: {DumpList(zero.RList)}]";
 
             if (tree is AltBinaryRandomAccessList<T>.One one)
-            {
-                var result = new StringBuilder();
-                result.Append("[One: ");
-                result.Append(one.Alpha);
-                result.Append(", ");
-                result.Append(DumpList(one.RList));
-                result.Append("]");
-                return result.ToString();
-            }
+                return $"[One: {one.Alpha}, {DumpList(one.RList)}]";
 
             throw new ArgumentException();
         }
