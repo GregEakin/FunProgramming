@@ -13,7 +13,6 @@ namespace FunProgTests.queue
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using System;
     using System.Linq;
-    using System.Text;
     using static streams.StreamTests;
     using static utilities.ExpectedException;
 

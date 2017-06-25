@@ -12,12 +12,10 @@ using static FunProgTests.utilities.ExpectedException;
 
 namespace FunProgTests.lists
 {
+    using FunProgLib.lists;
+    using Microsoft.VisualStudio.TestTools.UnitTesting;
     using System;
     using System.Linq;
-
-    using FunProgLib.lists;
-
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     [TestClass]
     public class AltBinaryRandomAccessListTests

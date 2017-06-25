@@ -7,8 +7,6 @@
 // All Rights Reserved.
 //
 
-using System.Text;
-
 namespace FunProgTests.heap
 {
     using FunProgLib.heap;

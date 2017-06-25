@@ -9,13 +9,11 @@
 
 namespace FunProgTests.heap
 {
+    using FunProgLib.heap;
+    using Microsoft.VisualStudio.TestTools.UnitTesting;
     using System;
     using System.Linq;
     using System.Text;
-
-    using FunProgLib.heap;
-
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
     using static utilities.ExpectedException;
 
     [TestClass]

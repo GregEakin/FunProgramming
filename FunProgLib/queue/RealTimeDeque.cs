@@ -18,7 +18,7 @@ namespace FunProgLib.queue
     {
         private const int C = 2; // C == 2 || C == 3
 
-        public class Queue
+        public sealed class Queue
         {
             public Queue(
                 int lenF,
