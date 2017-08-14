@@ -131,5 +131,30 @@ namespace FunProgTests.queue
 
             Assert.IsTrue(RealTimeQueue<string>.IsEmpty(queue));
         }
+
+        private const int Size = 16;
+
+        [TestMethod]
+        public void PerfTest()
+        {
+            var heap = RealTimeQueue<int>.Empty;
+            for (var i = 0; i < Size; i++)
+            {
+                heap = RealTimeQueue<int>.Snoc(heap, i);
+            }
+
+            Console.WriteLine(DumpQueue(heap, true));
+
+            var count = 0;
+            while (!RealTimeQueue<int>.IsEmpty(heap))
+            {
+                var next = RealTimeQueue<int>.Head(heap);
+                Assert.AreEqual(count, next);
+                heap = RealTimeQueue<int>.Tail(heap);
+                count++;
+            }
+
+            Assert.AreEqual(Size, count);
+        }
     }
 }

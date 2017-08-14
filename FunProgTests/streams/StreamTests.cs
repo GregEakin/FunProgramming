@@ -111,7 +111,7 @@ namespace FunProgTests.streams
             Assert.AreEqual("$2, $3", DumpStream(drop, true));
 
             // Now that we've displayed everything in the drop steam, 
-            // all the items in the first stream are new evaluated.
+            // all the items in the first stream are now evaluated.
             Assert.AreEqual("1, 2, 3", DumpStream(stream, false));
         }
 
