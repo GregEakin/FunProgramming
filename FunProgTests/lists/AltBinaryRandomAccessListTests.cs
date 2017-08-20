@@ -182,7 +182,29 @@ namespace FunProgTests.lists
         }
 
         [TestMethod]
-        public void FUpdateTest()
+        public void FUpdateOneTest()
+        {
+            const string data = "How now, cow?";
+            var list = data.Split().Aggregate(AltBinaryRandomAccessList<string>.Empty, (current, word) => AltBinaryRandomAccessList<string>.Cons(word, current));
+
+            list = AltBinaryRandomAccessList<string>.Fupdate(value => value + "-" + value, 1, list);
+            Assert.AreEqual("[One: cow?, {(now,-now,, How)}]", DumpTree(list));
+            Assert.AreEqual("now,-now,", AltBinaryRandomAccessList<string>.Lookup(1, list));
+        }
+
+        [TestMethod]
+        public void FUpdateZeroEvenTest()
+        {
+            const string data = "How now, brown cow?";
+            var list = data.Split().Aggregate(AltBinaryRandomAccessList<string>.Empty, (current, word) => AltBinaryRandomAccessList<string>.Cons(word, current));
+
+            list = AltBinaryRandomAccessList<string>.Fupdate(value => value + "-" + value, 2, list);
+            Assert.AreEqual("[Zero: {(cow?, brown), (now,-now,, How)}]", DumpTree(list));
+            Assert.AreEqual("now,-now,", AltBinaryRandomAccessList<string>.Lookup(2, list));
+        }
+
+        [TestMethod]
+        public void FUpdateZeroOddTest()
         {
             const string data = "How now, brown cow?";
             var list = data.Split().Aggregate(AltBinaryRandomAccessList<string>.Empty, (current, word) => AltBinaryRandomAccessList<string>.Cons(word, current));

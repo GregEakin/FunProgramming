@@ -79,6 +79,7 @@
     <Compile Include="lists\AltBinaryRandomAccessListTests.cs" />
     <Compile Include="lists\CatenableListTests.cs" />
     <Compile Include="lists\CustomStackTests.cs" />
+    <Compile Include="lists\RListTests.cs" />
     <Compile Include="lists\SkewBinaryRandomAccessListTests.cs" />
     <Compile Include="lists\ListTests.cs" />
     <Compile Include="tree\TrieTests.cs" />
@@ -102,6 +103,7 @@
     <Compile Include="tree\UnbalancedSetTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="utilities\CodeTimer.cs" />
+    <Compile Include="utilities\CodeTimer2.cs" />
     <Compile Include="utilities\CollectionCounters.cs" />
     <Compile Include="utilities\Counters.cs" />
     <Compile Include="utilities\CycleTime.cs" />
