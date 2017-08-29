@@ -82,6 +82,7 @@
     <Compile Include="heap\ParingHeap.cs" />
     <Compile Include="tree\RedBlackSet.cs" />
     <Compile Include="heap\SplayHeap.cs" />
+    <Compile Include="tree\TrieOfTrees.cs" />
     <Compile Include="tree\UnbalancedSet.cs" />
     <Compile Include="tree\Trie.cs" />
     <Compile Include="utilities\StringUtilities.cs" />

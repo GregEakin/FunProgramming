@@ -35,14 +35,16 @@ namespace FunProgTests.lists
         public void EmptyHeadTest()
         {
             var list = List<string>.Empty;
-            AssertThrows<ArgumentNullException>(() => List<string>.Head(list));
+            var exception = AssertThrows<ArgumentNullException>(() => List<string>.Head(list));
+            Assert.AreEqual("Value cannot be null.\r\nParameter name: list", exception.Message);
         }
 
         [TestMethod]
         public void EmptyTailTest()
         {
             var list = List<string>.Empty;
-            AssertThrows<ArgumentNullException>(() => List<string>.Tail(list));
+            var exception = AssertThrows<ArgumentNullException>(() => List<string>.Tail(list));
+            Assert.AreEqual("Value cannot be null.\r\nParameter name: list", exception.Message);
         }
 
         [TestMethod]

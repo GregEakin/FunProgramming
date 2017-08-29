@@ -21,7 +21,7 @@ namespace FunProgTests.heap
         public void PerfTest1()
         {
             var modelSimulator = new ModelSimulator();
-            var codeTimer = new CodeTimer(modelSimulator, modelSimulator.RunModel);
+            var codeTimer = new CodeTimer2(modelSimulator, modelSimulator.RunModel);
             var time = codeTimer.Time();
             Console.WriteLine("{0:#,##0} Cycles", time.CpuCycles);
             Console.WriteLine("{0:#,##0} GC0", time.CollectionCount0);
@@ -31,7 +31,7 @@ namespace FunProgTests.heap
 
         private class ModelSimulator : IModel
         {
-            private const int Size = 100;
+            private const int Size = 16;
             private readonly Random _random = new Random(4432);
 
             public void RunModel(IModel obj)
@@ -46,21 +46,21 @@ namespace FunProgTests.heap
 
                 Console.WriteLine(LazyBinomialHeapTests.DumpHeap(heap, true));
 
-                //var last = 0;
-                //var count = 0;
-                //while (!LazyBinomialHeap<int>.IsEmpty(heap))
-                //{
-                //    Assert.IsTrue(heap.IsValueCreated);
+                var last = 0;
+                var count = 0;
+                while (!LazyBinomialHeap<int>.IsEmpty(heap))
+                {
+                    Assert.IsTrue(heap.IsValueCreated);
 
-                //    var next = LazyBinomialHeap<int>.FindMin(heap);
-                //    Assert.IsTrue(last <= next);
-                //    last = next;
+                    var next = LazyBinomialHeap<int>.FindMin(heap);
+                    Assert.IsTrue(last <= next);
+                    last = next;
 
-                //    heap = LazyBinomialHeap<int>.DeleteMin(heap);
-                //    count++;
-                //}
+                    heap = LazyBinomialHeap<int>.DeleteMin(heap);
+                    count++;
+                }
 
-                //Assert.AreEqual(Size, count);
+                Assert.AreEqual(Size, count);
             }
         }
     }
