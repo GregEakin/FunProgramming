@@ -11,7 +11,9 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace FunProgTests.ephemeral
 {
@@ -31,6 +33,14 @@ namespace FunProgTests.ephemeral
             Console.WriteLine($"Test took {count:n0} times, for an average of {time} nanoseconds");
         }
 
+        private struct TestRun
+        {
+            public int Index;
+            public byte[] Memory;
+            public double TimeWith;
+            public double TimeWithout;
+        }
+
         // [Ignore]
         // [TestMethod]
         public void TimeVsBufferSize()
@@ -40,56 +50,72 @@ namespace FunProgTests.ephemeral
             const int duration = 333;   // ms
 
             // setup the data structures before taking measurements.
-            var memory = new byte[samples][];
-            for (var i = 0; i < memory.Length; i++)
+            var testRuns = new TestRun[samples];
+            for (var i = 0; i < testRuns.Length; i++)
             {
-                var length = (int)Math.Pow(2.0, (i + start) / 2.5);
-                memory[i] = new byte[length];
+                var length = (int) Math.Pow(2.0, (i + start) / 2.5);
+                testRuns[i] = new TestRun
+                {
+                    Index = i + start,
+                    Memory = new byte[length],
+                    TimeWith = double.MaxValue,
+                    TimeWithout = double.MaxValue
+                };
             }
 
             // Let the system settle a bit.
-            RandomAccessMemory(memory[20], 100, true);
-            RandomAccessMemory(memory[10], 100, true);
+            if (testRuns.Length > 20)
+                RandomAccessMemory(testRuns[20].Memory, 100, true);
+            if (testRuns.Length > 10)
+                RandomAccessMemory(testRuns[10].Memory, 100, true);
 
-            // Measure the performance.
-            Console.WriteLine("Test\tSize\tWithout\tWith");
-            for (var i = 0; i < memory.Length; i++)
+            var rand = new Random();
+
+            // Do each step five times, to find the fastest.
+            for (var j = 0; j < 5; j++)
             {
-                // Do each step three times, to find the fastest.
-                var time1 = double.MaxValue;
-                var time2 = double.MaxValue;
-                for (var j = 0; j < 3; j++)
+                var indices = Enumerable.Range(0, testRuns.Length).OrderBy(p => rand.Next());
+                foreach (var i in indices)
                 {
-                    var count1 = RandomAccessMemory(memory[i], duration, false);
-                    time1 = Math.Min(1.0e6 * duration / count1, time1);
+                    // Measure the performance.
 
-                    var count2 = RandomAccessMemory(memory[i], duration, true);
-                    time2 = Math.Min(1.0e6 * duration / count2, time2);
+                    // time = count / duration;
+                    var count1 = RandomAccessMemory(testRuns[i].Memory, duration, false);
+                    testRuns[i].TimeWithout = Math.Min(1.0e6 * duration / count1, testRuns[i].TimeWithout);
+
+                    var count2 = RandomAccessMemory(testRuns[i].Memory, duration, true);
+                    testRuns[i].TimeWith = Math.Min(1.0e6 * duration / count2, testRuns[i].TimeWith);
                 }
-                Console.WriteLine($"{i}\t{memory[i].Length}\t{time1}\t{time2}");
+            }
+
+            Console.WriteLine("Test\t         Size\tWithout\t   With\t   Diff");
+            foreach (var testRun in testRuns)
+            {
+                Console.WriteLine(
+                    $"{testRun.Index,4}\t{testRun.Memory.Length,13:N0}\t{testRun.TimeWithout,7:F2}\t{testRun.TimeWith,7:F2}\t{testRun.TimeWith - testRun.TimeWithout,7:F2}");
             }
         }
 
-        private static int RandomAccessMemory(IList<byte> memory, long time, bool measure)
+        private static long RandomAccessMemory(byte[] memory, long time, bool measure)
         {
             // bring all the memory into the cache.
-            for (var i = 0; i < memory.Count; i++)
-                memory[i] = (byte)(i & 0xFF);
+            for (var i = 0; i < memory.Length; i++)
+                memory[i] = (byte) (i & 0xFF);
 
             // Separate the writes from the reads.
             Interlocked.MemoryBarrier();
 
             // read the data randomly.
-            var count = 0;
-            var watch = new Stopwatch();
-            watch.Start();
+            var count = 0L;
+            var watch = Stopwatch.StartNew();
             while (watch.ElapsedMilliseconds < time)
             {
                 ++count;
-                var index = RandomNum.Next(memory.Count);
+                var index = RandomNum.Next(memory.Length);
                 if (!measure) continue;
                 var data = memory[index];
             }
+
             return count;
         }
     }
