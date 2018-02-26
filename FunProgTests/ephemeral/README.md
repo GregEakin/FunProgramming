@@ -4,6 +4,7 @@ The idea is when all of the data fits into a given cache level, it can access th
 If the dataset size is larger, then it needs to go to a slower (but larger) cache.
 
 ![CPU Memory Access Time](images/CacheSpeedTests.png)
+![CPU Memory Access Time](https://raw.githubusercontent.com/GregEakin/FunProgramming/master/FunProgTests/ephemeral/images/CacheSpeedTest.png)
 
 Here, we can see six different slops, as we transition to larger caches.
 The curve starts on the left as a flat line, because everything is being pulled from the L1 cache.
