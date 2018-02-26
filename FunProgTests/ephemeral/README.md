@@ -3,7 +3,7 @@ Here's a measurement of CPU access time, when it kept to a given dataset size.
 The idea is when all of the data fits into a given cache level, it can access the data faster.
 If the dataset size is larger, then it needs to go to a slower (but larger) cache.
 
-[![CPU Memory Access Time](CacheSpeedTests.png)](http://gdbtech.info/)
+![CPU Memory Access Time](CacheSpeedTests.png)
 
 Here, we can see six different slops, as we transition to larger caches.
 The curve starts on the left as a flat line, because everything is being pulled from the L1 cache.
