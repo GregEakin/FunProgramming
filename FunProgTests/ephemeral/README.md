@@ -9,4 +9,4 @@ If the dataset size is larger, then it needs to go to a slower (but larger) cach
 Here, we can see five different slops, as we transition to larger caches.
 The curve starts on the left as a flat line, because everything is being pulled from the L1 cache.
 Then the curve picks up some slope as the data is being shared between the L1 and L2 caches. 
-Here, all the data fits within the L2 cache, but blocks are being copied back into L1, and sometime the needed bits are already in the L1 cache.
+Here, all the data fits within the L2 cache, but as blocks are being copied from L2 down into L1, sometimes the next needed bits are already in the L1 cache.
