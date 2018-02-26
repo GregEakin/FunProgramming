@@ -6,9 +6,7 @@ If the dataset size is larger, then it needs to go to a slower (but larger) cach
 ![CPU Memory Access Time](images/CacheSpeedTests.png)
 ![CPU Memory Access Time](https://raw.githubusercontent.com/GregEakin/FunProgramming/master/FunProgTests/ephemeral/images/CacheSpeedTest.png)
 
-Here, we can see six different slops, as we transition to larger caches.
+Here, we can see five different slops, as we transition to larger caches.
 The curve starts on the left as a flat line, because everything is being pulled from the L1 cache.
 Then the curve picks up some slope as the data is being shared between the L1 and L2 caches. 
-Here, all the data fits within the L2 cache, but blocks are being copied back into L1, and sometime the next bits of data is still in the L1 cache.
-
-
+Here, all the data fits within the L2 cache, but blocks are being copied back into L1, and sometime the needed bits are already in the L1 cache.
