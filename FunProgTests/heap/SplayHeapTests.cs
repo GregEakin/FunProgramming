@@ -67,19 +67,19 @@ namespace FunProgTests.heap
         [TestMethod]
         public void Test2()
         {
-            const string Words = "What's in a name? That which we call a rose by any other name would smell as sweet";
-            var ts = Words.Split().Aggregate(SplayHeap<string>.Empty, (current, word) => SplayHeap<string>.Insert(word, current));
+            const string words = "What's in a name? That which we call a rose by any other name would smell as sweet";
+            var ts = words.Split().Aggregate(SplayHeap<string>.Empty, (current, word) => SplayHeap<string>.Insert(word, current));
             Assert.AreEqual("[[[[[[a], a], any], as, [by, [[call, [in]], name, [name?]]]], other, [[rose], smell]], sweet, [[That, [[we], What's, [which]]], would]]", DumpHeap(ts));
         }
 
         [TestMethod]
         public void MergeTest()
         {
-            const string Data1 = "What's in a name?";
-            var ts1 = Data1.Split().Aggregate(SplayHeap<string>.Empty, (current, word) => SplayHeap<string>.Insert(word, current));
+            const string data1 = "What's in a name?";
+            var ts1 = data1.Split().Aggregate(SplayHeap<string>.Empty, (current, word) => SplayHeap<string>.Insert(word, current));
 
-            const string Data2 = "That which we call a rose by any other name would smell as sweet";
-            var ts2 = Data2.Split().Aggregate(SplayHeap<string>.Empty, (current, word) => SplayHeap<string>.Insert(word, current));
+            const string data2 = "That which we call a rose by any other name would smell as sweet";
+            var ts2 = data2.Split().Aggregate(SplayHeap<string>.Empty, (current, word) => SplayHeap<string>.Insert(word, current));
 
             var t = SplayHeap<string>.Merge(ts1, ts2);
             Assert.AreEqual("[[[[a], a, [any, [as]]], by, [[call], in, [name]]], name?, [other, [[[[rose], smell], sweet, [That, [we]]], What's, [[which], would]]]]", DumpHeap(t));

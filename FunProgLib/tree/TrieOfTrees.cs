@@ -13,7 +13,7 @@ using System;
 
 namespace FunProgLib.tree
 {
-    public static class TrieOfTree<K, T> where K : IComparable<K>
+    public static class TrieOfTree<TKey, TValue> where TKey : IComparable<TKey>
     {
         // assumes polymorphic recursion!
         public sealed class Tree
@@ -31,7 +31,7 @@ namespace FunProgLib.tree
 
         public static Map Empty { get; } = new Map();
 
-        public static T Lookup()
+        public static TValue Lookup()
         {
             throw new NotImplementedException();
         }

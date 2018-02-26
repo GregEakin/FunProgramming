@@ -91,31 +91,9 @@ namespace FunProgTests.ephemeral
             Task.WaitAll(taskList.ToArray());
         }
 
-        private bool _disposed;
-
-        ~DictionarySemaphoreTests()
-        {
-            Dispose(false);    
-        }
-
         public void Dispose()
         {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-
-        // Protected implementation of Dispose pattern.
-        private void Dispose(bool disposing)
-        {
-            if (_disposed) return;
-            if (disposing)
-            {
-                _semaphore.Dispose();
-                // Free any other managed objects here.
-            }
-
-            // Free any unmanaged objects here.
-            _disposed = true;
+            _semaphore.Dispose();
         }
     }
 }

@@ -19,16 +19,17 @@ namespace FunProgTests.tree
     [TestClass]
     public class TrieTests
     {
-        private static List<K>.Node ToList<K>(K[] value)
+        private static List<TKey>.Node ToList<TKey>(TKey[] value)
         {
-            var car = value.Aggregate(List<K>.Empty, (current, letter) => List<K>.Cons(letter, current));
-            return List<K>.Reverse(car);
+            var car = value.Aggregate(List<TKey>.Empty, (current, letter) => List<TKey>.Cons(letter, current));
+            return List<TKey>.Reverse(car);
         }
 
-        private static string DumpMap<K, T>(Trie<K, T>.Map map) where K : IComparable<K> where T : class
+        private static string DumpMap<TKey, TValue>(Trie<TKey, TValue>.Map map)
+            where TKey : IComparable<TKey> where TValue : class
         {
-            return map == null 
-                ? string.Empty 
+            return map == null
+                ? string.Empty
                 : $"{{'{map.Option}', {DumpMap(map.M)}, {DumpMap(map.Sibling)}, \"{map.V}\"}}";
         }
 
@@ -118,6 +119,10 @@ namespace FunProgTests.tree
         public void TrieEmptyTest()
         {
             var trie = Trie<char, string>.Empty;
+            Assert.IsNull(trie.V);  // default(string)
+            Assert.IsNull(trie.M);
+            Assert.AreEqual('\0', trie.Option); // default(char)
+            Assert.IsNull(trie.Sibling);
         }
 
         [TestMethod]
@@ -332,7 +337,8 @@ namespace FunProgTests.tree
             Assert.AreEqual("CB", findCb);
 
             //Assert.AreEqual("{'\0', {'C', {'B', , , \"CB\"}, {'C', , , \"C\"}, \"C\"}, , \"\"}", DumpMap(trie));
-            Assert.AreEqual("{'\0', {'C', {'B', , , \"CB\"}, {'C', {'B', , , \"CB\"}, , \"\"}, \"C\"}, , \"\"}", DumpMap(trie));
+            Assert.AreEqual("{'\0', {'C', {'B', , , \"CB\"}, {'C', {'B', , , \"CB\"}, , \"\"}, \"C\"}, , \"\"}",
+                DumpMap(trie));
         }
 
         [TestMethod]
@@ -388,11 +394,14 @@ namespace FunProgTests.tree
 
             var cart = ToList("CART".ToCharArray());
             var trie2 = Trie<char, string>.Bind(cart, "cart", trie1);
-            Assert.AreEqual("{'\0', {'C', {'A', {'R', {'T', , , \"cart\"}, , \"\"}, , \"\"}, , \"\"}, , \"\"}", DumpMap(trie2));
+            Assert.AreEqual("{'\0', {'C', {'A', {'R', {'T', , , \"cart\"}, , \"\"}, , \"\"}, , \"\"}, , \"\"}",
+                DumpMap(trie2));
 
             var car = ToList("CAR".ToCharArray());
             var trie3 = Trie<char, string>.Bind(car, "car", trie2);
-            Assert.AreEqual("{'\0', {'C', {'A', {'R', {'T', , , \"cart\"}, {'R', {'T', , , \"cart\"}, , \"\"}, \"car\"}, {'A', {'R', {'T', , , \"cart\"}, , \"\"}, , \"\"}, \"\"}, {'C', {'A', {'R', {'T', , , \"cart\"}, , \"\"}, , \"\"}, , \"\"}, \"\"}, , \"\"}", DumpMap(trie3));
+            Assert.AreEqual(
+                "{'\0', {'C', {'A', {'R', {'T', , , \"cart\"}, {'R', {'T', , , \"cart\"}, , \"\"}, \"car\"}, {'A', {'R', {'T', , , \"cart\"}, , \"\"}, , \"\"}, \"\"}, {'C', {'A', {'R', {'T', , , \"cart\"}, , \"\"}, , \"\"}, , \"\"}, \"\"}, , \"\"}",
+                DumpMap(trie3));
 
             var dog = ToList("DOG".ToCharArray());
             var trie4 = Trie<char, string>.Bind(dog, "dog", trie3);

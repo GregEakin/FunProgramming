@@ -82,8 +82,7 @@ namespace FunProgTests.ephemeral
         {
             var tasks = new System.Collections.Generic.List<Task>();
             var q = new BlockingQueue<int>(4);
-            var watch = new Stopwatch();
-            watch.Start();
+            var watch = Stopwatch.StartNew();
 
             // Producer
             var producer = new Task(() =>

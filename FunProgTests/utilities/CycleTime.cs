@@ -32,6 +32,11 @@ namespace FunProgTests.utilities
             var now = Kernel32.QueryThreadCycleTime();
             return now - _startTime;
         }
+
+        public void Dispose()
+        {
+            _handle.Dispose();
+        }
     }
 
     public sealed class ProcessCycleTime : ICycleTime
@@ -49,6 +54,11 @@ namespace FunProgTests.utilities
         {
             var now = Kernel32.QueryProcessCycleTime(_handle);
             return now - _startTime;
+        }
+
+        public void Dispose()
+        {
+            _handle.Dispose();
         }
     }
 }

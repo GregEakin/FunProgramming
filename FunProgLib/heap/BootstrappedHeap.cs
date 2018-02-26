@@ -44,9 +44,9 @@ namespace FunProgLib.heap
                 public Element H2 { get; }
             }
 
-            public static Element Empty { get; } = null;
+            public static Element EmptyElement { get; } = null;
 
-            public static bool IsEmpty(Element h) => h == Empty;
+            public static bool IsEmpty(Element h) => h == EmptyElement;
 
             public static Element Merge(Element h1, Element h2)
             {
@@ -56,7 +56,7 @@ namespace FunProgLib.heap
                 return new Element(h2.H1, Insert(h1.H1, h2.H2));
             }
 
-            public static Element Insert(Heap e1, Element h2) => Merge(new Element(e1, Empty), h2);
+            public static Element Insert(Heap e1, Element h2) => Merge(new Element(e1, EmptyElement), h2);
 
             public static Heap FindMin(Element h)
             {
@@ -67,7 +67,7 @@ namespace FunProgLib.heap
             public static Element DeleteMin(Element h)
             {
                 if (IsEmpty(h)) throw new ArgumentNullException(nameof(h));
-                if (IsEmpty(h.H2)) return Empty;
+                if (IsEmpty(h.H2)) return EmptyElement;
                 var p1 = FindMin(h.H2).P;
                 var p2 = DeleteMin(h.H2);
                 return new Element(h.H1, Merge(p1, p2));
@@ -86,7 +86,7 @@ namespace FunProgLib.heap
             return new Heap(h2.X, PrimH.Insert(h1, h2.P));
         }
 
-        public static Heap Insert(T x, Heap h) => Merge(new Heap(x, PrimH.Empty), h);
+        public static Heap Insert(T x, Heap h) => Merge(new Heap(x, PrimH.EmptyElement), h);
 
         public static T FindMin(Heap h)
         {

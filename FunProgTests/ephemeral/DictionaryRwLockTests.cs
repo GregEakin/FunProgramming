@@ -78,25 +78,9 @@ namespace FunProgTests.ephemeral
             Task.WaitAll(taskList.ToArray());
         }
 
-        private bool _disposed;
-
-        ~DictionaryRwLockTests()
-        {
-            Dispose(false);
-        }
-
         public void Dispose()
         {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-
-        // Protected implementation of Dispose pattern.
-        private void Dispose(bool disposing)
-        {
-            if (_disposed) return;
             _lockObject.Dispose();
-            _disposed = true;
         }
     }
 }

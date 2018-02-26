@@ -100,19 +100,19 @@ namespace FunProgTests.heap
         [TestMethod]
         public void Test2()
         {
-            const string Words = "What's in a name? That which we call a rose by any other name would smell as sweet.";
-            var t = Words.Split().Aggregate(SkewBinomialHeap<string>.Empty, (current, word) => SkewBinomialHeap<string>.Insert(word, current));
+            const string words = "What's in a name? That which we call a rose by any other name would smell as sweet.";
+            var t = words.Split().Aggregate(SkewBinomialHeap<string>.Empty, (current, word) => SkewBinomialHeap<string>.Insert(word, current));
             Assert.AreEqual("[[as, sweet.[[smell]]][a, would, name, rose[[a, we, in[[name?, which[[That]]][What's]]][any, other[[by]]][call]]]]", DumpHeap(t));
         }
 
         [TestMethod]
         public void MergeTest()
         {
-            const string Data1 = "What's in a name?";
-            var ts1 = Data1.Split().Aggregate(SkewBinomialHeap<string>.Empty, (current, word) => SkewBinomialHeap<string>.Insert(word, current));
+            const string data1 = "What's in a name?";
+            var ts1 = data1.Split().Aggregate(SkewBinomialHeap<string>.Empty, (current, word) => SkewBinomialHeap<string>.Insert(word, current));
 
-            const string Data2 = "That which we call a rose by any other name would smell as sweet";
-            var ts2 = Data2.Split().Aggregate(SkewBinomialHeap<string>.Empty, (current, word) => SkewBinomialHeap<string>.Insert(word, current));
+            const string data2 = "That which we call a rose by any other name would smell as sweet";
+            var ts2 = data2.Split().Aggregate(SkewBinomialHeap<string>.Empty, (current, word) => SkewBinomialHeap<string>.Insert(word, current));
 
             var t = SkewBinomialHeap<string>.Merge(ts1, ts2);
             Assert.AreEqual("[[name?][a, in[[What's]]][a, by, rose[[any, sweet, name[[as, smell[[would]]][other]]][That, we[[which]]][call]]]]", DumpHeap(t));

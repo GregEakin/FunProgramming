@@ -17,7 +17,7 @@ namespace FunProgTests.heap
     using System;
     using System.Linq;
     using System.Text;
-    using static utilities.ExpectedException;
+    using static ExpectedException;
 
     [TestClass]
     public class LazyBinomialHeapTests
