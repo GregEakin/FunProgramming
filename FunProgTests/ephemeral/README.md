@@ -11,6 +11,7 @@ The curve starts on the left as a flat line, because everything is being pulled 
 Then the curve picks up some slope as the data is being shared between the L1 and L2 caches. 
 Here, all the data fits within the L2 cache, but as blocks are being copied from L2 down into L1, sometimes the next needed bits are already in the L1 cache.
 
+## Measurement Code:
 This graph was measured by using `byte[]` of various sizes.
 Where it counted memory accesses, in a given amount of `time`.
 To subtract the overhead of the random number generator, we run the test twice: one with and one without the memory access.

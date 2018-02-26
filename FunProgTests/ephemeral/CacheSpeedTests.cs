@@ -9,11 +9,9 @@
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace FunProgTests.ephemeral
 {
@@ -69,12 +67,10 @@ namespace FunProgTests.ephemeral
             if (testRuns.Length > 10)
                 RandomAccessMemory(testRuns[10].Memory, 100, true);
 
-            var rand = new Random();
-
             // Do each step five times, to find the fastest.
             for (var j = 0; j < 5; j++)
             {
-                var indices = Enumerable.Range(0, testRuns.Length).OrderBy(p => rand.Next());
+                var indices = Enumerable.Range(0, testRuns.Length).OrderBy(p => RandomNum.Next());
                 foreach (var i in indices)
                 {
                     // Measure the performance.
