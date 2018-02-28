@@ -33,7 +33,7 @@ namespace FunProgTests.queue
             var result = new StringBuilder();
             if (!lazyNode.IsValueCreated)
                 result.Append("$");
-            result.Append(lazyNode.Value != null ? lazyNode.Value.ToReadableString() : "null");
+            result.Append(lazyNode.Value?.ToReadableString() ?? "null");
             return result.ToString();
         }
 
@@ -43,7 +43,7 @@ namespace FunProgTests.queue
 
             var builder = new StringBuilder();
             builder.Append("[");
-            builder.Append(queue.W != null ? queue.W.ToReadableString() : "null");
+            builder.Append(queue.W?.ToReadableString() ?? "null");
             builder.Append(", ");
             builder.Append(queue.Lenf);
             builder.Append(", ");
@@ -51,7 +51,7 @@ namespace FunProgTests.queue
             builder.Append(", ");
             builder.Append(queue.Lenr);
             builder.Append(", ");
-            builder.Append(queue.R != null ? queue.R.ToReadableString() : "null");
+            builder.Append(queue.R?.ToReadableString() ?? "null");
             builder.Append("]");
             return builder.ToString();
         }

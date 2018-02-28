@@ -24,9 +24,9 @@ namespace FunProgTests.queue
         {
             var builder = new StringBuilder();
             builder.Append("[");
-            builder.Append(queue.F != null ? queue.F.ToReadableString() : "null");
+            builder.Append(queue.F?.ToReadableString() ?? "null");
             builder.Append(", ");
-            builder.Append(queue.R != null ? queue.R.ToReadableString() : "null");
+            builder.Append(queue.R?.ToReadableString() ?? "null");
             builder.Append("]");
             return builder.ToString();
         }

@@ -30,13 +30,13 @@ namespace FunProgTests.queue
             result.Append("[");
             result.Append(queue.LenF);
             result.Append(", ");
-            result.Append(queue.F != null ? queue.F.ToReadableString() : "null");
+            result.Append(queue.F?.ToReadableString() ?? "null");
             // result.Append(", ");
             // result.Append(queue.State.GetType());
             result.Append(", ");
             result.Append(queue.LenR);
             result.Append(", ");
-            result.Append(queue.R != null ? queue.R.ToReadableString() : "null");
+            result.Append(queue.R?.ToReadableString() ?? "null");
             result.Append("]");
             return result.ToString();
         }

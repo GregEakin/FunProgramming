@@ -29,7 +29,7 @@ namespace FunProgTests.queue
             result.Append("[{");
             result.Append(StreamTests.DumpStream(queue.F, expandUnCreated));
             result.Append("}, ");
-            result.Append(queue.R != null ? queue.R.ToReadableString() : "null");
+            result.Append(queue.R?.ToReadableString() ?? "null");
             result.Append(", {");
             result.Append(StreamTests.DumpStream(queue.S, expandUnCreated));
             result.Append("}]");
