@@ -4,23 +4,22 @@
 // SUBSYSTEM:	FunProgramming
 // FILE:		BlockingQueue.cs
 // AUTHOR:		Greg Eakin
+
 namespace FunProgTests.ephemeral
 {
     using System.Diagnostics;
     using System.Threading;
     using System.Threading.Tasks;
-
     using FunProgLib.queue;
-
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-    class BlockingQueue<T>
+    internal class BlockingQueue<T>
     {
-        private readonly object _key = new object();
+        private readonly object _lock = new object();
         private readonly int _size;
         private int _count;
-        private volatile RealTimeQueue<T>.Queue _queue = RealTimeQueue<T>.Empty;
-        private volatile bool _quit;
+        private RealTimeQueue<T>.Queue _queue = RealTimeQueue<T>.Empty;
+        private bool _quit;
 
         public BlockingQueue(int size)
         {
@@ -29,25 +28,25 @@ namespace FunProgTests.ephemeral
 
         public void Quit()
         {
-            lock (_key)
+            lock (_lock)
             {
                 _quit = true;
-                Monitor.PulseAll(_key);
+                Monitor.PulseAll(_lock);
             }
         }
 
         public bool Enqueue(T t)
         {
-            lock (_key)
+            lock (_lock)
             {
-                while (!_quit && _count >= _size) Monitor.Wait(_key);
+                while (!_quit && _count >= _size) Monitor.Wait(_lock);
 
                 if (_quit) return false;
 
-                Interlocked.Increment(ref _count);
+                _count++;
                 _queue = RealTimeQueue<T>.Snoc(_queue, t);
 
-                Monitor.PulseAll(_key);
+                Monitor.PulseAll(_lock);
             }
 
             return true;
@@ -57,17 +56,17 @@ namespace FunProgTests.ephemeral
         {
             t = default(T);
 
-            lock (_key)
+            lock (_lock)
             {
-                while (!_quit && RealTimeQueue<T>.IsEmpty(_queue)) Monitor.Wait(_key);
+                while (!_quit && RealTimeQueue<T>.IsEmpty(_queue)) Monitor.Wait(_lock);
 
                 if (RealTimeQueue<T>.IsEmpty(_queue)) return false;
 
-                Interlocked.Decrement(ref _count);
+                _count--;
                 t = RealTimeQueue<T>.Head(_queue);
                 _queue = RealTimeQueue<T>.Tail(_queue);
 
-                Monitor.PulseAll(_key);
+                Monitor.PulseAll(_lock);
             }
 
             return true;
@@ -87,13 +86,14 @@ namespace FunProgTests.ephemeral
             // Producer
             var producer = new Task(() =>
             {
-                for (var x = 0; ; x++)
+                for (var x = 0; q.Enqueue(x); x++)
                 {
-                    if (!q.Enqueue(x)) break;
-                    var msg = $"{Thread.CurrentThread.ManagedThreadId,3}: {watch.Elapsed,14} {x,4:0000} >";
+                    var threadId = Thread.CurrentThread.ManagedThreadId;
+                    var msg = $"{threadId,3}: {watch.ElapsedMilliseconds,3} {x,4:0000} >";
                     Trace.WriteLine(msg);
                 }
-                Trace.WriteLine("Producer quitting");
+
+                Trace.WriteLine($"{Thread.CurrentThread.ManagedThreadId,3}: Producer finished");
             });
             producer.Start();
             tasks.Add(producer);
@@ -103,15 +103,16 @@ namespace FunProgTests.ephemeral
             {
                 var consumer = new Task(() =>
                 {
-                    for (; ; )
+                    Thread.Sleep(10);
+                    while (q.Dequeue(out var x))
                     {
-                        Thread.Sleep(10);
-                        int x;
-                        if (!q.Dequeue(out x)) break;
-                        var msg = $"{Thread.CurrentThread.ManagedThreadId,3}: {watch.Elapsed,14}      < {x,4:0000}";
+                        var threadId = Thread.CurrentThread.ManagedThreadId;
+                        var msg = $"{threadId,3}: {watch.ElapsedMilliseconds,3}      < {x,4:0000}";
                         Trace.WriteLine(msg);
+                        Thread.Sleep(10);
                     }
-                    Trace.WriteLine("Consumer quitting");
+
+                    Trace.WriteLine($"{Thread.CurrentThread.ManagedThreadId,3}: Consumer finished");
                 });
                 consumer.Start();
                 tasks.Add(consumer);
@@ -119,7 +120,7 @@ namespace FunProgTests.ephemeral
 
             Thread.Sleep(100);
 
-            Trace.WriteLine("Quitting");
+            Trace.WriteLine($"{Thread.CurrentThread.ManagedThreadId,3}: Stopping after 100 ms");
 
             q.Quit();
 
