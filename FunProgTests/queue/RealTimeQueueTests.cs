@@ -11,8 +11,8 @@ namespace FunProgTests.queue
 {
     using FunProgLib.queue;
     using FunProgLib.Utilities;
-    using streams;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using streams;
     using System;
     using System.Linq;
     using System.Text;

@@ -44,7 +44,7 @@ namespace FunProgLib.queue
 
         public static Queue Snoc(Queue queue, T element)
         {
-            var lazy = Stream<T>.DollarCons(element, queue.R);
+            var lazy = new Lazy<Stream<T>.StreamCell>(() => new Stream<T>.StreamCell(element, queue.R));
             return Check(queue.LenF, queue.F, queue.LenR + 1, lazy);
         }
 

@@ -43,7 +43,7 @@ namespace FunProgTests.streams
         public void Test1()
         {
             const string data = "One Two Three One Three";
-            var stream = data.Split().Reverse().Aggregate(Stream<string>.DollarNil, (s1, t) => Stream<string>.DollarCons(t, s1));
+            var stream = data.Split().Reverse().Aggregate(Stream<string>.DollarNil, (s1, t) => new Lazy<Stream<string>.StreamCell>(() => new Stream<string>.StreamCell(t, s1)));
             Assert.AreEqual("$One, $Two, $Three, $One, $Three", DumpStream(stream, true));
         }
 
@@ -51,7 +51,7 @@ namespace FunProgTests.streams
         public void Test2()
         {
             const string data = "One Two Three One Three";
-            var stream = data.Split().Reverse().Aggregate(Stream<string>.DollarNil, (s1, t) => Stream<string>.DollarCons(t, s1));
+            var stream = data.Split().Reverse().Aggregate(Stream<string>.DollarNil, (s1, t) => new Lazy<Stream<string>.StreamCell>(() => new Stream<string>.StreamCell(t, s1)));
             Assert.IsNotNull(stream.Value);
             Assert.IsNotNull(stream.Value.Next.Value);
             Assert.AreEqual("One, Two, $Three, $One, $Three", DumpStream(stream, true));
@@ -68,7 +68,7 @@ namespace FunProgTests.streams
         public void ConsTest()
         {
             var data = new[] { 3, 2, 1 };
-            var stream = data.Aggregate(Stream<int>.DollarNil, (s1, t) => Stream<int>.DollarCons(t, s1));
+            var stream = data.Aggregate(Stream<int>.DollarNil, (s1, t) => new Lazy<Stream<int>.StreamCell>(() => new Stream<int>.StreamCell(t, s1)));
 
             Assert.AreEqual("$1, $2, $3", DumpStream(stream, true));
         }
@@ -77,7 +77,7 @@ namespace FunProgTests.streams
         public void ReverseTest()
         {
             var data = new[] { 3, 2, 1 };
-            var stream = data.Aggregate(Stream<int>.DollarNil, (s1, t) => Stream<int>.DollarCons(t, s1));
+            var stream = data.Aggregate(Stream<int>.DollarNil, (s1, t) => new Lazy<Stream<int>.StreamCell>(() => new Stream<int>.StreamCell(t, s1)));
             var reverse = Stream<int>.Reverse(stream);
 
             Assert.AreEqual("1, 2, 3", DumpStream(stream, true));
@@ -88,7 +88,7 @@ namespace FunProgTests.streams
         public void AppendTest()
         {
             var data = new[] { 3, 2, 1 };
-            var stream = data.Aggregate(Stream<int>.DollarNil, (s1, t1) => Stream<int>.DollarCons(t1, s1));
+            var stream = data.Aggregate(Stream<int>.DollarNil, (s1, t1) => new Lazy<Stream<int>.StreamCell>(() => new Stream<int>.StreamCell(t1, s1)));
             var reverse = Stream<int>.Reverse(stream);
             var sum = Stream<int>.Append(stream, reverse);
 
@@ -104,7 +104,7 @@ namespace FunProgTests.streams
         public void DropOneTest()
         {
             var data = new[] { 3, 2, 1 };
-            var stream = data.Aggregate(Stream<int>.DollarNil, (s1, t1) => Stream<int>.DollarCons(t1, s1));
+            var stream = data.Aggregate(Stream<int>.DollarNil, (s1, t1) => new Lazy<Stream<int>.StreamCell>(() => new Stream<int>.StreamCell(t1, s1)));
             var drop = Stream<int>.Drop(1, stream);
 
             Assert.AreEqual("1, $", DumpStream(stream, false));
@@ -118,7 +118,7 @@ namespace FunProgTests.streams
         [TestMethod]
         public void TakeZeroTest()
         {
-            var stream = Stream<string>.DollarCons("X", Stream<string>.DollarNil);
+            var stream = new Lazy<Stream<string>.StreamCell>(() => new Stream<string>.StreamCell("X", Stream<string>.DollarNil));
 
             var empty = Stream<string>.Take(0, stream);
             Assert.AreSame(Stream<string>.DollarNil, empty);
@@ -135,7 +135,7 @@ namespace FunProgTests.streams
         public void TakeTest()
         {
             string[] data = { "A", "B", "C", "D" };
-            var stream = data.Reverse().Aggregate(Stream<string>.DollarNil, (s1, t1) => Stream<string>.DollarCons(t1, s1));
+            var stream = data.Reverse().Aggregate(Stream<string>.DollarNil, (s1, t1) => new Lazy<Stream<string>.StreamCell>(() => new Stream<string>.StreamCell(t1, s1)));
 
             for (var i = 0; i <= data.Length + 1; i++)
             {
@@ -156,7 +156,7 @@ namespace FunProgTests.streams
         [TestMethod]
         public void DropZeroTest()
         {
-            var stream = Stream<string>.DollarCons("X", Stream<string>.DollarNil);
+            var stream = new Lazy<Stream<string>.StreamCell>(() => new Stream<string>.StreamCell("X", Stream<string>.DollarNil));
 
             var full = Stream<string>.Drop(0, stream);
             Assert.AreSame(stream, full);
@@ -173,7 +173,7 @@ namespace FunProgTests.streams
         public void DropTest()
         {
             string[] data = { "A", "B", "C", "D" };
-            var stream = data.Reverse().Aggregate(Stream<string>.DollarNil, (s1, t1) => Stream<string>.DollarCons(t1, s1));
+            var stream = data.Reverse().Aggregate(Stream<string>.DollarNil, (s1, t1) => new Lazy<Stream<string>.StreamCell>(() => new Stream<string>.StreamCell(t1, s1)));
 
             for (var i = 0; i < data.Length; i++)
             {
@@ -197,7 +197,7 @@ namespace FunProgTests.streams
         public void IncrementalConsTest()
         {
             var data = new[] { 3, 2, 1 };
-            var stream = data.Aggregate(Stream<int>.DollarNil, (s1, t) => Stream<int>.DollarCons(t, s1));
+            var stream = data.Aggregate(Stream<int>.DollarNil, (s1, t) => new Lazy<Stream<int>.StreamCell>(() => new Stream<int>.StreamCell(t, s1)));
 
             // Each value has to be fetched, before its expanded
             Assert.AreEqual("$", DumpStream(stream, false));
@@ -213,7 +213,7 @@ namespace FunProgTests.streams
         public void IncrementalReverseTest()
         {
             var data = new[] { 3, 2, 1 };
-            var stream = data.Aggregate(Stream<int>.DollarNil, (s1, t) => Stream<int>.DollarCons(t, s1));
+            var stream = data.Aggregate(Stream<int>.DollarNil, (s1, t) => new Lazy<Stream<int>.StreamCell>(() => new Stream<int>.StreamCell(t, s1)));
             var reverse = Stream<int>.Reverse(stream);
             Assert.AreEqual("1, 2, 3", DumpStream(stream, false));  // the input has to be expanded, to get its reverse
 

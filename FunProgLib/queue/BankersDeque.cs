@@ -63,7 +63,7 @@ namespace FunProgLib.queue
 
         public static Queue Cons(T x, Queue q)
         {
-            var lazy = Stream<T>.DollarCons(x, q.F);
+            var lazy = new Lazy<Stream<T>.StreamCell>(() => new Stream<T>.StreamCell(x, q.F));
             return Check(q.LenF + 1, lazy, q.LenR, q.R);
         }
 
@@ -83,7 +83,7 @@ namespace FunProgLib.queue
 
         public static Queue Snoc(Queue q, T x)
         {
-            var lazy = Stream<T>.DollarCons(x, q.R);
+            var lazy = new Lazy<Stream<T>.StreamCell>(() => new Stream<T>.StreamCell(x, q.R));
             return Check(q.LenF, q.F, q.LenR + 1, lazy);
         }
 
