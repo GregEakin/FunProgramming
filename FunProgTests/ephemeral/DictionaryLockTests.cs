@@ -55,7 +55,7 @@ namespace FunProgTests.ephemeral
                     }
 
                     // 2 ms, 3,000 calls
-                    var word = SplayHeap<string>.FindMin(_set);
+                    var unused = SplayHeap<string>.FindMin(_set);
                     // 2 ms, 3,000 calls
                     _set = SplayHeap<string>.DeleteMin(_set);
                 }

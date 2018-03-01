@@ -109,7 +109,7 @@ namespace FunProgTests.ephemeral
                 ++count;
                 var index = RandomNum.Next(memory.Length);
                 if (!measure) continue;
-                var data = memory[index];
+                var unused = memory[index];
             }
 
             return count;

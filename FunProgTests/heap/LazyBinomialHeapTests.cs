@@ -208,7 +208,7 @@ namespace FunProgTests.heap
         {
             var empty = LazyBinomialHeap<int>.Empty;
             var heap = LazyBinomialHeap<int>.DeleteMin(empty);
-            AssertThrows<ArgumentNullException>(() => { var x = heap.Value; });
+            AssertThrows<ArgumentNullException>(() => { var unused = heap.Value; });
         }
 
         [TestMethod]

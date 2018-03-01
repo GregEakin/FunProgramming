@@ -38,7 +38,7 @@ namespace FunProgTests.ephemeral
                 if (SplayHeap<string>.IsEmpty(_set))
                     return i;
 
-                var word = SplayHeap<string>.FindMin(_set);
+                var unused = SplayHeap<string>.FindMin(_set);
                 _set = SplayHeap<string>.DeleteMin(_set);
                 i++;
             }

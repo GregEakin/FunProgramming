@@ -64,7 +64,7 @@ namespace FunProgTests.ephemeral
                             continue;
 
                         // 3 ms, 3,000 calls
-                        var word = SplayHeap<string>.FindMin(localSet);
+                        var unused = SplayHeap<string>.FindMin(localSet);
                         // 4 ms, 3,000 calls
                         var newSet = SplayHeap<string>.DeleteMin(localSet);
                         Interlocked.Exchange(ref _set, newSet);
