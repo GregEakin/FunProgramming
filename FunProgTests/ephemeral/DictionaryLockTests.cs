@@ -16,7 +16,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace FunProgTests.ephemeral
 {
-    public class DictionaryLock<T> : DictionaryInterlockTests
+    public class DictionaryLock<T>
     {
         private readonly object _lockObject = new object();
         private readonly CancellationToken _token;
