@@ -5,6 +5,9 @@
 // FILE:		BlockingQueue.cs
 // AUTHOR:		Greg Eakin
 
+using System;
+using System.Collections.Concurrent;
+
 namespace FunProgTests.ephemeral
 {
     using System.Diagnostics;
@@ -17,31 +20,25 @@ namespace FunProgTests.ephemeral
     {
         private readonly object _lock = new object();
         private readonly int _size;
-        private int _count;
+        private readonly CancellationToken _token;
         private RealTimeQueue<T>.Queue _queue = RealTimeQueue<T>.Empty;
-        private bool _quit;
+        private int _count;
 
-        public BlockingQueue(int size)
+        public BlockingQueue(int size, CancellationToken token)
         {
             _size = size;
-        }
-
-        public void Quit()
-        {
-            lock (_lock)
-            {
-                _quit = true;
-                Monitor.PulseAll(_lock);
-            }
+            _token = token;
         }
 
         public bool Enqueue(T t)
         {
             lock (_lock)
             {
-                while (!_quit && _count >= _size) Monitor.Wait(_lock);
+                while (!_token.IsCancellationRequested && _count >= _size)
+                    Monitor.Wait(_lock);
 
-                if (_quit) return false;
+                if (_token.IsCancellationRequested)
+                    return false;
 
                 _count++;
                 _queue = RealTimeQueue<T>.Snoc(_queue, t);
@@ -58,9 +55,12 @@ namespace FunProgTests.ephemeral
 
             lock (_lock)
             {
-                while (!_quit && RealTimeQueue<T>.IsEmpty(_queue)) Monitor.Wait(_lock);
+                while (!_token.IsCancellationRequested && RealTimeQueue<T>.IsEmpty(_queue))
+                    Monitor.Wait(_lock);
 
-                if (RealTimeQueue<T>.IsEmpty(_queue)) return false;
+                // Empty the queue, before exiting.
+                if (RealTimeQueue<T>.IsEmpty(_queue))
+                    return false;
 
                 _count--;
                 t = RealTimeQueue<T>.Head(_queue);
@@ -76,55 +76,55 @@ namespace FunProgTests.ephemeral
     [TestClass]
     public class BlockingQueueTests
     {
-        // [TestMethod]
+        [TestMethod]
         public void BlockingQueueTest()
         {
-            var tasks = new System.Collections.Generic.List<Task>();
-            var q = new BlockingQueue<int>(4);
+            var tasks = new ConcurrentBag<Task>();
             var watch = Stopwatch.StartNew();
 
-            // Producer
-            var producer = new Task(() =>
+            using (var tokenSource = new CancellationTokenSource())
             {
-                for (var x = 0; q.Enqueue(x); x++)
-                {
-                    var threadId = Thread.CurrentThread.ManagedThreadId;
-                    var msg = $"{threadId,3}: {watch.ElapsedMilliseconds,3} {x,4:0000} >";
-                    Trace.WriteLine(msg);
-                }
+                var queue = new BlockingQueue<int>(4, tokenSource.Token);
 
-                Trace.WriteLine($"{Thread.CurrentThread.ManagedThreadId,3}: Producer finished");
-            });
-            producer.Start();
-            tasks.Add(producer);
-
-            // Consumers
-            for (var i = 0; i < 2; i++)
-            {
-                var consumer = new Task(() =>
+                // Producer
+                var producer = Task.Factory.StartNew(() =>
                 {
-                    Thread.Sleep(10);
-                    while (q.Dequeue(out var x))
+                    for (var x = 0; queue.Enqueue(x); x++)
                     {
                         var threadId = Thread.CurrentThread.ManagedThreadId;
-                        var msg = $"{threadId,3}: {watch.ElapsedMilliseconds,3}      < {x,4:0000}";
+                        var msg = $"{threadId,3}: {watch.ElapsedMilliseconds,3} {x,4:0000} >";
                         Trace.WriteLine(msg);
-                        Thread.Sleep(10);
                     }
 
-                    Trace.WriteLine($"{Thread.CurrentThread.ManagedThreadId,3}: Consumer finished");
-                });
-                consumer.Start();
-                tasks.Add(consumer);
+                    Trace.WriteLine($"{Thread.CurrentThread.ManagedThreadId,3}: {watch.ElapsedMilliseconds,3} Producer finished");
+                }, tokenSource.Token);
+                tasks.Add(producer);
+
+                // Consumers
+                for (var i = 0; i < 2; i++)
+                {
+                    var consumer = Task.Factory.StartNew(() =>
+                    {
+                        Thread.Sleep(10);
+                        while (queue.Dequeue(out var x))
+                        {
+                            var threadId = Thread.CurrentThread.ManagedThreadId;
+                            var msg = $"{threadId,3}: {watch.ElapsedMilliseconds,3}      < {x,4:0000}";
+                            Trace.WriteLine(msg);
+                            Thread.Sleep(10);
+                        }
+
+                        Trace.WriteLine($"{Thread.CurrentThread.ManagedThreadId,3}: {watch.ElapsedMilliseconds,3} Consumer finished");
+                    }, tokenSource.Token);
+                    tasks.Add(consumer);
+                }
+
+                Trace.WriteLine(
+                    $"{Thread.CurrentThread.ManagedThreadId,3}: {watch.ElapsedMilliseconds,3} Stopping after 27 ms");
+                tokenSource.CancelAfter(27);
+
+                Task.WaitAll(tasks.ToArray());
             }
-
-            Thread.Sleep(100);
-
-            Trace.WriteLine($"{Thread.CurrentThread.ManagedThreadId,3}: Stopping after 100 ms");
-
-            q.Quit();
-
-            Task.WaitAll(tasks.ToArray());
         }
     }
 }

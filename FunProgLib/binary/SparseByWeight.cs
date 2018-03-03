@@ -17,7 +17,7 @@ namespace FunProgLib.binary
     {
         private static List<int>.Node Carry(int w, List<int>.Node list)
         {
-            if (list == null) return List<int>.Cons(w, null);
+            if (List<int>.IsEmpty(list)) return List<int>.Cons(w, null);
             if (w < list.Element) return List<int>.Cons(w, list);
             return Carry(2 * w, list.Next);
         }
@@ -34,8 +34,8 @@ namespace FunProgLib.binary
 
         public static List<int>.Node Add(List<int>.Node ds1, List<int>.Node ds2)
         {
-            if (ds2 == null) return ds1;
-            if (ds1 == null) return ds2;
+            if (List<int>.IsEmpty(ds2)) return ds1;
+            if (List<int>.IsEmpty(ds1)) return ds2;
             if (ds1.Element < ds2.Element) return List<int>.Cons(ds1.Element, Add(ds1.Next, ds2));
             if (ds2.Element < ds1.Element) return List<int>.Cons(ds2.Element, Add(ds1, ds2.Next));
             return Carry(2 * ds1.Element, Add(ds1.Next, ds2.Next));
