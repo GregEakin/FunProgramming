@@ -5,6 +5,7 @@
 // FILE:		BlockingQueue.cs
 // AUTHOR:		Greg Eakin
 
+using System;
 using System.Collections.Concurrent;
 
 namespace FunProgTests.ephemeral
@@ -27,6 +28,12 @@ namespace FunProgTests.ephemeral
         {
             _size = size;
             _token = token;
+
+            token.Register(() =>
+            {
+                lock(_lock)
+                    Monitor.PulseAll(_lock);
+            });
         }
 
         public bool Enqueue(T t)
@@ -78,12 +85,12 @@ namespace FunProgTests.ephemeral
         [TestMethod]
         public void BlockingQueueTest()
         {
-            var tasks = new ConcurrentBag<Task>();
-            var watch = Stopwatch.StartNew();
-
             using (var tokenSource = new CancellationTokenSource())
             {
-                var queue = new BlockingQueue<int>(4, tokenSource.Token);
+                var token = tokenSource.Token;
+                var tasks = new ConcurrentBag<Task>();
+                var watch = Stopwatch.StartNew();
+                var queue = new BlockingQueue<int>(4, token);
 
                 // Producer
                 var producer = Task.Factory.StartNew(() =>
@@ -96,7 +103,7 @@ namespace FunProgTests.ephemeral
                     }
 
                     Trace.WriteLine($"{Thread.CurrentThread.ManagedThreadId,3}: {watch.ElapsedMilliseconds,3} Producer finished");
-                }, tokenSource.Token);
+                }, token);
                 tasks.Add(producer);
 
                 // Consumers
@@ -110,11 +117,15 @@ namespace FunProgTests.ephemeral
                             var threadId = Thread.CurrentThread.ManagedThreadId;
                             var msg = $"{threadId,3}: {watch.ElapsedMilliseconds,3}      < {x,4:0000}";
                             Trace.WriteLine(msg);
+
                             Thread.Sleep(10);
+                            //var cancelled = token.WaitHandle.WaitOne(10);
+                            //if (cancelled)
+                            //    break;
                         }
 
                         Trace.WriteLine($"{Thread.CurrentThread.ManagedThreadId,3}: {watch.ElapsedMilliseconds,3} Consumer finished");
-                    }, tokenSource.Token);
+                    }, token);
                     tasks.Add(consumer);
                 }
 
