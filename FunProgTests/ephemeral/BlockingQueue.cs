@@ -5,7 +5,6 @@
 // FILE:		BlockingQueue.cs
 // AUTHOR:		Greg Eakin
 
-using System;
 using System.Collections.Concurrent;
 
 namespace FunProgTests.ephemeral
@@ -58,7 +57,7 @@ namespace FunProgTests.ephemeral
                 while (!_token.IsCancellationRequested && RealTimeQueue<T>.IsEmpty(_queue))
                     Monitor.Wait(_lock);
 
-                // Empty the queue, before exiting.
+                // We can exit, once the queue is empty.
                 if (RealTimeQueue<T>.IsEmpty(_queue))
                     return false;
 
