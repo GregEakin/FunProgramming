@@ -8,11 +8,11 @@
 //
 
 using System;
-using FunProgLib.heap;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System.Collections.Generic;
+using System.Collections.Concurrent;
 using System.Threading;
 using System.Threading.Tasks;
+using FunProgLib.heap;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace FunProgTests.ephemeral
 {
@@ -68,7 +68,7 @@ namespace FunProgTests.ephemeral
         [TestMethod]
         public void Test1()
         {
-            var taskList = new List<Task>();
+            var taskList = new ConcurrentBag<Task>();
             for (var i = 0; i < Threads; i += 2)
             {
                 taskList.Add(Task.Factory.StartNew(map => InsertAction(), this));
