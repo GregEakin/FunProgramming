@@ -9,12 +9,12 @@
 // Okasaki, Chris. "7.2 Real-Time Queues." Purely Functional Data Structures. 
 //     Cambridge, U.K.: Cambridge UP, 1998. 86-89. Print.
 
+using System;
+using FunProgLib.lists;
+using FunProgLib.streams;
+
 namespace FunProgLib.queue
 {
-    using lists;
-    using streams;
-    using System;
-
     public static class RealTimeQueue<T>
     {
         public sealed class Queue

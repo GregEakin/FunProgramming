@@ -5,17 +5,15 @@
 // FILE:		BlockingQueue.cs
 // AUTHOR:		Greg Eakin
 
-using System;
 using System.Collections.Concurrent;
+using System.Diagnostics;
+using System.Threading;
+using System.Threading.Tasks;
+using FunProgLib.queue;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace FunProgTests.ephemeral
 {
-    using System.Diagnostics;
-    using System.Threading;
-    using System.Threading.Tasks;
-    using FunProgLib.queue;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
-
     internal class BlockingQueue<T>
     {
         private readonly object _lock = new object();
@@ -129,8 +127,7 @@ namespace FunProgTests.ephemeral
                     tasks.Add(consumer);
                 }
 
-                Trace.WriteLine(
-                    $"{Thread.CurrentThread.ManagedThreadId,3}: {watch.ElapsedMilliseconds,3} Stopping after 27 ms");
+                Trace.WriteLine($"{Thread.CurrentThread.ManagedThreadId,3}: {watch.ElapsedMilliseconds,3} Stopping after 27 ms");
                 tokenSource.CancelAfter(27);
 
                 Task.WaitAll(tasks.ToArray());
