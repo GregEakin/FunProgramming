@@ -28,11 +28,11 @@ namespace FunProgTests.ephemeral
                 var word = NextWord(1);
                 while (true)
                 {
-                    var workingSet = _set;
+                    var localCopy = _set;
                     Thread.MemoryBarrier();
-                    var newSet = RedBlackSet<string>.Insert(word, workingSet);
-                    var oldSet = Interlocked.CompareExchange(ref _set, newSet, workingSet);
-                    if (ReferenceEquals(oldSet, workingSet))
+                    var newSet = RedBlackSet<string>.Insert(word, localCopy);
+                    var oldSet = Interlocked.CompareExchange(ref _set, newSet, localCopy);
+                    if (ReferenceEquals(oldSet, localCopy))
                         break;
                 }
             }

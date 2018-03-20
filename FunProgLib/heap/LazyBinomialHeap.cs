@@ -35,7 +35,8 @@ namespace FunProgLib.heap
 
         public static Lazy<List<Tree>.Node> Empty { get; } = new Lazy<List<Tree>.Node>(() => List<Tree>.Empty);
 
-        public static bool IsEmpty(Lazy<List<Tree>.Node> heap) => List<Tree>.IsEmpty(heap.Value);
+        public static bool IsEmpty(Lazy<List<Tree>.Node> heap) => 
+            heap == null || ReferenceEquals(Empty, heap) || List<Tree>.IsEmpty(heap.Value);
 
         public static int Rank(Tree t) => t.Rank;
 

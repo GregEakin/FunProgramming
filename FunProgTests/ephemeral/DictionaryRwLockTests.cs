@@ -43,6 +43,7 @@ namespace FunProgTests.ephemeral
         {
             for (var i = 0; i < Count; i++)
             {
+                SplayHeap<string>.Heap localCopy;
                 while (true)
                 {
                     _lockObject.EnterWriteLock();
@@ -50,8 +51,8 @@ namespace FunProgTests.ephemeral
                     {
                         if (!SplayHeap<string>.IsEmpty(_set))
                         {
-                            var unused = SplayHeap<string>.FindMin(_set);
-                            _set = SplayHeap<string>.DeleteMin(_set);
+                            localCopy = _set;
+                            _set = SplayHeap<string>.DeleteMin(localCopy);
                             break;
                         }
                     }
@@ -62,6 +63,8 @@ namespace FunProgTests.ephemeral
 
                     Thread.Yield();
                 }
+
+                var unused = SplayHeap<string>.FindMin(localCopy);
             }
         }
 
@@ -76,6 +79,7 @@ namespace FunProgTests.ephemeral
             }
 
             Task.WaitAll(taskList.ToArray());
+            Assert.IsNull(_set);
         }
 
         public void Dispose()

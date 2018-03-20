@@ -38,8 +38,9 @@ namespace FunProgTests.ephemeral
                 if (SplayHeap<string>.IsEmpty(_set))
                     return i;
 
-                var unused = SplayHeap<string>.FindMin(_set);
-                _set = SplayHeap<string>.DeleteMin(_set);
+                var localCopy = _set;
+                _set = SplayHeap<string>.DeleteMin(localCopy);
+                var unused = SplayHeap<string>.FindMin(localCopy);
                 i++;
             }
 
@@ -49,10 +50,10 @@ namespace FunProgTests.ephemeral
         [TestMethod]
         public void Test1()
         {
-            var size = Threads * Count / 2;
+            const int size = Threads * Count / 2;
             var writes = 0;
             var reads = 0;
-            while (writes < size && reads < size)
+            while (writes < size || reads < size)
             {
                 var count = _random.Next(50);
                 var next = _random.Next(10);
@@ -69,6 +70,8 @@ namespace FunProgTests.ephemeral
                     reads += RemoveAction(count);
                 }
             }
+
+            Assert.IsNull(_set);
         }
     }
 }

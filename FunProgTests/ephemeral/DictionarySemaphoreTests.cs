@@ -34,10 +34,9 @@ namespace FunProgTests.ephemeral
                 _semaphore.Wait();
                 try
                 {
-                    var localSet = _set;
                     Interlocked.MemoryBarrier();
                     // 43 ms, 3,000 calls
-                    var newSet = SplayHeap<string>.Insert(word, localSet);
+                    var newSet = SplayHeap<string>.Insert(word, _set);
                     Interlocked.Exchange(ref _set, newSet);
                 }
                 finally
@@ -52,21 +51,23 @@ namespace FunProgTests.ephemeral
         {
             for (var i = 0; i < Count; i++)
             {
+                SplayHeap<string>.Heap localCopy;
                 while (true)
                 {
                     // 294 ms, 3,000 calls
                     _semaphore.Wait();
                     try
                     {
-                        var localSet = _set;
+                        localCopy = _set;
                         Interlocked.MemoryBarrier();
-                        if (SplayHeap<string>.IsEmpty(localSet))
+                        if (SplayHeap<string>.IsEmpty(localCopy))
+                        {
+                            Thread.Yield();
                             continue;
+                        }
 
-                        // 3 ms, 3,000 calls
-                        var unused = SplayHeap<string>.FindMin(localSet);
                         // 4 ms, 3,000 calls
-                        var newSet = SplayHeap<string>.DeleteMin(localSet);
+                        var newSet = SplayHeap<string>.DeleteMin(localCopy);
                         Interlocked.Exchange(ref _set, newSet);
                         break;
                     }
@@ -75,6 +76,9 @@ namespace FunProgTests.ephemeral
                         _semaphore.Release();
                     }
                 }
+
+                // 3 ms, 3,000 calls
+                var unused = SplayHeap<string>.FindMin(localCopy);
             }
         }
 
@@ -89,6 +93,7 @@ namespace FunProgTests.ephemeral
             }
 
             Task.WaitAll(taskList.ToArray());
+            Assert.IsNull(_set);
         }
 
         public void Dispose()

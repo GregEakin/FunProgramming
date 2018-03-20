@@ -29,13 +29,13 @@ namespace FunProgTests.ephemeral
                 var word = NextWord(10);
                 while (true)
                 {
-                    var workingSet = _set;
+                    var localCopy = _set;
                     Thread.MemoryBarrier();
                     // 99 ms, 13,072 calls
-                    var newSet = SplayHeap<string>.Insert(word, workingSet);
+                    var newSet = SplayHeap<string>.Insert(word, localCopy);
                     // 3 ms, 13,072 calls
-                    var oldSet = Interlocked.CompareExchange(ref _set, newSet, workingSet);
-                    if (ReferenceEquals(oldSet, workingSet))
+                    var oldSet = Interlocked.CompareExchange(ref _set, newSet, localCopy);
+                    if (ReferenceEquals(oldSet, localCopy))
                     {
                         // 3,000 calls
                         break;
@@ -49,31 +49,32 @@ namespace FunProgTests.ephemeral
         {
             for (var i = 0; i < Count; i++)
             {
+                SplayHeap<string>.Heap localCopy;
                 while (true)
                 {
-                    var workingSet = _set;
+                    localCopy = _set;
                     Thread.MemoryBarrier();
                     // 13 ms, 66,042 calls
-                    if (SplayHeap<string>.IsEmpty(workingSet))
+                    if (SplayHeap<string>.IsEmpty(localCopy))
                     {
+                        Thread.Yield();
                         continue;
                     }
 
                     // 15 ms, 7,594 calls
-                    var unused = SplayHeap<string>.FindMin(workingSet);
-                    // 15 ms, 7,594 calls
-                    var newSet = SplayHeap<string>.DeleteMin(workingSet);
+                    var newSet = SplayHeap<string>.DeleteMin(localCopy);
                     // 2 ms, 7,594 calls
-                    var oldSet = Interlocked.CompareExchange(ref _set, newSet, workingSet);
-                    if (ReferenceEquals(oldSet, workingSet))
-                    {
-                        // 3,000 calls
+                    var oldSet = Interlocked.CompareExchange(ref _set, newSet, localCopy);
+                    if (ReferenceEquals(oldSet, localCopy))
                         break;
-                    }
                 }
+
+                // 3,000 calls
+                var unused = SplayHeap<string>.FindMin(localCopy);
             }
         }
 
+        //[AssertTraffic(AllocatedObjectsCount = 15128)]
         [TestMethod]
         public void Test1()
         {
@@ -85,6 +86,8 @@ namespace FunProgTests.ephemeral
             }
 
             Task.WaitAll(taskList.ToArray());
+
+            Assert.IsNull(_set);
         }
     }
 }

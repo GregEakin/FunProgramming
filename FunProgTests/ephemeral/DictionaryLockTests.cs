@@ -53,9 +53,8 @@ namespace FunProgTests.ephemeral
 
         public bool Remove(out string item)
         {
-            item = default(string);
-
             // 58 ms, 3,000 calls
+            SplayHeap<string>.Heap localCopy;
             lock (_lockObject)
             {
                 while (!_token.IsCancellationRequested && SplayHeap<string>.IsEmpty(_set))
@@ -63,15 +62,30 @@ namespace FunProgTests.ephemeral
                     Monitor.Wait(_lockObject);
 
                 if (SplayHeap<string>.IsEmpty(_set))
+                {
+                    item = default(string);
                     return false;
+                }
 
                 // 2 ms, 3,000 calls
-                item = SplayHeap<string>.FindMin(_set);
-                // 2 ms, 3,000 calls
-                _set = SplayHeap<string>.DeleteMin(_set);
+                localCopy = _set;
+                _set = SplayHeap<string>.DeleteMin(localCopy);
             }
 
+            // 2 ms, 3,000 calls
+            item = SplayHeap<string>.FindMin(localCopy);
             return true;
+        }
+
+        public bool IsEmpty
+        {
+            get
+            {
+                lock (_lockObject)
+                {
+                    return SplayHeap<string>.IsEmpty(_set);
+                }
+            }
         }
     }
 
@@ -81,7 +95,7 @@ namespace FunProgTests.ephemeral
         // 157 ms, 10 calls
         private void InsertAction(object ojb)
         {
-            var map = (DictionaryLock<string>)ojb;
+            var map = (DictionaryLock<string>) ojb;
             for (var i = 0; i < Count; i++)
             {
                 // 5 ms, 3,000 calls
@@ -96,12 +110,12 @@ namespace FunProgTests.ephemeral
         // 98 ms, 10 calls
         private static void RemoveAction(object ojb)
         {
-            var map = (DictionaryLock<string>)ojb;
+            var map = (DictionaryLock<string>) ojb;
             for (var i = 0; i < Count; i++)
             {
                 var removed = map.Remove(out var item);
                 if (!removed)
-                    return;
+                    break;
 
                 var unused = Convert.FromBase64String(item);
                 // Console.WriteLine(string.Join(", ", unused));
@@ -124,6 +138,7 @@ namespace FunProgTests.ephemeral
                 }
 
                 Task.WaitAll(taskList.ToArray());
+                Assert.IsTrue(dictionary.IsEmpty);
             }
         }
     }
