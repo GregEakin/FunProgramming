@@ -31,67 +31,54 @@ namespace FunProgLib.heap
             public Heap B { get; }
         }
 
-        private sealed class Pair
-        {
-            public Pair(Heap a, Heap b)
-            {
-                A = a;
-                B = b;
-            }
-
-            public Heap A { get; }
-
-            public Heap B { get; }
-        }
-
         public static Heap Empty { get; } = null;
 
         public static bool IsEmpty(Heap h) => h == Empty;
 
-        private static Pair Partition(T pivot, Heap t)
+        private static (Heap, Heap) Partition(T pivot, Heap t)
         {
-            if (IsEmpty(t)) return new Pair(Empty, Empty);
+            if (IsEmpty(t)) return (Empty, Empty);
             if (t.X.CompareTo(pivot) <= 0)
             {
-                if (IsEmpty(t.B)) return new Pair(t, Empty);
+                if (IsEmpty(t.B)) return (t, Empty);
                 if (t.B.X.CompareTo(pivot) <= 0)
                 {
-                    var pair = Partition(pivot, t.B.B);
-                    return new Pair(new Heap(new Heap(t.A, t.X, t.B.A), t.B.X, pair.A), pair.B);
+                    var (small, big) = Partition(pivot, t.B.B);
+                    return (new Heap(new Heap(t.A, t.X, t.B.A), t.B.X, small), big);
                 }
                 else
                 {
-                    var pair = Partition(pivot, t.B.A);
-                    return new Pair(new Heap(t.A, t.X, pair.A), new Heap(pair.B, t.B.X, t.B.B));
+                    var (small, big) = Partition(pivot, t.B.A);
+                    return (new Heap(t.A, t.X, small), new Heap(big, t.B.X, t.B.B));
                 }
             }
             else
             {
-                if (IsEmpty(t.A)) return new Pair(Empty, t);
+                if (IsEmpty(t.A)) return (Empty, t);
                 if (t.A.X.CompareTo(pivot) <= 0)
                 {
-                    var pair = Partition(pivot, t.A.B);
-                    return new Pair(new Heap(t.A.A, t.A.X, pair.A), new Heap(pair.B, t.X, t.B));
+                    var (small, big) = Partition(pivot, t.A.B);
+                    return (new Heap(t.A.A, t.A.X, small), new Heap(big, t.X, t.B));
                 }
                 else
                 {
-                    var pair = Partition(pivot, t.A.A);
-                    return new Pair(pair.A, new Heap(pair.B, t.A.X, new Heap(t.A.B, t.X, t.B)));
+                    var (small, big) = Partition(pivot, t.A.A);
+                    return (small, new Heap(big, t.A.X, new Heap(t.A.B, t.X, t.B)));
                 }
             }
         }
 
         public static Heap Insert(T x, Heap t)
         {
-            var pair = Partition(x, t);
-            return new Heap(pair.A, x, pair.B);
+            var (a, b) = Partition(x, t);
+            return new Heap(a, x, b);
         }
 
         public static Heap Merge(Heap s, Heap t)
         {
             if (IsEmpty(s)) return t;
-            var pair = Partition(s.X, t);
-            return new Heap(Merge(pair.A, s.A), s.X, Merge(pair.B, s.B));
+            var (ta, tb) = Partition(s.X, t);
+            return new Heap(Merge(ta, s.A), s.X, Merge(tb, s.B));
         }
 
         public static T FindMin(Heap t)

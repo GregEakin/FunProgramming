@@ -65,35 +65,22 @@ namespace FunProgLib.heap
             return InsertTree(Link(ts1.Element, ts2.Element), Merge(ts1.Next, ts2.Next));
         }
 
-        private class TreeParts
-        {
-            public TreeParts(Tree tree, List<Tree>.Node list)
-            {
-                Tree = tree;
-                List = list;
-            }
-
-            public Tree Tree { get; }
-
-            public List<Tree>.Node List { get; }
-        }
-
-        private static TreeParts RemoveMinTree(List<Tree>.Node list)
+        private static (Tree, List<Tree>.Node) RemoveMinTree(List<Tree>.Node list)
         {
             if (List<Tree>.IsEmpty(list)) throw new ArgumentNullException(nameof(list));
-            if (List<Tree>.IsEmpty(list.Next)) return new TreeParts(list.Element, List<Tree>.Empty);
-            var prime = RemoveMinTree(list.Next);
-            if (list.Element.Root.CompareTo(prime.Tree.Root) <= 0) return new TreeParts(list.Element, list.Next);
-            return new TreeParts(prime.Tree, List<Tree>.Cons(list.Element, prime.List));
+            if (List<Tree>.IsEmpty(list.Next)) return (list.Element, List<Tree>.Empty);
+            var (tp, tsp) = RemoveMinTree(list.Next);
+            if (list.Element.Root.CompareTo(tp.Root) <= 0) return (list.Element, list.Next);
+            return (tp, List<Tree>.Cons(list.Element, tsp));
         }
 
-        public static T FindMin(List<Tree>.Node ts) => RemoveMinTree(ts).Tree.Root;
+        public static T FindMin(List<Tree>.Node ts) => RemoveMinTree(ts).Item1.Root;
 
         public static List<Tree>.Node DeleteMin(List<Tree>.Node ts)
         {
-            var t = RemoveMinTree(ts);
-            var x = List<Tree>.Reverse(t.Tree.List);
-            return Merge(x, t.List);
+            var (tree, list) = RemoveMinTree(ts);
+            var x = List<Tree>.Reverse(tree.List);
+            return Merge(x, list);
         }
     }
 }

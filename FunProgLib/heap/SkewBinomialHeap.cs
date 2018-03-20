@@ -103,33 +103,18 @@ namespace FunProgLib.heap
 
         public static List<Tree>.Node Merge(List<Tree>.Node ts1, List<Tree>.Node ts2) => MergeTrees(Normalize(ts1), Normalize(ts2));
 
-        private class TreeParts
-        {
-            public TreeParts(Tree tree, List<Tree>.Node list)
-            {
-                Tree = tree;
-                List = list;
-            }
-
-            public Tree Tree { get; }
-
-            public List<Tree>.Node List { get; }
-        }
-
-        private static TreeParts RemoveMinTree(List<Tree>.Node ds)
+        private static (Tree, List<Tree>.Node) RemoveMinTree(List<Tree>.Node ds)
         {
             if (List<Tree>.IsEmpty(ds)) throw new ArgumentNullException(nameof(ds));
             var t = List<Tree>.Head(ds);
             var ts = List<Tree>.Tail(ds);
-            if (List<Tree>.IsEmpty(ts)) return new TreeParts(t, ts);
-            var val = RemoveMinTree(ts);
-            var tp = val.Tree;
-            if (t.Root.CompareTo(tp.Root) <= 0) return new TreeParts(t, ts);
-            var tsp = val.List;
-            return new TreeParts(tp, List<Tree>.Cons(t, tsp));
+            if (List<Tree>.IsEmpty(ts)) return (t, ts);
+            var (tp, tsp) = RemoveMinTree(ts);
+            if (t.Root.CompareTo(tp.Root) <= 0) return (t, ts);
+            return (tp, List<Tree>.Cons(t, tsp));
         }
 
-        public static T FindMin(List<Tree>.Node ts) => RemoveMinTree(ts).Tree.Root;
+        public static T FindMin(List<Tree>.Node ts) => RemoveMinTree(ts).Item1.Root;
 
         private static List<Tree>.Node InsertAll(List<T>.Node xsp, List<Tree>.Node ts)
         {
@@ -141,11 +126,11 @@ namespace FunProgLib.heap
 
         public static List<Tree>.Node DeleteMin(List<Tree>.Node ts)
         {
-            var val = RemoveMinTree(ts);
-            // var x = val.Tree.Node;
-            var xs = val.Tree.List;
-            var ts1 = val.Tree.TreeList;
-            var ts2 = val.List;
+            var (tree, ts2) = RemoveMinTree(ts);
+            var _ = tree.Rank;
+            var x = tree.Root;
+            var xs = tree.List;
+            var ts1 = tree.TreeList;
             return InsertAll(xs, Merge(List<Tree>.Reverse(ts1), ts2));
         }
     }
