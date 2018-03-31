@@ -67,13 +67,26 @@ namespace FunProgTests.tree
         }
 
         [TestMethod]
-        public void DuplicateMemberTest()
+        public void DuplicateRootMemberTest()
         {
             var t = RedBlackSet<string>.EmptyTree;
             var x1 = RedBlackSet<string>.Insert("C", t);
             var x2 = RedBlackSet<string>.Insert("C", x1);
             Assert.AreEqual("(B: C)", DumpSet(x2));
             Assert.AreNotSame(x1, x2);
+        }
+
+        [TestMethod]
+        public void DuplicateLeafMemberTest()
+        {
+            var empty = RedBlackSet<string>.EmptyTree;
+            var a = RedBlackSet<string>.Insert("A", empty);
+            var b = RedBlackSet<string>.Insert("B", a);
+            var c1 = RedBlackSet<string>.Insert("C", b);
+            Assert.AreEqual("(B: (B: A) B (B: C))", DumpSet(c1));
+            var c2 = RedBlackSet<string>.Insert("C", c1);
+            Assert.AreEqual("(B: (B: A) B (B: C))", DumpSet(c2));
+            Assert.AreNotSame(c1, c2);
         }
 
         [TestMethod]

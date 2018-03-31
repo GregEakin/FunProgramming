@@ -127,8 +127,8 @@ namespace FunProgLib.heap
         public static List<Tree>.Node DeleteMin(List<Tree>.Node ts)
         {
             var (tree, ts2) = RemoveMinTree(ts);
-            var _ = tree.Rank;
-            var x = tree.Root;
+            //var _ = tree.Rank;
+            //var x = tree.Root;
             var xs = tree.List;
             var ts1 = tree.TreeList;
             return InsertAll(xs, Merge(List<Tree>.Reverse(ts1), ts2));

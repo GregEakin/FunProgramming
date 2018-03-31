@@ -11,8 +11,8 @@
 
 namespace FunProgLib.heap
 {
-    using lists;
     using System;
+    using lists;
 
     public static class BinomialHeap<T> where T : IComparable<T>
     {
@@ -79,8 +79,8 @@ namespace FunProgLib.heap
         public static List<Tree>.Node DeleteMin(List<Tree>.Node ts)
         {
             var (tree, list) = RemoveMinTree(ts);
-            var x = List<Tree>.Reverse(tree.List);
-            return Merge(x, list);
+            var rev = List<Tree>.Reverse(tree.List);
+            return Merge(rev, list);
         }
     }
 }

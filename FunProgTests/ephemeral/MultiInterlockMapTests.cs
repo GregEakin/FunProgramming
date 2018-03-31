@@ -23,19 +23,24 @@ namespace FunProgTests.ephemeral
 
         private void WriteAction()
         {
+            var total = 0;
             for (var i = 0; i < 2 * Count; i++)
             {
                 var word = NextWord(1);
                 while (true)
                 {
+                    total++;
                     var localCopy = _set;
                     Thread.MemoryBarrier();
                     var newSet = RedBlackSet<string>.Insert(word, localCopy);
                     var oldSet = Interlocked.CompareExchange(ref _set, newSet, localCopy);
-                    if (ReferenceEquals(oldSet, localCopy))
+                    if (ReferenceEquals(localCopy, oldSet))
                         break;
                 }
             }
+
+            Console.WriteLine("Write Task={0}, Thread={1} : {2} average",
+                Task.CurrentId, Thread.CurrentThread.ManagedThreadId, 2.0 * Count / total);
         }
 
         private void ReadAction()
@@ -48,8 +53,8 @@ namespace FunProgTests.ephemeral
                     hits++;
             }
 
-            Console.WriteLine("Task={0}, Thread={1} : {2} words found",
-                            Task.CurrentId, Thread.CurrentThread.ManagedThreadId, hits);
+            Console.WriteLine("Read Task={0}, Thread={1} : {2} words found",
+                Task.CurrentId, Thread.CurrentThread.ManagedThreadId, hits);
         }
 
         [TestMethod]
@@ -62,6 +67,7 @@ namespace FunProgTests.ephemeral
                 taskList.Add(Task.Factory.StartNew(map => ReadAction(), this));
                 taskList.Add(Task.Factory.StartNew(map => ReadAction(), this));
             }
+
             Task.WaitAll(taskList.ToArray());
             Console.WriteLine("Done....");
         }

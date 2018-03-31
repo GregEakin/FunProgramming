@@ -12,8 +12,6 @@ namespace FunProgTests.binary
     using FunProgLib.binary;
     using FunProgLib.lists;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
-    using System.Globalization;
-    using System.Text;
 
     [TestClass]
     public class SparseByWeightTests
@@ -28,17 +26,8 @@ namespace FunProgTests.binary
         private static string DumpNat(List<int>.Node number)
         {
             if (List<int>.IsEmpty(number)) return "0";
-
-            var result = new StringBuilder();
-            while (!List<int>.IsEmpty(number))
-            {
-                result.Insert(0, number.Element.ToString(CultureInfo.InvariantCulture));
-                result.Insert(0, ',');
-                number = number.Next;
-            }
-
-            result = result.Remove(0, 1);
-            return result.ToString();
+            var result = string.Join(",", List<int>.Reverse(number));
+            return result;
         }
 
         [TestMethod]

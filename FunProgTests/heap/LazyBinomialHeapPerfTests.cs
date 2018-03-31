@@ -31,7 +31,7 @@ namespace FunProgTests.heap
 
         private class ModelSimulator : IModel
         {
-            private const int Size = 16;
+            private const int Size = 200;
             private readonly Random _random = new Random(4432);
 
             public void RunModel(IModel obj)
