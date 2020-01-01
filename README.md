@@ -7,7 +7,7 @@ This allows one to fire up the samples, in a debugger, and see how they work.
 It also allows one to test the performance to see how they stack up with other data structures.
 
 ## From the book:
-[![Purely Functional Data Structures](pictures/pfds-180x245.jpg)](http://gdbtech.info/purely-functional-data-structures-in-csharp)
+[![Purely Functional Data Structures](pictures/pfds-180x245.jpg)](https://en.wikipedia.org/wiki/Purely_functional_data_structure)
 >Okasaki, Chris. *Purely Functional Data Structures*. 
 >Cambridge, U.K.: Cambridge UP, 1998. Print.
 

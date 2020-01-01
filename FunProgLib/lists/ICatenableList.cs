@@ -2,7 +2,7 @@
 // 
 // Copyright © 2016 Greg Eakin. 
 //
-// Greg Eakin <greg@gdbtech.info>
+// Greg Eakin <greg@eakin.dev>
 //
 // All Rights Reserved.
 //
