@@ -117,8 +117,7 @@ namespace FunProgLib.lists
 
         private static Tree UpdateTree(int w, int i, T x, Tree t)
         {
-            var leaf = t as Leaf;
-            if (w == 1 && leaf != null)
+            if (w == 1 && t is Leaf leaf)
             {
                 if (i == 0) return new Leaf(x);
                 throw new Exception("Subscript");

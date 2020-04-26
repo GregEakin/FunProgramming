@@ -6,10 +6,10 @@ using System.Runtime.InteropServices;
 // associated with an assembly.
 [assembly: AssemblyTitle("FunProgLib")]
 [assembly: AssemblyDescription("")]
-[assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Greg Eakin")]
+[assembly: AssemblyConfiguration("http://eakin.dev")]
+[assembly: AssemblyCompany("Gregory Eakin")]
 [assembly: AssemblyProduct("FunProgLib")]
-[assembly: AssemblyCopyright("Copyright ©  2014")]
+[assembly: AssemblyCopyright("Copyright © Gregory Eakin 2014")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
