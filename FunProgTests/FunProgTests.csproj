@@ -82,6 +82,7 @@
     <Compile Include="lists\RListTests.cs" />
     <Compile Include="lists\SkewBinaryRandomAccessListTests.cs" />
     <Compile Include="lists\ListTests.cs" />
+    <Compile Include="memory\MemoryTests.cs" />
     <Compile Include="tree\TrieTests.cs" />
     <Compile Include="queue\BankersDequeTests.cs" />
     <Compile Include="queue\BankersQueueTests.cs" />
@@ -120,6 +121,7 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
       <ItemGroup>
