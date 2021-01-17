@@ -86,7 +86,7 @@
     <Compile Include="tree\TrieOfTrees.cs" />
     <Compile Include="tree\UnbalancedSet.cs" />
     <Compile Include="tree\Trie.cs" />
-    <Compile Include="utilities\StringUtilities.cs" />
+    <Compile Include="Utilities\StringUtilities.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

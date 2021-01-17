@@ -49,7 +49,7 @@ namespace FunProgTests.binary
         }
 
         [TestMethod]
-        public void DecerementOneTest()
+        public void DecrementOneTest()
         {
             var zero = Dense.Dec(One);
             Assert.AreEqual("0", DumpNat(zero));
