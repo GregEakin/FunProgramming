@@ -9,6 +9,8 @@
 // Okasaki, Chris. "2.1 Lists." Purely Functional Data Structures. 
 //     Cambridge, U.K.: Cambridge UP, 1998. 7-11. Print.
 
+using System.Diagnostics;
+
 namespace FunProgLib.lists
 {
     using System;
@@ -58,7 +60,8 @@ namespace FunProgLib.lists
                 public T Current => _list.Element;
 
                 public void Dispose()
-                { }
+                {
+                }
             }
         }
 
@@ -100,5 +103,37 @@ namespace FunProgLib.lists
             var next = new Node(Head(listIn), listOut);
             return Rev(Tail(listIn), next);
         }
+
+        public static TB FoldRight<TB>(Node xs, TB z, Func<T, TB, TB> f)
+        {
+            if (IsEmpty(xs)) return z;
+            return f(xs.Element, FoldRight<TB>(xs.Next, z, f));
+        }
+
+        public static TB FoldLeftR<TB>(Node xs, TB z, Func<TB, T, TB> f)
+        {
+            var identity = new Func<TB, TB>(b => b);
+            var combinerDelayer =
+                new Func<T, Func<TB, TB>, Func<TB, TB>>((a, delayedExec) => b => delayedExec(f(b, a)));
+            var chain = FoldRight(xs, identity, combinerDelayer);
+            return chain(z);
+        }
+
+        public static TB FoldLeft<TB>(Node xs, TB z, Func<TB, T, TB> f)
+        {
+            // while (true)
+            // {
+            //     if (IsEmpty(xs)) return z;
+            //     var xs1 = xs;
+            //     xs = xs.Next;
+            //     z = f(z, xs1.Element);
+            // }
+
+            if (IsEmpty(xs)) return z;
+            return FoldLeft<TB>(xs.Next, f(z, xs.Element), f);
+        }
+
+        public static TB FoldRightL<TB>(Node xs, TB z, Func<T, TB, TB> f) => 
+            FoldLeft(xs, new Func<TB, TB>(b => b), (g, a) => b => g(f(a, b)))(z);
     }
 }

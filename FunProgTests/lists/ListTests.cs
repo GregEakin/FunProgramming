@@ -118,5 +118,85 @@ namespace FunProgTests.lists
             var list3 = List<string>.Cat(list1, list2);
             Assert.AreEqual("[now,, How, cow?, brown]", list3.ToReadableString());
         }
+
+        [TestMethod]
+        public void FoldRightSumTest()
+        {
+            var data = new[]{ 1, 2, 3, 4, 5 };
+            var list = data.Aggregate(List<int>.Empty, (current, word) => List<int>.Cons(word, current));
+
+            var sum = List<int>.FoldRight(list, 0, (x, y) => x + y);
+            Assert.AreEqual(15, sum);
+        }
+
+        [TestMethod]
+        public void FoldLeftSumTest()
+        {
+            var data = new[] { 1, 2, 3, 4, 5 };
+            var list = data.Aggregate(List<int>.Empty, (current, word) => List<int>.Cons(word, current));
+
+            var sum = List<int>.FoldLeft(list, 0, (x, y) => x + y);
+            Assert.AreEqual(15, sum);
+        }
+
+        [TestMethod]
+        public void FoldLeftRSumTest()
+        {
+            var data = new[] { 1, 2, 3, 4, 5 };
+            var list = data.Aggregate(List<int>.Empty, (current, word) => List<int>.Cons(word, current));
+
+            var sum = List<int>.FoldLeftR(list, 0, (x, y) => x + y);
+            Assert.AreEqual(15, sum);
+        }
+
+        [TestMethod]
+        public void FoldRightLSumTest()
+        {
+            var data = new[] { 1, 2, 3, 4, 5 };
+            var list = data.Aggregate(List<int>.Empty, (current, word) => List<int>.Cons(word, current));
+
+            var sum = List<int>.FoldRightL(list, 0, (x, y) => x + y);
+            Assert.AreEqual(15, sum);
+        }
+
+        [TestMethod]
+        public void FoldRightProductTest()
+        {
+            var data = new[] { 1.0, 2.0, 3.0, 4.0, 5.0 };
+            var list = data.Aggregate(List<double>.Empty, (current, word) => List<double>.Cons(word, current));
+
+            var product = List<double>.FoldRight(list, 1.0, (x, y) => x * y);
+            Assert.AreEqual(120.0, product);
+        }
+
+        [TestMethod]
+        public void FoldLeftProductTest()
+        {
+            var data = new[] { 1.0, 2.0, 3.0, 4.0, 5.0 };
+            var list = data.Aggregate(List<double>.Empty, (current, word) => List<double>.Cons(word, current));
+
+            var product = List<double>.FoldLeft(list, 1.0, (x, y) => x * y);
+            Assert.AreEqual(120.0, product);
+        }
+
+        [TestMethod]
+        public void FoldLeftRProductTest()
+        {
+            var data = new[] { 1.0, 2.0, 3.0, 4.0, 5.0 };
+            var list = data.Aggregate(List<double>.Empty, (current, word) => List<double>.Cons(word, current));
+
+            var product = List<double>.FoldLeftR(list, 1.0, (x, y) => x * y);
+            Assert.AreEqual(120.0, product);
+        }
+
+        [TestMethod]
+        public void FoldRightLProductTest()
+        {
+            var data = new[] { 1.0, 2.0, 3.0, 4.0, 5.0 };
+            var list = data.Aggregate(List<double>.Empty, (current, word) => List<double>.Cons(word, current));
+
+            var product = List<double>.FoldRightL(list, 1.0, (x, y) => x * y);
+            Assert.AreEqual(120.0, product);
+        }
     }
 }
