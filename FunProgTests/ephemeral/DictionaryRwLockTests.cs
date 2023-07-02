@@ -7,84 +7,77 @@
 // All Rights Reserved.
 //
 
-using System;
-using System.Collections.Concurrent;
-using System.Threading;
-using System.Threading.Tasks;
 using FunProgLib.heap;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace FunProgTests.ephemeral
+namespace FunProgTests.ephemeral;
+
+public class DictionaryRwLockTests : DictionaryTests, IDisposable
 {
-    [TestClass]
-    public class DictionaryRwLockTests : DictionaryTests, IDisposable
-    {
-        private readonly ReaderWriterLockSlim _lockObject = new ReaderWriterLockSlim();
-        private SplayHeap<string>.Heap _set = SplayHeap<string>.Empty;
+    private readonly ReaderWriterLockSlim _lockObject = new ReaderWriterLockSlim();
+    private SplayHeap<string>.Heap _set = SplayHeap<string>.Empty;
 
-        private void InsertAction()
+    private void InsertAction()
+    {
+        for (var i = 0; i < Count; i++)
         {
-            for (var i = 0; i < Count; i++)
+            var word = NextWord(10);
+            _lockObject.EnterWriteLock();
+            try
             {
-                var word = NextWord(10);
+                _set = SplayHeap<string>.Insert(word, _set);
+            }
+            finally
+            {
+                _lockObject.ExitWriteLock();
+            }
+        }
+    }
+
+    private void RemoveAction()
+    {
+        for (var i = 0; i < Count; i++)
+        {
+            SplayHeap<string>.Heap localCopy;
+            while (true)
+            {
                 _lockObject.EnterWriteLock();
                 try
                 {
-                    _set = SplayHeap<string>.Insert(word, _set);
+                    if (!SplayHeap<string>.IsEmpty(_set))
+                    {
+                        localCopy = _set;
+                        _set = SplayHeap<string>.DeleteMin(localCopy);
+                        break;
+                    }
                 }
                 finally
                 {
                     _lockObject.ExitWriteLock();
                 }
-            }
-        }
 
-        private void RemoveAction()
-        {
-            for (var i = 0; i < Count; i++)
-            {
-                SplayHeap<string>.Heap localCopy;
-                while (true)
-                {
-                    _lockObject.EnterWriteLock();
-                    try
-                    {
-                        if (!SplayHeap<string>.IsEmpty(_set))
-                        {
-                            localCopy = _set;
-                            _set = SplayHeap<string>.DeleteMin(localCopy);
-                            break;
-                        }
-                    }
-                    finally
-                    {
-                        _lockObject.ExitWriteLock();
-                    }
-
-                    Thread.Yield();
-                }
-
-                var unused = SplayHeap<string>.FindMin(localCopy);
-            }
-        }
-
-        [TestMethod]
-        public void Test1()
-        {
-            var taskList = new ConcurrentBag<Task>();
-            for (var i = 0; i < Threads; i += 2)
-            {
-                taskList.Add(Task.Factory.StartNew(map => InsertAction(), this));
-                taskList.Add(Task.Factory.StartNew(map => RemoveAction(), this));
+                Thread.Yield();
             }
 
-            Task.WaitAll(taskList.ToArray());
-            Assert.IsNull(_set);
+            var _ = SplayHeap<string>.FindMin(localCopy);
+        }
+    }
+
+    [Fact]
+    public void Test1()
+    {
+        var taskList = new ConcurrentBag<Task>();
+        for (var i = 0; i < Threads; i += 2)
+        {
+            taskList.Add(Task.Factory.StartNew(map => InsertAction(), this));
+            taskList.Add(Task.Factory.StartNew(map => RemoveAction(), this));
         }
 
-        public void Dispose()
-        {
-            _lockObject.Dispose();
-        }
+        Task.WaitAll(taskList.ToArray());
+        Assert.Null(_set);
+    }
+
+    public void Dispose()
+    {
+        _lockObject.Dispose();
     }
 }

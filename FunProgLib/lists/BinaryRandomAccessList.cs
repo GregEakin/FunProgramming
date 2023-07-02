@@ -9,156 +9,153 @@
 // Okasaki, Chris. "9.2.1 Binary Random-Access Lists." Purely Functional Data Structures. 
 //     Cambridge, U.K.: Cambridge UP, 1998. 119-22. Print.
 
-namespace FunProgLib.lists
+namespace FunProgLib.lists;
+
+public static class BinaryRandomAccessList<T> // : IRandomAccessList<T>
 {
-    using System;
+    public abstract class Tree
+    {}
 
-    public static class BinaryRandomAccessList<T> // : IRandomAccessList<T>
+    private sealed class Leaf : Tree
     {
-        public abstract class Tree
-        {}
-
-        private sealed class Leaf : Tree
+        public Leaf(T alpha)
         {
-            public Leaf(T alpha)
-            {
-                Alpha = alpha;
-            }
-
-            public T Alpha { get; }
+            Alpha = alpha;
         }
 
-        private sealed class Node : Tree
+        public T Alpha { get; }
+    }
+
+    private sealed class Node : Tree
+    {
+        public Node(int index, Tree tree1, Tree tree2)
         {
-            public Node(int index, Tree tree1, Tree tree2)
-            {
-                Index = index;
-                Tree1 = tree1;
-                Tree2 = tree2;
-            }
-
-            public int Index { get; }
-
-            public Tree Tree1 { get; }
-
-            public Tree Tree2 { get; }
+            Index = index;
+            Tree1 = tree1;
+            Tree2 = tree2;
         }
 
-        public sealed class Digit
-        {
-            public Digit(Tree tree)
-            {
-                One = tree;
-            }
+        public int Index { get; }
 
-            public Tree One { get; }
+        public Tree Tree1 { get; }
+
+        public Tree Tree2 { get; }
+    }
+
+    public sealed class Digit
+    {
+        public Digit(Tree tree)
+        {
+            One = tree;
         }
 
-        private static readonly Digit Zero = new Digit(null);
+        public Tree One { get; }
+    }
 
-        private sealed class Stuff
+    private static readonly Digit Zero = new Digit(null);
+
+    private sealed class Stuff
+    {
+        public Stuff(Tree tree, FunList<Digit>.Node list)
         {
-            public Stuff(Tree tree, List<Digit>.Node list)
-            {
-                Tree = tree;
-                List = list;
-            }
-
-            public Tree Tree { get; }
-
-            public List<Digit>.Node List { get; }
+            Tree = tree;
+            FunList = list;
         }
 
-        public static List<Digit>.Node Empty => List<Digit>.Empty;
+        public Tree Tree { get; }
 
-        public static bool IsEmpty(List<Digit>.Node list) => List<Digit>.IsEmpty(list);
+        public FunList<Digit>.Node FunList { get; }
+    }
 
-        private static int Size(Tree tree)
+    public static FunList<Digit>.Node Empty => FunList<Digit>.Empty;
+
+    public static bool IsEmpty(FunList<Digit>.Node list) => FunList<Digit>.IsEmpty(list);
+
+    private static int Size(Tree tree)
+    {
+        if (tree is Node node) return node.Index;
+        return 1;
+    }
+
+    private static Tree Link(Tree t1, Tree t2) => new Node(Size(t1) + Size(t2), t1, t2);
+
+    private static FunList<Digit>.Node ConsTree(Tree t, FunList<Digit>.Node ts)
+    {
+        if (IsEmpty(ts)) return FunList<Digit>.Cons(new Digit(t), FunList<Digit>.Empty);
+        if (ts.Element == Zero) return FunList<Digit>.Cons(new Digit(t), ts.Next);
+        return FunList<Digit>.Cons(Zero, ConsTree(Link(t, ts.Element.One), ts.Next));
+    }
+
+    private static Stuff UnconsTree(FunList<Digit>.Node list)
+    {
+        if (IsEmpty(list)) throw new ArgumentNullException(nameof(list));
+        if (list.Element == Zero)
         {
-            if (tree is Node node) return node.Index;
-            return 1;
-        }
-
-        private static Tree Link(Tree t1, Tree t2) => new Node(Size(t1) + Size(t2), t1, t2);
-
-        private static List<Digit>.Node ConsTree(Tree t, List<Digit>.Node ts)
-        {
-            if (IsEmpty(ts)) return List<Digit>.Cons(new Digit(t), List<Digit>.Empty);
-            if (ts.Element == Zero) return List<Digit>.Cons(new Digit(t), ts.Next);
-            return List<Digit>.Cons(Zero, ConsTree(Link(t, ts.Element.One), ts.Next));
-        }
-
-        private static Stuff UnconsTree(List<Digit>.Node list)
-        {
-            if (IsEmpty(list)) throw new ArgumentNullException(nameof(list));
-            if (list.Element == Zero)
-            {
-                var stuff = UnconsTree(list.Next);
-                if (stuff.Tree is Node node) return new Stuff(node.Tree1, List<Digit>.Cons(new Digit(node.Tree2), stuff.List));
-                throw new Exception();
-            }
-            if (IsEmpty(list.Next)) return new Stuff(list.Element.One, List<Digit>.Empty);
-            return new Stuff(list.Element.One, List<Digit>.Cons(Zero, list.Next));
-        }
-
-        public static List<Digit>.Node Cons(T x, List<Digit>.Node ts) => ConsTree(new Leaf(x), ts);
-
-        public static T Head(List<Digit>.Node ts)
-        {
-            if (UnconsTree(ts).Tree is Leaf leaf) return leaf.Alpha;
+            var stuff = UnconsTree(list.Next);
+            if (stuff.Tree is Node node) return new Stuff(node.Tree1, FunList<Digit>.Cons(new Digit(node.Tree2), stuff.FunList));
             throw new Exception();
         }
+        if (IsEmpty(list.Next)) return new Stuff(list.Element.One, FunList<Digit>.Empty);
+        return new Stuff(list.Element.One, FunList<Digit>.Cons(Zero, list.Next));
+    }
 
-        public static List<Digit>.Node Tail(List<Digit>.Node ts) => UnconsTree(ts).List;
+    public static FunList<Digit>.Node Cons(T x, FunList<Digit>.Node ts) => ConsTree(new Leaf(x), ts);
 
-        private static T LookupTree(int i, Tree t)
+    public static T Head(FunList<Digit>.Node ts)
+    {
+        if (UnconsTree(ts).Tree is Leaf leaf) return leaf.Alpha;
+        throw new Exception();
+    }
+
+    public static FunList<Digit>.Node Tail(FunList<Digit>.Node ts) => UnconsTree(ts).FunList;
+
+    private static T LookupTree(int i, Tree t)
+    {
+        if (t is Leaf leaf)
         {
-            if (t is Leaf leaf)
-            {
-                if (i == 0) return leaf.Alpha;
-                throw new Exception("Subscript");
-            }
-
-            if (t is Node node)
-            {
-                if (i < node.Index / 2) return LookupTree(i, node.Tree1);
-                return LookupTree(i - node.Index / 2, node.Tree2);
-            }
-
-            throw new ArgumentException("Argument t needs to be a Leaf or None.", nameof(t));
+            if (i == 0) return leaf.Alpha;
+            throw new Exception("Subscript");
         }
 
-        private static Tree UpdateTree(int i, T x, Tree t)
+        if (t is Node node)
         {
-            if (t is Leaf leaf)
-            {
-                if (i == 0) return new Leaf(x);
-                throw new Exception("Subscript");
-            }
-
-            if (t is Node node)
-            {
-                if (i < node.Index / 2) return new Node(node.Index, UpdateTree(i, x, node.Tree1), node.Tree2);
-                return new Node(node.Index, node.Tree1, UpdateTree(i - node.Index / 2, x, node.Tree2));
-            }
-
-            throw new ArgumentException("Argument t needs to be a Leaf or None.", nameof(t));
+            if (i < node.Index / 2) return LookupTree(i, node.Tree1);
+            return LookupTree(i - node.Index / 2, node.Tree2);
         }
 
-        public static T Lookup(int i, List<Digit>.Node ts)
+        throw new ArgumentException("Argument t needs to be a Leaf or None.", nameof(t));
+    }
+
+    private static Tree UpdateTree(int i, T x, Tree t)
+    {
+        if (t is Leaf leaf)
         {
-            if (IsEmpty(ts)) throw new ArgumentException("Subscript", nameof(ts));
-            if (ts.Element == Zero) return Lookup(i, ts.Next);
-            if (i < Size(ts.Element.One)) return LookupTree(i, ts.Element.One);
-            return Lookup(i - Size(ts.Element.One), ts.Next);
+            if (i == 0) return new Leaf(x);
+            throw new Exception("Subscript");
         }
 
-        public static List<Digit>.Node Update(int i, T x, List<Digit>.Node ts)
+        if (t is Node node)
         {
-            if (IsEmpty(ts)) throw new ArgumentException("Subscript", nameof(ts));
-            if (ts.Element == Zero) return List<Digit>.Cons(Zero, Update(i, x, ts.Next));
-            if (i < Size(ts.Element.One)) return List<Digit>.Cons(new Digit(UpdateTree(i, x, ts.Element.One)), ts.Next);
-            return List<Digit>.Cons(new Digit(ts.Element.One), Update(i - Size(ts.Element.One), x, ts.Next));
+            if (i < node.Index / 2) return new Node(node.Index, UpdateTree(i, x, node.Tree1), node.Tree2);
+            return new Node(node.Index, node.Tree1, UpdateTree(i - node.Index / 2, x, node.Tree2));
         }
+
+        throw new ArgumentException("Argument t needs to be a Leaf or None.", nameof(t));
+    }
+
+    public static T Lookup(int i, FunList<Digit>.Node ts)
+    {
+        if (IsEmpty(ts)) throw new ArgumentException("Subscript", nameof(ts));
+        if (ts.Element == Zero) return Lookup(i, ts.Next);
+        if (i < Size(ts.Element.One)) return LookupTree(i, ts.Element.One);
+        return Lookup(i - Size(ts.Element.One), ts.Next);
+    }
+
+    public static FunList<Digit>.Node Update(int i, T x, FunList<Digit>.Node ts)
+    {
+        if (IsEmpty(ts)) throw new ArgumentException("Subscript", nameof(ts));
+        if (ts.Element == Zero) return FunList<Digit>.Cons(Zero, Update(i, x, ts.Next));
+        if (i < Size(ts.Element.One)) return FunList<Digit>.Cons(new Digit(UpdateTree(i, x, ts.Element.One)), ts.Next);
+        return FunList<Digit>.Cons(new Digit(ts.Element.One), Update(i - Size(ts.Element.One), x, ts.Next));
     }
 }

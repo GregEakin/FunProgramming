@@ -1,152 +1,29 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project Sdk="Microsoft.NET.Sdk">
+
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{B5684A84-44F5-415C-9FB2-127DDF6A48D4}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>FunProgTests</RootNamespace>
-    <AssemblyName>FunProgTests</AssemblyName>
-    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
-    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
-    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
-    <ReferencePath>$(ProgramFiles)\Common Files\microsoft shared\VSTT\$(VisualStudioVersion)\UITestExtensionPackages</ReferencePath>
-    <IsCodedUITest>False</IsCodedUITest>
-    <TestProjectType>UnitTest</TestProjectType>
-    <TargetFrameworkProfile />
+    <TargetFramework>net7.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>disable</Nullable>
+
+    <IsPackable>false</IsPackable>
+    <IsTestProject>true</IsTestProject>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <UseVSHostingProcess>false</UseVSHostingProcess>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
+
   <ItemGroup>
-    <Reference Include="dotMemory.Unit, Version=111.0.0.0, Culture=neutral, PublicKeyToken=1010a0d8d6380325, processorArchitecture=MSIL">
-      <HintPath>..\packages\JetBrains.dotMemoryUnit.3.1.20200127.214830\lib\net35\dotMemory.Unit.dll</HintPath>
-    </Reference>
-    <Reference Include="System" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.5.0" />
+    <PackageReference Include="xunit" Version="2.4.2" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.4.5">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="coverlet.collector" Version="3.2.0">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
   </ItemGroup>
-  <Choose>
-    <When Condition="('$(VisualStudioVersion)' == '10.0' or '$(VisualStudioVersion)' == '') and '$(TargetFrameworkVersion)' == 'v3.5'">
-      <ItemGroup>
-        <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=10.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
-      </ItemGroup>
-    </When>
-    <Otherwise>
-      <ItemGroup>
-        <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework" />
-      </ItemGroup>
-    </Otherwise>
-  </Choose>
+
   <ItemGroup>
-    <Compile Include="binary\DenseTests.cs" />
-    <Compile Include="binary\SparseByWeightTests.cs" />
-    <Compile Include="ephemeral\BlockingQueue.cs" />
-    <Compile Include="ephemeral\DictionaryInterlockTests.cs" />
-    <Compile Include="ephemeral\DictionaryRwLockTests.cs" />
-    <Compile Include="ephemeral\DictionarySemaphoreTests.cs" />
-    <Compile Include="ephemeral\DictionaryLockTests.cs" />
-    <Compile Include="ephemeral\DictionarySingleThreadTests.cs" />
-    <Compile Include="ephemeral\CacheSpeedTests.cs" />
-    <Compile Include="ephemeral\MultiInterlockMapTests.cs" />
-    <Compile Include="ephemeral\MultiReaderMapTests.cs" />
-    <Compile Include="ephemeral\DictionaryTests.cs" />
-    <Compile Include="ephemeral\MultiRwLockMapTests.cs" />
-    <Compile Include="heap\BootstrappedHeapTests.cs" />
-    <Compile Include="heap\LazyBinomialHeapPerfTests.cs" />
-    <Compile Include="heap\ScheduledBinomialHeapTest.cs" />
-    <Compile Include="heap\SkewBinomialHeapTests.cs" />
-    <Compile Include="heap\SplayHeapTests.cs" />
-    <Compile Include="heap\LazyParingHeapTests.cs" />
-    <Compile Include="lamda\ListOfFuncsTests.cs" />
-    <Compile Include="lists\BinaryRandomAccessListTests.cs" />
-    <Compile Include="lists\AltBinaryRandomAccessListTests.cs" />
-    <Compile Include="lists\CatenableListTests.cs" />
-    <Compile Include="lists\CustomStackTests.cs" />
-    <Compile Include="lists\RListTests.cs" />
-    <Compile Include="lists\SkewBinaryRandomAccessListTests.cs" />
-    <Compile Include="lists\ListTests.cs" />
-    <Compile Include="memory\MemoryTests.cs" />
-    <Compile Include="tree\TrieTests.cs" />
-    <Compile Include="queue\BankersDequeTests.cs" />
-    <Compile Include="queue\BankersQueueTests.cs" />
-    <Compile Include="queue\BootstrappedQueueTests.cs" />
-    <Compile Include="queue\HoodMelvilleQueueTests.cs" />
-    <Compile Include="queue\RealTimeDequeTests.cs" />
-    <Compile Include="queue\RealTimeQueueTests.cs" />
-    <Compile Include="queue\BatchedQueueTests.cs" />
-    <Compile Include="queue\PhysicistQueueTests.cs" />
-    <Compile Include="sort\ScheduledBottomUpMergeSortTests.cs" />
-    <Compile Include="sort\BottomUpMergeSortTests.cs" />
-    <Compile Include="heap\ParingHeapTests.cs" />
-    <Compile Include="heap\LazyBinomialHeapTests.cs" />
-    <Compile Include="heap\BinomialHeapTests.cs" />
-    <Compile Include="heap\LeftistHeapTests.cs" />
-    <Compile Include="streams\Stream2Tests.cs" />
-    <Compile Include="streams\StreamTests.cs" />
-    <Compile Include="tree\RedBlackSetTests.cs" />
-    <Compile Include="tree\UnbalancedSetTests.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="utilities\CodeTimer.cs" />
-    <Compile Include="utilities\CodeTimer2.cs" />
-    <Compile Include="utilities\CollectionCounters.cs" />
-    <Compile Include="utilities\Counters.cs" />
-    <Compile Include="utilities\CycleTime.cs" />
-    <Compile Include="utilities\ExpectedException.cs" />
-    <Compile Include="utilities\Kernel32.cs" />
-    <Compile Include="utilities\StringUtilitiesTests.cs" />
+    <ProjectReference Include="..\FunProgLib\FunProgLib.csproj" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\FunProgLib\FunProgLib.csproj">
-      <Project>{ff8681f9-206f-4fe6-80c7-3ddee10fd22f}</Project>
-      <Name>FunProgLib</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup />
-  <Choose>
-    <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
-      <ItemGroup>
-        <Reference Include="Microsoft.VisualStudio.QualityTools.CodedUITestFramework, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-          <Private>False</Private>
-        </Reference>
-        <Reference Include="Microsoft.VisualStudio.TestTools.UITest.Common, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-          <Private>False</Private>
-        </Reference>
-        <Reference Include="Microsoft.VisualStudio.TestTools.UITest.Extension, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-          <Private>False</Private>
-        </Reference>
-        <Reference Include="Microsoft.VisualStudio.TestTools.UITesting, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-          <Private>False</Private>
-        </Reference>
-      </ItemGroup>
-    </When>
-  </Choose>
-  <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
+
 </Project>

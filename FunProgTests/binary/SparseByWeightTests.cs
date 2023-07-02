@@ -7,87 +7,84 @@
 // All Rights Reserved.
 //
 
-namespace FunProgTests.binary
+using FunProgLib.binary;
+using FunProgLib.lists;
+
+namespace FunProgTests.binary;
+
+public class SparseByWeightTests
 {
-    using FunProgLib.binary;
-    using FunProgLib.lists;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
+    private static readonly FunList<int>.Node Zero = FunList<int>.Empty;
+    private static readonly FunList<int>.Node One = SparseByWeight.Inc(Zero);
+    private static readonly FunList<int>.Node Two = SparseByWeight.Inc(One);
+    private static readonly FunList<int>.Node Three = SparseByWeight.Inc(Two);
+    private static readonly FunList<int>.Node Five = SparseByWeight.Add(Two, Three);
+    private static readonly FunList<int>.Node Fifteen = SparseByWeight.Add(Five, SparseByWeight.Add(Five, Five));
 
-    [TestClass]
-    public class SparseByWeightTests
+    private static string DumpNat(FunList<int>.Node number)
     {
-        private static readonly List<int>.Node Zero = List<int>.Empty;
-        private static readonly List<int>.Node One = SparseByWeight.Inc(Zero);
-        private static readonly List<int>.Node Two = SparseByWeight.Inc(One);
-        private static readonly List<int>.Node Three = SparseByWeight.Inc(Two);
-        private static readonly List<int>.Node Five = SparseByWeight.Add(Two, Three);
-        private static readonly List<int>.Node Fifteen = SparseByWeight.Add(Five, SparseByWeight.Add(Five, Five));
+        if (FunList<int>.IsEmpty(number)) return "0";
+        var result = string.Join(",", FunList<int>.Reverse(number));
+        return result;
+    }
 
-        private static string DumpNat(List<int>.Node number)
-        {
-            if (List<int>.IsEmpty(number)) return "0";
-            var result = string.Join(",", List<int>.Reverse(number));
-            return result;
-        }
+    [Fact]
+    public void ZeroTest()
+    {
+        Assert.Equal("0", DumpNat(Zero));
+    }
 
-        [TestMethod]
-        public void ZeroTest()
-        {
-            Assert.AreEqual("0", DumpNat(Zero));
-        }
+    [Fact]
+    public void OneTest()
+    {
+        Assert.Equal("1", DumpNat(One));
+    }
 
-        [TestMethod]
-        public void OneTest()
-        {
-            Assert.AreEqual("1", DumpNat(One));
-        }
+    [Fact]
+    public void TwoTest()
+    {
+        Assert.Equal("2", DumpNat(Two));
+    }
 
-        [TestMethod]
-        public void TwoTest()
-        {
-            Assert.AreEqual("2", DumpNat(Two));
-        }
+    [Fact]
+    public void FiveTest()
+    {
+        Assert.Equal("4,1", DumpNat(Five));
+    }
 
-        [TestMethod]
-        public void FiveTest()
-        {
-            Assert.AreEqual("4,1", DumpNat(Five));
-        }
+    [Fact]
+    public void FifteenTest()
+    {
+        Assert.Equal("8,4,2,1", DumpNat(Fifteen));
+    }
 
-        [TestMethod]
-        public void FifteenTest()
-        {
-            Assert.AreEqual("8,4,2,1", DumpNat(Fifteen));
-        }
+    [Fact]
+    public void SixteenTest()
+    {
+        var sixteen = SparseByWeight.Inc(Fifteen);
+        Assert.Equal("16", DumpNat(sixteen));
+    }
 
-        [TestMethod]
-        public void SixteenTest()
-        {
-            var sixteen = SparseByWeight.Inc(Fifteen);
-            Assert.AreEqual("16", DumpNat(sixteen));
-        }
+    [Fact]
+    public void SeventeenTest()
+    {
+        var seventeen = SparseByWeight.Add(Fifteen, Two);
+        Assert.Equal("16,1", DumpNat(seventeen));
+    }
 
-        [TestMethod]
-        public void SeventeenTest()
-        {
-            var seventeen = SparseByWeight.Add(Fifteen, Two);
-            Assert.AreEqual("16,1", DumpNat(seventeen));
-        }
+    [Fact]
+    public void FourTest()
+    {
+        var four = SparseByWeight.Dec(Five);
+        Assert.Equal("4", DumpNat(four));
+    }
 
-        [TestMethod]
-        public void FourTest()
-        {
-            var four = SparseByWeight.Dec(Five);
-            Assert.AreEqual("4", DumpNat(four));
-        }
-
-        [TestMethod]
-        public void ThreeTest()
-        {
-            var four = SparseByWeight.Dec(Five);
-            var three = SparseByWeight.Dec(four);
-            Assert.AreEqual("2,1", DumpNat(Three));
-            Assert.AreEqual("2,1", DumpNat(three));
-        }
+    [Fact]
+    public void ThreeTest()
+    {
+        var four = SparseByWeight.Dec(Five);
+        var three = SparseByWeight.Dec(four);
+        Assert.Equal("2,1", DumpNat(Three));
+        Assert.Equal("2,1", DumpNat(three));
     }
 }

@@ -9,129 +9,127 @@
 // Okasaki, Chris. "9.3.2 Skew Binomial Heaps." Purely Functional Data Structures. 
 //     Cambridge, U.K.: Cambridge UP, 1998. 134-8. Print.
 
-namespace FunProgLib.heap
+using FunProgLib.lists;
+
+namespace FunProgLib.heap;
+
+public static class SkewBinomialHeap<T>
+    where T : IComparable<T> // : IHeap<T>
 {
-    using lists;
-    using System;
-
-    public static class SkewBinomialHeap<T>
-        where T : IComparable<T> // : IHeap<T>
+    public sealed class Tree
     {
-        public sealed class Tree
+        public Tree(int rank, T root, FunList<T>.Node list, FunList<Tree>.Node treeList)
         {
-            public Tree(int rank, T root, List<T>.Node list, List<Tree>.Node treeList)
-            {
-                Rank = rank;
-                Root = root;
-                List = list;
-                TreeList = treeList;
-            }
-
-            public int Rank { get; }
-
-            public T Root { get; }
-
-            public List<T>.Node List { get; }
-
-            public List<Tree>.Node TreeList { get; }
+            Rank = rank;
+            Root = root;
+            FunList = list;
+            TreeList = treeList;
         }
 
-        public static List<Tree>.Node Empty => List<Tree>.Empty;
+        public int Rank { get; }
 
-        public static bool IsEmpty(List<Tree>.Node heap) => List<Tree>.IsEmpty(heap);
+        public T Root { get; }
 
-        public static int Rank(Tree t) => t.Rank;
+        public FunList<T>.Node FunList { get; }
 
-        public static T Root(Tree t) => t.Root;
+        public FunList<Tree>.Node TreeList { get; }
+    }
 
-        private static Tree Link(Tree t1, Tree t2)
-        {
-            if (t1.Root.CompareTo(t2.Root) <= 0) return new Tree(t1.Rank + 1, t1.Root, t1.List, List<Tree>.Cons(t2, t1.TreeList));
-            return new Tree(t1.Rank + 1, t2.Root, t2.List, List<Tree>.Cons(t1, t2.TreeList));
-        }
+    public static FunList<Tree>.Node Empty => FunList<Tree>.Empty;
 
-        private static Tree SkewLink(T element, Tree t1, Tree t2)
-        {
-            var node = Link(t1, t2);
-            if (element.CompareTo(node.Root) <= 0) return new Tree(node.Rank, element, List<T>.Cons(node.Root, node.List), node.TreeList);
-            return new Tree(node.Rank, node.Root, List<T>.Cons(element, node.List), node.TreeList);
-        }
+    public static bool IsEmpty(FunList<Tree>.Node heap) => FunList<Tree>.IsEmpty(heap);
 
-        private static List<Tree>.Node InsTree(Tree t1, List<Tree>.Node treeList)
-        {
-            if (List<Tree>.IsEmpty(treeList)) return List<Tree>.Cons(t1, List<Tree>.Empty);
+    public static int Rank(Tree t) => t.Rank;
 
-            var t2 = List<Tree>.Head(treeList);
-            if (t1.Rank < t2.Rank) return List<Tree>.Cons(t1, treeList);
-            var ts = List<Tree>.Tail(treeList);
-            return InsTree(Link(t1, t2), ts);
-        }
+    public static T Root(Tree t) => t.Root;
 
-        private static List<Tree>.Node MergeTrees(List<Tree>.Node ts1, List<Tree>.Node ts2)
-        {
-            if (List<Tree>.IsEmpty(ts2)) return ts1;
-            if (List<Tree>.IsEmpty(ts1)) return ts2;
+    private static Tree Link(Tree t1, Tree t2)
+    {
+        if (t1.Root.CompareTo(t2.Root) <= 0) return new Tree(t1.Rank + 1, t1.Root, t1.FunList, FunList<Tree>.Cons(t2, t1.TreeList));
+        return new Tree(t1.Rank + 1, t2.Root, t2.FunList, FunList<Tree>.Cons(t1, t2.TreeList));
+    }
 
-            var t1 = List<Tree>.Head(ts1);
-            var tsp1 = List<Tree>.Tail(ts1);
-            var t2 = List<Tree>.Head(ts2);
-            if (t1.Rank < t2.Rank) return List<Tree>.Cons(t1, MergeTrees(tsp1, ts2));
-            var tsp2 = List<Tree>.Tail(ts2);
-            if (t2.Rank < t1.Rank) return List<Tree>.Cons(t2, MergeTrees(ts1, tsp2));
-            return InsTree(Link(List<Tree>.Head(ts1), List<Tree>.Head(ts2)), MergeTrees(tsp1, tsp2));
-        }
+    private static Tree SkewLink(T element, Tree t1, Tree t2)
+    {
+        var node = Link(t1, t2);
+        if (element.CompareTo(node.Root) <= 0) return new Tree(node.Rank, element, FunList<T>.Cons(node.Root, node.FunList), node.TreeList);
+        return new Tree(node.Rank, node.Root, FunList<T>.Cons(element, node.FunList), node.TreeList);
+    }
 
-        private static List<Tree>.Node Normalize(List<Tree>.Node tsp)
-        {
-            if (List<Tree>.IsEmpty(tsp)) return List<Tree>.Empty;
-            var t = List<Tree>.Head(tsp);
-            var ts = List<Tree>.Tail(tsp);
-            return InsTree(t, ts);
-        }
+    private static FunList<Tree>.Node InsTree(Tree t1, FunList<Tree>.Node treeList)
+    {
+        if (FunList<Tree>.IsEmpty(treeList)) return FunList<Tree>.Cons(t1, FunList<Tree>.Empty);
 
-        public static List<Tree>.Node Insert(T x, List<Tree>.Node ts)
-        {
-            if (List<Tree>.IsEmpty(ts)) return List<Tree>.Cons(new Tree(0, x, List<T>.Empty, List<Tree>.Empty), List<Tree>.Empty);
-            var tail = List<Tree>.Tail(ts);
-            if (List<Tree>.IsEmpty(tail)) return List<Tree>.Cons(new Tree(0, x, List<T>.Empty, List<Tree>.Empty), ts);
-            var t1 = List<Tree>.Head(ts);
-            var t2 = List<Tree>.Head(tail);
-            var rest = List<Tree>.Tail(tail);
-            if (t1.Rank == t2.Rank) return List<Tree>.Cons(SkewLink(x, t1, t2), rest);
-            return List<Tree>.Cons(new Tree(0, x, List<T>.Empty, List<Tree>.Empty), ts);
-        }
+        var t2 = FunList<Tree>.Head(treeList);
+        if (t1.Rank < t2.Rank) return FunList<Tree>.Cons(t1, treeList);
+        var ts = FunList<Tree>.Tail(treeList);
+        return InsTree(Link(t1, t2), ts);
+    }
 
-        public static List<Tree>.Node Merge(List<Tree>.Node ts1, List<Tree>.Node ts2) => MergeTrees(Normalize(ts1), Normalize(ts2));
+    private static FunList<Tree>.Node MergeTrees(FunList<Tree>.Node ts1, FunList<Tree>.Node ts2)
+    {
+        if (FunList<Tree>.IsEmpty(ts2)) return ts1;
+        if (FunList<Tree>.IsEmpty(ts1)) return ts2;
 
-        private static (Tree, List<Tree>.Node) RemoveMinTree(List<Tree>.Node ds)
-        {
-            if (List<Tree>.IsEmpty(ds)) throw new ArgumentNullException(nameof(ds));
-            var t = List<Tree>.Head(ds);
-            var ts = List<Tree>.Tail(ds);
-            if (List<Tree>.IsEmpty(ts)) return (t, ts);
-            var (tp, tsp) = RemoveMinTree(ts);
-            if (t.Root.CompareTo(tp.Root) <= 0) return (t, ts);
-            return (tp, List<Tree>.Cons(t, tsp));
-        }
+        var t1 = FunList<Tree>.Head(ts1);
+        var tsp1 = FunList<Tree>.Tail(ts1);
+        var t2 = FunList<Tree>.Head(ts2);
+        if (t1.Rank < t2.Rank) return FunList<Tree>.Cons(t1, MergeTrees(tsp1, ts2));
+        var tsp2 = FunList<Tree>.Tail(ts2);
+        if (t2.Rank < t1.Rank) return FunList<Tree>.Cons(t2, MergeTrees(ts1, tsp2));
+        return InsTree(Link(FunList<Tree>.Head(ts1), FunList<Tree>.Head(ts2)), MergeTrees(tsp1, tsp2));
+    }
 
-        public static T FindMin(List<Tree>.Node ts) => RemoveMinTree(ts).Item1.Root;
+    private static FunList<Tree>.Node Normalize(FunList<Tree>.Node tsp)
+    {
+        if (FunList<Tree>.IsEmpty(tsp)) return FunList<Tree>.Empty;
+        var t = FunList<Tree>.Head(tsp);
+        var ts = FunList<Tree>.Tail(tsp);
+        return InsTree(t, ts);
+    }
 
-        private static List<Tree>.Node InsertAll(List<T>.Node xsp, List<Tree>.Node ts)
-        {
-            if (List<T>.IsEmpty(xsp)) return ts;
-            var x = List<T>.Head(xsp);
-            var xs = List<T>.Tail(xsp);
-            return InsertAll(xs, Insert(x, ts));
-        }
+    public static FunList<Tree>.Node Insert(T x, FunList<Tree>.Node ts)
+    {
+        if (FunList<Tree>.IsEmpty(ts)) return FunList<Tree>.Cons(new Tree(0, x, FunList<T>.Empty, FunList<Tree>.Empty), FunList<Tree>.Empty);
+        var tail = FunList<Tree>.Tail(ts);
+        if (FunList<Tree>.IsEmpty(tail)) return FunList<Tree>.Cons(new Tree(0, x, FunList<T>.Empty, FunList<Tree>.Empty), ts);
+        var t1 = FunList<Tree>.Head(ts);
+        var t2 = FunList<Tree>.Head(tail);
+        var rest = FunList<Tree>.Tail(tail);
+        if (t1.Rank == t2.Rank) return FunList<Tree>.Cons(SkewLink(x, t1, t2), rest);
+        return FunList<Tree>.Cons(new Tree(0, x, FunList<T>.Empty, FunList<Tree>.Empty), ts);
+    }
 
-        public static List<Tree>.Node DeleteMin(List<Tree>.Node ts)
-        {
-            var (tree, ts2) = RemoveMinTree(ts);
-            //var _ = tree.Rank;
-            //var x = tree.Root;
-            var xs = tree.List;
-            var ts1 = tree.TreeList;
-            return InsertAll(xs, Merge(List<Tree>.Reverse(ts1), ts2));
-        }
+    public static FunList<Tree>.Node Merge(FunList<Tree>.Node ts1, FunList<Tree>.Node ts2) => MergeTrees(Normalize(ts1), Normalize(ts2));
+
+    private static (Tree, FunList<Tree>.Node) RemoveMinTree(FunList<Tree>.Node ds)
+    {
+        if (FunList<Tree>.IsEmpty(ds)) throw new ArgumentNullException(nameof(ds));
+        var t = FunList<Tree>.Head(ds);
+        var ts = FunList<Tree>.Tail(ds);
+        if (FunList<Tree>.IsEmpty(ts)) return (t, ts);
+        var (tp, tsp) = RemoveMinTree(ts);
+        if (t.Root.CompareTo(tp.Root) <= 0) return (t, ts);
+        return (tp, FunList<Tree>.Cons(t, tsp));
+    }
+
+    public static T FindMin(FunList<Tree>.Node ts) => RemoveMinTree(ts).Item1.Root;
+
+    private static FunList<Tree>.Node InsertAll(FunList<T>.Node xsp, FunList<Tree>.Node ts)
+    {
+        if (FunList<T>.IsEmpty(xsp)) return ts;
+        var x = FunList<T>.Head(xsp);
+        var xs = FunList<T>.Tail(xsp);
+        return InsertAll(xs, Insert(x, ts));
+    }
+
+    public static FunList<Tree>.Node DeleteMin(FunList<Tree>.Node ts)
+    {
+        var (tree, ts2) = RemoveMinTree(ts);
+        //var _ = tree.Rank;
+        //var x = tree.Root;
+        var xs = tree.FunList;
+        var ts1 = tree.TreeList;
+        return InsertAll(xs, Merge(FunList<Tree>.Reverse(ts1), ts2));
     }
 }

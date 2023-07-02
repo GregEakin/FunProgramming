@@ -9,14 +9,13 @@
 // Okasaki, Chris. "2.2 Binaryt Search Trees." Purely Functional Data Structures. 
 //     Cambridge, U.K.: Cambridge UP, 1998. 11-15. Print.
 
-namespace FunProgLib.tree
+namespace FunProgLib.tree;
+
+public interface IOrdered<in T>
 {
-    public interface IOrdered<in T>
-    {
-        bool Equal(T left, T right);
+    bool Equal(T left, T right);
 
-        bool LessThan(T left, T right);
+    bool LessThan(T left, T right);
 
-        bool LessThanEqual(T left, T right);
-    }
+    bool LessThanEqual(T left, T right);
 }

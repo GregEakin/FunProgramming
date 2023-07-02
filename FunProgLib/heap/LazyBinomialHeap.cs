@@ -9,83 +9,81 @@
 // Okasaki, Chris. "6.4.1 Example: Binomial Heaps." Purely Functional Data Structures. 
 //     Cambridge, U.K.: Cambridge UP, 1998. 70-72. Print.
 
-namespace FunProgLib.heap
+using FunProgLib.lists;
+// using Heap = System.Lazy<lists.FunList<LazyBinomialHeap<int>.Tree>.Node>;
+
+namespace FunProgLib.heap;
+
+public static class LazyBinomialHeap<T> where T : IComparable<T>
 {
-    using lists;
-    using System;
-    // using Heap = System.Lazy<lists.List<LazyBinomialHeap<int>.Tree>.Node>;
-
-    public static class LazyBinomialHeap<T> where T : IComparable<T>
+    public sealed class Tree
     {
-        public sealed class Tree
+        public Tree(int rank, T x, FunList<Tree>.Node list)
         {
-            public Tree(int rank, T x, List<Tree>.Node list)
-            {
-                Rank = rank;
-                Root = x;
-                List = list;
-            }
-
-            public int Rank { get; }
-
-            public T Root { get; }
-
-            public List<Tree>.Node List { get; }
+            Rank = rank;
+            Root = x;
+            FunList = list;
         }
 
-        public static Lazy<List<Tree>.Node> Empty { get; } = new Lazy<List<Tree>.Node>(() => List<Tree>.Empty);
+        public int Rank { get; }
 
-        public static bool IsEmpty(Lazy<List<Tree>.Node> heap) => 
-            heap == null || ReferenceEquals(Empty, heap) || List<Tree>.IsEmpty(heap.Value);
+        public T Root { get; }
 
-        public static int Rank(Tree t) => t.Rank;
+        public FunList<Tree>.Node FunList { get; }
+    }
 
-        public static T Root(Tree t) => t.Root;
+    public static Lazy<FunList<Tree>.Node> Empty { get; } = new Lazy<FunList<Tree>.Node>(() => FunList<Tree>.Empty);
 
-        private static Tree Link(Tree t1, Tree t2)
-        {
-            if (t1.Root.CompareTo(t2.Root) <= 0) return new Tree(t1.Rank + 1, t1.Root, List<Tree>.Cons(t2, t1.List));
-            return new Tree(t1.Rank + 1, t2.Root, List<Tree>.Cons(t1, t2.List));
-        }
+    public static bool IsEmpty(Lazy<FunList<Tree>.Node> heap) => 
+        heap == null || ReferenceEquals(Empty, heap) || FunList<Tree>.IsEmpty(heap.Value);
 
-        private static List<Tree>.Node InsTree(Tree t, List<Tree>.Node ts)
-        {
-            if (List<Tree>.IsEmpty(ts)) return List<Tree>.Cons(t, List<Tree>.Empty);
-            if (t.Rank < ts.Element.Rank) return List<Tree>.Cons(t, ts);
-            return InsTree(Link(t, ts.Element), ts.Next);
-        }
+    public static int Rank(Tree t) => t.Rank;
 
-        private static List<Tree>.Node Mrg(List<Tree>.Node ts1, List<Tree>.Node ts2)
-        {
-            if (List<Tree>.IsEmpty(ts2)) return ts1;
-            if (List<Tree>.IsEmpty(ts1)) return ts2;
+    public static T Root(Tree t) => t.Root;
 
-            if (ts1.Element.Rank < ts2.Element.Rank) return List<Tree>.Cons(ts1.Element, Mrg(ts1.Next, ts2));
-            if (ts2.Element.Rank < ts1.Element.Rank) return List<Tree>.Cons(ts2.Element, Mrg(ts1, ts2.Next));
-            return InsTree(Link(ts1.Element, ts2.Element), Mrg(ts1.Next, ts2.Next));
-        }
+    private static Tree Link(Tree t1, Tree t2)
+    {
+        if (t1.Root.CompareTo(t2.Root) <= 0) return new Tree(t1.Rank + 1, t1.Root, FunList<Tree>.Cons(t2, t1.FunList));
+        return new Tree(t1.Rank + 1, t2.Root, FunList<Tree>.Cons(t1, t2.FunList));
+    }
 
-        public static Lazy<List<Tree>.Node> Insert(T x, Lazy<List<Tree>.Node> ts) => 
-            new Lazy<List<Tree>.Node>(() => InsTree(new Tree(0, x, List<Tree>.Empty), ts.Value));
+    private static FunList<Tree>.Node InsTree(Tree t, FunList<Tree>.Node ts)
+    {
+        if (FunList<Tree>.IsEmpty(ts)) return FunList<Tree>.Cons(t, FunList<Tree>.Empty);
+        if (t.Rank < ts.Element.Rank) return FunList<Tree>.Cons(t, ts);
+        return InsTree(Link(t, ts.Element), ts.Next);
+    }
 
-        public static Lazy<List<Tree>.Node> Merge(Lazy<List<Tree>.Node> ts1, Lazy<List<Tree>.Node> ts2) => 
-            new Lazy<List<Tree>.Node>(() => Mrg(ts1.Value, ts2.Value));
+    private static FunList<Tree>.Node Mrg(FunList<Tree>.Node ts1, FunList<Tree>.Node ts2)
+    {
+        if (FunList<Tree>.IsEmpty(ts2)) return ts1;
+        if (FunList<Tree>.IsEmpty(ts1)) return ts2;
 
-        private static (Tree, List<Tree>.Node) RemoveMinTree(List<Tree>.Node list)
-        {
-            if (List<Tree>.IsEmpty(list)) throw new ArgumentNullException(nameof(list));
-            if (List<Tree>.IsEmpty(list.Next)) return (list.Element, List<Tree>.Empty);
-            var (tp, tsp) = RemoveMinTree(list.Next);
-            if (list.Element.Root.CompareTo(tp.Root) <= 0) return (list.Element, list.Next);
-            return (tp, List<Tree>.Cons(list.Element, tsp));
-        }
+        if (ts1.Element.Rank < ts2.Element.Rank) return FunList<Tree>.Cons(ts1.Element, Mrg(ts1.Next, ts2));
+        if (ts2.Element.Rank < ts1.Element.Rank) return FunList<Tree>.Cons(ts2.Element, Mrg(ts1, ts2.Next));
+        return InsTree(Link(ts1.Element, ts2.Element), Mrg(ts1.Next, ts2.Next));
+    }
 
-        public static T FindMin(Lazy<List<Tree>.Node> ts) => RemoveMinTree(ts.Value).Item1.Root;
+    public static Lazy<FunList<Tree>.Node> Insert(T x, Lazy<FunList<Tree>.Node> ts) => 
+        new Lazy<FunList<Tree>.Node>(() => InsTree(new Tree(0, x, FunList<Tree>.Empty), ts.Value));
 
-        public static Lazy<List<Tree>.Node> DeleteMin(Lazy<List<Tree>.Node> ts)
-        {
-            var (t, ts2) = RemoveMinTree(ts.Value);
-            return new Lazy<List<Tree>.Node>(() => Mrg(List<Tree>.Reverse(t.List), ts2));
-        }
+    public static Lazy<FunList<Tree>.Node> Merge(Lazy<FunList<Tree>.Node> ts1, Lazy<FunList<Tree>.Node> ts2) => 
+        new Lazy<FunList<Tree>.Node>(() => Mrg(ts1.Value, ts2.Value));
+
+    private static (Tree, FunList<Tree>.Node) RemoveMinTree(FunList<Tree>.Node list)
+    {
+        if (FunList<Tree>.IsEmpty(list)) throw new ArgumentNullException(nameof(list));
+        if (FunList<Tree>.IsEmpty(list.Next)) return (list.Element, FunList<Tree>.Empty);
+        var (tp, tsp) = RemoveMinTree(list.Next);
+        if (list.Element.Root.CompareTo(tp.Root) <= 0) return (list.Element, list.Next);
+        return (tp, FunList<Tree>.Cons(list.Element, tsp));
+    }
+
+    public static T FindMin(Lazy<FunList<Tree>.Node> ts) => RemoveMinTree(ts.Value).Item1.Root;
+
+    public static Lazy<FunList<Tree>.Node> DeleteMin(Lazy<FunList<Tree>.Node> ts)
+    {
+        var (t, ts2) = RemoveMinTree(ts.Value);
+        return new Lazy<FunList<Tree>.Node>(() => Mrg(FunList<Tree>.Reverse(t.FunList), ts2));
     }
 }

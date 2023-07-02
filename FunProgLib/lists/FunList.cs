@@ -11,7 +11,7 @@
 
 namespace FunProgLib.lists;
 
-public static class RList<T> // : IStack<T>
+public static class FunList<T> // : IStack<T>
 {
     public sealed class Node : IEnumerable<T>
     {
@@ -54,7 +54,8 @@ public static class RList<T> // : IStack<T>
             public T Current => _list.Element;
 
             public void Dispose()
-            { }
+            {
+            }
         }
     }
 
@@ -97,34 +98,35 @@ public static class RList<T> // : IStack<T>
         return Rev(Tail(listIn), next);
     }
 
-    public static T Lookup(int i, Node list)
+    public static TB FoldRight<TB>(Node xs, TB z, Func<T, TB, TB> f)
     {
-        if (IsEmpty(list)) throw new ArgumentNullException(nameof(list));
-        if (i < 0) throw new ArgumentException("neg", nameof(i));
-        return i == 0
-            ? Head(list)
-            : Lookup(i - 1, Tail(list));
+        if (IsEmpty(xs)) return z;
+        return f(xs.Element, FoldRight<TB>(xs.Next, z, f));
     }
 
-    //public static Node Update(int i, T item, Node list)
-    //{
-    //    if (IsEmpty(list)) throw new ArgumentNullException(nameof(list));
-    //    if (i < 0) throw new ArgumentException("neg", nameof(i));
-    //    return i == 0
-    //        ? Cons(item, Tail(list))
-    //        : Cons(Head(list), Update(i - 1, item, Tail(list)));
-    //}
-
-    public delegate T Del(T value);
-
-    public static Node Fupdate(Del f, int i, Node ts)
+    public static TB FoldLeftR<TB>(Node xs, TB z, Func<TB, T, TB> f)
     {
-        if (IsEmpty(ts)) throw new ArgumentNullException(nameof(ts));
-        if (i < 0) throw new ArgumentException("Negative", nameof(i));
-        var head = Head(ts);
-        var tail = Tail(ts);
-        return i == 0
-            ? Cons(f(head), tail)
-            : Cons(head, Fupdate(f, i - 1, tail));
+        var identity = new Func<TB, TB>(b => b);
+        var combinerDelayer =
+            new Func<T, Func<TB, TB>, Func<TB, TB>>((a, delayedExec) => b => delayedExec(f(b, a)));
+        var chain = FoldRight(xs, identity, combinerDelayer);
+        return chain(z);
     }
+
+    public static TB FoldLeft<TB>(Node xs, TB z, Func<TB, T, TB> f)
+    {
+        // while (true)
+        // {
+        //     if (IsEmpty(xs)) return z;
+        //     var xs1 = xs;
+        //     xs = xs.Next;
+        //     z = f(z, xs1.Element);
+        // }
+
+        if (IsEmpty(xs)) return z;
+        return FoldLeft<TB>(xs.Next, f(z, xs.Element), f);
+    }
+
+    public static TB FoldRightL<TB>(Node xs, TB z, Func<T, TB, TB> f) => 
+        FoldLeft(xs, new Func<TB, TB>(b => b), (g, a) => b => g(f(a, b)))(z);
 }

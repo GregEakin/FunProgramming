@@ -9,61 +9,58 @@
 // Okasaki, Chris. "6.5 Lazy Paring Heaps." Purely Functional Data Structures. 
 //     Cambridge, U.K.: Cambridge UP, 1998. 79-81. Print.
 
-namespace FunProgLib.heap
+namespace FunProgLib.heap;
+
+public static class LazyParingHeap<T> where T : IComparable<T>
 {
-    using System;
-
-    public static class LazyParingHeap<T> where T : IComparable<T>
+    public sealed class Heap
     {
-        public sealed class Heap
+        public Heap(T root, Heap list, Lazy<Heap> lazyList)
         {
-            public Heap(T root, Heap list, Lazy<Heap> lazyList)
-            {
-                Root = root;
-                List = list;
-                LazyList = lazyList;
-            }
-
-            public T Root { get; }
-
-            public Heap List { get; }
-
-            public Lazy<Heap> LazyList { get; }
+            Root = root;
+            FunList = list;
+            LazyList = lazyList;
         }
 
-        private static readonly Lazy<Heap> EmptyHeapSusp = new Lazy<Heap>(() => null);
+        public T Root { get; }
 
-        public static Heap Empty { get; } = null;
+        public Heap FunList { get; }
 
-        public static bool IsEmpty(Heap list) => list == Empty;
+        public Lazy<Heap> LazyList { get; }
+    }
 
-        public static Heap Merge(Heap h1, Heap h2)
-        {
-            if (IsEmpty(h2)) return h1;
-            if (IsEmpty(h1)) return h2;
+    private static readonly Lazy<Heap> EmptyHeapSusp = new Lazy<Heap>(() => null);
 
-            if (h1.Root.CompareTo(h2.Root) <= 0) return Link(h1, h2);
-            return Link(h2, h1);
-        }
+    public static Heap Empty { get; } = null;
 
-        private static Heap Link(Heap h1, Heap h2)
-        {
-            if (IsEmpty(h1.List)) return new Heap(h1.Root, h2, h1.LazyList);
-            return new Heap(h1.Root, Empty, new Lazy<Heap>(() => Merge(Merge(h2, h1.List), h1.LazyList.Value)));
-        }
+    public static bool IsEmpty(Heap list) => list == Empty;
 
-        public static Heap Insert(T x, Heap h) => Merge(new Heap(x, Empty, EmptyHeapSusp), h);
+    public static Heap Merge(Heap h1, Heap h2)
+    {
+        if (IsEmpty(h2)) return h1;
+        if (IsEmpty(h1)) return h2;
 
-        public static T FindMin(Heap h)
-        {
-            if (IsEmpty(h)) throw new ArgumentNullException(nameof(h));
-            return h.Root;
-        }
+        if (h1.Root.CompareTo(h2.Root) <= 0) return Link(h1, h2);
+        return Link(h2, h1);
+    }
 
-        public static Heap DeleteMin(Heap h)
-        {
-            if (IsEmpty(h)) throw new ArgumentNullException(nameof(h));
-            return Merge(h.List, h.LazyList.Value);
-        }
+    private static Heap Link(Heap h1, Heap h2)
+    {
+        if (IsEmpty(h1.FunList)) return new Heap(h1.Root, h2, h1.LazyList);
+        return new Heap(h1.Root, Empty, new Lazy<Heap>(() => Merge(Merge(h2, h1.FunList), h1.LazyList.Value)));
+    }
+
+    public static Heap Insert(T x, Heap h) => Merge(new Heap(x, Empty, EmptyHeapSusp), h);
+
+    public static T FindMin(Heap h)
+    {
+        if (IsEmpty(h)) throw new ArgumentNullException(nameof(h));
+        return h.Root;
+    }
+
+    public static Heap DeleteMin(Heap h)
+    {
+        if (IsEmpty(h)) throw new ArgumentNullException(nameof(h));
+        return Merge(h.FunList, h.LazyList.Value);
     }
 }

@@ -8,25 +8,22 @@
 //
 
 using FunProgLib.Utilities;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace FunProgTests.utilities
+namespace FunProgTests.utilities;
+
+public class StringUtilitiesTests
 {
-    [TestClass]
-    public class StringUtilitiesTests
+    [Fact]
+    public void EnumerableToReadableStringEmptyTest()
     {
-        [TestMethod]
-        public void EnumerableToReadableStringEmptyTest()
-        {
-            var data = new string[0];
-            Assert.AreEqual("[]", data.ToReadableString());
-        }
+        var data = new string[0];
+        Assert.Equal("[]", data.ToReadableString());
+    }
 
-        [TestMethod]
-        public void EnumerableToReadableStringTest()
-        {
-            var data = new[] { "A", "B" };
-            Assert.AreEqual("[A, B]", data.ToReadableString());
-        }
+    [Fact]
+    public void EnumerableToReadableStringTest()
+    {
+        var data = new[] { "A", "B" };
+        Assert.Equal("[A, B]", data.ToReadableString());
     }
 }

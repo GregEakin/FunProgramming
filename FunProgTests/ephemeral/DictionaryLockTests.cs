@@ -7,139 +7,132 @@
 // All Rights Reserved.
 //
 
-using System;
-using System.Collections.Concurrent;
-using System.Threading;
-using System.Threading.Tasks;
 using FunProgLib.heap;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace FunProgTests.ephemeral
+namespace FunProgTests.ephemeral;
+
+public class DictionaryLock<T>
 {
-    public class DictionaryLock<T>
+    private readonly object _lockObject = new object();
+    private readonly CancellationToken _token;
+    private SplayHeap<string>.Heap _set = SplayHeap<string>.Empty;
+
+    public DictionaryLock(CancellationToken token)
     {
-        private readonly object _lockObject = new object();
-        private readonly CancellationToken _token;
-        private SplayHeap<string>.Heap _set = SplayHeap<string>.Empty;
+        _token = token;
 
-        public DictionaryLock(CancellationToken token)
+        token.Register(() =>
         {
-            _token = token;
+            lock (_lockObject)
+                Monitor.PulseAll(_lockObject);
+        });
+    }
 
-            token.Register(() =>
-            {
-                lock (_lockObject)
-                    Monitor.PulseAll(_lockObject);
-            });
+    public bool Insert(string word)
+    {
+        if (_token.IsCancellationRequested)
+            return false;
+
+        // 132 ms, 3,000 calls
+        lock (_lockObject)
+        {
+            // 13 ms, 3,000 calls
+            _set = SplayHeap<string>.Insert(word, _set);
+
+            // 2 ms, 3,000 calls
+            Monitor.Pulse(_lockObject);
         }
 
-        public bool Insert(string word)
+        return true;
+    }
+
+    public bool Remove(out string item)
+    {
+        // 58 ms, 3,000 calls
+        SplayHeap<string>.Heap localCopy;
+        lock (_lockObject)
         {
-            if (_token.IsCancellationRequested)
+            while (!_token.IsCancellationRequested && SplayHeap<string>.IsEmpty(_set))
+                // 33 ms, 1,609 calls
+                Monitor.Wait(_lockObject);
+
+            if (SplayHeap<string>.IsEmpty(_set))
+            {
+                item = default(string);
                 return false;
-
-            // 132 ms, 3,000 calls
-            lock (_lockObject)
-            {
-                // 13 ms, 3,000 calls
-                _set = SplayHeap<string>.Insert(word, _set);
-
-                // 2 ms, 3,000 calls
-                Monitor.Pulse(_lockObject);
-            }
-
-            return true;
-        }
-
-        public bool Remove(out string item)
-        {
-            // 58 ms, 3,000 calls
-            SplayHeap<string>.Heap localCopy;
-            lock (_lockObject)
-            {
-                while (!_token.IsCancellationRequested && SplayHeap<string>.IsEmpty(_set))
-                    // 33 ms, 1,609 calls
-                    Monitor.Wait(_lockObject);
-
-                if (SplayHeap<string>.IsEmpty(_set))
-                {
-                    item = default(string);
-                    return false;
-                }
-
-                // 2 ms, 3,000 calls
-                localCopy = _set;
-                _set = SplayHeap<string>.DeleteMin(localCopy);
             }
 
             // 2 ms, 3,000 calls
-            item = SplayHeap<string>.FindMin(localCopy);
-            return true;
+            localCopy = _set;
+            _set = SplayHeap<string>.DeleteMin(localCopy);
         }
 
-        public bool IsEmpty
+        // 2 ms, 3,000 calls
+        item = SplayHeap<string>.FindMin(localCopy);
+        return true;
+    }
+
+    public bool IsEmpty
+    {
+        get
         {
-            get
+            lock (_lockObject)
             {
-                lock (_lockObject)
-                {
-                    return SplayHeap<string>.IsEmpty(_set);
-                }
+                return SplayHeap<string>.IsEmpty(_set);
             }
         }
     }
+}
 
-    [TestClass]
-    public class DictionaryLockTests : DictionaryTests
+public class DictionaryLockTests : DictionaryTests
+{
+    // 157 ms, 10 calls
+    private void InsertAction(object ojb)
     {
-        // 157 ms, 10 calls
-        private void InsertAction(object ojb)
+        var map = (DictionaryLock<string>) ojb;
+        for (var i = 0; i < Count; i++)
         {
-            var map = (DictionaryLock<string>) ojb;
-            for (var i = 0; i < Count; i++)
-            {
-                // 5 ms, 3,000 calls
-                var word = NextWord(10);
-                var inserted = map.Insert(word);
-                if (!inserted)
-                    break;
-            }
+            // 5 ms, 3,000 calls
+            var word = NextWord(10);
+            var inserted = map.Insert(word);
+            if (!inserted)
+                break;
         }
+    }
 
 
-        // 98 ms, 10 calls
-        private static void RemoveAction(object ojb)
+    // 98 ms, 10 calls
+    private static void RemoveAction(object ojb)
+    {
+        var map = (DictionaryLock<string>) ojb;
+        for (var i = 0; i < Count; i++)
         {
-            var map = (DictionaryLock<string>) ojb;
-            for (var i = 0; i < Count; i++)
-            {
-                var removed = map.Remove(out var item);
-                if (!removed)
-                    break;
+            var removed = map.Remove(out var item);
+            if (!removed)
+                break;
 
-                var unused = Convert.FromBase64String(item);
-                // Console.WriteLine(string.Join(", ", unused));
-            }
+            var _ = Convert.FromBase64String(item);
+            // Console.WriteLine(string.Join(", ", unused));
         }
+    }
 
-        [TestMethod]
-        public void Test1()
+    [Fact]
+    public void Test1()
+    {
+        using (var tokenSource = new CancellationTokenSource())
         {
-            using (var tokenSource = new CancellationTokenSource())
+            var token = tokenSource.Token;
+            var taskList = new ConcurrentBag<Task>();
+            var dictionary = new DictionaryLock<string>(token);
+
+            for (var i = 0; i < Threads; i += 2)
             {
-                var token = tokenSource.Token;
-                var taskList = new ConcurrentBag<Task>();
-                var dictionary = new DictionaryLock<string>(token);
-
-                for (var i = 0; i < Threads; i += 2)
-                {
-                    taskList.Add(Task.Factory.StartNew(InsertAction, dictionary, token));
-                    taskList.Add(Task.Factory.StartNew(RemoveAction, dictionary, token));
-                }
-
-                Task.WaitAll(taskList.ToArray());
-                Assert.IsTrue(dictionary.IsEmpty);
+                taskList.Add(Task.Factory.StartNew(InsertAction, dictionary, token));
+                taskList.Add(Task.Factory.StartNew(RemoveAction, dictionary, token));
             }
+
+            Task.WaitAll(taskList.ToArray());
+            Assert.True(dictionary.IsEmpty);
         }
     }
 }

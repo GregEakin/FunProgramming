@@ -7,23 +7,19 @@
 // All Rights Reserved.
 //
 
-namespace FunProgLib.Utilities
-{
-    using System.Collections;
-    using System.Text;
+namespace FunProgLib.Utilities;
 
-    public static class StringUtilities
+public static class StringUtilities
+{
+    public static string ToReadableString(this IEnumerable list)
     {
-        public static string ToReadableString(this IEnumerable list)
-        {
-            var sb = new StringBuilder();
-            sb.Append("[");
-            foreach (var l in list)
-                sb.Append(l + ", ");
-            if (sb.Length > 2)
-                sb.Remove(sb.Length - 2, 2);
-            sb.Append("]");
-            return sb.ToString();
-        }
+        var sb = new StringBuilder();
+        sb.Append("[");
+        foreach (var l in list)
+            sb.Append(l + ", ");
+        if (sb.Length > 2)
+            sb.Remove(sb.Length - 2, 2);
+        sb.Append("]");
+        return sb.ToString();
     }
 }

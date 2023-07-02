@@ -9,58 +9,56 @@
 // Okasaki, Chris. "5.5 Pairing Heaps." Purely Functional Data Structures. 
 //     Cambridge, U.K.: Cambridge UP, 1998. 52-54. Print.
 
-namespace FunProgLib.heap
+using FunProgLib.lists;
+
+namespace FunProgLib.heap;
+
+public static class ParingHeap<T> where T : IComparable<T>
 {
-    using lists;
-    using System;
-
-    public static class ParingHeap<T> where T : IComparable<T>
+    public sealed class Heap
     {
-        public sealed class Heap
+        public Heap(T root, FunList<Heap>.Node list)
         {
-            public Heap(T root, List<Heap>.Node list)
-            {
-                Root = root;
-                List = list;
-            }
-
-            public T Root { get; }
-
-            public List<Heap>.Node List { get; }
+            Root = root;
+            FunList = list;
         }
 
-        public static Heap Empty { get; } = null;
+        public T Root { get; }
 
-        public static bool IsEmpty(Heap list) => list == Empty;
+        public FunList<Heap>.Node FunList { get; }
+    }
 
-        public static Heap Merge(Heap h1, Heap h2)
-        {
-            if (h2 == Empty) return h1;
-            if (h1 == Empty) return h2;
+    public static Heap Empty { get; } = null;
 
-            if (h1.Root.CompareTo(h2.Root) <= 0) return new Heap(h1.Root, List<Heap>.Cons(h2, h1.List));
-            return new Heap(h2.Root, List<Heap>.Cons(h1, h2.List));
-        }
+    public static bool IsEmpty(Heap list) => list == Empty;
 
-        public static Heap Insert(T x, Heap h) => Merge(new Heap(x, List<Heap>.Empty), h);
+    public static Heap Merge(Heap h1, Heap h2)
+    {
+        if (h2 == Empty) return h1;
+        if (h1 == Empty) return h2;
 
-        private static Heap MergePairs(List<Heap>.Node hs)
-        {
-            if (List<Heap>.IsEmpty(hs)) return Empty;
-            if (List<Heap>.IsEmpty(hs.Next)) return hs.Element;
-            return Merge(Merge(hs.Element, hs.Next.Element), MergePairs(hs.Next.Next));
-        }
+        if (h1.Root.CompareTo(h2.Root) <= 0) return new Heap(h1.Root, FunList<Heap>.Cons(h2, h1.FunList));
+        return new Heap(h2.Root, FunList<Heap>.Cons(h1, h2.FunList));
+    }
 
-        public static T FindMin(Heap h)
-        {
-            if (IsEmpty(h)) throw new ArgumentNullException(nameof(h));
-            return h.Root;
-        }
+    public static Heap Insert(T x, Heap h) => Merge(new Heap(x, FunList<Heap>.Empty), h);
 
-        public static Heap DeleteMin(Heap h)
-        {
-            if (IsEmpty(h)) throw new ArgumentNullException(nameof(h));
-            return MergePairs(h.List);
-        }
+    private static Heap MergePairs(FunList<Heap>.Node hs)
+    {
+        if (FunList<Heap>.IsEmpty(hs)) return Empty;
+        if (FunList<Heap>.IsEmpty(hs.Next)) return hs.Element;
+        return Merge(Merge(hs.Element, hs.Next.Element), MergePairs(hs.Next.Next));
+    }
+
+    public static T FindMin(Heap h)
+    {
+        if (IsEmpty(h)) throw new ArgumentNullException(nameof(h));
+        return h.Root;
+    }
+
+    public static Heap DeleteMin(Heap h)
+    {
+        if (IsEmpty(h)) throw new ArgumentNullException(nameof(h));
+        return MergePairs(h.FunList);
     }
 }

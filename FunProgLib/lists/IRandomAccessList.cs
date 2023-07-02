@@ -9,22 +9,21 @@
 // Okasaki, Chris. "9.2.1 Binary Random-Access Lists." Purely Functional Data Structures. 
 //     Cambridge, U.K.: Cambridge UP, 1998. 119-22. Print.
 
-namespace FunProgLib.lists
+namespace FunProgLib.lists;
+
+public interface IRandomAccessList<T>
 {
-    public interface IRandomAccessList<T>
-    {
-        IRandomAccessList<T> Empty { get; }
+    IRandomAccessList<T> Empty { get; }
 
-        bool IsEmpty(IRandomAccessList<T> list);
+    bool IsEmpty(IRandomAccessList<T> list);
 
-        IRandomAccessList<T> Cons(T element, IRandomAccessList<T> list);
+    IRandomAccessList<T> Cons(T element, IRandomAccessList<T> list);
 
-        T Head(IRandomAccessList<T> list);
+    T Head(IRandomAccessList<T> list);
 
-        IRandomAccessList<T> Tail(IRandomAccessList<T> list);
+    IRandomAccessList<T> Tail(IRandomAccessList<T> list);
 
-        T Lookup(int index, IRandomAccessList<T> list);
+    T Lookup(int index, IRandomAccessList<T> list);
 
-        IRandomAccessList<T> Update(int index, T element, IRandomAccessList<T> list);
-    }
+    IRandomAccessList<T> Update(int index, T element, IRandomAccessList<T> list);
 }

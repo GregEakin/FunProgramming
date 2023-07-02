@@ -9,22 +9,19 @@
 // Okasaki, Chris. "3.1 Leftist Heaps." Purely Functional Data Structures. 
 //     Cambridge, U.K.: Cambridge UP, 1998. 17-20. Print.
 
-namespace FunProgLib.heap
+namespace FunProgLib.heap;
+
+public interface IHeap<T> where T : IComparable<T>
 {
-    using System;
+    IHeap<T> Empty { get; }
 
-    public interface IHeap<T> where T : IComparable<T>
-    {
-        IHeap<T> Empty { get; }
+    bool IsEmpty(IHeap<T> heap);
 
-        bool IsEmpty(IHeap<T> heap);
+    IHeap<T> Insert(T value, IHeap<T> heap);
 
-        IHeap<T> Insert(T value, IHeap<T> heap);
+    IHeap<T> Merge(IHeap<T> a, IHeap<T> b);
 
-        IHeap<T> Merge(IHeap<T> a, IHeap<T> b);
+    T FindMin(IHeap<T> heap);
 
-        T FindMin(IHeap<T> heap);
-
-        IHeap<T> DeleteMin(IHeap<T> heap);
-    }
+    IHeap<T> DeleteMin(IHeap<T> heap);
 }

@@ -9,47 +9,45 @@
 // Okasaki, Chris. "5.2 Queues." Purely Functional Data Structures. 
 //     Cambridge, U.K.: Cambridge UP, 1998. 42-45. Print.
 
-namespace FunProgLib.queue
+using FunProgLib.lists;
+
+namespace FunProgLib.queue;
+
+public static class BatchedQueue<T>
 {
-    using lists;
-    using System;
-
-    public static class BatchedQueue<T>
+    public sealed class Queue
     {
-        public sealed class Queue
+        public Queue(FunList<T>.Node f, FunList<T>.Node r)
         {
-            public Queue(List<T>.Node f, List<T>.Node r)
-            {
-                F = f;
-                R = r;
-            }
-
-            public List<T>.Node F { get; }
-            public List<T>.Node R { get; }
+            F = f;
+            R = r;
         }
 
-        public static Queue Empty { get; } = new Queue(List<T>.Empty, List<T>.Empty);
+        public FunList<T>.Node F { get; }
+        public FunList<T>.Node R { get; }
+    }
 
-        public static bool IsEmpty(Queue q) => List<T>.IsEmpty(q.F);
+    public static Queue Empty { get; } = new Queue(FunList<T>.Empty, FunList<T>.Empty);
 
-        private static Queue CheckF(List<T>.Node f, List<T>.Node r)
-        {
-            if (List<T>.IsEmpty(f)) return new Queue(List<T>.Reverse(r), List<T>.Empty);
-            return new Queue(f, r);
-        }
+    public static bool IsEmpty(Queue q) => FunList<T>.IsEmpty(q.F);
 
-        public static Queue Snoc(Queue q, T x) => CheckF(q.F, List<T>.Cons(x, q.R));
+    private static Queue CheckF(FunList<T>.Node f, FunList<T>.Node r)
+    {
+        if (FunList<T>.IsEmpty(f)) return new Queue(FunList<T>.Reverse(r), FunList<T>.Empty);
+        return new Queue(f, r);
+    }
 
-        public static T Head(Queue q)
-        {
-            if (List<T>.IsEmpty(q.F)) throw new ArgumentNullException(nameof(q));
-            return q.F.Element;
-        }
+    public static Queue Snoc(Queue q, T x) => CheckF(q.F, FunList<T>.Cons(x, q.R));
 
-        public static Queue Tail(Queue q)
-        {
-            if (List<T>.IsEmpty(q.F)) throw new ArgumentNullException(nameof(q));
-            return CheckF(q.F.Next, q.R);
-        }
+    public static T Head(Queue q)
+    {
+        if (FunList<T>.IsEmpty(q.F)) throw new ArgumentNullException(nameof(q));
+        return q.F.Element;
+    }
+
+    public static Queue Tail(Queue q)
+    {
+        if (FunList<T>.IsEmpty(q.F)) throw new ArgumentNullException(nameof(q));
+        return CheckF(q.F.Next, q.R);
     }
 }

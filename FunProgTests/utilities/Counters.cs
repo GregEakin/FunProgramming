@@ -7,22 +7,21 @@
 // All Rights Reserved.
 //
 
-namespace FunProgTests.utilities
-{
-    public static class Counters
-    {
-        public static int CountBinaryOnes(int n)
-        {
-            var count = 0;
-            while (n != 0)
-            {
-                n = n & (n - 1);
-                count++;
-            }
+namespace FunProgTests.utilities;
 
-            return count;
+public static class Counters
+{
+    public static int CountBinaryOnes(int n)
+    {
+        var count = 0;
+        while (n != 0)
+        {
+            n &= n - 1;
+            count++;
         }
 
-        public static int CountChar(string s, char c) => s.Split(c).Length;
+        return count;
     }
+
+    public static int CountChar(string s, char c) => s.Split(c).Length;
 }

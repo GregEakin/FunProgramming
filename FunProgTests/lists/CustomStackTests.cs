@@ -7,53 +7,48 @@
 // All Rights Reserved.
 //
 
-using System;
 using FunProgLib.lists;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using static FunProgTests.utilities.ExpectedException;
 
-namespace FunProgTests.lists
+namespace FunProgTests.lists;
+
+public class CustomStackTests
 {
-    [TestClass]
-    public class CustomStackTests
+    [Fact]
+    public void EmptyTest()
     {
-        [TestMethod]
-        public void EmptyTest()
-        {
-            var stack = CustomStack<string>.Empty;
-            Assert.IsTrue(CustomStack<string>.IsEmpty(stack));
-        }
+        var stack = CustomStack<string>.Empty;
+        Assert.True(CustomStack<string>.IsEmpty(stack));
+    }
 
-        [TestMethod]
-        public void NotEmptyTest()
-        {
-            var stack = CustomStack<string>.Cons("Hello", CustomStack<string>.Empty);
-            Assert.IsFalse(CustomStack<string>.IsEmpty(stack));
-        }
+    [Fact]
+    public void NotEmptyTest()
+    {
+        var stack = CustomStack<string>.Cons("Hello", CustomStack<string>.Empty);
+        Assert.False(CustomStack<string>.IsEmpty(stack));
+    }
 
-        [TestMethod]
-        public void EmptyHeadTest()
-        {
-            var stack = CustomStack<string>.Empty;
-            AssertThrows<ArgumentNullException>(() => CustomStack<string>.Head(stack));
-        }
+    [Fact]
+    public void EmptyHeadTest()
+    {
+        var stack = CustomStack<string>.Empty;
+        Assert.Throws<ArgumentNullException>(() => CustomStack<string>.Head(stack));
+    }
 
-        [TestMethod]
-        public void HeadTest()
-        {
-            var stack = CustomStack<string>.Cons("Hello", CustomStack<string>.Empty);
-            var head = CustomStack<string>.Head(stack);
-            Assert.AreEqual("Hello", head);
-        }
+    [Fact]
+    public void HeadTest()
+    {
+        var stack = CustomStack<string>.Cons("Hello", CustomStack<string>.Empty);
+        var head = CustomStack<string>.Head(stack);
+        Assert.Equal("Hello", head);
+    }
 
-        [TestMethod]
-        public void TailTest()
-        {
-            var empty = CustomStack<string>.Empty;
-            var hello = CustomStack<string>.Cons("Hello", empty);
-            var world = CustomStack<string>.Cons("World", hello);
-            var stack = CustomStack<string>.Tail(world);
-            Assert.AreEqual(hello, stack);
-        }
+    [Fact]
+    public void TailTest()
+    {
+        var empty = CustomStack<string>.Empty;
+        var hello = CustomStack<string>.Cons("Hello", empty);
+        var world = CustomStack<string>.Cons("World", hello);
+        var stack = CustomStack<string>.Tail(world);
+        Assert.Equal(hello, stack);
     }
 }

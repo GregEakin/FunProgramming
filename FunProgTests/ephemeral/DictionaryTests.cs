@@ -7,21 +7,18 @@
 // All Rights Reserved.
 //
 
-using System;
+namespace FunProgTests.ephemeral;
 
-namespace FunProgTests.ephemeral
+public class DictionaryTests
 {
-    public class DictionaryTests
-    {
-        protected const int Threads = 20;
-        protected const int Count = 300;
-        private readonly Random _random = new Random();
+    protected const int Threads = 20;
+    protected const int Count = 300;
+    private readonly Random _random = new Random();
 
-        protected string NextWord(int length)
-        {
-            var data = new byte[length];
-            _random.NextBytes(data);
-            return Convert.ToBase64String(data);
-        }
+    protected string NextWord(int length)
+    {
+        var data = new byte[length];
+        _random.NextBytes(data);
+        return Convert.ToBase64String(data);
     }
 }

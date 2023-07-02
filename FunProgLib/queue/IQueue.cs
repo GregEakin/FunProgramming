@@ -9,18 +9,17 @@
 // Okasaki, Chris. "5.2 Queues." Purely Functional Data Structures. 
 //     Cambridge, U.K.: Cambridge UP, 1998. 42-45. Print.
 
-namespace FunProgLib.queue
+namespace FunProgLib.queue;
+
+public interface IQueue<T>
 {
-    public interface IQueue<T>
-    {
-        IQueue<T> Empty { get; }
+    IQueue<T> Empty { get; }
 
-        bool IsEmpty(IQueue<T> queue);
+    bool IsEmpty(IQueue<T> queue);
 
-        IQueue<T> Snoc(IQueue<T> queue, T element);
+    IQueue<T> Snoc(IQueue<T> queue, T element);
 
-        T Head(IQueue<T> queue);
+    T Head(IQueue<T> queue);
 
-        IQueue<T> Tail(IQueue<T> queue);
-    }
+    IQueue<T> Tail(IQueue<T> queue);
 }
