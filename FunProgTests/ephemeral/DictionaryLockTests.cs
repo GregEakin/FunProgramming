@@ -117,22 +117,20 @@ public class DictionaryLockTests : DictionaryTests
     }
 
     [Fact]
-    public void Test1()
+    public async Task Test1()
     {
-        using (var tokenSource = new CancellationTokenSource())
+        using var tokenSource = new CancellationTokenSource();
+        var token = tokenSource.Token;
+        var taskList = new ConcurrentBag<Task>();
+        var dictionary = new DictionaryLock<string>(token);
+
+        for (var i = 0; i < Threads; i += 2)
         {
-            var token = tokenSource.Token;
-            var taskList = new ConcurrentBag<Task>();
-            var dictionary = new DictionaryLock<string>(token);
-
-            for (var i = 0; i < Threads; i += 2)
-            {
-                taskList.Add(Task.Factory.StartNew(InsertAction, dictionary, token));
-                taskList.Add(Task.Factory.StartNew(RemoveAction, dictionary, token));
-            }
-
-            Task.WaitAll(taskList.ToArray());
-            Assert.True(dictionary.IsEmpty);
+            taskList.Add(Task.Factory.StartNew(InsertAction, dictionary, token));
+            taskList.Add(Task.Factory.StartNew(RemoveAction, dictionary, token));
         }
+
+        await Task.WhenAll(taskList.ToArray());
+        Assert.True(dictionary.IsEmpty);
     }
 }

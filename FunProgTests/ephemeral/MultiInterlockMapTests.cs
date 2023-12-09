@@ -52,7 +52,7 @@ public class MultiInterlockMapTests : DictionaryTests
     }
 
     [Fact]
-    public void Test1()
+    public async Task Test1()
     {
         var taskList = new ConcurrentBag<Task>();
         for (var i = 0; i < Threads; i += 3)
@@ -62,7 +62,7 @@ public class MultiInterlockMapTests : DictionaryTests
             taskList.Add(Task.Factory.StartNew(map => ReadAction(), this));
         }
 
-        Task.WaitAll(taskList.ToArray());
+        await Task.WhenAll(taskList.ToArray());
         Console.WriteLine("Done....");
     }
 }

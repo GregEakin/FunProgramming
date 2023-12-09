@@ -71,7 +71,7 @@ public class DictionaryInterlockTests : DictionaryTests
 
     //[AssertTraffic(AllocatedObjectsCount = 15128)]
     [Fact]
-    public void Test1()
+    public async Task Test1()
     {
         var taskList = new ConcurrentBag<Task>();
         for (var i = 0; i < Threads; i += 2)
@@ -80,7 +80,7 @@ public class DictionaryInterlockTests : DictionaryTests
             taskList.Add(Task.Factory.StartNew(map => RemoveAction(), this));
         }
 
-        Task.WaitAll(taskList.ToArray());
+        await Task.WhenAll(taskList.ToArray());
 
         Assert.Null(_set);
     }

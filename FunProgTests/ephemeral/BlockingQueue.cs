@@ -75,7 +75,7 @@ internal class BlockingQueue<T>
 public class BlockingQueueTests
 {
     [Fact]
-    public void BlockingQueueTest()
+    public async Task BlockingQueueTest()
     {
         using var tokenSource = new CancellationTokenSource();
         var token = tokenSource.Token;
@@ -123,6 +123,6 @@ public class BlockingQueueTests
         Trace.WriteLine($"{Environment.CurrentManagedThreadId,3}: {watch.ElapsedMilliseconds,3} Stopping after 27 ms");
         tokenSource.CancelAfter(27);
 
-        Task.WaitAll(tasks.ToArray());
+        await Task.WhenAll(tasks.ToArray());
     }
 }
