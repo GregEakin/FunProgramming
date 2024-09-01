@@ -38,7 +38,7 @@ public static class BootstrappedQueue<T>
         public FunList<T>.Node R { get; }
     }
 
-    public static Queue Empty { get; } = null;
+    public static Queue Empty => null;
 
     public static bool IsEmpty(Queue queue) => queue == Empty;
 

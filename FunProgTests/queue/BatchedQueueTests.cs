@@ -17,11 +17,11 @@ public class BatchedQueueTests
     private static string DumpQueue<T>(BatchedQueue<T>.Queue queue)
     {
         var builder = new StringBuilder();
-        builder.Append("[");
+        builder.Append('[');
         builder.Append(queue.F?.ToReadableString() ?? "null");
         builder.Append(", ");
         builder.Append(queue.R?.ToReadableString() ?? "null");
-        builder.Append("]");
+        builder.Append(']');
         return builder.ToString();
     }
 

@@ -7,11 +7,19 @@
 // All Rights Reserved.
 //
 
+using Xunit.Abstractions;
+
 namespace FunProgTests.ephemeral;
 
 public class CacheSpeedTests
 {
     private static readonly Random RandomNum = new Random();
+    private readonly ITestOutputHelper _testOutputHelper;
+
+    public CacheSpeedTests(ITestOutputHelper testOutputHelper)
+    {
+        _testOutputHelper = testOutputHelper;
+    }
 
     // [Ignore]
     // [Fact]
@@ -21,7 +29,7 @@ public class CacheSpeedTests
         const int duration = 1000;  // ms
         var count = RandomAccessMemory(memory, duration, false);
         var time = 1.0e6 * duration / count;
-        Console.WriteLine($"Test took {count:n0} times, for an average of {time} nanoseconds");
+        _testOutputHelper.WriteLine($"Test took {count:n0} times, for an average of {time} nanoseconds");
     }
 
     private struct TestRun
@@ -77,10 +85,10 @@ public class CacheSpeedTests
             }
         }
 
-        Console.WriteLine("Test\t         Size\tWithout\t   With\t   Diff");
+        _testOutputHelper.WriteLine("Test\t         Size\tWithout\t   With\t   Diff");
         foreach (var testRun in testRuns)
         {
-            Console.WriteLine(
+            _testOutputHelper.WriteLine(
                 $"{testRun.Index,4}\t{testRun.Memory.Length,13:N0}\t{testRun.TimeWithout,7:F2}\t{testRun.TimeWith,7:F2}\t{testRun.TimeWith - testRun.TimeWithout,7:F2}");
         }
     }

@@ -16,23 +16,20 @@ public class AltBinaryRandomAccessListTests
 {
     private static string DumpTree<T>(AltBinaryRandomAccessList<T>.DataType tree) where T : IComparable<T>
     {
-        if (tree == null)
-            return "null";
-
-        if (tree is AltBinaryRandomAccessList<T>.Zero zero)
-            return $"[Zero: {DumpList(zero.RList)}]";
-
-        if (tree is AltBinaryRandomAccessList<T>.One one)
-            return $"[One: {one.Alpha}, {DumpList(one.RList)}]";
-
-        throw new ArgumentException();
+        return tree switch
+        {
+            null => "null",
+            AltBinaryRandomAccessList<T>.Zero zero => $"[Zero: {DumpList(zero.RList)}]",
+            AltBinaryRandomAccessList<T>.One one => $"[One: {one.Alpha}, {DumpList(one.RList)}]",
+            _ => throw new ArgumentException("Unknown tree type element.", nameof(tree))
+        };
     }
 
     private static string DumpList<T>(RList<Tuple<T, T>>.Node list)
     {
         var result = new StringBuilder();
-        result.Append("{");
-        var separator = "";
+        result.Append('{');
+        var separator = string.Empty;
         while (true)
         {
             if (list == null) break;
@@ -42,7 +39,7 @@ public class AltBinaryRandomAccessListTests
             result.Append(head);
             list = RList<Tuple<T, T>>.Tail(list);
         }
-        result.Append("}");
+        result.Append('}');
         return result.ToString();
     }
 

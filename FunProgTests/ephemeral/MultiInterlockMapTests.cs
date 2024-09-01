@@ -8,12 +8,19 @@
 //
 
 using FunProgLib.tree;
+using Xunit.Abstractions;
 
 namespace FunProgTests.ephemeral;
 
 public class MultiInterlockMapTests : DictionaryTests
 {
     private volatile RedBlackSet<string>.Tree _set = RedBlackSet<string>.EmptyTree;
+    private readonly ITestOutputHelper _testOutputHelper;
+
+    public MultiInterlockMapTests(ITestOutputHelper testOutputHelper)
+    {
+        _testOutputHelper = testOutputHelper;
+    }
 
     private void WriteAction()
     {
@@ -33,7 +40,7 @@ public class MultiInterlockMapTests : DictionaryTests
             }
         }
 
-        Console.WriteLine("Write Task={0}, Thread={1} : {2} average",
+        _testOutputHelper.WriteLine("Write Task={0}, Thread={1} : {2} average",
             Task.CurrentId, Environment.CurrentManagedThreadId, 2.0 * Count / total);
     }
 
@@ -47,7 +54,7 @@ public class MultiInterlockMapTests : DictionaryTests
                 hits++;
         }
 
-        Console.WriteLine("Read Task={0}, Thread={1} : {2} words found",
+        _testOutputHelper.WriteLine("Read Task={0}, Thread={1} : {2} words found",
             Task.CurrentId, Environment.CurrentManagedThreadId, hits);
     }
 
@@ -63,6 +70,6 @@ public class MultiInterlockMapTests : DictionaryTests
         }
 
         await Task.WhenAll(taskList.ToArray());
-        Console.WriteLine("Done....");
+        _testOutputHelper.WriteLine("Done....");
     }
 }

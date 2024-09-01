@@ -28,7 +28,7 @@ public static class ParingHeap<T> where T : IComparable<T>
         public FunList<Heap>.Node FunList { get; }
     }
 
-    public static Heap Empty { get; } = null;
+    public static Heap Empty => null;
 
     public static bool IsEmpty(Heap list) => list == Empty;
 

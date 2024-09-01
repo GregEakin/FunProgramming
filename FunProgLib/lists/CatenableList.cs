@@ -27,7 +27,7 @@ public static class CatenableList<T>
         public BootstrappedQueue<Lazy<C>>.Queue Q { get; }
     }
 
-    public static C Empty { get; } = null;
+    public static C Empty => null;
 
     public static bool IsEmpty(C list) => list == Empty;
 

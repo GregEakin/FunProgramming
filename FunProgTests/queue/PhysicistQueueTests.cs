@@ -24,7 +24,7 @@ public class PhysicistQueueTests
 
         var result = new StringBuilder();
         if (!lazyNode.IsValueCreated)
-            result.Append("$");
+            result.Append('$');
         result.Append(lazyNode.Value?.ToReadableString() ?? "null");
         return result.ToString();
     }
@@ -34,7 +34,7 @@ public class PhysicistQueueTests
         if (queue == null) return string.Empty;
 
         var builder = new StringBuilder();
-        builder.Append("[");
+        builder.Append('[');
         builder.Append(queue.W?.ToReadableString() ?? "null");
         builder.Append(", ");
         builder.Append(queue.Lenf);
@@ -44,7 +44,7 @@ public class PhysicistQueueTests
         builder.Append(queue.Lenr);
         builder.Append(", ");
         builder.Append(queue.R?.ToReadableString() ?? "null");
-        builder.Append("]");
+        builder.Append(']');
         return builder.ToString();
     }
 

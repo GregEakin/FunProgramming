@@ -24,8 +24,8 @@ public class BootstrappedQueueTests
     private static string DumpList<T>(FunList<T>.Node list)
     {
         var result = new StringBuilder();
-        result.Append("{");
-        var separator = "";
+        result.Append('{');
+        var separator = string.Empty;
         while (true)
         {
             if (list == null) break;
@@ -35,7 +35,7 @@ public class BootstrappedQueueTests
             result.Append(head);
             list = FunList<T>.Tail(list);
         }
-        result.Append("}");
+        result.Append('}');
         return result.ToString();
     }
 

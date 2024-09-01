@@ -44,7 +44,7 @@ public static class LeftistHeap<T> where T : IComparable<T>
         return new Heap(Rank(a) + 1, x, b, a);
     }
 
-    public static Heap Empty { get; } = null;
+    public static Heap Empty => null;
 
     public static bool IsEmpty(Heap h) => h == Empty;
 

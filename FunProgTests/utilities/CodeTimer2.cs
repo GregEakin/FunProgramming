@@ -54,6 +54,7 @@ public sealed class CodeTimer2
         catch (Exception e)
         {
             Console.WriteLine(e);
+            throw;
         }
     }
 

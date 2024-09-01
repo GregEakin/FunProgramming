@@ -9,27 +9,41 @@
 
 using FunProgLib.heap;
 using FunProgTests.utilities;
+using Xunit.Abstractions;
 
 namespace FunProgTests.heap;
 
 public class LazyBinomialHeapPerfTests
 {
+    private readonly ITestOutputHelper _testOutputHelper;
+
+    public LazyBinomialHeapPerfTests(ITestOutputHelper testOutputHelper)
+    {
+        _testOutputHelper = testOutputHelper;
+    }
+
     [Fact]
     public void PerfTest1()
     {
-        var modelSimulator = new ModelSimulator();
+        var modelSimulator = new ModelSimulator(_testOutputHelper);
         var codeTimer = new CodeTimer2(modelSimulator, modelSimulator.RunModel);
         var time = codeTimer.Time();
-        Console.WriteLine("{0:#,##0} Cycles", time.CpuCycles);
-        Console.WriteLine("{0:#,##0} GC0", time.CollectionCount0);
-        Console.WriteLine("{0:#,##0} GC1", time.CollectionCount1);
-        Console.WriteLine("{0:#,##0} GC2", time.CollectionCount2);
+        _testOutputHelper.WriteLine("{0:#,##0} Cycles", time.CpuCycles);
+        _testOutputHelper.WriteLine("{0:#,##0} GC0", time.CollectionCount0);
+        _testOutputHelper.WriteLine("{0:#,##0} GC1", time.CollectionCount1);
+        _testOutputHelper.WriteLine("{0:#,##0} GC2", time.CollectionCount2);
     }
 
     private class ModelSimulator : IModel
     {
         private const int Size = 200;
         private readonly Random _random = new Random(4432);
+        private readonly ITestOutputHelper _testOutputHelper;
+
+        public ModelSimulator(ITestOutputHelper testOutputHelper)
+        {
+            _testOutputHelper = testOutputHelper;
+        }
 
         public void RunModel(IModel _)
         {
@@ -41,7 +55,7 @@ public class LazyBinomialHeapPerfTests
                 Assert.False(heap.IsValueCreated);
             }
 
-            Console.WriteLine(LazyBinomialHeapTests.DumpHeap(heap, true));
+            _testOutputHelper.WriteLine(LazyBinomialHeapTests.DumpHeap(heap, true));
 
             var last = 0;
             var count = 0;

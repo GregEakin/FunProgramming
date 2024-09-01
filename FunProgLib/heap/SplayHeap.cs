@@ -29,7 +29,7 @@ public static class SplayHeap<T> where T : IComparable<T>
         public Heap B { get; }
     }
 
-    public static Heap Empty { get; } = null;
+    public static Heap Empty => null;
 
     public static bool IsEmpty(Heap h) => h == Empty;
 

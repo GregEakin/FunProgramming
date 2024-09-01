@@ -8,13 +8,20 @@
 //
 
 using FunProgLib.tree;
+using Xunit.Abstractions;
 
 namespace FunProgTests.ephemeral;
 
 public class MultiRwLockMapTests : DictionaryTests, IDisposable
 {
+    private readonly ITestOutputHelper _testOutputHelper;
     private readonly ReaderWriterLockSlim _lockObject = new ReaderWriterLockSlim();
     private RedBlackSet<string>.Tree _set = RedBlackSet<string>.EmptyTree;
+
+    public MultiRwLockMapTests(ITestOutputHelper testOutputHelper)
+    {
+        _testOutputHelper = testOutputHelper;
+    }
 
     private void WriteAction()
     {
@@ -33,7 +40,7 @@ public class MultiRwLockMapTests : DictionaryTests, IDisposable
         }
     }
 
-    private void ReadAction()
+    private void ReadAction(ITestOutputHelper _testOutputHelper)
     {
         var hits = 0;
         for (var i = 0; i < Count; i++)
@@ -50,7 +57,7 @@ public class MultiRwLockMapTests : DictionaryTests, IDisposable
             }
         }
 
-        Console.WriteLine("Task={0}, Thread={1} : {2} words found",
+        _testOutputHelper.WriteLine("Task={0}, Thread={1} : {2} words found",
             Task.CurrentId, Environment.CurrentManagedThreadId, hits);
     }
 
@@ -61,11 +68,11 @@ public class MultiRwLockMapTests : DictionaryTests, IDisposable
         for (var i = 0; i < Threads; i += 3)
         {
             taskList.Add(Task.Factory.StartNew(map => WriteAction(), this));
-            taskList.Add(Task.Factory.StartNew(map => ReadAction(), this));
-            taskList.Add(Task.Factory.StartNew(map => ReadAction(), this));
+            taskList.Add(Task.Factory.StartNew(map => ReadAction(_testOutputHelper), this));
+            taskList.Add(Task.Factory.StartNew(map => ReadAction(_testOutputHelper), this));
         }
         await Task.WhenAll(taskList.ToArray());
-        Console.WriteLine("Done....");
+        _testOutputHelper.WriteLine("Done....");
     }
 
     public void Dispose()

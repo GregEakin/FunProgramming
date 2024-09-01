@@ -8,6 +8,7 @@
 //
 
 using FunProgLib.tree;
+using Xunit.Abstractions;
 
 namespace FunProgTests.ephemeral;
 
@@ -15,6 +16,12 @@ public class MultiReaderMapTests : DictionaryTests
 {
     private readonly object _lockObject = new object();
     private volatile RedBlackSet<string>.Tree _set = RedBlackSet<string>.EmptyTree;
+    private readonly ITestOutputHelper _testOutputHelper;
+
+    public MultiReaderMapTests(ITestOutputHelper testOutputHelper)
+    {
+        _testOutputHelper = testOutputHelper;
+    }
 
     private void WriteAction()
     {
@@ -38,7 +45,7 @@ public class MultiReaderMapTests : DictionaryTests
                 hits++;
         }
 
-        Console.WriteLine("Task={0}, Thread={1} : {2} words found",
+        _testOutputHelper.WriteLine("Task={0}, Thread={1} : {2} words found",
             Task.CurrentId, Environment.CurrentManagedThreadId, hits);
     }
 
@@ -53,6 +60,6 @@ public class MultiReaderMapTests : DictionaryTests
             taskList.Add(Task.Factory.StartNew(map => ReadAction(), this));
         }
         await Task.WhenAll(taskList.ToArray());
-        Console.WriteLine("Done....");
+        _testOutputHelper.WriteLine("Done....");
     }
 }

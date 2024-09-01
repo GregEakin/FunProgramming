@@ -10,15 +10,23 @@
 using FunProgTests.utilities;
 using FunProgLib.heap;
 using FunProgLib.lists;
+using Xunit.Abstractions;
 
 namespace FunProgTests.heap;
 
 public class LazyBinomialHeapTests
 {
+    private readonly ITestOutputHelper _testOutputHelper;
+
+    public LazyBinomialHeapTests(ITestOutputHelper testOutputHelper)
+    {
+        _testOutputHelper = testOutputHelper;
+    }
+
     public static string DumpNode<T>(LazyBinomialHeap<T>.Tree tree) where T : IComparable<T>
     {
         var result = new StringBuilder();
-        result.Append("[");
+        result.Append('[');
         result.Append(tree.Root);
         if (!FunList<LazyBinomialHeap<T>.Tree>.IsEmpty(tree.FunList))
         {
@@ -28,7 +36,7 @@ public class LazyBinomialHeapTests
                 result.Append(DumpNode(node));
             }
         }
-        result.Append("]");
+        result.Append(']');
         return result.ToString();
     }
 
@@ -49,6 +57,7 @@ public class LazyBinomialHeapTests
             result.Append(DumpNode(node));
             result.Append("; ");
         }
+
         result.Remove(result.Length - 2, 2);
         return result.ToString();
     }
@@ -70,7 +79,7 @@ public class LazyBinomialHeapTests
         var heap = LazyBinomialHeap<int>.Empty;
         Assert.Null(heap.Value);
         var dumpHeap = DumpHeap(heap, true);
-        Assert.Equal("", dumpHeap);
+        Assert.Equal(string.Empty, dumpHeap);
     }
 
     [Fact]
@@ -81,7 +90,7 @@ public class LazyBinomialHeapTests
         {
             heap = LazyBinomialHeap<int>.Insert(i, heap);
             var dumpHeap = DumpHeap(heap, true);
-            // Console.WriteLine(dumpHeap, true);
+            // _testOutputHelper.WriteLine(dumpHeap, true);
 
             var semicolons = Counters.CountChar(dumpHeap, ';');
             Assert.Equal(Counters.CountBinaryOnes(i + 1) - 1, semicolons);
@@ -96,7 +105,7 @@ public class LazyBinomialHeapTests
         {
             heap = LazyBinomialHeap<int>.Insert(1, heap);
             var dumpHeap = DumpHeap(heap, true);
-            //Console.WriteLine(dumpHeap, true);
+            // _testOutputHelper.WriteLine(dumpHeap, true);
             var blocks = dumpHeap.Split(';');
 
             var j = 0;
@@ -236,7 +245,7 @@ public class LazyBinomialHeapTests
     }
 
     [Fact]
-    public void DeleteLotsOfMinsTest()
+    public void DeleteLotsOfMinimumsTest()
     {
         const int size = 1000;
         var random = new Random(3456);

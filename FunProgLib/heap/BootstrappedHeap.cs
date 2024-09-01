@@ -42,7 +42,7 @@ public static class BootstrappedHeap<T> where T : IComparable<T>
             public Element H2 { get; }
         }
 
-        public static Element EmptyElement { get; } = null;
+        public static Element EmptyElement => null;
 
         public static bool IsEmpty(Element h) => h == EmptyElement;
 
@@ -72,7 +72,7 @@ public static class BootstrappedHeap<T> where T : IComparable<T>
         }
     }
 
-    public static Heap Empty { get; } = null;
+    public static Heap Empty => null;
 
     public static bool IsEmpty(Heap heap) => heap == Empty;
 

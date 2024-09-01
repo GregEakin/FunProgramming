@@ -23,14 +23,14 @@ public class UnbalancedSetTests
         if (tree.A != UnbalancedSet<T>.Empty)
         {
             results.Append(DumpTree(tree.A));
-            results.Append(",");
+            results.Append(',');
         }
 
         results.Append(tree.Y);
 
         if (tree.B != UnbalancedSet<T>.Empty)
         {
-            results.Append(",");
+            results.Append(',');
             results.Append(DumpTree(tree.B));
         }
         results.Append(']');

@@ -34,7 +34,7 @@ public static class RedBlackSet<T> where T : IComparable<T>
         public Tree Tree2 { get; }
     }
 
-    public static Tree EmptyTree { get; } = null;
+    public static Tree EmptyTree => null;
 
     public static bool Member(T x, Tree t)
     {

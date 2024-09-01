@@ -24,7 +24,7 @@ public class SparseByWeightTests
     private static string DumpNat(FunList<int>.Node number)
     {
         if (FunList<int>.IsEmpty(number)) return "0";
-        var result = string.Join(",", FunList<int>.Reverse(number));
+        var result = string.Join(',', FunList<int>.Reverse(number));
         return result;
     }
 

@@ -10,11 +10,19 @@
 using FunProgLib.queue;
 using FunProgLib.Utilities;
 using FunProgTests.streams;
+using Xunit.Abstractions;
 
 namespace FunProgTests.queue;
 
 public class RealTimeQueueTests
 {
+    private readonly ITestOutputHelper _testOutputHelper;
+
+    public RealTimeQueueTests(ITestOutputHelper testOutputHelper)
+    {
+        _testOutputHelper = testOutputHelper;
+    }
+
     public static string DumpQueue<T>(RealTimeQueue<T>.Queue queue, bool expandUnCreated)
     {
         if (RealTimeQueue<T>.IsEmpty(queue)) return string.Empty;
@@ -34,7 +42,7 @@ public class RealTimeQueueTests
     public void Test1()
     {
         var queue = RealTimeQueue<string>.Empty;
-        Assert.Equal("", DumpQueue(queue, true));
+        Assert.Equal(string.Empty, DumpQueue(queue, true));
     }
 
     [Fact]
@@ -137,7 +145,7 @@ public class RealTimeQueueTests
             heap = RealTimeQueue<int>.Snoc(heap, i);
         }
 
-        Console.WriteLine(DumpQueue(heap, true));
+        _testOutputHelper.WriteLine(DumpQueue(heap, true));
 
         var count = 0;
         while (!RealTimeQueue<int>.IsEmpty(heap))

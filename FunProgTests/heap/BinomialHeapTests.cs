@@ -9,6 +9,7 @@
 
 using FunProgLib.heap;
 using FunProgTests.utilities;
+using Xunit.Abstractions;
 
 namespace FunProgTests.heap;
 
@@ -17,10 +18,17 @@ namespace FunProgTests.heap;
 
 public class BinomialHeapTests
 {
+    private readonly ITestOutputHelper _testOutputHelper;
+
+    public BinomialHeapTests(ITestOutputHelper testOutputHelper)
+    {
+        _testOutputHelper = testOutputHelper;
+    }
+
     private static string DumpTree<T>(BinomialHeap<T>.Tree tree) where T : IComparable<T>
     {
         var result = new StringBuilder();
-        result.Append("[");
+        result.Append('[');
         result.Append(tree.Root);
         if (!FunProgLib.lists.FunList<BinomialHeap<T>.Tree>.IsEmpty(tree.FunList))
         {
@@ -30,7 +38,7 @@ public class BinomialHeapTests
                 result.Append(DumpTree(node1));
             }
         }
-        result.Append("]");
+        result.Append(']');
         return result.ToString();
     }
 
@@ -57,7 +65,7 @@ public class BinomialHeapTests
         {
             heap = BinomialHeap<int>.Insert(i, heap);
             var dumpHeap = DumpHeap(heap);
-            // Console.WriteLine(dumpHeap);
+            // _testOutputHelper.WriteLine(dumpHeap);
 
             var semicolons = Counters.CountChar(dumpHeap, ';');
             Assert.Equal(Counters.CountBinaryOnes(i + 1) - 1, semicolons);
@@ -72,7 +80,7 @@ public class BinomialHeapTests
         {
             heap = BinomialHeap<int>.Insert(1, heap);
             var dumpHeap = DumpHeap(heap);
-            // Console.WriteLine(dumpHeap);
+            // _testOutputHelper.WriteLine(dumpHeap);
             var blocks = dumpHeap.Split(';');
 
             var j = 0;

@@ -16,7 +16,7 @@ public class ParingHeapTests
     private static string DumpHeap<T>(ParingHeap<T>.Heap node) where T : IComparable<T>
     {
         var result = new StringBuilder();
-        result.Append("[");
+        result.Append('[');
         result.Append(node.Root);
         if (!FunProgLib.lists.FunList<ParingHeap<T>.Heap>.IsEmpty(node.FunList) && node.FunList.Any())
         {
@@ -24,14 +24,14 @@ public class ParingHeapTests
             foreach (var node1 in node.FunList)
                 result.Append(DumpHeap(node1));
         }
-        result.Append("]");
+        result.Append(']');
         return result.ToString();
     }
 
     private static string DumpHeapList<T>(IEnumerable<ParingHeap<T>.Heap> list) where T : IComparable<T>
     {
         var result = new StringBuilder();
-        result.Append("[");
+        result.Append('[');
         if (Equals(list, FunProgLib.lists.FunList<ParingHeap<T>.Heap>.Empty))
         {
             foreach (var node in list)
@@ -41,7 +41,7 @@ public class ParingHeapTests
             result.Append(", ");
         }
         result.Remove(result.Length - 2, 2);
-        result.Append("]");
+        result.Append(']');
         return result.ToString();
     }
 

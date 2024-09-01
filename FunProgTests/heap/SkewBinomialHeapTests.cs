@@ -33,28 +33,28 @@ public class SkewBinomialHeapTests
     {
         if (tree == null) return string.Empty;
         var result = new StringBuilder();
-        result.Append("[");
+        result.Append('[');
         //result.Append(tree.Rank);
         //result.Append(", ");
         result.Append(tree.Root);
         result.Append(DumpList(tree.FunList));
         if (!FunProgLib.lists.FunList<SkewBinomialHeap<T>.Tree>.IsEmpty(tree.TreeList))
             result.Append(DumpHeap(tree.TreeList));
-        result.Append("]");
+        result.Append(']');
         return result.ToString();
     }
 
     private static string DumpHeap<T>(FunProgLib.lists.FunList<SkewBinomialHeap<T>.Tree>.Node heap) where T : IComparable<T>
     {
         var result = new StringBuilder();
-        result.Append("[");
+        result.Append('[');
         while (!FunProgLib.lists.FunList<SkewBinomialHeap<T>.Tree>.IsEmpty(heap))
         {
             var head = FunProgLib.lists.FunList<SkewBinomialHeap<T>.Tree>.Head(heap);
             result.Append(DumpTree(head));
             heap = FunProgLib.lists.FunList<SkewBinomialHeap<T>.Tree>.Tail(heap);
         }
-        result.Append("]");
+        result.Append(']');
         return result.ToString();
     }
 
@@ -129,7 +129,7 @@ public class SkewBinomialHeapTests
     }
 
     [Fact]
-    public void DeleteLotsOfMinsTest()
+    public void DeleteLotsOfMinimumsTest()
     {
         var random = new Random(3456);
         var heap = SkewBinomialHeap<int>.Empty;
@@ -148,7 +148,7 @@ public class SkewBinomialHeapTests
     }
 
     [Fact]
-    public void DeleteLotsOfMinsTest2()
+    public void DeleteLotsOfMinimumsTest2()
     {
         var random = new Random(1000);
         var t = SkewBinomialHeap<int>.Empty;

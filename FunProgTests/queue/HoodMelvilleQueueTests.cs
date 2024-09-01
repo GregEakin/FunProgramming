@@ -20,7 +20,7 @@ public class HoodMelvilleQueueTests
             return "null";
 
         var result = new StringBuilder();
-        result.Append("[");
+        result.Append('[');
         result.Append(queue.LenF);
         result.Append(", ");
         result.Append(queue.F?.ToReadableString() ?? "null");
@@ -30,7 +30,7 @@ public class HoodMelvilleQueueTests
         result.Append(queue.LenR);
         result.Append(", ");
         result.Append(queue.R?.ToReadableString() ?? "null");
-        result.Append("]");
+        result.Append(']');
         return result.ToString();
     }
 

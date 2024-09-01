@@ -27,7 +27,7 @@ public class LeftistHeapTests
         results.Append(heap.X);
         //results.Append(" [");
         //results.Append(heap.r);
-        //results.Append("]");
+        //results.Append(']');
         results.Append(", ");
 
         if (!LeftistHeap<T>.IsEmpty(heap.B))

@@ -20,7 +20,7 @@ public class ScheduledBinomialHeapTests
         if (tree == null) return string.Empty;
 
         var result = new StringBuilder();
-        result.Append("[");
+        result.Append('[');
         result.Append(tree.Node);
         if (tree.TreeList != FunList<ScheduledBinomialHeap<T>.Tree>.Empty)
         {
@@ -32,7 +32,7 @@ public class ScheduledBinomialHeapTests
             }
             result.Remove(result.Length - 2, 2);
         }
-        result.Append("]");
+        result.Append(']');
         return result.ToString();
     }
 
@@ -47,14 +47,14 @@ public class ScheduledBinomialHeapTests
     private static string DumpHeap<T>(ScheduledBinomialHeap<T>.Heap heap) where T : IComparable<T>
     {
         var result = new StringBuilder();
-        result.Append("[");
+        result.Append('[');
         if (heap.DigitStream != Stream<ScheduledBinomialHeap<T>.Digit>.DollarNil)
         {
             result.Append(DumpDigitStream(heap.DigitStream));
             result.Append(", ");
             result.Remove(result.Length - 2, 2);
         }
-        result.Append("]");
+        result.Append(']');
         return result.ToString();
     }
 

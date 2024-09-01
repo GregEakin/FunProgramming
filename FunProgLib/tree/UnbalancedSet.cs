@@ -31,7 +31,7 @@ public static class UnbalancedSet<T> where T : IComparable<T> // ISet
 
     // type Set = Tree
 
-    public static Tree Empty { get; } = null;
+    public static Tree Empty => null;
 
     public static bool Member(T x, Tree s)
     {

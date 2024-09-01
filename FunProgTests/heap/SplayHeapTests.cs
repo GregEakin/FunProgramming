@@ -18,7 +18,7 @@ public class SplayHeapTests
         if (SplayHeap<T>.IsEmpty(heap)) return "\u2205";
 
         var result = new StringBuilder();
-        result.Append("[");
+        result.Append('[');
 
         if (!SplayHeap<T>.IsEmpty(heap.A))
         {
@@ -34,7 +34,7 @@ public class SplayHeapTests
             result.Append(DumpHeap(heap.B));
         }
 
-        result.Append("]");
+        result.Append(']');
         return result.ToString();
     }
 

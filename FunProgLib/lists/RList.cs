@@ -58,7 +58,7 @@ public static class RList<T> // : IStack<T>
         }
     }
 
-    public static Node Empty { get; } = null;
+    public static Node Empty => null;
 
     public static bool IsEmpty(Node list) => list == Empty;
 

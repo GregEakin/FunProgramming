@@ -9,11 +9,19 @@
 
 using FunProgLib.lists;
 using FunProgLib.tree;
+using Xunit.Abstractions;
 
 namespace FunProgTests.tree;
 
 public class TrieTests
 {
+    private readonly ITestOutputHelper _testOutputHelper;
+
+    public TrieTests(ITestOutputHelper testOutputHelper)
+    {
+        _testOutputHelper = testOutputHelper;
+    }
+
     private static FunList<TKey>.Node ToList<TKey>(TKey[] value)
     {
         var car = value.Aggregate(FunList<TKey>.Empty, (current, letter) => FunList<TKey>.Cons(letter, current));
@@ -410,6 +418,6 @@ public class TrieTests
         var findCart = Trie<char, string>.Lookup(cart, trie4);
         Assert.Equal("cart", findCart);
 
-        Console.WriteLine(DumpMap(trie3));
+        _testOutputHelper.WriteLine(DumpMap(trie3));
     }
 }

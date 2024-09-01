@@ -16,7 +16,7 @@ public class LazyParingHeapTests
     private static string DumpHeap<T>(LazyParingHeap<T>.Heap node, bool showSusp) where T : IComparable<T>
     {
         var result = new StringBuilder();
-        result.Append("[");
+        result.Append('[');
         result.Append(node.Root);
         if (!LazyParingHeap<T>.IsEmpty(node.FunList))
         {
@@ -35,7 +35,7 @@ public class LazyParingHeapTests
         {
             result.Append("; susp");
         }
-        result.Append("]");
+        result.Append(']');
         return result.ToString();
     }
 
