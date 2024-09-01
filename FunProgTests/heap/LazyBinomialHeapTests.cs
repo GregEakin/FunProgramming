@@ -39,7 +39,11 @@ public class LazyBinomialHeapTests
 
         var result = new StringBuilder();
         if (!list.IsValueCreated)
-            result.Append("$");
+            result.Append('$');
+
+        if (list.Value == null)
+            return result.ToString();
+
         foreach (var node in list.Value)
         {
             result.Append(DumpNode(node));
@@ -47,6 +51,26 @@ public class LazyBinomialHeapTests
         }
         result.Remove(result.Length - 2, 2);
         return result.ToString();
+    }
+
+    [Fact]
+    public void DumpHeapTest()
+    {
+        var heap = LazyBinomialHeap<int>.Empty;
+        heap = LazyBinomialHeap<int>.Insert(1, heap);
+        heap = LazyBinomialHeap<int>.Insert(2, heap);
+        heap = LazyBinomialHeap<int>.Insert(3, heap);
+        var dumpHeap = DumpHeap(heap, true);
+        Assert.Equal("$[3]; [1, [2]]", dumpHeap);
+    }
+
+    [Fact]
+    public void DumpEmptyHeapTest()
+    {
+        var heap = LazyBinomialHeap<int>.Empty;
+        Assert.Null(heap.Value);
+        var dumpHeap = DumpHeap(heap, true);
+        Assert.Equal("", dumpHeap);
     }
 
     [Fact]
