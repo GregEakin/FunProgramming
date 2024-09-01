@@ -23,5 +23,5 @@ public static class Counters
         return count;
     }
 
-    public static int CountChar(string s, char c) => s.Split(c).Length;
+    public static int CountChar(string s, char c) => s.Split(c).Length - 1;
 }

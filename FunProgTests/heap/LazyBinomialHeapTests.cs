@@ -60,7 +60,7 @@ public class LazyBinomialHeapTests
             // Console.WriteLine(dumpHeap, true);
 
             var semicolons = Counters.CountChar(dumpHeap, ';');
-            Assert.Equal(Counters.CountBinaryOnes(i + 1), semicolons);
+            Assert.Equal(Counters.CountBinaryOnes(i + 1) - 1, semicolons);
         }
     }
 
@@ -82,7 +82,7 @@ public class LazyBinomialHeapTests
                 if (k % 2 == 0) continue;
                 var q = (int)Math.Pow(2, j);
                 var block = blocks[p++];
-                Assert.Equal(q, Counters.CountChar(block, '1') - 1);
+                Assert.Equal(q, Counters.CountChar(block, '1'));
             }
         }
     }
