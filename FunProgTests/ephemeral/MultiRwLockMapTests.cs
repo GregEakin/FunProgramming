@@ -40,7 +40,7 @@ public class MultiRwLockMapTests : DictionaryTests, IDisposable
         }
     }
 
-    private void ReadAction(ITestOutputHelper _testOutputHelper)
+    private void ReadAction(ITestOutputHelper testOutputHelper)
     {
         var hits = 0;
         for (var i = 0; i < Count; i++)
@@ -57,7 +57,7 @@ public class MultiRwLockMapTests : DictionaryTests, IDisposable
             }
         }
 
-        _testOutputHelper.WriteLine("Task={0}, Thread={1} : {2} words found",
+        testOutputHelper.WriteLine("Task={0}, Thread={1} : {2} words found",
             Task.CurrentId, Environment.CurrentManagedThreadId, hits);
     }
 
