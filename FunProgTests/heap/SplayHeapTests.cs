@@ -1,11 +1,16 @@
-﻿// Fun Programming Data Structures 1.0
-// 
-// Copyright © 2014 Greg Eakin. 
+// Copyright 2014 Gregory Eakin <greg@eakin.dev>
 //
-// Greg Eakin <greg@eakin.dev>
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
 //
-// All Rights Reserved.
+//     http://www.apache.org/licenses/LICENSE-2.0
 //
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 
 using FunProgLib.heap;
 
@@ -43,7 +48,7 @@ public class SplayHeapTests
     {
         var t = SplayHeap<string>.Empty;
         Assert.True(SplayHeap<string>.IsEmpty(t));
-        Assert.Equal("∅", DumpHeap(t));
+        Assert.Equal("?", DumpHeap(t));
 
         var t1 = SplayHeap<string>.Insert("C", t);
         Assert.False(SplayHeap<string>.IsEmpty(t1));
@@ -128,7 +133,7 @@ public class SplayHeapTests
         var t0 = SplayHeap<int>.Empty;
         var t1 = SplayHeap<int>.Insert(5, t0);
         var result = SplayHeap<int>.DeleteMin(t1);
-        Assert.Equal("∅", DumpHeap(result));
+        Assert.Equal("?", DumpHeap(result));
     }
 
     [Fact]
