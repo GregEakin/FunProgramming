@@ -13,7 +13,6 @@
 // limitations under the License.
 
 using FunProgLib.tree;
-using Xunit.Abstractions;
 
 namespace FunProgTests.ephemeral;
 
@@ -46,7 +45,7 @@ public class MultiInterlockMapTests : DictionaryTests
         }
 
         _testOutputHelper.WriteLine("Write Task={0}, Thread={1} : {2} average",
-            Task.CurrentId, Environment.CurrentManagedThreadId, 2.0 * Count / total);
+            Task.CurrentId ?? -1, Environment.CurrentManagedThreadId, 2.0 * Count / total);
     }
 
     private void ReadAction()
@@ -60,7 +59,7 @@ public class MultiInterlockMapTests : DictionaryTests
         }
 
         _testOutputHelper.WriteLine("Read Task={0}, Thread={1} : {2} words found",
-            Task.CurrentId, Environment.CurrentManagedThreadId, hits);
+            Task.CurrentId ?? -1, Environment.CurrentManagedThreadId, hits);
     }
 
     [Fact]
@@ -69,9 +68,9 @@ public class MultiInterlockMapTests : DictionaryTests
         var taskList = new ConcurrentBag<Task>();
         for (var i = 0; i < Threads; i += 3)
         {
-            taskList.Add(Task.Factory.StartNew(map => WriteAction(), this));
-            taskList.Add(Task.Factory.StartNew(map => ReadAction(), this));
-            taskList.Add(Task.Factory.StartNew(map => ReadAction(), this));
+            taskList.Add(Task.Factory.StartNew(_ => WriteAction(), this, TestContext.Current.CancellationToken));
+            taskList.Add(Task.Factory.StartNew(_ => ReadAction(), this, TestContext.Current.CancellationToken));
+            taskList.Add(Task.Factory.StartNew(_ => ReadAction(), this, TestContext.Current.CancellationToken));
         }
 
         await Task.WhenAll(taskList.ToArray());

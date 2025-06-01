@@ -148,7 +148,7 @@ public static class HoodMelvilleQueue<T>
         return Exec2(lenF + lenR, f, newState, 0, FunList<T>.Empty);
     }
 
-    public static Queue Empty { get; } = new Queue(0, FunList<T>.Empty, new Idle(), 0, FunList<T>.Empty);
+    public static Queue Empty { get; } = new(0, FunList<T>.Empty, new Idle(), 0, FunList<T>.Empty);
 
     public static bool IsEmpty(Queue queue) => queue.LenF == 0;
 

@@ -18,7 +18,7 @@ public class DictionaryTests
 {
     protected const int Threads = 20;
     protected const int Count = 300;
-    private readonly Random _random = new Random();
+    private readonly Random _random = new();
 
     protected string NextWord(int length)
     {

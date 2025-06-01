@@ -47,7 +47,7 @@ public class LeftistHeapTests
     public void EmptyTest()
     {
         var heap = LeftistHeap<int>.Empty;
-        Assert.Equal("?", DumpHeap(heap));
+        Assert.Equal("\u2205", DumpHeap(heap));
     }
 
     [Fact]

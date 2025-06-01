@@ -42,7 +42,7 @@ public static class BottomUpMergeSort<T> where T : IComparable<T>
         return FunList<T>.Cons(ys.Element, Mrg(xs, ys.Next));
     }
 
-    public static Sortable Empty { get; } = new Sortable(0, new Lazy<FunList<FunList<T>.Node>.Node>(() => FunList<FunList<T>.Node>.Empty));
+    public static Sortable Empty { get; } = new(0, new Lazy<FunList<FunList<T>.Node>.Node>(() => FunList<FunList<T>.Node>.Empty));
 
     public static Sortable Add(T x, Sortable segs)
     {

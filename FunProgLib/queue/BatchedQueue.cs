@@ -33,7 +33,7 @@ public static class BatchedQueue<T>
         public FunList<T>.Node R { get; }
     }
 
-    public static Queue Empty { get; } = new Queue(FunList<T>.Empty, FunList<T>.Empty);
+    public static Queue Empty { get; } = new(FunList<T>.Empty, FunList<T>.Empty);
 
     public static bool IsEmpty(Queue q) => FunList<T>.IsEmpty(q.F);
 

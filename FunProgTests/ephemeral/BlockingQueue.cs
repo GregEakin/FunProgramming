@@ -18,7 +18,7 @@ namespace FunProgTests.ephemeral;
 
 internal class BlockingQueue<T>
 {
-    private readonly object _lock = new object();
+    private readonly object _lock = new();
     private readonly int _size;
     private readonly CancellationToken _token;
     private RealTimeQueue<T>.Queue _queue = RealTimeQueue<T>.Empty;
@@ -128,7 +128,7 @@ public class BlockingQueueTests
         }
 
         Trace.WriteLine($"{Environment.CurrentManagedThreadId,3}: {watch.ElapsedMilliseconds,3} Stopping after 27 ms");
-        tokenSource.CancelAfter(27);
+        tokenSource.CancelAfter(100);
 
         await Task.WhenAll(tasks.ToArray());
     }

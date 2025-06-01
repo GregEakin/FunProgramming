@@ -12,13 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Xunit.Abstractions;
-
 namespace FunProgTests.ephemeral;
 
 public class CacheSpeedTests
 {
-    private static readonly Random RandomNum = new Random();
+    private static readonly Random RandomNum = new();
     private readonly ITestOutputHelper _testOutputHelper;
 
     public CacheSpeedTests(ITestOutputHelper testOutputHelper)
@@ -76,7 +74,7 @@ public class CacheSpeedTests
         // Do each step five times, to find the fastest.
         for (var j = 0; j < 5; j++)
         {
-            var indices = Enumerable.Range(0, testRuns.Length).OrderBy(p => RandomNum.Next());
+            var indices = Enumerable.Range(0, testRuns.Length).OrderBy(_ => RandomNum.Next());
             foreach (var i in indices)
             {
                 // Measure the performance.
@@ -115,7 +113,7 @@ public class CacheSpeedTests
             ++count;
             var index = RandomNum.Next(memory.Length);
             if (!measure) continue;
-            var _ = memory[index];
+            _ = memory[index];
         }
 
         return count;

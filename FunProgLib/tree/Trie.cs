@@ -57,10 +57,10 @@ public static class Trie<TKey, TValue>
             return Lookup(item, sibling.Sibling);
         }
 
-        public static Map Bind(TKey item, Map child, Map sibling) => new Map(child.V, child.M, item, sibling);
+        public static Map Bind(TKey item, Map child, Map sibling) => new(child.V, child.M, item, sibling);
     }
 
-    public static Map Empty { get; } = new Map(default(TValue), null);
+    public static Map Empty { get; } = new(default(TValue), null);
 
     public static TValue Lookup(FunList<TKey>.Node mKey, Map trie)
     {

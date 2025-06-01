@@ -58,7 +58,7 @@ public static class BinaryRandomAccessList<T> // : IRandomAccessList<T>
         public Tree One { get; }
     }
 
-    private static readonly Digit Zero = new Digit(null);
+    private static readonly Digit Zero = new(null);
 
     private sealed class Stuff
     {

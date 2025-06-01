@@ -49,7 +49,7 @@ public static class RealTimeDeque<T> // : IDeque<T>
         public Lazy<Stream<T>.StreamCell> Sr { get; }
     }
 
-    public static Queue Empty { get; } = new Queue(0, Stream<T>.DollarNil, Stream<T>.DollarNil, 0, Stream<T>.DollarNil, Stream<T>.DollarNil);
+    public static Queue Empty { get; } = new(0, Stream<T>.DollarNil, Stream<T>.DollarNil, 0, Stream<T>.DollarNil, Stream<T>.DollarNil);
 
     public static bool IsEmpty(Queue q) => q.LenF + q.LenR == 0;
 

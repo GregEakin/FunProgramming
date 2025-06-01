@@ -13,14 +13,13 @@
 // limitations under the License.
 
 using FunProgLib.tree;
-using Xunit.Abstractions;
 
 namespace FunProgTests.ephemeral;
 
 public class MultiRwLockMapTests : DictionaryTests, IDisposable
 {
     private readonly ITestOutputHelper _testOutputHelper;
-    private readonly ReaderWriterLockSlim _lockObject = new ReaderWriterLockSlim();
+    private readonly ReaderWriterLockSlim _lockObject = new();
     private RedBlackSet<string>.Tree _set = RedBlackSet<string>.EmptyTree;
 
     public MultiRwLockMapTests(ITestOutputHelper testOutputHelper)
@@ -63,7 +62,7 @@ public class MultiRwLockMapTests : DictionaryTests, IDisposable
         }
 
         testOutputHelper.WriteLine("Task={0}, Thread={1} : {2} words found",
-            Task.CurrentId, Environment.CurrentManagedThreadId, hits);
+            Task.CurrentId ?? -1, Environment.CurrentManagedThreadId, hits);
     }
 
     [Fact]
@@ -72,9 +71,9 @@ public class MultiRwLockMapTests : DictionaryTests, IDisposable
         var taskList = new ConcurrentBag<Task>();
         for (var i = 0; i < Threads; i += 3)
         {
-            taskList.Add(Task.Factory.StartNew(map => WriteAction(), this));
-            taskList.Add(Task.Factory.StartNew(map => ReadAction(_testOutputHelper), this));
-            taskList.Add(Task.Factory.StartNew(map => ReadAction(_testOutputHelper), this));
+            taskList.Add(Task.Factory.StartNew(_ => WriteAction(), this, TestContext.Current.CancellationToken));
+            taskList.Add(Task.Factory.StartNew(_ => ReadAction(_testOutputHelper), this, TestContext.Current.CancellationToken));
+            taskList.Add(Task.Factory.StartNew(_ => ReadAction(_testOutputHelper), this, TestContext.Current.CancellationToken));
         }
         await Task.WhenAll(taskList.ToArray());
         _testOutputHelper.WriteLine("Done....");

@@ -18,7 +18,7 @@ namespace FunProgTests.ephemeral;
 
 public class DictionaryLock<T>
 {
-    private readonly object _lockObject = new object();
+    private readonly object _lockObject = new();
     private readonly CancellationToken _token;
     private SplayHeap<string>.Heap _set = SplayHeap<string>.Empty;
 
@@ -116,7 +116,7 @@ public class DictionaryLockTests : DictionaryTests
             if (!removed)
                 break;
 
-            var _ = Convert.FromBase64String(item);
+            _ = Convert.FromBase64String(item);
             // Console.WriteLine(string.Join(", ", unused));
         }
     }
@@ -124,8 +124,7 @@ public class DictionaryLockTests : DictionaryTests
     [Fact]
     public async Task Test1()
     {
-        using var tokenSource = new CancellationTokenSource();
-        var token = tokenSource.Token;
+        var token = TestContext.Current.CancellationToken;
         var taskList = new ConcurrentBag<Task>();
         var dictionary = new DictionaryLock<string>(token);
 

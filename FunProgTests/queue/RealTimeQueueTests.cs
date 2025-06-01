@@ -15,7 +15,6 @@
 using FunProgLib.queue;
 using FunProgLib.Utilities;
 using FunProgTests.streams;
-using Xunit.Abstractions;
 
 namespace FunProgTests.queue;
 

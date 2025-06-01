@@ -45,7 +45,7 @@ public static class ScheduledBinomialHeap<T> where T : IComparable<T>
         public Tree One { get; }
     }
 
-    private static readonly Digit Zero = new Digit(null);
+    private static readonly Digit Zero = new(null);
 
     public sealed class Schedule
     {
@@ -70,11 +70,11 @@ public static class ScheduledBinomialHeap<T> where T : IComparable<T>
         public Schedule Schedule { get; }
     }
 
-    private static readonly Schedule EmptySchedule = new Schedule(null);
+    private static readonly Schedule EmptySchedule = new(null);
 
     public static readonly Lazy<Stream<Digit>.StreamCell> EmptyStream = Stream<Digit>.DollarNil;
 
-    public static Heap Empty { get; } = new Heap(EmptyStream, EmptySchedule);
+    public static Heap Empty { get; } = new(EmptyStream, EmptySchedule);
 
     public static bool IsEmpty(Heap heap) => heap.DigitStream == Stream<Digit>.DollarNil;
 

@@ -64,9 +64,9 @@ public static class ScheduledBottomUpMergeSort<T> where T : IComparable<T>
         return FunList<Lazy<Stream<T>.StreamCell>>.Cons(list.Element.Value.Next, list.Next);
     }
 
-    private static Schedule Exec2(Schedule x) => new Schedule(x.Stream, Exec1(Exec1(x.ScheduleList)));
+    private static Schedule Exec2(Schedule x) => new(x.Stream, Exec1(Exec1(x.ScheduleList)));
 
-    public static Sortable Empty { get; } = new Sortable(0, null);
+    public static Sortable Empty { get; } = new(0, null);
 
     private static FunList<Schedule>.Node AddSeg(Lazy<Stream<T>.StreamCell> xs, FunList<Schedule>.Node segs, int size, FunList<Lazy<Stream<T>.StreamCell>>.Node rsched)
     {

@@ -14,7 +14,6 @@
 
 using FunProgLib.heap;
 using FunProgTests.utilities;
-using Xunit.Abstractions;
 
 namespace FunProgTests.heap;
 
@@ -42,7 +41,7 @@ public class LazyBinomialHeapPerfTests
     private class ModelSimulator : IModel
     {
         private const int Size = 200;
-        private readonly Random _random = new Random(4432);
+        private readonly Random _random = new(4432);
         private readonly ITestOutputHelper _testOutputHelper;
 
         public ModelSimulator(ITestOutputHelper testOutputHelper)

@@ -68,7 +68,7 @@ public static class RList<T> // : IStack<T>
 
     public static bool IsEmpty(Node list) => list == Empty;
 
-    public static Node Cons(T element, Node list) => new Node(element, list);
+    public static Node Cons(T element, Node list) => new(element, list);
 
     public static T Head(Node list)
     {

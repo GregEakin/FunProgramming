@@ -121,5 +121,5 @@ public static class AltBinaryRandomAccessList<T>
         throw new ArgumentException("must be Zero or One", nameof(ts));
     }
 
-    public static DataType Update(int i, T y, DataType xs) => Fupdate(x => y, i, xs);
+    public static DataType Update(int i, T y, DataType xs) => Fupdate(_ => y, i, xs);
 }

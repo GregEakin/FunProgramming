@@ -48,7 +48,7 @@ public class SplayHeapTests
     {
         var t = SplayHeap<string>.Empty;
         Assert.True(SplayHeap<string>.IsEmpty(t));
-        Assert.Equal("?", DumpHeap(t));
+        Assert.Equal("\u2205", DumpHeap(t));
 
         var t1 = SplayHeap<string>.Insert("C", t);
         Assert.False(SplayHeap<string>.IsEmpty(t1));
@@ -133,7 +133,7 @@ public class SplayHeapTests
         var t0 = SplayHeap<int>.Empty;
         var t1 = SplayHeap<int>.Insert(5, t0);
         var result = SplayHeap<int>.DeleteMin(t1);
-        Assert.Equal("?", DumpHeap(result));
+        Assert.Equal("\u2205", DumpHeap(result));
     }
 
     [Fact]

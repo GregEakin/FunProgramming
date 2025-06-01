@@ -37,7 +37,7 @@ public static class CatenableList<T>
 
     public static bool IsEmpty(C list) => list == Empty;
 
-    private static C Link(C xs, Lazy<C> s) => new C(xs.X, BootstrappedQueue<Lazy<C>>.Snoc(xs.Q, s));
+    private static C Link(C xs, Lazy<C> s) => new(xs.X, BootstrappedQueue<Lazy<C>>.Snoc(xs.Q, s));
 
     private static C LinkAll(BootstrappedQueue<Lazy<C>>.Queue q)
     {

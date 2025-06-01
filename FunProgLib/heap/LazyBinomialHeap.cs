@@ -38,7 +38,7 @@ public static class LazyBinomialHeap<T> where T : IComparable<T>
         public FunList<Tree>.Node FunList { get; }
     }
 
-    public static Lazy<FunList<Tree>.Node> Empty { get; } = new Lazy<FunList<Tree>.Node>(() => FunList<Tree>.Empty);
+    public static Lazy<FunList<Tree>.Node> Empty { get; } = new(() => FunList<Tree>.Empty);
 
     public static bool IsEmpty(Lazy<FunList<Tree>.Node> heap) => 
         heap == null || ReferenceEquals(Empty, heap) || FunList<Tree>.IsEmpty(heap.Value);
@@ -70,11 +70,11 @@ public static class LazyBinomialHeap<T> where T : IComparable<T>
         return InsTree(Link(ts1.Element, ts2.Element), Mrg(ts1.Next, ts2.Next));
     }
 
-    public static Lazy<FunList<Tree>.Node> Insert(T x, Lazy<FunList<Tree>.Node> ts) => 
-        new Lazy<FunList<Tree>.Node>(() => InsTree(new Tree(0, x, FunList<Tree>.Empty), ts.Value));
+    public static Lazy<FunList<Tree>.Node> Insert(T x, Lazy<FunList<Tree>.Node> ts) =>
+        new(() => InsTree(new Tree(0, x, FunList<Tree>.Empty), ts.Value));
 
-    public static Lazy<FunList<Tree>.Node> Merge(Lazy<FunList<Tree>.Node> ts1, Lazy<FunList<Tree>.Node> ts2) => 
-        new Lazy<FunList<Tree>.Node>(() => Mrg(ts1.Value, ts2.Value));
+    public static Lazy<FunList<Tree>.Node> Merge(Lazy<FunList<Tree>.Node> ts1, Lazy<FunList<Tree>.Node> ts2) =>
+        new(() => Mrg(ts1.Value, ts2.Value));
 
     private static (Tree, FunList<Tree>.Node) RemoveMinTree(FunList<Tree>.Node list)
     {

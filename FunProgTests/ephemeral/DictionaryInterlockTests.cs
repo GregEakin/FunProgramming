@@ -70,7 +70,7 @@ public class DictionaryInterlockTests : DictionaryTests
             }
 
             // 3,000 calls
-            var _ = SplayHeap<string>.FindMin(localCopy);
+            _ = SplayHeap<string>.FindMin(localCopy);
         }
     }
 
@@ -81,8 +81,8 @@ public class DictionaryInterlockTests : DictionaryTests
         var taskList = new ConcurrentBag<Task>();
         for (var i = 0; i < Threads; i += 2)
         {
-            taskList.Add(Task.Factory.StartNew(map => InsertAction(), this));
-            taskList.Add(Task.Factory.StartNew(map => RemoveAction(), this));
+            taskList.Add(Task.Factory.StartNew(_ => InsertAction(), this, TestContext.Current.CancellationToken));
+            taskList.Add(Task.Factory.StartNew(_ => RemoveAction(), this, TestContext.Current.CancellationToken));
         }
 
         await Task.WhenAll(taskList.ToArray());

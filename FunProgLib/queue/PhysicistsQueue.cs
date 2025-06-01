@@ -39,7 +39,7 @@ public static class PhysicistsQueue<T>
         public FunList<T>.Node R { get; }
     }
 
-    public static Queue Empty { get; } = new Queue(FunList<T>.Empty, 0, new Lazy<FunList<T>.Node>(() => FunList<T>.Empty), 0, FunList<T>.Empty);
+    public static Queue Empty { get; } = new(FunList<T>.Empty, 0, new Lazy<FunList<T>.Node>(() => FunList<T>.Empty), 0, FunList<T>.Empty);
 
     public static bool IsEmpty(Queue queue) => queue.Lenf == 0;
 

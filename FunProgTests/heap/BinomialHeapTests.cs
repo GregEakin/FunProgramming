@@ -14,7 +14,6 @@
 
 using FunProgLib.heap;
 using FunProgTests.utilities;
-using Xunit.Abstractions;
 
 namespace FunProgTests.heap;
 

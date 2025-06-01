@@ -18,7 +18,7 @@ namespace FunProgTests.ephemeral;
 
 public class DictionarySingleThreadTests : DictionaryTests
 {
-    private readonly Random _random = new Random();
+    private readonly Random _random = new();
     private SplayHeap<string>.Heap _set = SplayHeap<string>.Empty;
 
     private int InsertAction(int count)
@@ -42,7 +42,7 @@ public class DictionarySingleThreadTests : DictionaryTests
 
             var localCopy = _set;
             _set = SplayHeap<string>.DeleteMin(localCopy);
-            var _ = SplayHeap<string>.FindMin(localCopy);
+            _ = SplayHeap<string>.FindMin(localCopy);
             i++;
         }
 

@@ -37,7 +37,7 @@ public static class BankersQueue<T>
         public Lazy<Stream<T>.StreamCell> R { get; }
     }
 
-    public static Queue Empty { get; } = new Queue(0, Stream<T>.DollarNil, 0, Stream<T>.DollarNil);
+    public static Queue Empty { get; } = new(0, Stream<T>.DollarNil, 0, Stream<T>.DollarNil);
 
     public static bool IsEmpty(Queue queue) => queue.LenF == 0;
 

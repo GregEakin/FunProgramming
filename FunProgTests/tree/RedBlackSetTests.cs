@@ -53,7 +53,7 @@ public class RedBlackSetTests
     public void EmptyTest()
     {
         var t = RedBlackSet<string>.EmptyTree;
-        Assert.Equal("?", DumpSet(t));
+        Assert.Equal("\u2205", DumpSet(t));
     }
 
     [Fact]

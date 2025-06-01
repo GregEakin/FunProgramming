@@ -18,7 +18,7 @@ namespace FunProgTests.ephemeral;
 
 public class DictionaryRwLockTests : DictionaryTests, IDisposable
 {
-    private readonly ReaderWriterLockSlim _lockObject = new ReaderWriterLockSlim();
+    private readonly ReaderWriterLockSlim _lockObject = new();
     private SplayHeap<string>.Heap _set = SplayHeap<string>.Empty;
 
     private void InsertAction()
@@ -63,7 +63,7 @@ public class DictionaryRwLockTests : DictionaryTests, IDisposable
                 Thread.Yield();
             }
 
-            var _ = SplayHeap<string>.FindMin(localCopy);
+            _ = SplayHeap<string>.FindMin(localCopy);
         }
     }
 
@@ -73,8 +73,8 @@ public class DictionaryRwLockTests : DictionaryTests, IDisposable
         var taskList = new ConcurrentBag<Task>();
         for (var i = 0; i < Threads; i += 2)
         {
-            taskList.Add(Task.Factory.StartNew(map => InsertAction(), this));
-            taskList.Add(Task.Factory.StartNew(map => RemoveAction(), this));
+            taskList.Add(Task.Factory.StartNew(_ => InsertAction(), this, TestContext.Current.CancellationToken));
+            taskList.Add(Task.Factory.StartNew(_ => RemoveAction(), this, TestContext.Current.CancellationToken));
         }
 
         await Task.WhenAll(taskList.ToArray());

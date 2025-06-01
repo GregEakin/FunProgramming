@@ -36,7 +36,7 @@ public static class RealTimeQueue<T>
         public Lazy<Stream<T>.StreamCell> S { get; }
     }
 
-    public static Queue Empty { get; } = new Queue(Stream<T>.DollarNil, FunList<T>.Empty, Stream<T>.DollarNil);
+    public static Queue Empty { get; } = new(Stream<T>.DollarNil, FunList<T>.Empty, Stream<T>.DollarNil);
 
     public static bool IsEmpty(Queue queue) => queue.F == Stream<T>.DollarNil;
 

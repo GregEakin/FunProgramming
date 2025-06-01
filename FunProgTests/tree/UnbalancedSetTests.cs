@@ -47,7 +47,7 @@ public class UnbalancedSetTests
     public void EmptyTest()
     {
         var tree = UnbalancedSet<string>.Empty;
-        Assert.Equal("?", DumpTree(tree));
+        Assert.Equal("\u2205", DumpTree(tree));
     }
 
     [Fact]

@@ -33,7 +33,7 @@ public static class TrieOfTree<TKey, TValue> where TKey : IComparable<TKey>
         // alpha map map M.map
     }
 
-    public static Map Empty { get; } = new Map();
+    public static Map Empty { get; } = new();
 
     public static TValue Lookup()
     {

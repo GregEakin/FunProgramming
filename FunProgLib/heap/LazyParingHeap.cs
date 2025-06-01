@@ -35,7 +35,7 @@ public static class LazyParingHeap<T> where T : IComparable<T>
         public Lazy<Heap> LazyList { get; }
     }
 
-    private static readonly Lazy<Heap> EmptyHeapSusp = new Lazy<Heap>(() => null);
+    private static readonly Lazy<Heap> EmptyHeapSusp = new(() => null);
 
     public static Heap Empty => null;
 

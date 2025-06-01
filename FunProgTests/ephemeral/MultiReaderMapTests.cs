@@ -13,13 +13,12 @@
 // limitations under the License.
 
 using FunProgLib.tree;
-using Xunit.Abstractions;
 
 namespace FunProgTests.ephemeral;
 
 public class MultiReaderMapTests : DictionaryTests
 {
-    private readonly object _lockObject = new object();
+    private readonly object _lockObject = new();
     private volatile RedBlackSet<string>.Tree _set = RedBlackSet<string>.EmptyTree;
     private readonly ITestOutputHelper _testOutputHelper;
 
@@ -51,7 +50,7 @@ public class MultiReaderMapTests : DictionaryTests
         }
 
         _testOutputHelper.WriteLine("Task={0}, Thread={1} : {2} words found",
-            Task.CurrentId, Environment.CurrentManagedThreadId, hits);
+            Task.CurrentId ?? -1, Environment.CurrentManagedThreadId, hits);
     }
 
     [Fact]
@@ -60,9 +59,9 @@ public class MultiReaderMapTests : DictionaryTests
         var taskList = new ConcurrentBag<Task>();
         for (var i = 0; i < Threads; i += 3)
         {
-            taskList.Add(Task.Factory.StartNew(map => WriteAction(), this));
-            taskList.Add(Task.Factory.StartNew(map => ReadAction(), this));
-            taskList.Add(Task.Factory.StartNew(map => ReadAction(), this));
+            taskList.Add(Task.Factory.StartNew(_ => WriteAction(), this, TestContext.Current.CancellationToken));
+            taskList.Add(Task.Factory.StartNew(_ => ReadAction(), this, TestContext.Current.CancellationToken));
+            taskList.Add(Task.Factory.StartNew(_ => ReadAction(), this, TestContext.Current.CancellationToken));
         }
         await Task.WhenAll(taskList.ToArray());
         _testOutputHelper.WriteLine("Done....");
