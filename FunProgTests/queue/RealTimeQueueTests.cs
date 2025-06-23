@@ -1,4 +1,4 @@
-// Copyright 2014 Gregory Eakin <greg@eakin.dev>
+// Copyright 2025 Gregory Eakin <greg@eakin.dev>
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -20,17 +20,10 @@ namespace FunProgTests.queue;
 
 public class RealTimeQueueTests
 {
-    private readonly ITestOutputHelper _testOutputHelper;
-
-    public RealTimeQueueTests(ITestOutputHelper testOutputHelper)
-    {
-        _testOutputHelper = testOutputHelper;
-    }
-
     public static string DumpQueue<T>(RealTimeQueue<T>.Queue queue, bool expandUnCreated)
     {
-        if (RealTimeQueue<T>.IsEmpty(queue)) return string.Empty;
-
+        if (RealTimeQueue<T>.IsEmpty(queue))
+            return string.Empty;
         var result = new StringBuilder();
         result.Append("[{");
         result.Append(StreamTests.DumpStream(queue.F, expandUnCreated));
@@ -42,106 +35,100 @@ public class RealTimeQueueTests
         return result.ToString();
     }
 
-    [Fact]
-    public void Test1()
+    [Test]
+    public async Task Test1()
     {
         var queue = RealTimeQueue<string>.Empty;
-        Assert.Equal(string.Empty, DumpQueue(queue, true));
+        await Assert.That(DumpQueue(queue, true)).IsEqualTo(string.Empty);
     }
 
-    [Fact]
-    public void Test2()
+    [Test]
+    public async Task Test2()
     {
         const string data = "One Two Three One Three";
         var queue = data.Split().Aggregate(RealTimeQueue<string>.Empty, RealTimeQueue<string>.Snoc);
-        Assert.Equal("[{One, Two, $Three}, [Three, One], {Three}]", DumpQueue(queue, true));
+        await Assert.That(DumpQueue(queue, true)).IsEqualTo("[{One, Two, $Three}, [Three, One], {Three}]");
     }
 
-    [Fact]
-    public void EmptyTest()
+    [Test]
+    public async Task EmptyTest()
     {
         var queue = RealTimeQueue<string>.Empty;
-        Assert.True(RealTimeQueue<string>.IsEmpty(queue));
-
+        await Assert.That(RealTimeQueue<string>.IsEmpty(queue)).IsTrue();
         queue = RealTimeQueue<string>.Snoc(queue, "Item");
-        Assert.False(RealTimeQueue<string>.IsEmpty(queue));
-
+        await Assert.That(RealTimeQueue<string>.IsEmpty(queue)).IsFalse();
         queue = RealTimeQueue<string>.Tail(queue);
-        Assert.True(RealTimeQueue<string>.IsEmpty(queue));
+        await Assert.That(RealTimeQueue<string>.IsEmpty(queue)).IsTrue();
     }
 
-    [Fact]
-    public void EmptySnocTest()
+    [Test]
+    public async Task EmptySnocTest()
     {
-        Assert.Throws<NullReferenceException>(() => RealTimeQueue<string>.Snoc(null, "Item"));
+        await Assert.That(() => RealTimeQueue<string>.Snoc(null, "Item")).Throws<NullReferenceException>();
     }
 
-    [Fact]
-    public void SnocTest()
+    [Test]
+    public async Task SnocTest()
     {
         var queue = RealTimeQueue<string>.Empty;
         queue = RealTimeQueue<string>.Snoc(queue, "One");
-        Assert.Equal("[{$}, null, {$}]", DumpQueue(queue, false));
-
+        await Assert.That(DumpQueue(queue, false)).IsEqualTo("[{$}, null, {$}]");
         queue = RealTimeQueue<string>.Snoc(queue, "Two");
-        Assert.Equal("[{One}, [Two], {}]", DumpQueue(queue, false));
-
+        await Assert.That(DumpQueue(queue, false)).IsEqualTo("[{One}, [Two], {}]");
         queue = RealTimeQueue<string>.Snoc(queue, "Three");
-        Assert.Equal("[{$One, $Two, $Three}, null, {One, Two, Three}]", DumpQueue(queue, true));
+        await Assert.That(DumpQueue(queue, true)).IsEqualTo("[{$One, $Two, $Three}, null, {One, Two, Three}]");
     }
 
-    [Fact]
-    public void EmptyHeadTest()
+    [Test]
+    public async Task EmptyHeadTest()
     {
         var queue = RealTimeQueue<string>.Empty;
-        Assert.Throws<ArgumentNullException>(() => RealTimeQueue<string>.Head(queue));
+        await Assert.That(() => RealTimeQueue<string>.Head(queue)).Throws<ArgumentNullException>();
     }
 
-    [Fact]
-    public void HeadTest()
+    [Test]
+    public async Task HeadTest()
     {
         const string data = "One Two Three One Three";
         var queue = data.Split().Aggregate(RealTimeQueue<string>.Empty, RealTimeQueue<string>.Snoc);
         var head = RealTimeQueue<string>.Head(queue);
-        Assert.Equal("One", head);
+        await Assert.That(head).IsEqualTo("One");
     }
 
-    [Fact]
-    public void EmptyTailTest()
+    [Test]
+    public async Task EmptyTailTest()
     {
         var queue = RealTimeQueue<string>.Empty;
-        Assert.Throws<ArgumentNullException>(() => RealTimeQueue<string>.Tail(queue));
+        await Assert.That(() => RealTimeQueue<string>.Tail(queue)).Throws<ArgumentNullException>();
     }
 
-    [Fact]
-    public void TailTest()
+    [Test]
+    public async Task TailTest()
     {
         const string data = "One Two Three One Three";
         var queue = data.Split().Aggregate(RealTimeQueue<string>.Empty, RealTimeQueue<string>.Snoc);
         var tail = RealTimeQueue<string>.Tail(queue);
-        Assert.Equal("[{Two, Three}, [Three, One], {}]", DumpQueue(tail, true));
+        await Assert.That(DumpQueue(tail, true)).IsEqualTo("[{Two, Three}, [Three, One], {}]");
     }
 
-    [Fact]
-    public void PushPopTest()
+    [Test]
+    public async Task PushPopTest()
     {
         const string data = "One Two Three One Three";
         var queue = data.Split().Aggregate(RealTimeQueue<string>.Empty, RealTimeQueue<string>.Snoc);
-
         foreach (var expected in data.Split())
         {
             var head = RealTimeQueue<string>.Head(queue);
-            Assert.Equal(expected, head);
+            await Assert.That(head).IsEqualTo(expected);
             queue = RealTimeQueue<string>.Tail(queue);
         }
 
-        Assert.True(RealTimeQueue<string>.IsEmpty(queue));
+        await Assert.That(RealTimeQueue<string>.IsEmpty(queue)).IsTrue();
     }
 
     private const int Size = 16;
-
-    [Fact]
-    public void PerfTest()
+    [Test]
+    public async Task PerfTest()
     {
         var heap = RealTimeQueue<int>.Empty;
         for (var i = 0; i < Size; i++)
@@ -149,17 +136,16 @@ public class RealTimeQueueTests
             heap = RealTimeQueue<int>.Snoc(heap, i);
         }
 
-        _testOutputHelper.WriteLine(DumpQueue(heap, true));
-
+        Console.WriteLine(DumpQueue(heap, true));
         var count = 0;
         while (!RealTimeQueue<int>.IsEmpty(heap))
         {
             var next = RealTimeQueue<int>.Head(heap);
-            Assert.Equal(count, next);
+            await Assert.That(next).IsEqualTo(count);
             heap = RealTimeQueue<int>.Tail(heap);
             count++;
         }
 
-        Assert.Equal(Size, count);
+        await Assert.That(count).IsEqualTo(Size);
     }
 }

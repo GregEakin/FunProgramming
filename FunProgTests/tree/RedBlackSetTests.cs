@@ -1,4 +1,4 @@
-// Copyright 2014 Gregory Eakin <greg@eakin.dev>
+// Copyright 2025 Gregory Eakin <greg@eakin.dev>
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -18,13 +18,16 @@ namespace FunProgTests.tree;
 
 public class RedBlackSetTests
 {
-    private static string DumpSet<T>(RedBlackSet<T>.Tree s) where T : IComparable<T>
+    private static string DumpSet<T>(RedBlackSet<T>.Tree s)
+        where T : IComparable<T>
     {
-        if (s == RedBlackSet<T>.EmptyTree) return "\u2205";
+        if (s == RedBlackSet<T>.EmptyTree)
+            return "\u2205";
         return DumpTree(s);
     }
 
-    private static string DumpTree<T>(RedBlackSet<T>.Tree s) where T : IComparable<T>
+    private static string DumpTree<T>(RedBlackSet<T>.Tree s)
+        where T : IComparable<T>
     {
         var results = new StringBuilder();
         results.Append('(');
@@ -49,100 +52,100 @@ public class RedBlackSetTests
         return results.ToString();
     }
 
-    [Fact]
-    public void EmptyTest()
+    [Test]
+    public async Task EmptyTest()
     {
         var t = RedBlackSet<string>.EmptyTree;
-        Assert.Equal("\u2205", DumpSet(t));
+        await Assert.That(DumpSet(t)).IsEqualTo("\u2205");
     }
 
-    [Fact]
-    public void EmptyLeafTest()
+    [Test]
+    public async Task EmptyLeafTest()
     {
         var t = RedBlackSet<string>.EmptyTree;
         var x1 = RedBlackSet<string>.Insert("C", t);
-        Assert.Equal("(B: C)", DumpSet(x1));
+        await Assert.That(DumpSet(x1)).IsEqualTo("(B: C)");
     }
 
-    [Fact]
-    public void DuplicateRootMemberTest()
+    [Test]
+    public async Task DuplicateRootMemberTest()
     {
         var t = RedBlackSet<string>.EmptyTree;
         var x1 = RedBlackSet<string>.Insert("C", t);
         var x2 = RedBlackSet<string>.Insert("C", x1);
-        Assert.Equal("(B: C)", DumpSet(x2));
-        Assert.NotSame(x1, x2);
+        await Assert.That(DumpSet(x2)).IsEqualTo("(B: C)");
+        await Assert.That(x2).IsNotSameReferenceAs(x1);
     }
 
-    [Fact]
-    public void DuplicateLeafMemberTest()
+    [Test]
+    public async Task DuplicateLeafMemberTest()
     {
         var empty = RedBlackSet<string>.EmptyTree;
         var a = RedBlackSet<string>.Insert("A", empty);
         var b = RedBlackSet<string>.Insert("B", a);
         var c1 = RedBlackSet<string>.Insert("C", b);
-        Assert.Equal("(B: (B: A) B (B: C))", DumpSet(c1));
+        await Assert.That(DumpSet(c1)).IsEqualTo("(B: (B: A) B (B: C))");
         var c2 = RedBlackSet<string>.Insert("C", c1);
-        Assert.Equal("(B: (B: A) B (B: C))", DumpSet(c2));
-        Assert.NotSame(c1, c2);
+        await Assert.That(DumpSet(c2)).IsEqualTo("(B: (B: A) B (B: C))");
+        await Assert.That(c2).IsNotSameReferenceAs(c1);
     }
 
-    [Fact]
-    public void MemberTest()
+    [Test]
+    public async Task MemberTest()
     {
         var t = RedBlackSet<string>.EmptyTree;
         var x1 = RedBlackSet<string>.Insert("C", t);
         var x2 = RedBlackSet<string>.Insert("B", x1);
-        Assert.True(RedBlackSet<string>.Member("B", x2));
-        Assert.False(RedBlackSet<string>.Member("A", x2));
-        Assert.False(RedBlackSet<string>.Member("D", x2));
+        await Assert.That(RedBlackSet<string>.Member("B", x2)).IsTrue();
+        await Assert.That(RedBlackSet<string>.Member("A", x2)).IsFalse();
+        await Assert.That(RedBlackSet<string>.Member("D", x2)).IsFalse();
     }
 
-    [Fact]
-    public void BalanceTest1()
+    [Test]
+    public async Task BalanceTest1()
     {
         const string data = "z y x";
         var t = data.Split().Aggregate(RedBlackSet<string>.EmptyTree, (current, word) => RedBlackSet<string>.Insert(word, current));
-        Assert.Equal("(B: (B: x) y (B: z))", DumpSet(t));
+        await Assert.That(DumpSet(t)).IsEqualTo("(B: (B: x) y (B: z))");
     }
 
-    [Fact]
-    public void BalanceTest2()
+    [Test]
+    public async Task BalanceTest2()
     {
         const string data = "z x y";
         var t = data.Split().Aggregate(RedBlackSet<string>.EmptyTree, (current, word) => RedBlackSet<string>.Insert(word, current));
-        Assert.Equal("(B: (B: x) y (B: z))", DumpSet(t));
+        await Assert.That(DumpSet(t)).IsEqualTo("(B: (B: x) y (B: z))");
     }
 
-    [Fact]
-    public void BalanceTest3()
+    [Test]
+    public async Task BalanceTest3()
     {
         const string data = "x z y";
         var t = data.Split().Aggregate(RedBlackSet<string>.EmptyTree, (current, word) => RedBlackSet<string>.Insert(word, current));
-        Assert.Equal("(B: (B: x) y (B: z))", DumpSet(t));
+        await Assert.That(DumpSet(t)).IsEqualTo("(B: (B: x) y (B: z))");
     }
 
-    [Fact]
-    public void BalanceTest4()
+    [Test]
+    public async Task BalanceTest4()
     {
         const string data = "x y z";
         var t = data.Split().Aggregate(RedBlackSet<string>.EmptyTree, (current, word) => RedBlackSet<string>.Insert(word, current));
-        Assert.Equal("(B: (B: x) y (B: z))", DumpSet(t));
+        await Assert.That(DumpSet(t)).IsEqualTo("(B: (B: x) y (B: z))");
     }
 
-    [Fact]
-    public void BalanceTest5()
+    [Test]
+    public async Task BalanceTest5()
     {
         const string data = "y x z";
         var t = data.Split().Aggregate(RedBlackSet<string>.EmptyTree, (current, word) => RedBlackSet<string>.Insert(word, current));
-        Assert.Equal("(B: (R: x) y (R: z))", DumpSet(t));
+        await Assert.That(DumpSet(t)).IsEqualTo("(B: (R: x) y (R: z))");
     }
 
-    [Fact]
-    public void BalanceTest6()
+    [Test]
+    public async Task BalanceTest6()
     {
         const string data = "y z x";
         var t = data.Split().Aggregate(RedBlackSet<string>.EmptyTree, (current, word) => RedBlackSet<string>.Insert(word, current));
-        Assert.Equal("(B: (R: x) y (R: z))", DumpSet(t));
+        await Assert.That(DumpSet(t)).IsEqualTo("(B: (R: x) y (R: z))");
     }
 }

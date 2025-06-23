@@ -1,4 +1,4 @@
-// Copyright 2014 Gregory Eakin <greg@eakin.dev>
+// Copyright 2025 Gregory Eakin <greg@eakin.dev>
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,11 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using FunProgLib.queue;
+using static FunProgTests.streams.StreamTests;
+
 namespace FunProgTests.queue;
 
-using FunProgLib.queue;
-using static streams.StreamTests;
-    
 public class BankersQueueTests
 {
     private static string DumpQueue<T>(BankersQueue<T>.Queue queue, bool expandUnCreated)
@@ -24,108 +24,105 @@ public class BankersQueueTests
         return $"[{queue.LenF}, {{{DumpStream(queue.F, expandUnCreated)}}}, {queue.LenR}, {{{DumpStream(queue.R, expandUnCreated)}}}]";
     }
 
-    [Fact]
-    public void NullTest()
+    [Test]
+    public async Task NullTest()
     {
-        Assert.Throws<NullReferenceException>(() => BankersQueue<string>.IsEmpty(null));
+        await Assert.That(() => BankersQueue<string>.IsEmpty(null)).Throws<NullReferenceException>();
     }
 
-    [Fact]
-    public void EmptyTest()
+    [Test]
+    public async Task EmptyTest()
     {
         var queue = BankersQueue<string>.Empty;
-        Assert.True(BankersQueue<string>.IsEmpty(queue));
-
+        await Assert.That(BankersQueue<string>.IsEmpty(queue)).IsTrue();
         queue = BankersQueue<string>.Snoc(queue, "Item");
-        Assert.False(BankersQueue<string>.IsEmpty(queue));
-
+        await Assert.That(BankersQueue<string>.IsEmpty(queue)).IsFalse();
         queue = BankersQueue<string>.Tail(queue);
-        Assert.True(BankersQueue<string>.IsEmpty(queue));
+        await Assert.That(BankersQueue<string>.IsEmpty(queue)).IsTrue();
     }
 
-    [Fact]
-    public void NullSnocTest()
+    [Test]
+    public async Task NullSnocTest()
     {
-        var ex = Assert.Throws<NullReferenceException>(() => BankersQueue<string>.Snoc(null, "one"));
-        Assert.Equal("Object reference not set to an instance of an object.", ex.Message);
+        var ex = await Assert.That(() => BankersQueue<string>.Snoc(null, "one")).Throws<NullReferenceException>();
+        await Assert.That(ex.Message).IsEqualTo("Object reference not set to an instance of an object.");
     }
 
-    [Fact]
-    public void EmptySnocTest()
+    [Test]
+    public async Task EmptySnocTest()
     {
         var queue = BankersQueue<string>.Snoc(BankersQueue<string>.Empty, "one");
-        Assert.Equal("[1, {$one}, 0, {}]", DumpQueue(queue, true));
+        await Assert.That(DumpQueue(queue, true)).IsEqualTo("[1, {$one}, 0, {}]");
     }
 
-    [Fact]
-    public void SnocTest()
+    [Test]
+    public async Task SnocTest()
     {
         var queue = BankersQueue<string>.Snoc(BankersQueue<string>.Empty, "one");
         queue = BankersQueue<string>.Snoc(queue, "two");
-        Assert.Equal("[1, {$one}, 1, {$two}]", DumpQueue(queue, true));
+        await Assert.That(DumpQueue(queue, true)).IsEqualTo("[1, {$one}, 1, {$two}]");
     }
 
-    [Fact]
-    public void NullHeadTest()
+    [Test]
+    public async Task NullHeadTest()
     {
-        var ex = Assert.Throws<NullReferenceException>(() => BankersQueue<string>.Head(null));
-        Assert.Equal("Object reference not set to an instance of an object.", ex.Message);
+        var ex = await Assert.That(() => BankersQueue<string>.Head(null)).Throws<NullReferenceException>();
+        await Assert.That(ex.Message).IsEqualTo("Object reference not set to an instance of an object.");
     }
 
-    [Fact]
-    public void EmptyHeadTest()
+    [Test]
+    public async Task EmptyHeadTest()
     {
         var queue = BankersQueue<string>.Empty;
-        var ex = Assert.Throws<ArgumentNullException>(() => BankersQueue<string>.Head(queue));
-        Assert.Equal("Value cannot be null. (Parameter 'queue')", ex.Message);
+        var ex = await Assert.That(() => BankersQueue<string>.Head(queue)).Throws<ArgumentNullException>();
+        await Assert.That(ex.Message).IsEqualTo("Value cannot be null. (Parameter 'queue')");
     }
 
-    [Fact]
-    public void HeadTest()
+    [Test]
+    public async Task HeadTest()
     {
         const string data = "One Two Three One Three";
         var queue = data.Split().Aggregate(BankersQueue<string>.Empty, BankersQueue<string>.Snoc);
         var item = BankersQueue<string>.Head(queue);
-        Assert.Equal("One", item);
+        await Assert.That(item).IsEqualTo("One");
     }
 
-    [Fact]
-    public void NullTailTest()
+    [Test]
+    public async Task NullTailTest()
     {
-        var ex = Assert.Throws<NullReferenceException>(() => BankersQueue<string>.Tail(null));
-        Assert.Equal("Object reference not set to an instance of an object.", ex.Message);
+        var ex = await Assert.That(() => BankersQueue<string>.Tail(null)).Throws<NullReferenceException>();
+        await Assert.That(ex.Message).IsEqualTo("Object reference not set to an instance of an object.");
     }
 
-    [Fact]
-    public void EmptyTailTest()
+    [Test]
+    public async Task EmptyTailTest()
     {
         var queue = BankersQueue<string>.Empty;
-        var ex = Assert.Throws<ArgumentNullException>(() => BankersQueue<string>.Tail(queue));
-        Assert.Equal("Value cannot be null. (Parameter 'queue')", ex.Message);
+        var ex = await Assert.That(() => BankersQueue<string>.Tail(queue)).Throws<ArgumentNullException>();
+        await Assert.That(ex.Message).IsEqualTo("Value cannot be null. (Parameter 'queue')");
     }
 
-    [Fact]
-    public void TailTest()
+    [Test]
+    public async Task TailTest()
     {
         const string data = "One Two Three One Three";
         var queue = data.Split().Aggregate(BankersQueue<string>.Empty, BankersQueue<string>.Snoc);
         var tail = BankersQueue<string>.Tail(queue);
-        Assert.Equal("[2, {$Two, $Three}, 2, {$Three, $One}]", DumpQueue(tail, true));
+        await Assert.That(DumpQueue(tail, true)).IsEqualTo("[2, {$Two, $Three}, 2, {$Three, $One}]");
     }
 
-    [Fact]
-    public void PushPopTest()
+    [Test]
+    public async Task PushPopTest()
     {
         const string data = "One Two Three One Three";
         var queue = data.Split().Aggregate(BankersQueue<string>.Empty, BankersQueue<string>.Snoc);
-
         foreach (var expected in data.Split())
         {
             var actual = BankersQueue<string>.Head(queue);
-            Assert.Equal(expected, actual);
+            await Assert.That(actual).IsEqualTo(expected);
             queue = BankersQueue<string>.Tail(queue);
         }
 
-        Assert.True(BankersQueue<string>.IsEmpty(queue));
+        await Assert.That(BankersQueue<string>.IsEmpty(queue)).IsTrue();
     }
 }

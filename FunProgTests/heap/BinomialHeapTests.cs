@@ -1,4 +1,4 @@
-// Copyright 2014 Gregory Eakin <greg@eakin.dev>
+// Copyright 2025 Gregory Eakin <greg@eakin.dev>
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -14,22 +14,14 @@
 
 using FunProgLib.heap;
 using FunProgTests.utilities;
+// using Heap = FunProgLib.heap.BinomialHeap<int>;
 
 namespace FunProgTests.heap;
 
-
-// using Heap = FunProgLib.heap.BinomialHeap<int>;
-
 public class BinomialHeapTests
 {
-    private readonly ITestOutputHelper _testOutputHelper;
-
-    public BinomialHeapTests(ITestOutputHelper testOutputHelper)
-    {
-        _testOutputHelper = testOutputHelper;
-    }
-
-    private static string DumpTree<T>(BinomialHeap<T>.Tree tree) where T : IComparable<T>
+    private static string DumpTree<T>(BinomialHeap<T>.Tree tree)
+        where T : IComparable<T>
     {
         var result = new StringBuilder();
         result.Append('[');
@@ -42,11 +34,13 @@ public class BinomialHeapTests
                 result.Append(DumpTree(node1));
             }
         }
+
         result.Append(']');
         return result.ToString();
     }
 
-    private static string DumpHeap<T>(IEnumerable<BinomialHeap<T>.Tree> list) where T : IComparable<T>
+    private static string DumpHeap<T>(IEnumerable<BinomialHeap<T>.Tree> list)
+        where T : IComparable<T>
     {
         if (Equals(list, FunProgLib.lists.FunList<BinomialHeap<T>.Tree>.Empty))
             return string.Empty;
@@ -57,175 +51,173 @@ public class BinomialHeapTests
             result.Append(DumpTree(node));
             result.Append("; ");
         }
+
         result.Remove(result.Length - 2, 2);
         return result.ToString();
     }
 
-    [Fact]
-    public void BinomialTest1()
+    [Test]
+    public async Task BinomialTest1()
     {
         var heap = BinomialHeap<int>.Empty;
         for (var i = 0; i < 16; i++)
         {
             heap = BinomialHeap<int>.Insert(i, heap);
             var dumpHeap = DumpHeap(heap);
-            // _testOutputHelper.WriteLine(dumpHeap);
-
             var semicolons = Counters.CountChar(dumpHeap, ';');
-            Assert.Equal(Counters.CountBinaryOnes(i + 1) - 1, semicolons);
+            await Assert.That(semicolons).IsEqualTo(Counters.CountBinaryOnes(i + 1) - 1);
         }
     }
 
-    [Fact]
-    public void BinomialTest2()
+    [Test]
+    public async Task BinomialTest2()
     {
         var heap = BinomialHeap<int>.Empty;
         for (var i = 0; i < 0x100; i++)
         {
             heap = BinomialHeap<int>.Insert(1, heap);
             var dumpHeap = DumpHeap(heap);
-            // _testOutputHelper.WriteLine(dumpHeap);
             var blocks = dumpHeap.Split(';');
-
             var j = 0;
             var p = 0;
             for (var k = i + 1; k > 0; k >>= 1, j++)
             {
-                if (k % 2 == 0) continue;
+                if (k % 2 == 0)
+                    continue;
                 var q = (int)Math.Pow(2, j);
                 var block = blocks[p++];
-                Assert.Equal(q, Counters.CountChar(block, '1'));
+                await Assert.That(Counters.CountChar(block, '1')).IsEqualTo(q);
             }
         }
     }
 
-    [Fact]
-    public void EmptyTest()
+    [Test]
+    public async Task EmptyTest()
     {
         var empty = BinomialHeap<int>.Empty;
-        Assert.True(BinomialHeap<int>.IsEmpty(empty));
-
+        await Assert.That(BinomialHeap<int>.IsEmpty(empty)).IsTrue();
         var heap = BinomialHeap<int>.Insert(0, empty);
-        Assert.False(BinomialHeap<int>.IsEmpty(heap));
+        await Assert.That(BinomialHeap<int>.IsEmpty(heap)).IsFalse().IsFalse();
     }
 
-    [Fact]
-    public void InsertTest1()
+    [Test]
+    public async Task InsertTest1()
     {
         var empty = BinomialHeap<int>.Empty;
         var heap = BinomialHeap<int>.Insert(0, empty);
-        Assert.Equal("[0]", DumpHeap(heap));
+        await Assert.That(DumpHeap(heap)).IsEqualTo("[0]");
     }
 
-    [Fact]
-    public void InsertTest2()
+    [Test]
+    public async Task InsertTest2()
     {
         var heap1 = Enumerable.Range(0, 2).Aggregate(BinomialHeap<int>.Empty, (current, i) => BinomialHeap<int>.Insert(i, current));
         var heap = BinomialHeap<int>.Insert(2, heap1);
-        Assert.Equal("[2]; [0, [1]]", DumpHeap(heap));
+        await Assert.That(DumpHeap(heap)).IsEqualTo("[2]; [0, [1]]");
     }
 
-    [Fact]
-    public void InsertTest3()
+    [Test]
+    public async Task InsertTest3()
     {
         var heap1 = Enumerable.Range(0, 3).Aggregate(BinomialHeap<int>.Empty, (current, i) => BinomialHeap<int>.Insert(i, current));
         var heap = BinomialHeap<int>.Insert(3, heap1);
-        Assert.Equal("[0, [2, [3]], [1]]", DumpHeap(heap));
+        await Assert.That(DumpHeap(heap)).IsEqualTo("[0, [2, [3]], [1]]");
     }
 
-    [Fact]
-    public void MergeTest1()
+    [Test]
+    public async Task MergeTest1()
     {
         var heap1 = Enumerable.Range(0, 8).Aggregate(BinomialHeap<int>.Empty, (current, i) => BinomialHeap<int>.Insert(i, current));
         var empty = BinomialHeap<int>.Empty;
         var heap = BinomialHeap<int>.Merge(heap1, empty);
-        Assert.Same(heap1, heap);
+        await Assert.That(heap).IsSameReferenceAs(heap1);
     }
 
-    [Fact]
-    public void MergeTest2()
+    [Test]
+    public async Task MergeTest2()
     {
         var empty = BinomialHeap<int>.Empty;
         var heap2 = Enumerable.Range(0, 8).Aggregate(BinomialHeap<int>.Empty, (current, i) => BinomialHeap<int>.Insert(i, current));
         var heap = BinomialHeap<int>.Merge(empty, heap2);
-        Assert.Same(heap2, heap);
+        await Assert.That(heap).IsSameReferenceAs(heap2);
     }
 
-    [Fact]
-    public void MergeTest3()
+    [Test]
+    public async Task MergeTest3()
     {
         var heap1 = Enumerable.Range(0, 4).Aggregate(BinomialHeap<int>.Empty, (current, i) => BinomialHeap<int>.Insert(i, current));
         var heap2 = Enumerable.Range(10, 3).Aggregate(BinomialHeap<int>.Empty, (current, i) => BinomialHeap<int>.Insert(i, current));
         var heap = BinomialHeap<int>.Merge(heap1, heap2);
-        Assert.Equal("[12]; [10, [11]]; [0, [2, [3]], [1]]", DumpHeap(heap));
+        await Assert.That(DumpHeap(heap)).IsEqualTo("[12]; [10, [11]]; [0, [2, [3]], [1]]");
     }
 
-    [Fact]
-    public void MergeTest4()
+    [Test]
+    public async Task MergeTest4()
     {
         var heap1 = Enumerable.Range(0, 3).Aggregate(BinomialHeap<int>.Empty, (current, i) => BinomialHeap<int>.Insert(i, current));
         var heap2 = Enumerable.Range(10, 4).Aggregate(BinomialHeap<int>.Empty, (current, i) => BinomialHeap<int>.Insert(i, current));
         var heap = BinomialHeap<int>.Merge(heap1, heap2);
-        Assert.Equal("[2]; [0, [1]]; [10, [12, [13]], [11]]", DumpHeap(heap));
+        await Assert.That(DumpHeap(heap)).IsEqualTo("[2]; [0, [1]]; [10, [12, [13]], [11]]");
     }
 
-    [Fact]
-    public void MergeTest5()
+    [Test]
+    public async Task MergeTest5()
     {
         var heap1 = Enumerable.Range(0, 4).Aggregate(BinomialHeap<int>.Empty, (current, i) => BinomialHeap<int>.Insert(i, current));
         var heap2 = Enumerable.Range(10, 4).Aggregate(BinomialHeap<int>.Empty, (current, i) => BinomialHeap<int>.Insert(i, current));
         var heap = BinomialHeap<int>.Merge(heap1, heap2);
-        Assert.Equal("[0, [10, [12, [13]], [11]], [2, [3]], [1]]", DumpHeap(heap));
+        await Assert.That(DumpHeap(heap)).IsEqualTo("[0, [10, [12, [13]], [11]], [2, [3]], [1]]");
     }
 
-    [Fact]
-    public void FindMinEmptyTest()
+    [Test]
+    public async Task FindMinEmptyTest()
     {
         var empty = BinomialHeap<int>.Empty;
-        Assert.Throws<ArgumentNullException>(() => BinomialHeap<int>.FindMin(empty));
+        await Assert.That(() => BinomialHeap<int>.FindMin(empty)).Throws<ArgumentNullException>();
     }
 
-    [Fact]
-    public void FindMinTest()
+    [Test]
+    public async Task FindMinTest()
     {
         var heap = Enumerable.Range(0, 8).Aggregate(BinomialHeap<int>.Empty, (current, i) => BinomialHeap<int>.Insert(i, current));
         var min = BinomialHeap<int>.FindMin(heap);
-        Assert.Equal(0, min);
+        await Assert.That(min).IsEqualTo(0);
     }
 
-    [Fact]
-    public void DeleteMinEmptyTest()
+    [Test]
+    public async Task DeleteMinEmptyTest()
     {
         var empty = BinomialHeap<int>.Empty;
-        Assert.Throws<ArgumentNullException>(() => BinomialHeap<int>.DeleteMin(empty));
+        await Assert.That(() => BinomialHeap<int>.DeleteMin(empty)).Throws<ArgumentNullException>();
     }
 
-    [Fact]
-    public void DeleteMinTest()
+    [Test]
+    public async Task DeleteMinTest()
     {
         var heap = Enumerable.Range(0, 8).Aggregate(BinomialHeap<int>.Empty, (current, i) => BinomialHeap<int>.Insert(i, current));
         heap = BinomialHeap<int>.DeleteMin(heap);
-        Assert.Equal("[1]; [2, [3]]; [4, [6, [7]], [5]]", DumpHeap(heap));
+        await Assert.That(DumpHeap(heap)).IsEqualTo("[1]; [2, [3]]; [4, [6, [7]], [5]]");
     }
 
-    [Fact]
-    public void DeleteLotsOfMinsTest()
+    [Test]
+    public async Task DeleteLotsOfMinsTest()
     {
         const int size = 1000;
         var random = new Random(3456);
         var heap = BinomialHeap<int>.Empty;
-        for (var i = 0; i < size; i++) heap = BinomialHeap<int>.Insert(random.Next(size), heap);
-
+        for (var i = 0; i < size; i++)
+            heap = BinomialHeap<int>.Insert(random.Next(size), heap);
         var last = 0;
         var count = 0;
         while (!BinomialHeap<int>.IsEmpty(heap))
         {
             var next = BinomialHeap<int>.FindMin(heap);
             heap = BinomialHeap<int>.DeleteMin(heap);
-            Assert.True(last <= next);
+            await Assert.That(last <= next).IsTrue();
             last = next;
             count++;
         }
-        Assert.Equal(size, count);
+
+        await Assert.That(count).IsEqualTo(size);
     }
 }

@@ -1,4 +1,4 @@
-// Copyright 2014 Gregory Eakin <greg@eakin.dev>
+// Copyright 2025 Gregory Eakin <greg@eakin.dev>
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -33,108 +33,104 @@ public class BootstrappedQueueTests
         var separator = string.Empty;
         while (true)
         {
-            if (list == null) break;
+            if (list == null)
+                break;
             result.Append(separator);
             separator = ", ";
             var head = FunList<T>.Head(list);
             result.Append(head);
             list = FunList<T>.Tail(list);
         }
+
         result.Append('}');
         return result.ToString();
     }
 
-    [Fact]
-    public void EmptyTest()
+    [Test]
+    public async Task EmptyTest()
     {
         var queue = BootstrappedQueue<string>.Empty;
-        Assert.True(BootstrappedQueue<string>.IsEmpty(queue));
-
+        await Assert.That(BootstrappedQueue<string>.IsEmpty(queue)).IsTrue();
         queue = BootstrappedQueue<string>.Snoc(queue, "Item");
-        Assert.False(BootstrappedQueue<string>.IsEmpty(queue));
-
+        await Assert.That(BootstrappedQueue<string>.IsEmpty(queue)).IsFalse();
         queue = BootstrappedQueue<string>.Tail(queue);
-        Assert.True(BootstrappedQueue<string>.IsEmpty(queue));
+        await Assert.That(BootstrappedQueue<string>.IsEmpty(queue)).IsTrue();
     }
 
-    [Fact]
-    public void EmptySnocTest()
+    [Test]
+    public async Task EmptySnocTest()
     {
         var queue = BootstrappedQueue<string>.Snoc(BootstrappedQueue<string>.Empty, "one");
-        Assert.Equal("[1, {one}, null, 0, {}]", DumpQueue(queue));
+        await Assert.That(DumpQueue(queue)).IsEqualTo("[1, {one}, null, 0, {}]");
     }
 
-    [Fact]
-    public void SnocTest()
+    [Test]
+    public async Task SnocTest()
     {
         var queue = BootstrappedQueue<string>.Empty;
         queue = BootstrappedQueue<string>.Snoc(queue, "One");
-        Assert.Equal("[1, {One}, null, 0, {}]", DumpQueue(queue));
-
+        await Assert.That(DumpQueue(queue)).IsEqualTo("[1, {One}, null, 0, {}]");
         queue = BootstrappedQueue<string>.Snoc(queue, "Two");
-        Assert.Equal("[1, {One}, null, 1, {Two}]", DumpQueue(queue));
-
+        await Assert.That(DumpQueue(queue)).IsEqualTo("[1, {One}, null, 1, {Two}]");
         queue = BootstrappedQueue<string>.Snoc(queue, "Three");
-        Assert.Equal("[3, {One}, [1, {Value is not created.}, null, 0, {}], 0, {}]", DumpQueue(queue));
+        await Assert.That(DumpQueue(queue)).IsEqualTo("[3, {One}, [1, {Value is not created.}, null, 0, {}], 0, {}]");
     }
 
-    [Fact]
-    public void SnocThreeTest()
+    [Test]
+    public async Task SnocThreeTest()
     {
         var queue = BootstrappedQueue<string>.Snoc(BootstrappedQueue<string>.Empty, "one");
         queue = BootstrappedQueue<string>.Snoc(queue, "two");
         queue = BootstrappedQueue<string>.Snoc(queue, "three");
-        Assert.Equal("[3, {one}, [1, {Value is not created.}, null, 0, {}], 0, {}]", DumpQueue(queue));
-
+        await Assert.That(DumpQueue(queue)).IsEqualTo("[3, {one}, [1, {Value is not created.}, null, 0, {}], 0, {}]");
         queue = BootstrappedQueue<string>.Tail(queue);
-        Assert.Equal("[2, {two, three}, null, 0, {}]", DumpQueue(queue));
+        await Assert.That(DumpQueue(queue)).IsEqualTo("[2, {two, three}, null, 0, {}]");
     }
 
-    [Fact]
-    public void EmptyHeadTest()
+    [Test]
+    public async Task EmptyHeadTest()
     {
         var queue = BootstrappedQueue<string>.Empty;
-        Assert.Throws<ArgumentNullException>(() => BootstrappedQueue<string>.Head(queue));
+        await Assert.That(() => BootstrappedQueue<string>.Head(queue)).Throws<ArgumentNullException>();
     }
 
-    [Fact]
-    public void HeadTest()
+    [Test]
+    public async Task HeadTest()
     {
         const string data = "One Two Three One Three";
         var queue = data.Split().Aggregate(BootstrappedQueue<string>.Empty, BootstrappedQueue<string>.Snoc);
         var x = BootstrappedQueue<string>.Head(queue);
-        Assert.Equal("One", x);
+        await Assert.That(x).IsEqualTo("One");
     }
 
-    [Fact]
-    public void EmptyTailTest()
+    [Test]
+    public async Task EmptyTailTest()
     {
         var queue = BootstrappedQueue<string>.Empty;
-        Assert.Throws<ArgumentNullException>(() => BootstrappedQueue<string>.Tail(queue));
+        await Assert.That(() => BootstrappedQueue<string>.Tail(queue)).Throws<ArgumentNullException>();
     }
 
-    [Fact]
-    public void TailTest()
+    [Test]
+    public async Task TailTest()
     {
         const string data = "One Two Three One Three";
         var queue = data.Split().Aggregate(BootstrappedQueue<string>.Empty, BootstrappedQueue<string>.Snoc);
         queue = BootstrappedQueue<string>.Tail(queue);
-        Assert.Equal("[2, {Two, Three}, null, 2, {Three, One}]", DumpQueue(queue));
+        await Assert.That(DumpQueue(queue)).IsEqualTo("[2, {Two, Three}, null, 2, {Three, One}]");
     }
 
-    [Fact]
-    public void PushPopTest()
+    [Test]
+    public async Task PushPopTest()
     {
         const string data = "One Two Three One Three";
         var queue = data.Split().Aggregate(BootstrappedQueue<string>.Empty, BootstrappedQueue<string>.Snoc);
-
         foreach (var expected in data.Split())
         {
             var actual = BootstrappedQueue<string>.Head(queue);
-            Assert.Equal(expected, actual);
+            await Assert.That(actual).IsEqualTo(expected);
             queue = BootstrappedQueue<string>.Tail(queue);
         }
 
-        Assert.True(BootstrappedQueue<string>.IsEmpty(queue));
+        await Assert.That(BootstrappedQueue<string>.IsEmpty(queue)).IsTrue();
     }
 }

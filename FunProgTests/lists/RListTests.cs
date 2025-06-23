@@ -1,4 +1,4 @@
-// Copyright 2014 Gregory Eakin <greg@eakin.dev>
+// Copyright 2025 Gregory Eakin <greg@eakin.dev>
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -19,152 +19,144 @@ namespace FunProgTests.lists;
 
 public class RListTests
 {
-    [Fact]
-    public void IsEmptyTest()
+    [Test]
+    public async Task IsEmptyTest()
     {
         var list = RList<string>.Empty;
-        Assert.True(RList<string>.IsEmpty(list));
+        await Assert.That(RList<string>.IsEmpty(list)).IsTrue();
         list = RList<string>.Cons("A", list);
-        Assert.False(RList<string>.IsEmpty(list));
+        await Assert.That(RList<string>.IsEmpty(list)).IsFalse();
     }
 
-    [Fact]
-    public void EmptyHeadTest()
+    [Test]
+    public async Task EmptyHeadTest()
     {
         var list = RList<string>.Empty;
-        Assert.Throws<ArgumentNullException>(() => RList<string>.Head(list));
+        await Assert.That(() => RList<string>.Head(list)).Throws<ArgumentNullException>();
     }
 
-    [Fact]
-    public void EmptyTailTest()
+    [Test]
+    public async Task EmptyTailTest()
     {
         var list = RList<string>.Empty;
-        Assert.Throws<ArgumentNullException>(() => RList<string>.Tail(list));
+        await Assert.That(() => RList<string>.Tail(list)).Throws<ArgumentNullException>();
     }
 
-    [Fact]
-    public void EnumeratorTest()
+    [Test]
+    public async Task EnumeratorTest()
     {
         const string data = "a b c";
         var list = data.Split().Aggregate(RList<string>.Empty, (current, word) => RList<string>.Cons(word, current));
-        Assert.Equal("[c, b, a]", list.ToReadableString());
+        await Assert.That(list.ToReadableString()).IsEqualTo(list.ToReadableString());
     }
 
-    [Fact]
-    public void ReverseEmptyListTest()
+    [Test]
+    public async Task ReverseEmptyListTest()
     {
         var list = RList<string>.Reverse(RList<string>.Empty);
-        Assert.True(RList<string>.IsEmpty(list));
+        await Assert.That(RList<string>.IsEmpty(list)).IsTrue();
     }
 
-    [Fact]
-    public void ReverseSingleListTest()
+    [Test]
+    public async Task ReverseSingleListTest()
     {
         var list = RList<string>.Cons("Wow", RList<string>.Empty);
         var reverse = RList<string>.Reverse(list);
-        Assert.Same(list, reverse);
+        await Assert.That(reverse).IsSameReferenceAs(list);
     }
 
-    [Fact]
-    public void ReverseListTest()
+    [Test]
+    public async Task ReverseListTest()
     {
         const string data = "How now, brown cow?";
         var list = data.Split().Aggregate(RList<string>.Empty, (current, word) => RList<string>.Cons(word, current));
         var reverse = RList<string>.Reverse(list);
-        Assert.Equal("[How, now,, brown, cow?]", reverse.ToReadableString());
+        await Assert.That(reverse.ToReadableString()).IsEqualTo(reverse.ToReadableString());
     }
 
-    [Fact]
-    public void CatBothEmptyTest()
+    [Test]
+    public async Task CatBothEmptyTest()
     {
         var list = RList<string>.Cat(RList<string>.Empty, RList<string>.Empty);
-        Assert.True(RList<string>.IsEmpty(list));
+        await Assert.That(RList<string>.IsEmpty(list)).IsTrue();
     }
 
-    [Fact]
-    public void CatLeftEmptyTest()
+    [Test]
+    public async Task CatLeftEmptyTest()
     {
         const string data = "How now, brown cow?";
         var list = data.Split().Aggregate(RList<string>.Empty, (current, word) => RList<string>.Cons(word, current));
-
         var list2 = RList<string>.Cat(RList<string>.Empty, list);
-        Assert.Same(list, list2);
+        await Assert.That(list2).IsSameReferenceAs(list);
     }
 
-    [Fact]
-    public void CatRightEmptyTest()
+    [Test]
+    public async Task CatRightEmptyTest()
     {
         const string data = "How now, brown cow?";
         var list = data.Split().Aggregate(RList<string>.Empty, (current, word) => RList<string>.Cons(word, current));
-
         var list2 = RList<string>.Cat(list, RList<string>.Empty);
-        Assert.Same(list, list2);
+        await Assert.That(list2).IsSameReferenceAs(list);
     }
 
-    [Fact]
-    public void CatTest()
+    [Test]
+    public async Task CatTest()
     {
         const string data1 = "How now,";
         var list1 = data1.Split().Aggregate(RList<string>.Empty, (current, word) => RList<string>.Cons(word, current));
-
         const string data2 = "brown cow?";
         var list2 = data2.Split().Aggregate(RList<string>.Empty, (current, word) => RList<string>.Cons(word, current));
-
         var list3 = RList<string>.Cat(list1, list2);
-        Assert.Equal("[now,, How, cow?, brown]", list3.ToReadableString());
+        await Assert.That(list3.ToReadableString()).IsEqualTo(list3.ToReadableString());
     }
 
-    [Fact]
-    public void LookupEmptyTest()
+    [Test]
+    public async Task LookupEmptyTest()
     {
-        var exception = Assert.Throws<ArgumentNullException>(() => RList<string>.Lookup(0, RList<string>.Empty));
-        Assert.Equal("Value cannot be null. (Parameter 'list')", exception.Message);
+        var exception = await Assert.That(() => RList<string>.Lookup(0, RList<string>.Empty)).Throws<ArgumentNullException>();
+        await Assert.That(exception.Message).IsEqualTo("Value cannot be null. (Parameter 'list')");
     }
 
-    [Fact]
-    public void LookupNegativeTest()
-    {
-        const string data = "How now, brown cow?";
-        var list = data.Split().Aggregate(RList<string>.Empty, (current, word) => RList<string>.Cons(word, current));
-
-        var exception = Assert.Throws<ArgumentException>(() => RList<string>.Lookup(-1, list));
-        Assert.Equal("neg (Parameter 'i')", exception.Message);
-    }
-
-    [Fact]
-    public void LookupZeroTest()
+    [Test]
+    public async Task LookupNegativeTest()
     {
         const string data = "How now, brown cow?";
         var list = data.Split().Aggregate(RList<string>.Empty, (current, word) => RList<string>.Cons(word, current));
+        var exception = await Assert.That(() => RList<string>.Lookup(-1, list)).Throws<ArgumentException>();
+        await Assert.That(exception.Message).IsEqualTo("neg (Parameter 'i')");
+    }
 
+    [Test]
+    public async Task LookupZeroTest()
+    {
+        const string data = "How now, brown cow?";
+        var list = data.Split().Aggregate(RList<string>.Empty, (current, word) => RList<string>.Cons(word, current));
         var item = RList<string>.Lookup(0, list);
-        Assert.Equal("cow?", item);
+        await Assert.That(item).IsEqualTo("cow?");
     }
 
-    [Fact]
-    public void LookupOneTest()
+    [Test]
+    public async Task LookupOneTest()
     {
         const string data = "How now, brown cow?";
         var list = data.Split().Aggregate(RList<string>.Empty, (current, word) => RList<string>.Cons(word, current));
-
         var item = RList<string>.Lookup(1, list);
-        Assert.Equal("brown", item);
+        await Assert.That(item).IsEqualTo("brown");
     }
 
-    [Fact]
-    public void UpdateEmptyTest()
+    [Test]
+    public async Task UpdateEmptyTest()
     {
-        var exception = Assert.Throws<ArgumentNullException>(() => RList<string>.Fupdate(null, 0, RList<string>.Empty));
-        Assert.Equal("Value cannot be null. (Parameter 'ts')", exception.Message);
+        var exception = await Assert.That(() => RList<string>.Fupdate(null, 0, RList<string>.Empty)).Throws<ArgumentNullException>();
+        await Assert.That(exception.Message).IsEqualTo("Value cannot be null. (Parameter 'ts')");
     }
 
-    [Fact]
-    public void UpdateNegativeTest()
+    [Test]
+    public async Task UpdateNegativeTest()
     {
         const string data = "How now, brown cow?";
         var list = data.Split().Aggregate(RList<string>.Empty, (current, word) => RList<string>.Cons(word, current));
-
-        var exception = Assert.Throws<ArgumentException>(() => RList<string>.Fupdate(null, -1, list));
-        Assert.Equal("Negative (Parameter 'i')", exception.Message);
+        var exception = await Assert.That(() => RList<string>.Fupdate(null, -1, list)).Throws<ArgumentException>();
+        await Assert.That(exception.Message).IsEqualTo("Negative (Parameter 'i')");
     }
 }

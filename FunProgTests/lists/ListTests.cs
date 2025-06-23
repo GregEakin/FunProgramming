@@ -1,4 +1,4 @@
-// Copyright 2014 Gregory Eakin <greg@eakin.dev>
+// Copyright 2025 Gregory Eakin <greg@eakin.dev>
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -19,180 +19,224 @@ namespace FunProgTests.lists;
 
 public class ListTests
 {
-    [Fact]
-    public void IsEmptyTest()
+    [Test]
+    public async Task IsEmptyTest()
     {
         var list = FunList<string>.Empty;
-        Assert.True(FunList<string>.IsEmpty(list));
+        await Assert.That(FunList<string>.IsEmpty(list)).IsTrue();
         list = FunList<string>.Cons("A", list);
-        Assert.False(FunList<string>.IsEmpty(list));
+        await Assert.That(FunList<string>.IsEmpty(list)).IsFalse();
     }
 
-    [Fact]
-    public void EmptyHeadTest()
+    [Test]
+    public async Task EmptyHeadTest()
     {
         var list = FunList<string>.Empty;
-        var exception = Assert.Throws<ArgumentNullException>(() => FunList<string>.Head(list));
-        Assert.Equal("Value cannot be null. (Parameter 'list')", exception.Message);
+        var exception = await Assert.That(() => FunList<string>.Head(list)).Throws<ArgumentNullException>();
+        await Assert.That(exception.Message).IsEqualTo("Value cannot be null. (Parameter 'list')");
     }
 
-    [Fact]
-    public void EmptyTailTest()
+    [Test]
+    public async Task EmptyTailTest()
     {
         var list = FunList<string>.Empty;
-        var exception = Assert.Throws<ArgumentNullException>(() => FunList<string>.Tail(list));
-        Assert.Equal("Value cannot be null. (Parameter 'list')", exception.Message);
+        var exception = await Assert.That(() => FunList<string>.Tail(list)).Throws<ArgumentNullException>();
+        await Assert.That(exception.Message).IsEqualTo("Value cannot be null. (Parameter 'list')");
     }
 
-    [Fact]
-    public void EnumeratorTest()
+    [Test]
+    public async Task EnumeratorTest()
     {
         const string data = "a b c";
         var list = data.Split().Aggregate(FunList<string>.Empty, (current, word) => FunList<string>.Cons(word, current));
-        Assert.Equal("[c, b, a]", list.ToReadableString());
+        await Assert.That(list.ToReadableString()).IsEqualTo("[c, b, a]");
     }
 
-    [Fact]
-    public void ReverseEmptyListTest()
+    [Test]
+    public async Task ReverseEmptyListTest()
     {
         var list = FunList<string>.Reverse(FunList<string>.Empty);
-        Assert.True(FunList<string>.IsEmpty(list));
+        await Assert.That(FunList<string>.IsEmpty(list)).IsTrue();
     }
 
-    [Fact]
-    public void ReverseSingleListTest()
+    [Test]
+    public async Task ReverseSingleListTest()
     {
         var list = FunList<string>.Cons("Wow", FunList<string>.Empty);
         var reverse = FunList<string>.Reverse(list);
-        Assert.Same(list, reverse);
+        await Assert.That(reverse).IsSameReferenceAs(list);
     }
 
-    [Fact]
-    public void ReverseListTest()
+    [Test]
+    public async Task ReverseListTest()
     {
         const string data = "How now, brown cow?";
         var list = data.Split().Aggregate(FunList<string>.Empty, (current, word) => FunList<string>.Cons(word, current));
         var reverse = FunList<string>.Reverse(list);
-        Assert.Equal("[How, now,, brown, cow?]", reverse.ToReadableString());
+        await Assert.That(reverse.ToReadableString()).IsEqualTo("[How, now,, brown, cow?]");
     }
 
-    [Fact]
-    public void CatBothEmptyTest()
+    [Test]
+    public async Task CatBothEmptyTest()
     {
         var list = FunList<string>.Cat(FunList<string>.Empty, FunList<string>.Empty);
-        Assert.True(FunList<string>.IsEmpty(list));
+        await Assert.That(FunList<string>.IsEmpty(list)).IsTrue();
     }
 
-    [Fact]
-    public void CatLeftEmptyTest()
+    [Test]
+    public async Task CatLeftEmptyTest()
     {
         const string data = "How now, brown cow?";
         var list = data.Split().Aggregate(FunList<string>.Empty, (current, word) => FunList<string>.Cons(word, current));
-
         var list2 = FunList<string>.Cat(FunList<string>.Empty, list);
-        Assert.Same(list, list2);
+        await Assert.That(list2).IsSameReferenceAs(list);
     }
 
-    [Fact]
-    public void CatRightEmptyTest()
+    [Test]
+    public async Task CatRightEmptyTest()
     {
         const string data = "How now, brown cow?";
         var list = data.Split().Aggregate(FunList<string>.Empty, (current, word) => FunList<string>.Cons(word, current));
-
         var list2 = FunList<string>.Cat(list, FunList<string>.Empty);
-        Assert.Same(list, list2);
+        await Assert.That(list2).IsSameReferenceAs(list);
     }
 
-    [Fact]
-    public void CatTest()
+    [Test]
+    public async Task CatTest()
     {
         const string data1 = "How now,";
         var list1 = data1.Split().Aggregate(FunList<string>.Empty, (current, word) => FunList<string>.Cons(word, current));
-
         const string data2 = "brown cow?";
         var list2 = data2.Split().Aggregate(FunList<string>.Empty, (current, word) => FunList<string>.Cons(word, current));
-
         var list3 = FunList<string>.Cat(list1, list2);
-        Assert.Equal("[now,, How, cow?, brown]", list3.ToReadableString());
+        await Assert.That(list3.ToReadableString()).IsEqualTo("[now,, How, cow?, brown]");
     }
 
-    [Fact]
-    public void FoldRightSumTest()
+    [Test]
+    public async Task FoldRightSumTest()
     {
-        var data = new[]{ 1, 2, 3, 4, 5 };
+        var data = new[]
+        {
+            1,
+            2,
+            3,
+            4,
+            5
+        };
         var list = data.Aggregate(FunList<int>.Empty, (current, word) => FunList<int>.Cons(word, current));
-
         var sum = FunList<int>.FoldRight(list, 0, (x, y) => x + y);
-        Assert.Equal(15, sum);
+        await Assert.That(sum).IsEqualTo(15);
     }
 
-    [Fact]
-    public void FoldLeftSumTest()
+    [Test]
+    public async Task FoldLeftSumTest()
     {
-        var data = new[] { 1, 2, 3, 4, 5 };
+        var data = new[]
+        {
+            1,
+            2,
+            3,
+            4,
+            5
+        };
         var list = data.Aggregate(FunList<int>.Empty, (current, word) => FunList<int>.Cons(word, current));
-
         var sum = FunList<int>.FoldLeft(list, 0, (x, y) => x + y);
-        Assert.Equal(15, sum);
+        await Assert.That(sum).IsEqualTo(15);
     }
 
-    [Fact]
-    public void FoldLeftRSumTest()
+    [Test]
+    public async Task FoldLeftRSumTest()
     {
-        var data = new[] { 1, 2, 3, 4, 5 };
+        var data = new[]
+        {
+            1,
+            2,
+            3,
+            4,
+            5
+        };
         var list = data.Aggregate(FunList<int>.Empty, (current, word) => FunList<int>.Cons(word, current));
-
         var sum = FunList<int>.FoldLeftR(list, 0, (x, y) => x + y);
-        Assert.Equal(15, sum);
+        await Assert.That(sum).IsEqualTo(15);
     }
 
-    [Fact]
-    public void FoldRightLSumTest()
+    [Test]
+    public async Task FoldRightLSumTest()
     {
-        var data = new[] { 1, 2, 3, 4, 5 };
+        var data = new[]
+        {
+            1,
+            2,
+            3,
+            4,
+            5
+        };
         var list = data.Aggregate(FunList<int>.Empty, (current, word) => FunList<int>.Cons(word, current));
-
         var sum = FunList<int>.FoldRightL(list, 0, (x, y) => x + y);
-        Assert.Equal(15, sum);
+        await Assert.That(sum).IsEqualTo(15);
     }
 
-    [Fact]
-    public void FoldRightProductTest()
+    [Test]
+    public async Task FoldRightProductTest()
     {
-        var data = new[] { 1.0, 2.0, 3.0, 4.0, 5.0 };
+        var data = new[]
+        {
+            1.0,
+            2.0,
+            3.0,
+            4.0,
+            5.0
+        };
         var list = data.Aggregate(FunList<double>.Empty, (current, word) => FunList<double>.Cons(word, current));
-
         var product = FunList<double>.FoldRight(list, 1.0, (x, y) => x * y);
-        Assert.Equal(120.0, product);
+        await Assert.That(product).IsEqualTo(120.0);
     }
 
-    [Fact]
-    public void FoldLeftProductTest()
+    [Test]
+    public async Task FoldLeftProductTest()
     {
-        var data = new[] { 1.0, 2.0, 3.0, 4.0, 5.0 };
+        var data = new[]
+        {
+            1.0,
+            2.0,
+            3.0,
+            4.0,
+            5.0
+        };
         var list = data.Aggregate(FunList<double>.Empty, (current, word) => FunList<double>.Cons(word, current));
-
         var product = FunList<double>.FoldLeft(list, 1.0, (x, y) => x * y);
-        Assert.Equal(120.0, product);
+        await Assert.That(product).IsEqualTo(120.0);
     }
 
-    [Fact]
-    public void FoldLeftRProductTest()
+    [Test]
+    public async Task FoldLeftRProductTest()
     {
-        var data = new[] { 1.0, 2.0, 3.0, 4.0, 5.0 };
+        var data = new[]
+        {
+            1.0,
+            2.0,
+            3.0,
+            4.0,
+            5.0
+        };
         var list = data.Aggregate(FunList<double>.Empty, (current, word) => FunList<double>.Cons(word, current));
-
         var product = FunList<double>.FoldLeftR(list, 1.0, (x, y) => x * y);
-        Assert.Equal(120.0, product);
+        await Assert.That(product).IsEqualTo(120.0);
     }
 
-    [Fact]
-    public void FoldRightLProductTest()
+    [Test]
+    public async Task FoldRightLProductTest()
     {
-        var data = new[] { 1.0, 2.0, 3.0, 4.0, 5.0 };
+        var data = new[]
+        {
+            1.0,
+            2.0,
+            3.0,
+            4.0,
+            5.0
+        };
         var list = data.Aggregate(FunList<double>.Empty, (current, word) => FunList<double>.Cons(word, current));
-
         var product = FunList<double>.FoldRightL(list, 1.0, (x, y) => x * y);
-        Assert.Equal(120.0, product);
+        await Assert.That(product).IsEqualTo(120.0);
     }
 }

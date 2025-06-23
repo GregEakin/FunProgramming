@@ -1,4 +1,4 @@
-// Copyright 2014 Gregory Eakin <greg@eakin.dev>
+// Copyright 2025 Gregory Eakin <greg@eakin.dev>
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -19,88 +19,83 @@ namespace FunProgTests.sort;
 
 public class ScheduledBottomUpMergeSortTests
 {
-    [Fact]
-    public void EmptyTest()
+    [Test]
+    public async Task EmptyTest()
     {
         var list = ScheduledBottomUpMergeSort<string>.Empty;
-        Assert.Equal(0, list.Size);
-        Assert.Null(list.Segs);
-
+        await Assert.That(list.Size).IsEqualTo(0);
+        await Assert.That(list.Segs).IsNull();
         list = ScheduledBottomUpMergeSort<string>.Add("One", list);
-        Assert.Equal(1, list.Size);
-        Assert.NotNull(list.Segs);
+        await Assert.That(list.Size).IsEqualTo(1);
+        await Assert.That(list.Segs).IsNotNull();
     }
 
-    [Fact]
-    public void LazyTest()
+    [Test]
+    public async Task LazyTest()
     {
         var list = ScheduledBottomUpMergeSort<string>.Empty;
         list = ScheduledBottomUpMergeSort<string>.Add("One", list);
-
-        Assert.False(list.Segs.Element.Stream.IsValueCreated);
-        Assert.Equal("One", list.Segs.Element.Stream.Value.Element);
-        Assert.True(list.Segs.Element.Stream.IsValueCreated);
+        await Assert.That(list.Segs.Element.Stream.IsValueCreated).IsFalse();
+        await Assert.That(list.Segs.Element.Stream.Value.Element).IsEqualTo("One");
+        await Assert.That(list.Segs.Element.Stream.IsValueCreated).IsTrue();
     }
 
-    [Fact]
-    public void SortLazyTest()
+    [Test]
+    public async Task SortLazyTest()
     {
         const string data = "How now, brown cow?";
         var list = data.Split().Aggregate(ScheduledBottomUpMergeSort<string>.Empty, (ts, x) => ScheduledBottomUpMergeSort<string>.Add(x, ts));
-        Assert.False(list.Segs.Element.Stream.IsValueCreated);
+        await Assert.That(list.Segs.Element.Stream.IsValueCreated).IsFalse();
         var sorted = ScheduledBottomUpMergeSort<string>.Sort(list);
-        Assert.True(list.Segs.Element.Stream.IsValueCreated);
+        await Assert.That(list.Segs.Element.Stream.IsValueCreated).IsTrue();
     }
 
-    [Fact]
-    public void AddTest()
+    [Test]
+    public async Task AddTest()
     {
         var list = ScheduledBottomUpMergeSort<string>.Empty;
         list = ScheduledBottomUpMergeSort<string>.Add("One", list);
-        Assert.Equal(1, list.Size);
+        await Assert.That(list.Size).IsEqualTo(1);
         var xs = ScheduledBottomUpMergeSort<string>.Sort(list);
-        Assert.Equal("[One]", xs.ToReadableString());
-
+        await Assert.That(xs.ToReadableString()).IsEqualTo("[One]");
         list = ScheduledBottomUpMergeSort<string>.Add("Two", list);
-        Assert.Equal(2, list.Size);
+        await Assert.That(list.Size).IsEqualTo(2);
         xs = ScheduledBottomUpMergeSort<string>.Sort(list);
-        Assert.Equal("[One, Two]", xs.ToReadableString());
-
+        await Assert.That(xs.ToReadableString()).IsEqualTo("[One, Two]");
         list = ScheduledBottomUpMergeSort<string>.Add("Three", list);
-        Assert.Equal(3, list.Size);
+        await Assert.That(list.Size).IsEqualTo(3);
         xs = ScheduledBottomUpMergeSort<string>.Sort(list);
-        Assert.Equal("[One, Three, Two]", xs.ToReadableString());
-
+        await Assert.That(xs.ToReadableString()).IsEqualTo("[One, Three, Two]");
         list = ScheduledBottomUpMergeSort<string>.Add("Four", list);
-        Assert.Equal(4, list.Size);
+        await Assert.That(list.Size).IsEqualTo(4);
         xs = ScheduledBottomUpMergeSort<string>.Sort(list);
-        Assert.Equal("[Four, One, Three, Two]", xs.ToReadableString());
+        await Assert.That(xs.ToReadableString()).IsEqualTo("[Four, One, Three, Two]");
     }
 
-    [Fact]
-    public void SimpleSortTest()
+    [Test]
+    public async Task SimpleSortTest()
     {
         const string data = "How now, jack brown cow? zed";
         var list = data.Split().Aggregate(ScheduledBottomUpMergeSort<string>.Empty, (ts, x) => ScheduledBottomUpMergeSort<string>.Add(x, ts));
         var xs = ScheduledBottomUpMergeSort<string>.Sort(list);
-        Assert.Equal("[brown, cow?, How, jack, now,, zed]", xs.ToReadableString());
+        await Assert.That(xs.ToReadableString()).IsEqualTo("[brown, cow?, How, jack, now,, zed]");
     }
 
-    [Fact]
-    public void SortAlphabetically()
+    [Test]
+    public async Task SortAlphabetically()
     {
         const string data = "Alpha Bravo Charlie Delta Echo Foxtrot Golf Hotel India Juliet Kilo Lima Mike November Oscar Papa Quebec Romeo Sierra Tango Uniform Victor Whiskey X-ray Yankee Zulu";
         var list = data.Split().Aggregate(ScheduledBottomUpMergeSort<string>.Empty, (ts, x) => ScheduledBottomUpMergeSort<string>.Add(x, ts));
         var xs = ScheduledBottomUpMergeSort<string>.Sort(list);
-        Assert.Equal(data.Split().ToReadableString(), xs.ToReadableString());
+        await Assert.That(xs.ToReadableString()).IsEqualTo(data.Split().ToReadableString());
     }
 
-    [Fact]
-    public void SortReverseAlphabetically()
+    [Test]
+    public async Task SortReverseAlphabetically()
     {
         const string data = "Zulu Yankee X-ray Whiskey Victor Uniform Tango Sierra Romeo Quebec Papa Oscar November Mike Lima Kilo Juliet India Hotel Golf Foxtrot Echo Delta Charlie Bravo Alpha";
         var list = data.Split().Aggregate(ScheduledBottomUpMergeSort<string>.Empty, (ts, x) => ScheduledBottomUpMergeSort<string>.Add(x, ts));
         var xs = ScheduledBottomUpMergeSort<string>.Sort(list);
-        Assert.Equal(data.Split().Reverse().ToReadableString(), xs.ToReadableString());
+        await Assert.That(xs.ToReadableString()).IsEqualTo(data.Split().Reverse().ToReadableString());
     }
 }

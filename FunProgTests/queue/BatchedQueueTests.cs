@@ -1,4 +1,4 @@
-// Copyright 2014 Gregory Eakin <greg@eakin.dev>
+// Copyright 2025 Gregory Eakin <greg@eakin.dev>
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@ using FunProgLib.queue;
 using FunProgLib.Utilities;
 
 namespace FunProgTests.queue;
-    
+
 public class BatchedQueueTests
 {
     private static string DumpQueue<T>(BatchedQueue<T>.Queue queue)
@@ -30,91 +30,87 @@ public class BatchedQueueTests
         return builder.ToString();
     }
 
-    [Fact]
-    public void Test1()
+    [Test]
+    public async Task Test1()
     {
         var queue = BatchedQueue<string>.Empty;
-        Assert.Equal("[null, null]", DumpQueue(queue));
+        await Assert.That(DumpQueue(queue)).IsEqualTo("[null, null]");
     }
 
-    [Fact]
-    public void Test2()
+    [Test]
+    public async Task Test2()
     {
         const string data = "One Two Three One Three";
         var queue = data.Split().Aggregate(BatchedQueue<string>.Empty, BatchedQueue<string>.Snoc);
-        Assert.Equal("[[One], [Three, One, Three, Two]]", DumpQueue(queue));
+        await Assert.That(DumpQueue(queue)).IsEqualTo("[[One], [Three, One, Three, Two]]");
     }
 
-    [Fact]
-    public void EmptyTest()
+    [Test]
+    public async Task EmptyTest()
     {
         var queue = BatchedQueue<string>.Empty;
-        Assert.True(BatchedQueue<string>.IsEmpty(queue));
-
+        await Assert.That(BatchedQueue<string>.IsEmpty(queue)).IsTrue();
         queue = BatchedQueue<string>.Snoc(queue, "Item");
-        Assert.False(BatchedQueue<string>.IsEmpty(queue));
-
+        await Assert.That(BatchedQueue<string>.IsEmpty(queue)).IsFalse();
         queue = BatchedQueue<string>.Tail(queue);
-        Assert.True(BatchedQueue<string>.IsEmpty(queue));
+        await Assert.That(BatchedQueue<string>.IsEmpty(queue)).IsTrue();
     }
 
-    [Fact]
-    public void EmptySnocTest()
+    [Test]
+    public async Task EmptySnocTest()
     {
-        Assert.Throws<NullReferenceException>(() => BatchedQueue<string>.Snoc(null, "Item"));
+        await Assert.That(() => BatchedQueue<string>.Snoc(null, "Item")).Throws<NullReferenceException>();
     }
 
-    [Fact]
-    public void SnocTest()
+    [Test]
+    public async Task SnocTest()
     {
-
     }
 
-    [Fact]
-    public void EmptyHeadTest()
+    [Test]
+    public async Task EmptyHeadTest()
     {
         var queue = BatchedQueue<string>.Empty;
-        Assert.Throws<ArgumentNullException>(() => BatchedQueue<string>.Head(queue));
+        await Assert.That(() => BatchedQueue<string>.Head(queue)).Throws<ArgumentNullException>();
     }
 
-    [Fact]
-    public void HeadTest()
+    [Test]
+    public async Task HeadTest()
     {
         const string data = "One Two Three One Three";
         var queue = data.Split().Aggregate(BatchedQueue<string>.Empty, BatchedQueue<string>.Snoc);
         var head = BatchedQueue<string>.Head(queue);
-        Assert.Equal("One", head);
+        await Assert.That(head).IsEqualTo("One");
     }
 
-    [Fact]
-    public void EmptyTailTest()
+    [Test]
+    public async Task EmptyTailTest()
     {
         var queue = BatchedQueue<string>.Empty;
-        Assert.Throws<ArgumentNullException>(() => BatchedQueue<string>.Tail(queue));
+        await Assert.That(() => BatchedQueue<string>.Tail(queue)).Throws<ArgumentNullException>();
     }
 
-    [Fact]
-    public void TailTest()
+    [Test]
+    public async Task TailTest()
     {
         const string data = "One Two Three One Three";
         var queue = data.Split().Aggregate(BatchedQueue<string>.Empty, BatchedQueue<string>.Snoc);
         var tail = BatchedQueue<string>.Tail(queue);
-        Assert.Equal("[[Two, Three, One, Three], null]", DumpQueue(tail));
+        await Assert.That(DumpQueue(tail)).IsEqualTo("[[Two, Three, One, Three], null]");
     }
 
-    [Fact]
-    public void PushPopTest()
+    [Test]
+    public async Task PushPopTest()
     {
         const string data = "One Two Three One Three";
         var queue = data.Split().Aggregate(BatchedQueue<string>.Empty, BatchedQueue<string>.Snoc);
-
         foreach (var expected in data.Split())
         {
             var actual = BatchedQueue<string>.Head(queue);
-            Assert.Equal(expected, actual);
+            await Assert.That(actual).IsEqualTo(expected);
             queue = BatchedQueue<string>.Tail(queue);
         }
 
-        Assert.True(BatchedQueue<string>.IsEmpty(queue));
+        await Assert.That(BatchedQueue<string>.IsEmpty(queue)).IsTrue();
     }
 }

@@ -1,4 +1,4 @@
-// Copyright 2014 Gregory Eakin <greg@eakin.dev>
+// Copyright 2025 Gregory Eakin <greg@eakin.dev>
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -25,86 +25,90 @@ public class DenseTests
     private static readonly FunList<Dense.Digit>.Node Three = Dense.Inc(Two);
     private static readonly FunList<Dense.Digit>.Node Five = Dense.Add(Two, Three);
     private static readonly FunList<Dense.Digit>.Node Fifteen = Dense.Add(Five, Dense.Add(Five, Five));
-
     private static string DumpNat(FunList<Dense.Digit>.Node number)
     {
-        if (number == null) return "0";
+        if (number == null)
+            return "0";
         var result = new StringBuilder();
         while (number != null)
         {
-            if (number.Element == Dense.Digit.Zero) result.Insert(0, "0");
-            else if (number.Element == Dense.Digit.One) result.Insert(0, "1");
-            else result.Insert(0, "*");
+            if (number.Element == Dense.Digit.Zero)
+                result.Insert(0, "0");
+            else if (number.Element == Dense.Digit.One)
+                result.Insert(0, "1");
+            else
+                result.Insert(0, "*");
             number = number.Next;
         }
+
         return result.ToString();
     }
 
-    [Fact]
-    public void ZeroTest()
+    [Test]
+    public async Task ZeroTest()
     {
-        Assert.Equal("0", DumpNat(Zero));
-        Assert.True(FunList<Dense.Digit>.IsEmpty(Zero));
+        await Assert.That(DumpNat(Zero)).IsEqualTo("0");
+        await Assert.That(FunList<Dense.Digit>.IsEmpty(Zero)).IsTrue();
     }
 
-    [Fact]
-    public void DecrementOneTest()
+    [Test]
+    public async Task DecrementOneTest()
     {
         var zero = Dense.Dec(One);
-        Assert.Equal("0", DumpNat(zero));
-        Assert.True(FunList<Dense.Digit>.IsEmpty(zero));
+        await Assert.That(DumpNat(zero)).IsEqualTo("0");
+        await Assert.That(FunList<Dense.Digit>.IsEmpty(zero)).IsTrue();
     }
 
-    [Fact]
-    public void NegativeTest()
+    [Test]
+    public async Task NegativeTest()
     {
-        var exception = Assert.Throws<ArgumentException>(() => Dense.Dec(Zero));
-        Assert.Equal("Can't go negative (Parameter 'ds')", exception.Message);
+        var exception = await Assert.That(() => Dense.Dec(Zero)).Throws<ArgumentException>();
+        await Assert.That(exception.Message).IsEqualTo("Can't go negative (Parameter 'ds')");
     }
 
-    [Fact]
-    public void OneTest()
+    [Test]
+    public async Task OneTest()
     {
-        Assert.Equal("1", DumpNat(One));
+        await Assert.That(DumpNat(One)).IsEqualTo("1");
     }
 
-    [Fact]
-    public void TwoTest()
+    [Test]
+    public async Task TwoTest()
     {
-        Assert.Equal("10", DumpNat(Two));
+        await Assert.That(DumpNat(Two)).IsEqualTo("10"); ;
     }
 
-    [Fact]
-    public void FiveTest()
+    [Test]
+    public async Task FiveTest()
     {
-        Assert.Equal("101", DumpNat(Five));
+        await Assert.That(DumpNat(Five)).IsEqualTo("101"); ;
     }
 
-    [Fact]
-    public void FifteenTest()
+    [Test]
+    public async Task FifteenTest()
     {
-        Assert.Equal("1111", DumpNat(Fifteen));
+        await Assert.That(DumpNat(Fifteen)).IsEqualTo("1111"); ;
     }
 
-    [Fact]
-    public void SixteenTest()
+    [Test]
+    public async Task SixteenTest()
     {
         var sixteen = Dense.Inc(Fifteen);
-        Assert.Equal("10000", DumpNat(sixteen));
+        await Assert.That(DumpNat(sixteen)).IsEqualTo("10000"); ;
     }
 
-    [Fact]
-    public void DecTest()
+    [Test]
+    public async Task DecTest()
     {
         var four = Dense.Dec(Five);
-        Assert.Equal("100", DumpNat(four));
+        await Assert.That(DumpNat(four)).IsEqualTo("100"); ;
     }
 
-    [Fact]
-    public void DecWithCaryTest()
+    [Test]
+    public async Task DecWithCaryTest()
     {
         var four = Dense.Dec(Five);
         var three = Dense.Dec(four);
-        Assert.Equal("11", DumpNat(three));
+        await Assert.That(DumpNat(three)).IsEqualTo("11"); ;
     }
 }

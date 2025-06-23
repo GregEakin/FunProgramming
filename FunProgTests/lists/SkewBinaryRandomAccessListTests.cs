@@ -1,4 +1,4 @@
-// Copyright 2014 Gregory Eakin <greg@eakin.dev>
+// Copyright 2025 Gregory Eakin <greg@eakin.dev>
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -18,75 +18,73 @@ namespace FunProgTests.lists;
 
 public class SkewBinaryRandomAccessListTests
 {
-    [Fact]
-    public void IsEmptyTest()
+    [Test]
+    public async Task IsEmptyTest()
     {
         var list = SkewBinaryRandomAccessList<string>.Empty;
-        Assert.True(SkewBinaryRandomAccessList<string>.IsEmpty(list));
+        await Assert.That(SkewBinaryRandomAccessList<string>.IsEmpty(list)).IsTrue();
         list = SkewBinaryRandomAccessList<string>.Cons("A", list);
-        Assert.False(SkewBinaryRandomAccessList<string>.IsEmpty(list));
+        await Assert.That(SkewBinaryRandomAccessList<string>.IsEmpty(list)).IsFalse();
     }
 
-    [Fact]
-    public void EmptyHeadTest()
+    [Test]
+    public async Task EmptyHeadTest()
     {
         var list = SkewBinaryRandomAccessList<string>.Empty;
-        Assert.Throws<ArgumentNullException>(() => SkewBinaryRandomAccessList<string>.Head(list));
+        await Assert.That(() => SkewBinaryRandomAccessList<string>.Head(list)).Throws<ArgumentNullException>();
     }
 
-    [Fact]
-    public void EmptyTailTest()
+    [Test]
+    public async Task EmptyTailTest()
     {
         var list = SkewBinaryRandomAccessList<string>.Empty;
-        Assert.Throws<ArgumentNullException>(() => SkewBinaryRandomAccessList<string>.Tail(list));
+        await Assert.That(() => SkewBinaryRandomAccessList<string>.Tail(list)).Throws<ArgumentNullException>();
     }
 
-    [Fact]
-    public void LookupTest()
+    [Test]
+    public async Task LookupTest()
     {
         const string data = "How now, brown cow?";
         var list = data.Split().Aggregate(SkewBinaryRandomAccessList<string>.Empty, (current, word) => SkewBinaryRandomAccessList<string>.Cons(word, current));
-
-        Assert.Equal("now,", SkewBinaryRandomAccessList<string>.Lookup(2, list));
+        await Assert.That(SkewBinaryRandomAccessList<string>.Lookup(2, list)).IsEqualTo("now,");
     }
 
-    [Fact]
-    public void UpdateTest()
+    [Test]
+    public async Task UpdateTest()
     {
         const string data = "How now, brown cow?";
         var list = data.Split().Aggregate(SkewBinaryRandomAccessList<string>.Empty, (current, word) => SkewBinaryRandomAccessList<string>.Cons(word, current));
         list = SkewBinaryRandomAccessList<string>.Update(1, "green", list);
-        Assert.Equal("green", SkewBinaryRandomAccessList<string>.Lookup(1, list));
+        await Assert.That(SkewBinaryRandomAccessList<string>.Lookup(1, list)).IsEqualTo("green");
     }
 
-    [Fact]
-    public void HeadTest()
+    [Test]
+    public async Task HeadTest()
     {
         const string data = "How now, brown cow?";
         var list = data.Split().Aggregate(SkewBinaryRandomAccessList<string>.Empty, (current, word) => SkewBinaryRandomAccessList<string>.Cons(word, current));
-        Assert.Equal("cow?", SkewBinaryRandomAccessList<string>.Head(list));
-
+        await Assert.That(SkewBinaryRandomAccessList<string>.Head(list)).IsEqualTo("cow?");
         list = SkewBinaryRandomAccessList<string>.Update(0, "dog?", list);
-        Assert.Equal("dog?", SkewBinaryRandomAccessList<string>.Head(list));
+        await Assert.That(SkewBinaryRandomAccessList<string>.Head(list)).IsEqualTo("dog?");
     }
 
-    [Fact]
-    public void TailTest()
+    [Test]
+    public async Task TailTest()
     {
         const string data = "How now, brown cow?";
         var list = data.Split().Aggregate(SkewBinaryRandomAccessList<string>.Empty, (current, word) => SkewBinaryRandomAccessList<string>.Cons(word, current));
         list = SkewBinaryRandomAccessList<string>.Tail(list);
-        Assert.Equal("brown", SkewBinaryRandomAccessList<string>.Lookup(0, list));
-        Assert.Equal("now,", SkewBinaryRandomAccessList<string>.Lookup(1, list));
-        Assert.Equal("How", SkewBinaryRandomAccessList<string>.Lookup(2, list));
+        await Assert.That(SkewBinaryRandomAccessList<string>.Lookup(0, list)).IsEqualTo("brown");
+        await Assert.That(SkewBinaryRandomAccessList<string>.Lookup(1, list)).IsEqualTo("now,");
+        await Assert.That(SkewBinaryRandomAccessList<string>.Lookup(2, list)).IsEqualTo("How");
     }
 
-    [Fact]
-    public void RoseTest()
+    [Test]
+    public async Task RoseTest()
     {
         const string data = "What's in a name? That which we call a rose by any other name would smell as sweet.";
         var list = data.Split().Aggregate(SkewBinaryRandomAccessList<string>.Empty, (current, word) => SkewBinaryRandomAccessList<string>.Cons(word, current));
-        Assert.Equal("sweet.", SkewBinaryRandomAccessList<string>.Lookup(0, list));
-        Assert.Equal("What's", SkewBinaryRandomAccessList<string>.Lookup(17, list));
+        await Assert.That(SkewBinaryRandomAccessList<string>.Lookup(0, list)).IsEqualTo("sweet.");
+        await Assert.That(SkewBinaryRandomAccessList<string>.Lookup(17, list)).IsEqualTo("What's");
     }
 }

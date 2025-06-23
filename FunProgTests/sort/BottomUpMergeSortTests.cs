@@ -1,4 +1,4 @@
-// Copyright 2014 Gregory Eakin <greg@eakin.dev>
+// Copyright 2025 Gregory Eakin <greg@eakin.dev>
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -19,49 +19,49 @@ namespace FunProgTests.sort;
 
 public class BottomUpMergeSortTests
 {
-    [Fact]
-    public void EmptyTest()
+    [Test]
+    public async Task EmptyTest()
     {
         var list = BottomUpMergeSort<string>.Empty;
-        // Assert.False(list.Segs.IsValueCreated);
-        Assert.Null(list.Segs.Value);
-        Assert.True(list.Segs.IsValueCreated);
+        // await Assert.That(list.Segs.IsValueCreated).IsFalse();
+        await Assert.That(list.Segs.Value).IsNull();
+        await Assert.That(list.Segs.IsValueCreated).IsTrue();
     }
 
-    [Fact]
-    public void LazyTest()
+    [Test]
+    public async Task LazyTest()
     {
         const string data = "How now, brown cow?";
         var list = data.Split().Aggregate(BottomUpMergeSort<string>.Empty, (ts, x) => BottomUpMergeSort<string>.Add(x, ts));
-        Assert.False(list.Segs.IsValueCreated);
+        await Assert.That(list.Segs.IsValueCreated).IsFalse();
         var xs = BottomUpMergeSort<string>.Sort(list);
-        Assert.True(list.Segs.IsValueCreated);
+        await Assert.That(list.Segs.IsValueCreated).IsTrue();
     }
 
-    [Fact]
-    public void SimpleSortTest()
+    [Test]
+    public async Task SimpleSortTest()
     {
         const string data = "How now, jack brown cow? zed";
         var list = data.Split().Aggregate(BottomUpMergeSort<string>.Empty, (ts, x) => BottomUpMergeSort<string>.Add(x, ts));
         var xs = BottomUpMergeSort<string>.Sort(list);
-        Assert.Equal("[brown, cow?, How, jack, now,, zed]", xs.ToReadableString());
+        await Assert.That(xs.ToReadableString()).IsEqualTo("[brown, cow?, How, jack, now,, zed]");
     }
 
-    [Fact]
-    public void SortAlphabetically()
+    [Test]
+    public async Task SortAlphabetically()
     {
         const string data = "Alpha Bravo Charlie Delta Echo Foxtrot Golf Hotel India Juliet Kilo Lima Mike November Oscar Papa Quebec Romeo Sierra Tango Uniform Victor Whiskey X-ray Yankee Zulu";
         var list = data.Split().Aggregate(BottomUpMergeSort<string>.Empty, (ts, x) => BottomUpMergeSort<string>.Add(x, ts));
         var xs = BottomUpMergeSort<string>.Sort(list);
-        Assert.Equal(data.Split().ToReadableString(), xs.ToReadableString());
+        await Assert.That(xs.ToReadableString()).IsEqualTo(data.Split().ToReadableString());
     }
 
-    [Fact]
-    public void SortReverseAlphabetically()
+    [Test]
+    public async Task SortReverseAlphabetically()
     {
         const string data = "Zulu Yankee X-ray Whiskey Victor Uniform Tango Sierra Romeo Quebec Papa Oscar November Mike Lima Kilo Juliet India Hotel Golf Foxtrot Echo Delta Charlie Bravo Alpha";
         var list = data.Split().Aggregate(BottomUpMergeSort<string>.Empty, (ts, x) => BottomUpMergeSort<string>.Add(x, ts));
         var xs = BottomUpMergeSort<string>.Sort(list);
-        Assert.Equal(data.Split().Reverse().ToReadableString(), xs.ToReadableString());
+        await Assert.That(xs.ToReadableString()).IsEqualTo(data.Split().Reverse().ToReadableString());
     }
 }

@@ -1,4 +1,4 @@
-// Copyright 2014 Gregory Eakin <greg@eakin.dev>
+// Copyright 2025 Gregory Eakin <greg@eakin.dev>
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -25,71 +25,71 @@ public class SparseByWeightTests
     private static readonly FunList<int>.Node Three = SparseByWeight.Inc(Two);
     private static readonly FunList<int>.Node Five = SparseByWeight.Add(Two, Three);
     private static readonly FunList<int>.Node Fifteen = SparseByWeight.Add(Five, SparseByWeight.Add(Five, Five));
-
     private static string DumpNat(FunList<int>.Node number)
     {
-        if (FunList<int>.IsEmpty(number)) return "0";
+        if (FunList<int>.IsEmpty(number))
+            return "0";
         var result = string.Join(',', FunList<int>.Reverse(number));
         return result;
     }
 
-    [Fact]
-    public void ZeroTest()
+    [Test]
+    public async Task ZeroTest()
     {
-        Assert.Equal("0", DumpNat(Zero));
+        await Assert.That(DumpNat(Zero)).IsEqualTo("0");
     }
 
-    [Fact]
-    public void OneTest()
+    [Test]
+    public async Task OneTest()
     {
-        Assert.Equal("1", DumpNat(One));
+        await Assert.That(DumpNat(One)).IsEqualTo("1");
     }
 
-    [Fact]
-    public void TwoTest()
+    [Test]
+    public async Task TwoTest()
     {
-        Assert.Equal("2", DumpNat(Two));
+        await Assert.That(DumpNat(Two)).IsEqualTo("2");
     }
 
-    [Fact]
-    public void FiveTest()
+    [Test]
+    public async Task FiveTest()
     {
-        Assert.Equal("4,1", DumpNat(Five));
+        await Assert.That(DumpNat(Five)).IsEqualTo("4,1");
     }
 
-    [Fact]
-    public void FifteenTest()
+    [Test]
+    public async Task FifteenTest()
     {
-        Assert.Equal("8,4,2,1", DumpNat(Fifteen));
+        await Assert.That(DumpNat(Fifteen)).IsEqualTo("8,4,2,1");
     }
 
-    [Fact]
-    public void SixteenTest()
+    [Test]
+    public async Task SixteenTest()
     {
         var sixteen = SparseByWeight.Inc(Fifteen);
-        Assert.Equal("16", DumpNat(sixteen));
+        await Assert.That(DumpNat(sixteen)).IsEqualTo("16");
     }
 
-    [Fact]
-    public void SeventeenTest()
+    [Test]
+    public async Task SeventeenTest()
     {
         var seventeen = SparseByWeight.Add(Fifteen, Two);
-        Assert.Equal("16,1", DumpNat(seventeen));
+        await Assert.That(DumpNat(seventeen)).IsEqualTo("16,1");
     }
 
-    [Fact]
-    public void FourTest()
+    [Test]
+    public async Task FourTest()
     {
         var four = SparseByWeight.Dec(Five);
-        Assert.Equal("4", DumpNat(four));
+        await Assert.That(DumpNat(four)).IsEqualTo("4");
     }
 
-    [Fact]
-    public void ThreeTest()
+    [Test]
+    public async Task ThreeTest()
     {
         var four = SparseByWeight.Dec(Five);
         var three = SparseByWeight.Dec(four);
-        Assert.Equal("2,1", DumpNat(Three));
-        Assert.Equal("2,1", DumpNat(three));
+        await Assert.That(DumpNat(Three)).IsEqualTo("2,1");
+        await Assert.That(DumpNat(three)).IsEqualTo("2,1");
     }
 }

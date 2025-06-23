@@ -1,4 +1,4 @@
-// Copyright 2014 Gregory Eakin <greg@eakin.dev>
+// Copyright 2025 Gregory Eakin <greg@eakin.dev>
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -18,17 +18,21 @@ namespace FunProgTests.utilities;
 
 public class StringUtilitiesTests
 {
-    [Fact]
-    public void EnumerableToReadableStringEmptyTest()
+    [Test]
+    public async Task EnumerableToReadableStringEmptyTest()
     {
-        var data = new string[0];
-        Assert.Equal("[]", data.ToReadableString());
+        var data = Array.Empty<string>();
+        await Assert.That(data.ToReadableString()).IsEqualTo("[]");
     }
 
-    [Fact]
-    public void EnumerableToReadableStringTest()
+    [Test]
+    public async Task EnumerableToReadableStringTest()
     {
-        var data = new[] { "A", "B" };
-        Assert.Equal("[A, B]", data.ToReadableString());
+        var data = new[]
+        {
+            "A",
+            "B"
+        };
+        await Assert.That(data.ToReadableString()).IsEqualTo("[A, B]");
     }
 }

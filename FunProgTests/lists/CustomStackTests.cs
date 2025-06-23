@@ -1,4 +1,4 @@
-// Copyright 2014 Gregory Eakin <greg@eakin.dev>
+// Copyright 2025 Gregory Eakin <greg@eakin.dev>
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -18,42 +18,42 @@ namespace FunProgTests.lists;
 
 public class CustomStackTests
 {
-    [Fact]
-    public void EmptyTest()
+    [Test]
+    public async Task EmptyTest()
     {
         var stack = CustomStack<string>.Empty;
-        Assert.True(CustomStack<string>.IsEmpty(stack));
+        await Assert.That(CustomStack<string>.IsEmpty(stack)).IsTrue();
     }
 
-    [Fact]
-    public void NotEmptyTest()
+    [Test]
+    public async Task NotEmptyTest()
     {
         var stack = CustomStack<string>.Cons("Hello", CustomStack<string>.Empty);
-        Assert.False(CustomStack<string>.IsEmpty(stack));
+        await Assert.That(CustomStack<string>.IsEmpty(stack)).IsFalse();
     }
 
-    [Fact]
-    public void EmptyHeadTest()
+    [Test]
+    public async Task EmptyHeadTest()
     {
         var stack = CustomStack<string>.Empty;
-        Assert.Throws<ArgumentNullException>(() => CustomStack<string>.Head(stack));
+        await Assert.That(() => CustomStack<string>.Head(stack)).Throws<ArgumentNullException>();
     }
 
-    [Fact]
-    public void HeadTest()
+    [Test]
+    public async Task HeadTest()
     {
         var stack = CustomStack<string>.Cons("Hello", CustomStack<string>.Empty);
         var head = CustomStack<string>.Head(stack);
-        Assert.Equal("Hello", head);
+        await Assert.That(head).IsEqualTo("Hello");
     }
 
-    [Fact]
-    public void TailTest()
+    [Test]
+    public async Task TailTest()
     {
         var empty = CustomStack<string>.Empty;
         var hello = CustomStack<string>.Cons("Hello", empty);
         var world = CustomStack<string>.Cons("World", hello);
         var stack = CustomStack<string>.Tail(world);
-        Assert.Equal(hello, stack);
+        await Assert.That(stack).IsEqualTo(hello);
     }
 }

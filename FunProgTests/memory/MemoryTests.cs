@@ -1,4 +1,4 @@
-// Copyright 2014 Gregory Eakin <greg@eakin.dev>
+// Copyright 2025 Gregory Eakin <greg@eakin.dev>
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -22,28 +22,26 @@ public class MemoryTests
 {
     // [Fact]
     // [DotMemoryUnit(FailIfRunWithoutSupport = false)]
-    // public void Test1()
+    // public async Task Test1()
     // {
     //     const string data = "One Two Three One Three";
     //     var queue = data.Split().Aggregate(PhysicistsQueue<string>.Empty, PhysicistsQueue<string>.Snoc);
     //
     //     dotMemory.Check(memory =>
     //     {
-    //         Assert.Equal(5,
-    //             memory.GetObjects(where => where.Type.Is<FunList<string>.Node>()).ObjectsCount);
+    //         await Assert.That(memory.GetObjects(where => where.Type.Is<FunList<string>.Node>()).ObjectsCount).IsEqualTo(5);
     //     });
     //
     //     foreach (var expected in data.Split())
     //     {
     //         var head = PhysicistsQueue<string>.Head(queue);
-    //         Assert.Equal(expected, head);
+    //         await Assert.That(head).IsEqualTo(expected);
     //         queue = PhysicistsQueue<string>.Tail(queue);
     //     }
     //
     //     dotMemory.Check(memory =>
     //     {
-    //         Assert.Equal(0,
-    //             memory.GetObjects(where => where.Type.Is<PhysicistsQueue<string>.Queue>()).ObjectsCount);
+    //         await Assert.That(memory.GetObjects(where => where.Type.Is<PhysicistsQueue<string>.Queue>()).ObjectsCount).IsEqualTo(0);
     //     });
     // }
 }

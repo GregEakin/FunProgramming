@@ -1,4 +1,4 @@
-// Copyright 2014 Gregory Eakin <greg@eakin.dev>
+// Copyright 2025 Gregory Eakin <greg@eakin.dev>
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -20,12 +20,6 @@ public class MultiReaderMapTests : DictionaryTests
 {
     private readonly object _lockObject = new();
     private volatile RedBlackSet<string>.Tree _set = RedBlackSet<string>.EmptyTree;
-    private readonly ITestOutputHelper _testOutputHelper;
-
-    public MultiReaderMapTests(ITestOutputHelper testOutputHelper)
-    {
-        _testOutputHelper = testOutputHelper;
-    }
 
     private void WriteAction()
     {
@@ -49,11 +43,10 @@ public class MultiReaderMapTests : DictionaryTests
                 hits++;
         }
 
-        _testOutputHelper.WriteLine("Task={0}, Thread={1} : {2} words found",
-            Task.CurrentId ?? -1, Environment.CurrentManagedThreadId, hits);
+        Console.WriteLine("Task={0}, Thread={1} : {2} words found", Task.CurrentId ?? -1, Environment.CurrentManagedThreadId, hits);
     }
 
-    [Fact]
+    [Test]
     public async Task Test1()
     {
         var taskList = new ConcurrentBag<Task>();
@@ -63,7 +56,8 @@ public class MultiReaderMapTests : DictionaryTests
             taskList.Add(Task.Factory.StartNew(_ => ReadAction(), this, TestContext.Current.CancellationToken));
             taskList.Add(Task.Factory.StartNew(_ => ReadAction(), this, TestContext.Current.CancellationToken));
         }
+
         await Task.WhenAll(taskList.ToArray());
-        _testOutputHelper.WriteLine("Done....");
+        Console.WriteLine("Done....");
     }
 }

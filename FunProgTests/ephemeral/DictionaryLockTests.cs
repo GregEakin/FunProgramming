@@ -1,4 +1,4 @@
-// Copyright 2014 Gregory Eakin <greg@eakin.dev>
+// Copyright 2025 Gregory Eakin <greg@eakin.dev>
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -63,7 +63,7 @@ public class DictionaryLock<T>
 
             if (SplayHeap<string>.IsEmpty(_set))
             {
-                item = default(string);
+                item = null;
                 return false;
             }
 
@@ -94,7 +94,7 @@ public class DictionaryLockTests : DictionaryTests
     // 157 ms, 10 calls
     private void InsertAction(object ojb)
     {
-        var map = (DictionaryLock<string>) ojb;
+        var map = (DictionaryLock<string>)ojb;
         for (var i = 0; i < Count; i++)
         {
             // 5 ms, 3,000 calls
@@ -105,11 +105,10 @@ public class DictionaryLockTests : DictionaryTests
         }
     }
 
-
     // 98 ms, 10 calls
     private static void RemoveAction(object ojb)
     {
-        var map = (DictionaryLock<string>) ojb;
+        var map = (DictionaryLock<string>)ojb;
         for (var i = 0; i < Count; i++)
         {
             var removed = map.Remove(out var item);
@@ -121,7 +120,7 @@ public class DictionaryLockTests : DictionaryTests
         }
     }
 
-    [Fact]
+    [Test]
     public async Task Test1()
     {
         var token = TestContext.Current.CancellationToken;
@@ -135,6 +134,6 @@ public class DictionaryLockTests : DictionaryTests
         }
 
         await Task.WhenAll(taskList.ToArray());
-        Assert.True(dictionary.IsEmpty);
+        await Assert.That(dictionary.IsEmpty).IsTrue();
     }
 }

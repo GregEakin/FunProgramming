@@ -1,4 +1,4 @@
-// Copyright 2014 Gregory Eakin <greg@eakin.dev>
+// Copyright 2025 Gregory Eakin <greg@eakin.dev>
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -18,7 +18,8 @@ namespace FunProgTests.heap;
 
 public class SkewBinomialHeapTests
 {
-    private static string DumpList<T>(FunProgLib.lists.FunList<T>.Node tree) where T : IComparable<T>
+    private static string DumpList<T>(FunProgLib.lists.FunList<T>.Node tree)
+        where T : IComparable<T>
     {
         if (FunProgLib.lists.FunList<T>.IsEmpty(tree))
             return string.Empty;
@@ -30,13 +31,16 @@ public class SkewBinomialHeapTests
             result.Append(node1);
             result.Append(", ");
         }
+
         result.Remove(result.Length - 2, 2);
         return result.ToString();
     }
 
-    private static string DumpTree<T>(SkewBinomialHeap<T>.Tree tree) where T : IComparable<T>
+    private static string DumpTree<T>(SkewBinomialHeap<T>.Tree tree)
+        where T : IComparable<T>
     {
-        if (tree == null) return string.Empty;
+        if (tree == null)
+            return string.Empty;
         var result = new StringBuilder();
         result.Append('[');
         //result.Append(tree.Rank);
@@ -49,7 +53,8 @@ public class SkewBinomialHeapTests
         return result.ToString();
     }
 
-    private static string DumpHeap<T>(FunProgLib.lists.FunList<SkewBinomialHeap<T>.Tree>.Node heap) where T : IComparable<T>
+    private static string DumpHeap<T>(FunProgLib.lists.FunList<SkewBinomialHeap<T>.Tree>.Node heap)
+        where T : IComparable<T>
     {
         var result = new StringBuilder();
         result.Append('[');
@@ -59,119 +64,114 @@ public class SkewBinomialHeapTests
             result.Append(DumpTree(head));
             heap = FunProgLib.lists.FunList<SkewBinomialHeap<T>.Tree>.Tail(heap);
         }
+
         result.Append(']');
         return result.ToString();
     }
 
-    [Fact]
-    public void EmptyTest()
+    [Test]
+    public async Task EmptyTest()
     {
         var t = SkewBinomialHeap<string>.Empty;
-        Assert.True(SkewBinomialHeap<string>.IsEmpty(t));
-
+        await Assert.That(SkewBinomialHeap<string>.IsEmpty(t)).IsTrue();
         var t1 = SkewBinomialHeap<string>.Insert("C", t);
-        Assert.False(SkewBinomialHeap<string>.IsEmpty(t1));
+        await Assert.That(SkewBinomialHeap<string>.IsEmpty(t1)).IsFalse();
     }
 
-    [Fact]
-    public void TestEmpty()
+    [Test]
+    public async Task TestEmpty()
     {
         var t = SkewBinomialHeap<string>.Empty;
-        Assert.Equal("[]", DumpHeap(t));
+        await Assert.That(DumpHeap(t)).IsEqualTo("[]");
     }
 
-    [Fact]
-    public void Test0()
+    [Test]
+    public async Task Test0()
     {
         var t = SkewBinomialHeap<string>.Empty;
         var x1 = SkewBinomialHeap<string>.Insert("C", t);
-        Assert.Equal("[[C]]", DumpHeap(x1));
+        await Assert.That(DumpHeap(x1)).IsEqualTo("[[C]]");
     }
 
-    [Fact]
-    public void Test1()
+    [Test]
+    public async Task Test1()
     {
         var t = SkewBinomialHeap<string>.Empty;
         var x1 = SkewBinomialHeap<string>.Insert("C", t);
         var x2 = SkewBinomialHeap<string>.Insert("B", x1);
-        Assert.Equal("[[B][C]]", DumpHeap(x2));
+        await Assert.That(DumpHeap(x2)).IsEqualTo("[[B][C]]");
     }
 
-    [Fact]
-    public void Test2()
+    [Test]
+    public async Task Test2()
     {
         const string words = "What's in a name? That which we call a rose by any other name would smell as sweet.";
         var t = words.Split().Aggregate(SkewBinomialHeap<string>.Empty, (current, word) => SkewBinomialHeap<string>.Insert(word, current));
-        Assert.Equal("[[as, sweet.[[smell]]][a, would, name, rose[[a, we, in[[name?, which[[That]]][What's]]][any, other[[by]]][call]]]]", DumpHeap(t));
+        await Assert.That(DumpHeap(t)).IsEqualTo("[[as, sweet.[[smell]]][a, would, name, rose[[a, we, in[[name?, which[[That]]][What's]]][any, other[[by]]][call]]]]");
     }
 
-    [Fact]
-    public void MergeTest()
+    [Test]
+    public async Task MergeTest()
     {
         const string data1 = "What's in a name?";
         var ts1 = data1.Split().Aggregate(SkewBinomialHeap<string>.Empty, (current, word) => SkewBinomialHeap<string>.Insert(word, current));
-
         const string data2 = "That which we call a rose by any other name would smell as sweet";
         var ts2 = data2.Split().Aggregate(SkewBinomialHeap<string>.Empty, (current, word) => SkewBinomialHeap<string>.Insert(word, current));
-
         var t = SkewBinomialHeap<string>.Merge(ts1, ts2);
-        Assert.Equal("[[name?][a, in[[What's]]][a, by, rose[[any, sweet, name[[as, smell[[would]]][other]]][That, we[[which]]][call]]]]", DumpHeap(t));
+        await Assert.That(DumpHeap(t)).IsEqualTo("[[name?][a, in[[What's]]][a, by, rose[[any, sweet, name[[as, smell[[would]]][other]]][That, we[[which]]][call]]]]");
     }
 
-    [Fact]
-    public void DeleteMinTest()
+    [Test]
+    public async Task DeleteMinTest()
     {
         var t = SkewBinomialHeap<int>.Empty;
         var t1 = SkewBinomialHeap<int>.Insert(5, t);
         var t2 = SkewBinomialHeap<int>.Insert(3, t1);
         var t3 = SkewBinomialHeap<int>.Insert(6, t2);
-
         var t4 = SkewBinomialHeap<int>.DeleteMin(t3);
-        Assert.Equal("[[6][5]]", DumpHeap(t4));
-        Assert.Equal(5, SkewBinomialHeap<int>.FindMin(t4));
-
-        Assert.Equal(3, SkewBinomialHeap<int>.FindMin(t3));
+        await Assert.That(DumpHeap(t4)).IsEqualTo("[[6][5]]");
+        await Assert.That(SkewBinomialHeap<int>.FindMin(t4)).IsEqualTo(5);
+        await Assert.That(SkewBinomialHeap<int>.FindMin(t3)).IsEqualTo(3);
     }
 
-    [Fact]
-    public void DeleteLotsOfMinimumsTest()
+    [Test]
+    public async Task DeleteLotsOfMinimumsTest()
     {
         var random = new Random(3456);
         var heap = SkewBinomialHeap<int>.Empty;
-        for (var i = 0; i < 100; i++) heap = SkewBinomialHeap<int>.Insert(random.Next(100), heap);
+        for (var i = 0; i < 100; i++)
+            heap = SkewBinomialHeap<int>.Insert(random.Next(100), heap);
         var last = 0;
         var count = 0;
         while (!SkewBinomialHeap<int>.IsEmpty(heap))
         {
             var next = SkewBinomialHeap<int>.FindMin(heap);
             heap = SkewBinomialHeap<int>.DeleteMin(heap);
-            Assert.True(last <= next);
+            await Assert.That(last <= next).IsTrue();
             last = next;
             count++;
         }
-        Assert.Equal(100, count);
+
+        await Assert.That(count).IsEqualTo(100);
     }
 
-    [Fact]
-    public void DeleteLotsOfMinimumsTest2()
+    [Test]
+    public async Task DeleteLotsOfMinimumsTest2()
     {
         var random = new Random(1000);
         var t = SkewBinomialHeap<int>.Empty;
-
         var min = 0;
         for (var i = 0; i < 1000; i++)
         {
             var j = random.Next(1000);
             min = Math.Min(j, min);
             t = SkewBinomialHeap<int>.Insert(j, t);
-
             j = random.Next(1000);
             min = Math.Min(j, min);
             t = SkewBinomialHeap<int>.Insert(j, t);
-
             var k = SkewBinomialHeap<int>.FindMin(t);
             t = SkewBinomialHeap<int>.DeleteMin(t);
-            Assert.True(min <= k);
+            await Assert.That(min <= k).IsTrue();
             min = k;
         }
 
@@ -179,10 +179,10 @@ public class SkewBinomialHeapTests
         {
             var j = SkewBinomialHeap<int>.FindMin(t);
             t = SkewBinomialHeap<int>.DeleteMin(t);
-            Assert.True(min <= j);
+            await Assert.That(min <= j).IsTrue();
             min = j;
         }
 
-        Assert.True(SkewBinomialHeap<int>.IsEmpty(t));
+        await Assert.That(SkewBinomialHeap<int>.IsEmpty(t)).IsTrue();
     }
 }

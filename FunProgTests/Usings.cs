@@ -1,4 +1,4 @@
-// Copyright 2014 Gregory Eakin <greg@eakin.dev>
+// Copyright 2025 Gregory Eakin <greg@eakin.dev>
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -22,5 +22,4 @@ global using System.Runtime.InteropServices;
 global using System.Text;
 global using System.Threading;
 global using System.Threading.Tasks;
-global using Xunit;
-
+global using TUnit.Assertions.AssertConditions.Throws;

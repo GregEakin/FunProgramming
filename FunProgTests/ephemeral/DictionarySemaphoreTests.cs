@@ -1,4 +1,4 @@
-// Copyright 2014 Gregory Eakin <greg@eakin.dev>
+// Copyright 2025 Gregory Eakin <greg@eakin.dev>
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@ using FunProgLib.heap;
 
 namespace FunProgTests.ephemeral;
 
-public sealed class DictionarySemaphoreTests : DictionaryTests, IDisposable
+public sealed class DictionarySemaphoreTests : DictionaryTests
 {
     private readonly SemaphoreSlim _semaphore = new(1);
     private SplayHeap<string>.Heap _set = SplayHeap<string>.Empty;
@@ -81,7 +81,7 @@ public sealed class DictionarySemaphoreTests : DictionaryTests, IDisposable
         }
     }
 
-    [Fact]
+    [Test]
     public async Task Test1()
     {
         var taskList = new ConcurrentBag<Task>();
@@ -92,9 +92,10 @@ public sealed class DictionarySemaphoreTests : DictionaryTests, IDisposable
         }
 
         await Task.WhenAll(taskList.ToArray());
-        Assert.Null(_set);
+        await Assert.That(_set).IsNull().IsNull();
     }
 
+    [After(Test)]
     public void Dispose()
     {
         _semaphore.Dispose();

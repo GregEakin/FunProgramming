@@ -1,4 +1,4 @@
-// Copyright 2014 Gregory Eakin <greg@eakin.dev>
+// Copyright 2025 Gregory Eakin <greg@eakin.dev>
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -31,7 +31,7 @@ internal class BlockingQueue<T>
 
         token.Register(() =>
         {
-            lock(_lock)
+            lock (_lock)
                 Monitor.PulseAll(_lock);
         });
     }
@@ -81,7 +81,7 @@ internal class BlockingQueue<T>
 
 public class BlockingQueueTests
 {
-    [Fact]
+    [Test]
     public async Task BlockingQueueTest()
     {
         using var tokenSource = new CancellationTokenSource();
@@ -96,11 +96,11 @@ public class BlockingQueueTests
             for (var x = 0; queue.Enqueue(x); x++)
             {
                 var threadId = Environment.CurrentManagedThreadId;
-                var msg = $"{threadId,3}: {watch.ElapsedMilliseconds,3} {x,4:0000} >";
+                var msg = $"{threadId, 3}: {watch.ElapsedMilliseconds, 3} {x, 4:0000} >";
                 Trace.WriteLine(msg);
             }
 
-            Trace.WriteLine($"{Environment.CurrentManagedThreadId,3}: {watch.ElapsedMilliseconds,3} Producer finished");
+            Trace.WriteLine($"{Environment.CurrentManagedThreadId, 3}: {watch.ElapsedMilliseconds, 3} Producer finished");
         }, token);
         tasks.Add(producer);
 
@@ -113,21 +113,20 @@ public class BlockingQueueTests
                 while (queue.Dequeue(out var x))
                 {
                     var threadId = Environment.CurrentManagedThreadId;
-                    var msg = $"{threadId,3}: {watch.ElapsedMilliseconds,3}      < {x,4:0000}";
+                    var msg = $"{threadId, 3}: {watch.ElapsedMilliseconds, 3}      < {x, 4:0000}";
                     Trace.WriteLine(msg);
-
                     Thread.Sleep(10);
                     //var cancelled = token.WaitHandle.WaitOne(10);
                     //if (cancelled)
                     //    break;
                 }
 
-                Trace.WriteLine($"{Environment.CurrentManagedThreadId,3}: {watch.ElapsedMilliseconds,3} Consumer finished");
+                Trace.WriteLine($"{Environment.CurrentManagedThreadId, 3}: {watch.ElapsedMilliseconds, 3} Consumer finished");
             }, token);
             tasks.Add(consumer);
         }
 
-        Trace.WriteLine($"{Environment.CurrentManagedThreadId,3}: {watch.ElapsedMilliseconds,3} Stopping after 27 ms");
+        Trace.WriteLine($"{Environment.CurrentManagedThreadId, 3}: {watch.ElapsedMilliseconds, 3} Stopping after 27 ms");
         tokenSource.CancelAfter(100);
 
         await Task.WhenAll(tasks.ToArray());

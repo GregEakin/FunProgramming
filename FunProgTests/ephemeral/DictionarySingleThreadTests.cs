@@ -1,4 +1,4 @@
-// Copyright 2014 Gregory Eakin <greg@eakin.dev>
+// Copyright 2025 Gregory Eakin <greg@eakin.dev>
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -20,7 +20,6 @@ public class DictionarySingleThreadTests : DictionaryTests
 {
     private readonly Random _random = new();
     private SplayHeap<string>.Heap _set = SplayHeap<string>.Empty;
-
     private int InsertAction(int count)
     {
         for (var i = 0; i < count; i++)
@@ -39,7 +38,6 @@ public class DictionarySingleThreadTests : DictionaryTests
         {
             if (SplayHeap<string>.IsEmpty(_set))
                 return i;
-
             var localCopy = _set;
             _set = SplayHeap<string>.DeleteMin(localCopy);
             _ = SplayHeap<string>.FindMin(localCopy);
@@ -49,8 +47,8 @@ public class DictionarySingleThreadTests : DictionaryTests
         return i;
     }
 
-    [Fact]
-    public void Test1()
+    [Test]
+    public async Task Test1()
     {
         const int size = Threads * Count / 2;
         var writes = 0;
@@ -73,6 +71,6 @@ public class DictionarySingleThreadTests : DictionaryTests
             }
         }
 
-        Assert.Null(_set);
+        await Assert.That(_set).IsNull();
     }
 }

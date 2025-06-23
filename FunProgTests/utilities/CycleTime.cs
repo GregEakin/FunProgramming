@@ -1,4 +1,4 @@
-// Copyright 2014 Gregory Eakin <greg@eakin.dev>
+// Copyright 2025 Gregory Eakin <greg@eakin.dev>
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -21,7 +21,7 @@ public interface ICycleTime
     ulong Elapsed();
 }
 
-public sealed class ThreadCycleTime : ICycleTime
+public sealed class ThreadCycleTime : ICycleTime, IDisposable
 {
     private readonly SafeWaitHandle _handle;
     private readonly ulong _startTime;
@@ -44,7 +44,7 @@ public sealed class ThreadCycleTime : ICycleTime
     }
 }
 
-public sealed class ProcessCycleTime : ICycleTime
+public sealed class ProcessCycleTime : ICycleTime, IDisposable
 {
     private readonly SafeWaitHandle _handle;
     private readonly ulong _startTime;

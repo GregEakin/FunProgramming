@@ -1,4 +1,4 @@
-// Copyright 2014 Gregory Eakin <greg@eakin.dev>
+// Copyright 2025 Gregory Eakin <greg@eakin.dev>
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -20,10 +20,11 @@ namespace FunProgTests.heap;
 
 public class ScheduledBinomialHeapTests
 {
-    private static string DumpTree<T>(ScheduledBinomialHeap<T>.Tree tree) where T : IComparable<T>
+    private static string DumpTree<T>(ScheduledBinomialHeap<T>.Tree tree)
+        where T : IComparable<T>
     {
-        if (tree == null) return string.Empty;
-
+        if (tree == null)
+            return string.Empty;
         var result = new StringBuilder();
         result.Append('[');
         result.Append(tree.Node);
@@ -35,21 +36,28 @@ public class ScheduledBinomialHeapTests
                 result.Append(DumpTree(node1));
                 result.Append(", ");
             }
+
             result.Remove(result.Length - 2, 2);
         }
+
         result.Append(']');
         return result.ToString();
     }
 
-    private static string DumpDigitStream<T>(Lazy<Stream<ScheduledBinomialHeap<T>.Digit>.StreamCell> stream) where T : IComparable<T>
+    private static string DumpDigitStream<T>(Lazy<Stream<ScheduledBinomialHeap<T>.Digit>.StreamCell> stream)
+        where T : IComparable<T>
     {
-        if (stream == ScheduledBinomialHeap<T>.EmptyStream) return string.Empty;
-        if (!stream.IsValueCreated) return " -$- ";
-        if (stream == Stream<ScheduledBinomialHeap<T>.Digit>.DollarNil) return string.Empty;
+        if (stream == ScheduledBinomialHeap<T>.EmptyStream)
+            return string.Empty;
+        if (!stream.IsValueCreated)
+            return " -$- ";
+        if (stream == Stream<ScheduledBinomialHeap<T>.Digit>.DollarNil)
+            return string.Empty;
         return $"{DumpTree(stream.Value.Element.One)}{DumpDigitStream(stream.Value.Next)}";
     }
 
-    private static string DumpHeap<T>(ScheduledBinomialHeap<T>.Heap heap) where T : IComparable<T>
+    private static string DumpHeap<T>(ScheduledBinomialHeap<T>.Heap heap)
+        where T : IComparable<T>
     {
         var result = new StringBuilder();
         result.Append('[');
@@ -59,124 +67,118 @@ public class ScheduledBinomialHeapTests
             result.Append(", ");
             result.Remove(result.Length - 2, 2);
         }
+
         result.Append(']');
         return result.ToString();
     }
 
-    [Fact]
-    public void EmptyTest()
+    [Test]
+    public async Task EmptyTest()
     {
         var t = ScheduledBinomialHeap<string>.Empty;
-        Assert.True(ScheduledBinomialHeap<string>.IsEmpty(t));
-
+        await Assert.That(ScheduledBinomialHeap<string>.IsEmpty(t)).IsTrue();
         var t1 = ScheduledBinomialHeap<string>.Insert("C", t);
-        Assert.False(ScheduledBinomialHeap<string>.IsEmpty(t1));
+        await Assert.That(ScheduledBinomialHeap<string>.IsEmpty(t1)).IsFalse();
     }
 
-    [Fact]
-    public void TestEmpty()
+    [Test]
+    public async Task TestEmpty()
     {
         var t = ScheduledBinomialHeap<string>.Empty;
-        Assert.Equal("[]", DumpHeap(t));
+        await Assert.That(DumpHeap(t)).IsEqualTo("[]");
     }
 
-    [Fact]
-    public void Test0()
+    [Test]
+    public async Task Test0()
     {
         var t = ScheduledBinomialHeap<string>.Empty;
         var x1 = ScheduledBinomialHeap<string>.Insert("C", t);
-        Assert.Equal("[[C]]", DumpHeap(x1));
+        await Assert.That(DumpHeap(x1)).IsEqualTo("[[C]]");
     }
 
-    [Fact]
-    public void Test1()
+    [Test]
+    public async Task Test1()
     {
         var t = ScheduledBinomialHeap<string>.Empty;
         var x1 = ScheduledBinomialHeap<string>.Insert("C", t);
         var x2 = ScheduledBinomialHeap<string>.Insert("B", x1);
-        Assert.Equal("[[B: [C]]]", DumpHeap(x2));
+        await Assert.That(DumpHeap(x2)).IsEqualTo("[[B: [C]]]");
     }
 
-    [Fact]
-    public void Test2()
+    [Test]
+    public async Task Test2()
     {
         const string words = "What's in a name? That which we call a rose by any other name would smell as sweet.";
         var t = words.Split().Aggregate(ScheduledBinomialHeap<string>.Empty, (current, word) => ScheduledBinomialHeap<string>.Insert(word, current));
-        Assert.Equal("[[as: [sweet.]] -$- ]", DumpHeap(t));
-
+        await Assert.That(DumpHeap(t)).IsEqualTo("[[as: [sweet.]] -$- ]");
         var x = ScheduledBinomialHeap<string>.Merge(t, ScheduledBinomialHeap<string>.Empty);
-        Assert.Equal("[[as: [sweet.]][a: [a: [call: [That: [which]], [we]], [in: [What's]], [name?]], [name: [smell: [would]], [other]], [any: [by]], [rose]]]", DumpHeap(x));
+        await Assert.That(DumpHeap(x)).IsEqualTo("[[as: [sweet.]][a: [a: [call: [That: [which]], [we]], [in: [What's]], [name?]], [name: [smell: [would]], [other]], [any: [by]], [rose]]]");
     }
 
-    [Fact]
-    public void MergeTest()
+    [Test]
+    public async Task MergeTest()
     {
         const string data1 = "What's in a name?";
         var ts1 = data1.Split().Aggregate(ScheduledBinomialHeap<string>.Empty, (current, word) => ScheduledBinomialHeap<string>.Insert(word, current));
-
         const string data2 = "That which we call a rose by any other name would smell as sweet";
         var ts2 = data2.Split().Aggregate(ScheduledBinomialHeap<string>.Empty, (current, word) => ScheduledBinomialHeap<string>.Insert(word, current));
-
         var t = ScheduledBinomialHeap<string>.Merge(ts1, ts2);
-        Assert.Equal("[[as: [sweet]][a: [a: [call: [That: [which]], [we]], [any: [by]], [rose]], [name: [smell: [would]], [other]], [in: [What's]], [name?]]]", DumpHeap(t));
+        await Assert.That(DumpHeap(t)).IsEqualTo("[[as: [sweet]][a: [a: [call: [That: [which]], [we]], [any: [by]], [rose]], [name: [smell: [would]], [other]], [in: [What's]], [name?]]]");
     }
 
-    [Fact]
-    public void DeleteMinTest()
+    [Test]
+    public async Task DeleteMinTest()
     {
         var t = ScheduledBinomialHeap<int>.Empty;
         var t1 = ScheduledBinomialHeap<int>.Insert(5, t);
         var t2 = ScheduledBinomialHeap<int>.Insert(3, t1);
         var t3 = ScheduledBinomialHeap<int>.Insert(6, t2);
-
         var t4 = ScheduledBinomialHeap<int>.DeleteMin(t3);
-        Assert.Equal("[[5: [6]]]", DumpHeap(t4));
-        Assert.Equal(5, ScheduledBinomialHeap<int>.FindMin(t4));
-
-        Assert.Equal(3, ScheduledBinomialHeap<int>.FindMin(t3));
+        await Assert.That(DumpHeap(t4)).IsEqualTo("[[5: [6]]]");
+        await Assert.That(ScheduledBinomialHeap<int>.FindMin(t4)).IsEqualTo(5);
+        await Assert.That(ScheduledBinomialHeap<int>.FindMin(t3)).IsEqualTo(3);
     }
 
-    [Fact]
-    public void DeleteLotsOfMinsTest()
+    [Test]
+    public async Task DeleteLotsOfMinsTest()
     {
         const int size = 1000;
         var random = new Random(3456);
         var heap = ScheduledBinomialHeap<int>.Empty;
-        for (var i = 0; i < size; i++) heap = ScheduledBinomialHeap<int>.Insert(random.Next(size), heap);
+        for (var i = 0; i < size; i++)
+            heap = ScheduledBinomialHeap<int>.Insert(random.Next(size), heap);
         var last = 0;
         var count = 0;
         while (!ScheduledBinomialHeap<int>.IsEmpty(heap))
         {
             var next = ScheduledBinomialHeap<int>.FindMin(heap);
             heap = ScheduledBinomialHeap<int>.DeleteMin(heap);
-            Assert.True(last <= next);
+            await Assert.That(last <= next).IsTrue();
             last = next;
             count++;
         }
-        Assert.Equal(size, count);
+
+        await Assert.That(count).IsEqualTo(size);
     }
 
-    [Fact]
-    public void DeleteLotsOfMinsTest2()
+    [Test]
+    public async Task DeleteLotsOfMinsTest2()
     {
         const int size = 1000;
         var random = new Random(6435);
         var heap = ScheduledBinomialHeap<int>.Empty;
-
         var min = size;
         for (var i = 0; i < size; i++)
         {
             var j = random.Next(size);
             min = Math.Min(j, min);
             heap = ScheduledBinomialHeap<int>.Insert(j, heap);
-
             j = random.Next(size);
             min = Math.Min(j, min);
             heap = ScheduledBinomialHeap<int>.Insert(j, heap);
-
             var k = ScheduledBinomialHeap<int>.FindMin(heap);
             heap = ScheduledBinomialHeap<int>.DeleteMin(heap);
-            Assert.True(min <= k);
+            await Assert.That(min <= k).IsTrue();
             min = k;
         }
 
@@ -184,10 +186,10 @@ public class ScheduledBinomialHeapTests
         {
             var j = ScheduledBinomialHeap<int>.FindMin(heap);
             heap = ScheduledBinomialHeap<int>.DeleteMin(heap);
-            Assert.True(min <= j);
+            await Assert.That(min <= j).IsTrue();
             min = j;
         }
 
-        Assert.True(ScheduledBinomialHeap<int>.IsEmpty(heap));
+        await Assert.That(ScheduledBinomialHeap<int>.IsEmpty(heap)).IsTrue();
     }
 }

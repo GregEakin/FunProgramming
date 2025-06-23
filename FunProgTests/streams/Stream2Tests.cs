@@ -1,4 +1,4 @@
-// Copyright 2014 Gregory Eakin <greg@eakin.dev>
+// Copyright 2025 Gregory Eakin <greg@eakin.dev>
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -30,22 +30,20 @@ public class Stream2Tests
 
     private static Stream<Stuff>.StreamCell Factory(int index)
     {
-        return new Stream<Stuff>.StreamCell(new Stuff(index),
-            new Lazy<Stream<Stuff>.StreamCell>(() => Factory(index + 1)));
+        return new Stream<Stuff>.StreamCell(new Stuff(index), new Lazy<Stream<Stuff>.StreamCell>(() => Factory(index + 1)));
     }
 
-    [Fact]
-    public void FirstTenTest()
+    [Test]
+    public async Task FirstTenTest()
     {
         var stream = Factory(-1).Next;
-
         for (var i = 0; i < 10; i++)
         {
-            Assert.False(stream.IsValueCreated);
+            await Assert.That(stream.IsValueCreated).IsFalse();
             var current = Interlocked.Exchange(ref stream, stream.Value.Next);
-            Assert.Equal(i, current.Value.Element.Key);
+            await Assert.That(current.Value.Element.Key).IsEqualTo(i);
         }
 
-        Assert.False(stream.IsValueCreated);
+        await Assert.That(stream.IsValueCreated).IsFalse();
     }
 }

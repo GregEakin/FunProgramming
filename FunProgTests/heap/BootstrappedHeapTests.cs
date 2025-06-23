@@ -1,4 +1,4 @@
-// Copyright 2016 Gregory Eakin <greg@eakin.dev>
+// Copyright 2025 Gregory Eakin <greg@eakin.dev>
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,93 +12,90 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace FunProgTests.heap;
-
 using FunProgLib.heap;
+
+namespace FunProgTests.heap;
 
 public class BootstrappedHeapTests
 {
-    private static string DumpElement<T>(BootstrappedHeap<T>.PrimH.Element element) where T : IComparable<T>
+    private static string DumpElement<T>(BootstrappedHeap<T>.PrimH.Element element)
+        where T : IComparable<T>
     {
-        return BootstrappedHeap<T>.PrimH.IsEmpty(element) 
-            ? "Empty" 
-            : $"{{{DumpHeap(element.H1)}: {DumpElement(element.H2)}}}";
+        return BootstrappedHeap<T>.PrimH.IsEmpty(element) ? "Empty" : $"{{{DumpHeap(element.H1)}: {DumpElement(element.H2)}}}";
     }
 
-    private static string DumpHeap<T>(BootstrappedHeap<T>.Heap heap) where T : IComparable<T>
+    private static string DumpHeap<T>(BootstrappedHeap<T>.Heap heap)
+        where T : IComparable<T>
     {
-        return BootstrappedHeap<T>.IsEmpty(heap) 
-            ? "Empty" 
-            : $"[{heap.X}: {DumpElement(heap.P)}]";
+        return BootstrappedHeap<T>.IsEmpty(heap) ? "Empty" : $"[{heap.X}: {DumpElement(heap.P)}]";
     }
 
-    [Fact]
-    public void EmptyTest()
+    [Test]
+    public async Task EmptyTest()
     {
         var t = BootstrappedHeap<string>.Empty;
-        Assert.True(BootstrappedHeap<string>.IsEmpty(t));
-
+        await Assert.That(BootstrappedHeap<string>.IsEmpty(t)).IsTrue();
         var t1 = BootstrappedHeap<string>.Insert("C", t);
-        Assert.False(BootstrappedHeap<string>.IsEmpty(t1));
+        await Assert.That(BootstrappedHeap<string>.IsEmpty(t1)).IsFalse();
     }
 
-    [Fact]
-    public void Merge1Test()
+    [Test]
+    public async Task Merge1Test()
     {
         var heap2 = "z x y".Split().Aggregate(BootstrappedHeap<string>.Empty, (current, word) => BootstrappedHeap<string>.Insert(word, current));
         var heap3 = BootstrappedHeap<string>.Merge(BootstrappedHeap<string>.Empty, heap2);
-        Assert.Same(heap2, heap3);
+        await Assert.That(heap3).IsSameReferenceAs(heap2);
     }
 
-    [Fact]
-    public void Merge2Test()
+    [Test]
+    public async Task Merge2Test()
     {
         var heap1 = "c a b".Split().Aggregate(BootstrappedHeap<string>.Empty, (current, word) => BootstrappedHeap<string>.Insert(word, current));
         var heap3 = BootstrappedHeap<string>.Merge(heap1, BootstrappedHeap<string>.Empty);
-        Assert.Same(heap1, heap3);
+        await Assert.That(heap3).IsSameReferenceAs(heap1);
     }
 
-    [Fact]
-    public void Merge3Test()
+    [Test]
+    public async Task Merge3Test()
     {
         var heap1 = "c a b".Split().Aggregate(BootstrappedHeap<string>.Empty, (current, word) => BootstrappedHeap<string>.Insert(word, current));
         var heap2 = "z x y".Split().Aggregate(BootstrappedHeap<string>.Empty, (current, word) => BootstrappedHeap<string>.Insert(word, current));
         var heap3 = BootstrappedHeap<string>.Merge(heap1, heap2);
-        Assert.Equal("[a: {[b: Empty]: {[c: Empty]: {[x: {[y: Empty]: {[z: Empty]: Empty}}]: Empty}}}]", DumpHeap(heap3));
+        await Assert.That(DumpHeap(heap3)).IsEqualTo("[a: {[b: Empty]: {[c: Empty]: {[x: {[y: Empty]: {[z: Empty]: Empty}}]: Empty}}}]");
     }
 
-    [Fact]
-    public void InsertTest()
+    [Test]
+    public async Task InsertTest()
     {
         var empty = BootstrappedHeap<string>.Empty;
         var heap = BootstrappedHeap<string>.Insert("A", empty);
-        Assert.Equal("A", BootstrappedHeap<string>.FindMin(heap));
+        await Assert.That(BootstrappedHeap<string>.FindMin(heap)).IsEqualTo("A");
     }
 
-    [Fact]
-    public void FindEmptyMinTest()
+    [Test]
+    public async Task FindEmptyMinTest()
     {
-        Assert.Throws<ArgumentNullException>(() => BootstrappedHeap<string>.FindMin(BootstrappedHeap<string>.Empty));
+        await Assert.That(() => BootstrappedHeap<string>.FindMin(BootstrappedHeap<string>.Empty)).Throws<ArgumentNullException>();
     }
 
-    [Fact]
-    public void FindMinTest()
+    [Test]
+    public async Task FindMinTest()
     {
         var ts1 = "c a b".Split().Aggregate(BootstrappedHeap<string>.Empty, (current, word) => BootstrappedHeap<string>.Insert(word, current));
-        Assert.Equal("a", BootstrappedHeap<string>.FindMin(ts1));
+        await Assert.That(BootstrappedHeap<string>.FindMin(ts1)).IsEqualTo("a");
     }
 
-    [Fact]
-    public void DeleteEmptyMinTest()
+    [Test]
+    public async Task DeleteEmptyMinTest()
     {
-        Assert.Throws<ArgumentNullException>(() => BootstrappedHeap<string>.DeleteMin(BootstrappedHeap<string>.Empty));
+        await Assert.That(() => BootstrappedHeap<string>.DeleteMin(BootstrappedHeap<string>.Empty)).Throws<ArgumentNullException>();
     }
 
-    [Fact]
-    public void DeleteMinTest()
+    [Test]
+    public async Task DeleteMinTest()
     {
         var ts1 = "c a b".Split().Aggregate(BootstrappedHeap<string>.Empty, (current, word) => BootstrappedHeap<string>.Insert(word, current));
         var ts2 = BootstrappedHeap<string>.DeleteMin(ts1);
-        Assert.Equal("b", BootstrappedHeap<string>.FindMin(ts2));
+        await Assert.That(BootstrappedHeap<string>.FindMin(ts2)).IsEqualTo("b");
     }
 }

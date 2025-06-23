@@ -1,4 +1,4 @@
-// Copyright 2014 Gregory Eakin <greg@eakin.dev>
+// Copyright 2025 Gregory Eakin <greg@eakin.dev>
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -13,190 +13,181 @@
 // limitations under the License.
 
 using FunProgLib.queue;
+using static FunProgTests.streams.StreamTests;
 
 namespace FunProgTests.queue;
 
-using static streams.StreamTests;
-
 public class RealTimeDequeTests
+
 {
     private static string DumpQueue<T>(RealTimeDeque<T>.Queue queue, bool expandUnCreated)
     {
-        return $"[{queue.LenF}, {{{DumpStream(queue.F, expandUnCreated)}}}, {{{DumpStream(queue.Sf, expandUnCreated)}}}, "
-               + $"{queue.LenR}, {{{DumpStream(queue.R, expandUnCreated)}}}, {{{DumpStream(queue.Sr, expandUnCreated)}}}]";
+        return $"[{queue.LenF}, {{{DumpStream(queue.F, expandUnCreated)}}}, {{{DumpStream(queue.Sf, expandUnCreated)}}}, " + $"{queue.LenR}, {{{DumpStream(queue.R, expandUnCreated)}}}, {{{DumpStream(queue.Sr, expandUnCreated)}}}]";
     }
 
-    [Fact]
-    public void EmptyTest()
+    [Test]
+    public async Task EmptyTest()
     {
         var queue = RealTimeDeque<string>.Empty;
-        Assert.True(RealTimeDeque<string>.IsEmpty(queue));
-
+        await Assert.That(RealTimeDeque<string>.IsEmpty(queue)).IsTrue();
         queue = RealTimeDeque<string>.Cons("Head", queue);
-        Assert.False(RealTimeDeque<string>.IsEmpty(queue));
+        await Assert.That(RealTimeDeque<string>.IsEmpty(queue)).IsFalse();
         queue = RealTimeDeque<string>.Tail(queue);
-        Assert.True(RealTimeDeque<string>.IsEmpty(queue));
-
+        await Assert.That(RealTimeDeque<string>.IsEmpty(queue)).IsTrue();
         queue = RealTimeDeque<string>.Snoc(queue, "Tail");
-        Assert.False(RealTimeDeque<string>.IsEmpty(queue));
+        await Assert.That(RealTimeDeque<string>.IsEmpty(queue)).IsFalse();
         queue = RealTimeDeque<string>.Init(queue);
-        Assert.True(RealTimeDeque<string>.IsEmpty(queue));
+        await Assert.That(RealTimeDeque<string>.IsEmpty(queue)).IsTrue();
     }
 
-    [Fact]
-    public void EmptyConsTest()
+    [Test]
+    public async Task EmptyConsTest()
     {
-        Assert.Throws<NullReferenceException>(() => RealTimeDeque<string>.Cons("Item", null));
+        await Assert.That(() => RealTimeDeque<string>.Cons("Item", null)).Throws<NullReferenceException>();
     }
 
-    [Fact]
-    public void ConsTest()
+    [Test]
+    public async Task ConsTest()
     {
         var queue = RealTimeDeque<string>.Empty;
         queue = RealTimeDeque<string>.Cons("Last", queue);
-        Assert.Equal("[1, {$}, {}, 0, {}, {}]", DumpQueue(queue, false));
-
+        await Assert.That(DumpQueue(queue, false)).IsEqualTo("[1, {$}, {}, 0, {}, {}]");
         queue = RealTimeDeque<string>.Cons("Head", queue);
-        Assert.Equal("[1, {$Head}, {Head}, 1, {$Last}, {Last}]", DumpQueue(queue, true));
+        await Assert.That(DumpQueue(queue, true)).IsEqualTo("[1, {$Head}, {Head}, 1, {$Last}, {Last}]");
     }
 
-    [Fact]
-    public void EmptyHeadTest()
+    [Test]
+    public async Task EmptyHeadTest()
     {
         var queue = RealTimeDeque<string>.Empty;
-        Assert.Throws<ArgumentNullException>(() => RealTimeDeque<string>.Head(queue));
+        await Assert.That(() => RealTimeDeque<string>.Head(queue)).Throws<ArgumentNullException>();
     }
 
-    [Fact]
-    public void HeadTest()
+    [Test]
+    public async Task HeadTest()
     {
         const string data = "One Two Three One Three";
         var queue = data.Split().Aggregate(RealTimeDeque<string>.Empty, (queue1, s) => RealTimeDeque<string>.Cons(s, queue1));
         var head = RealTimeDeque<string>.Head(queue);
-        Assert.Equal("Three", head);
+        await Assert.That(head).IsEqualTo("Three");
     }
 
-    [Fact]
-    public void EmptyTailTest()
+    [Test]
+    public async Task EmptyTailTest()
     {
         var queue = RealTimeDeque<string>.Empty;
-        Assert.Throws<ArgumentNullException>(() => RealTimeDeque<string>.Tail(queue));
+        await Assert.That(() => RealTimeDeque<string>.Tail(queue)).Throws<ArgumentNullException>();
     }
 
-    [Fact]
-    public void TailTest()
+    [Test]
+    public async Task TailTest()
     {
         const string data = "One Two Three One Three";
         var queue = data.Split().Aggregate(RealTimeDeque<string>.Empty, (queue1, s) => RealTimeDeque<string>.Cons(s, queue1));
         var tail = RealTimeDeque<string>.Tail(queue);
-        Assert.Equal("[1, {One}, {}, 3, {One, Two, $Three}, {Three}]", DumpQueue(tail, true));
+        await Assert.That(DumpQueue(tail, true)).IsEqualTo("[1, {One}, {}, 3, {One, Two, $Three}, {Three}]");
     }
 
-    [Fact]
-    public void ConsHeadTailTest()
+    [Test]
+    public async Task ConsHeadTailTest()
     {
         const string data = "One Two Three One Three";
         var queue = data.Split().Aggregate(RealTimeDeque<string>.Empty, (queue1, s) => RealTimeDeque<string>.Cons(s, queue1));
-
         foreach (var expected in data.Split().Reverse())
         {
             var actual = RealTimeDeque<string>.Head(queue);
-            Assert.Equal(expected, actual);
+            await Assert.That(actual).IsEqualTo(expected);
             queue = RealTimeDeque<string>.Tail(queue);
         }
 
-        Assert.True(RealTimeDeque<string>.IsEmpty(queue));
+        await Assert.That(RealTimeDeque<string>.IsEmpty(queue)).IsTrue();
     }
 
-    [Fact]
-    public void IncrementalHeadTest()
+    [Test]
+    public async Task IncrementalHeadTest()
     {
         const string data = "One Two Three Four Five";
         var queue = data.Split().Aggregate(RealTimeDeque<string>.Empty, (queue1, s) => RealTimeDeque<string>.Cons(s, queue1));
-        Assert.Equal("[2, {$}, {$}, 3, {$}, {$}]", DumpQueue(queue, false));
-
+        await Assert.That(DumpQueue(queue, false)).IsEqualTo("[2, {$}, {$}, 3, {$}, {$}]");
         // After looking at the first element, the rest of the queue should be not created.
         var head = RealTimeDeque<string>.Head(queue);
-        Assert.Equal("Five", head);
-        Assert.Equal("[2, {Five, $}, {Five, $}, 3, {$}, {$}]", DumpQueue(queue, false));
+        await Assert.That(head).IsEqualTo("Five");
+        await Assert.That(DumpQueue(queue, false)).IsEqualTo("[2, {Five, $}, {Five, $}, 3, {$}, {$}]");
     }
 
-    [Fact]
-    public void EmptySoncTest()
+    [Test]
+    public async Task EmptySoncTest()
     {
-        Assert.Throws<NullReferenceException>(() => RealTimeDeque<string>.Snoc(null, "Item"));
+        await Assert.That(() => RealTimeDeque<string>.Snoc(null, "Item")).Throws<NullReferenceException>();
     }
 
-    [Fact]
-    public void SnocTest()
+    [Test]
+    public async Task SnocTest()
     {
         var queue = RealTimeDeque<string>.Empty;
         queue = RealTimeDeque<string>.Snoc(queue, "Head");
-        Assert.Equal("[0, {}, {}, 1, {$}, {}]", DumpQueue(queue, false));
-
+        await Assert.That(DumpQueue(queue, false)).IsEqualTo("[0, {}, {}, 1, {$}, {}]");
         queue = RealTimeDeque<string>.Snoc(queue, "Last");
-        Assert.Equal("[1, {$Head}, {Head}, 1, {$Last}, {Last}]", DumpQueue(queue, true));
+        await Assert.That(DumpQueue(queue, true)).IsEqualTo("[1, {$Head}, {Head}, 1, {$Last}, {Last}]");
     }
 
-    [Fact]
-    public void LastTest()
+    [Test]
+    public async Task LastTest()
     {
         const string data = "One Two Three One Three";
         var queue = data.Split().Aggregate(RealTimeDeque<string>.Empty, RealTimeDeque<string>.Snoc);
         var last = RealTimeDeque<string>.Last(queue);
-        Assert.Equal("Three", last);
+        await Assert.That(last).IsEqualTo("Three");
     }
 
-    [Fact]
-    public void EmptyLastTest()
+    [Test]
+    public async Task EmptyLastTest()
     {
         var queue = RealTimeDeque<string>.Empty;
-        Assert.Throws<ArgumentNullException>(() => RealTimeDeque<string>.Last(queue));
+        await Assert.That(() => RealTimeDeque<string>.Last(queue)).Throws<ArgumentNullException>();
     }
 
-    [Fact]
-    public void InitTest()
+    [Test]
+    public async Task InitTest()
     {
         const string data = "One Two Three One Three";
         var queue = data.Split().Aggregate(RealTimeDeque<string>.Empty, RealTimeDeque<string>.Snoc);
         var init = RealTimeDeque<string>.Init(queue);
-        Assert.Equal("[3, {One, Two, $Three}, {Three}, 1, {One}, {}]", DumpQueue(init, true));
+        await Assert.That(DumpQueue(init, true)).IsEqualTo("[3, {One, Two, $Three}, {Three}, 1, {One}, {}]");
     }
 
-    [Fact]
-    public void EmptyInitTest()
+    [Test]
+    public async Task EmptyInitTest()
     {
         var queue = RealTimeDeque<string>.Empty;
-        Assert.Throws<ArgumentNullException>(() => RealTimeDeque<string>.Init(queue));
+        await Assert.That(() => RealTimeDeque<string>.Init(queue)).Throws<ArgumentNullException>();
     }
 
-    [Fact]
-    public void SnocLastInitTest()
+    [Test]
+    public async Task SnocLastInitTest()
     {
         const string data = "One Two Three One Three";
         var queue = data.Split().Aggregate(RealTimeDeque<string>.Empty, RealTimeDeque<string>.Snoc);
-
         var dat = data.Split().Reverse();
         foreach (var expected in dat)
         {
             var actual = RealTimeDeque<string>.Last(queue);
-            Assert.Equal(expected, actual);
+            await Assert.That(actual).IsEqualTo(expected);
             queue = RealTimeDeque<string>.Init(queue);
         }
 
-        Assert.True(RealTimeDeque<string>.IsEmpty(queue));
+        await Assert.That(RealTimeDeque<string>.IsEmpty(queue)).IsTrue();
     }
 
-    [Fact]
-    public void IncrementalLastTest()
+    [Test]
+    public async Task IncrementalLastTest()
     {
         const string data = "One Two Three Four Five";
         var queue = data.Split().Aggregate(RealTimeDeque<string>.Empty, RealTimeDeque<string>.Snoc);
-        Assert.Equal("[3, {$}, {$}, 2, {$}, {$}]", DumpQueue(queue, false));
-
+        await Assert.That(DumpQueue(queue, false)).IsEqualTo("[3, {$}, {$}, 2, {$}, {$}]");
         // After looking at the last element, the rest of the queue should be not created.
         var last = RealTimeDeque<string>.Last(queue);
-        Assert.Equal("Five", last);
-        Assert.Equal("[3, {$}, {$}, 2, {Five, $}, {Five, $}]", DumpQueue(queue, false));
+        await Assert.That(last).IsEqualTo("Five");
+        await Assert.That(DumpQueue(queue, false)).IsEqualTo("[3, {$}, {$}, 2, {Five, $}, {Five, $}]");
     }
 }

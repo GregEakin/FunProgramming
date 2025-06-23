@@ -1,4 +1,4 @@
-// Copyright 2014 Gregory Eakin <greg@eakin.dev>
+// Copyright 2025 Gregory Eakin <greg@eakin.dev>
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -16,13 +16,6 @@ namespace FunProgTests.lamda;
 
 public class ListOfFuncsTests
 {
-    private readonly ITestOutputHelper _testOutputHelper;
-
-    public ListOfFuncsTests(ITestOutputHelper testOutputHelper)
-    {
-        _testOutputHelper = testOutputHelper;
-    }
-
     // return a list of funcs, where each one returns a loaded page
     static IEnumerable<Func<int>> GetEnumerable(int? page = null, int limit = 10)
     {
@@ -38,16 +31,17 @@ public class ListOfFuncsTests
                     return i1;
                 };
             }
+
             currentPage++;
         }
     }
 
-    [Fact]
-    public void Test1()
+    [Test]
+    public async Task Test1()
     {
         foreach (var item in GetEnumerable().Skip(100).Take(10))
         {
-            _testOutputHelper.WriteLine(item().ToString());
+            Console.WriteLine(item().ToString());
         }
     }
 }

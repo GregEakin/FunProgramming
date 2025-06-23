@@ -1,4 +1,4 @@
-// Copyright 2014 Gregory Eakin <greg@eakin.dev>
+// Copyright 2025 Gregory Eakin <greg@eakin.dev>
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -19,12 +19,6 @@ namespace FunProgTests.ephemeral;
 public class MultiInterlockMapTests : DictionaryTests
 {
     private volatile RedBlackSet<string>.Tree _set = RedBlackSet<string>.EmptyTree;
-    private readonly ITestOutputHelper _testOutputHelper;
-
-    public MultiInterlockMapTests(ITestOutputHelper testOutputHelper)
-    {
-        _testOutputHelper = testOutputHelper;
-    }
 
     private void WriteAction()
     {
@@ -44,8 +38,7 @@ public class MultiInterlockMapTests : DictionaryTests
             }
         }
 
-        _testOutputHelper.WriteLine("Write Task={0}, Thread={1} : {2} average",
-            Task.CurrentId ?? -1, Environment.CurrentManagedThreadId, 2.0 * Count / total);
+        Console.WriteLine("Write Task={0}, Thread={1} : {2} average", Task.CurrentId ?? -1, Environment.CurrentManagedThreadId, 2.0 * Count / total);
     }
 
     private void ReadAction()
@@ -58,11 +51,10 @@ public class MultiInterlockMapTests : DictionaryTests
                 hits++;
         }
 
-        _testOutputHelper.WriteLine("Read Task={0}, Thread={1} : {2} words found",
-            Task.CurrentId ?? -1, Environment.CurrentManagedThreadId, hits);
+        Console.WriteLine("Read Task={0}, Thread={1} : {2} words found", Task.CurrentId ?? -1, Environment.CurrentManagedThreadId, hits);
     }
 
-    [Fact]
+    [Test]
     public async Task Test1()
     {
         var taskList = new ConcurrentBag<Task>();
@@ -74,6 +66,6 @@ public class MultiInterlockMapTests : DictionaryTests
         }
 
         await Task.WhenAll(taskList.ToArray());
-        _testOutputHelper.WriteLine("Done....");
+        Console.WriteLine("Done....");
     }
 }

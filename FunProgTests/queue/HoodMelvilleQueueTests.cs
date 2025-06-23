@@ -1,4 +1,4 @@
-// Copyright 2014 Gregory Eakin <greg@eakin.dev>
+// Copyright 2025 Gregory Eakin <greg@eakin.dev>
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -39,99 +39,94 @@ public class HoodMelvilleQueueTests
         return result.ToString();
     }
 
-    [Fact]
-    public void Test1()
+    [Test]
+    public async Task Test1()
     {
         var queue = HoodMelvilleQueue<string>.Empty;
-        Assert.Equal("[0, null, 0, null]", DumpQueue(queue));
+        await Assert.That(DumpQueue(queue)).IsEqualTo("[0, null, 0, null]");
     }
 
-    [Fact]
-    public void Test2()
+    [Test]
+    public async Task Test2()
     {
         const string data = "One Two Three One Three";
         var queue = data.Split().Aggregate(HoodMelvilleQueue<string>.Empty, HoodMelvilleQueue<string>.Snoc);
-        Assert.Equal("[3, [One, Two, Three], 2, [Three, One]]", DumpQueue(queue));
+        await Assert.That(DumpQueue(queue)).IsEqualTo("[3, [One, Two, Three], 2, [Three, One]]");
     }
 
-    [Fact]
-    public void EmptyTest()
+    [Test]
+    public async Task EmptyTest()
     {
         var queue = HoodMelvilleQueue<string>.Empty;
-        Assert.True(HoodMelvilleQueue<string>.IsEmpty(queue));
-
+        await Assert.That(HoodMelvilleQueue<string>.IsEmpty(queue)).IsTrue();
         queue = HoodMelvilleQueue<string>.Snoc(queue, "Item");
-        Assert.False(HoodMelvilleQueue<string>.IsEmpty(queue));
-
+        await Assert.That(HoodMelvilleQueue<string>.IsEmpty(queue)).IsFalse();
         queue = HoodMelvilleQueue<string>.Tail(queue);
-        Assert.True(HoodMelvilleQueue<string>.IsEmpty(queue));
+        await Assert.That(HoodMelvilleQueue<string>.IsEmpty(queue)).IsTrue();
     }
 
-    [Fact]
-    public void SnocEmptyTest()
+    [Test]
+    public async Task SnocEmptyTest()
     {
-        Assert.Throws<NullReferenceException>(() => HoodMelvilleQueue<string>.Snoc(null, "Item"));
+        await Assert.That(() => HoodMelvilleQueue<string>.Snoc(null, "Item")).Throws<NullReferenceException>();
     }
 
-    [Fact]
-    public void SnocTest()
+    [Test]
+    public async Task SnocTest()
     {
         var queue = HoodMelvilleQueue<string>.Empty;
         queue = HoodMelvilleQueue<string>.Snoc(queue, "One");
-        Assert.Equal("[1, [One], 0, null]", DumpQueue(queue));
-
+        await Assert.That(DumpQueue(queue)).IsEqualTo("[1, [One], 0, null]");
         queue = HoodMelvilleQueue<string>.Snoc(queue, "Two");
-        Assert.Equal("[1, [One], 1, [Two]]", DumpQueue(queue));
-
+        await Assert.That(DumpQueue(queue)).IsEqualTo("[1, [One], 1, [Two]]");
         queue = HoodMelvilleQueue<string>.Snoc(queue, "Three");
-        Assert.Equal("[3, [One], 0, null]", DumpQueue(queue));
+        await Assert.That(DumpQueue(queue)).IsEqualTo("[3, [One], 0, null]");
     }
 
-    [Fact]
-    public void EmptyHeadTest()
+    [Test]
+    public async Task EmptyHeadTest()
     {
         var queue = HoodMelvilleQueue<string>.Empty;
-        Assert.Throws<ArgumentNullException>(() => HoodMelvilleQueue<string>.Head(queue));
+        await Assert.That(() => HoodMelvilleQueue<string>.Head(queue)).Throws<ArgumentNullException>();
     }
 
-    [Fact]
-    public void HeadTest()
+    [Test]
+    public async Task HeadTest()
     {
         const string data = "One Two Three One Three";
         var queue = data.Split().Aggregate(HoodMelvilleQueue<string>.Empty, HoodMelvilleQueue<string>.Snoc);
         var head = HoodMelvilleQueue<string>.Head(queue);
-        Assert.Equal("One", head);
+        await Assert.That(head).IsEqualTo("One");
     }
 
-    [Fact]
-    public void EmptyTailTest()
+    [Test]
+    public async Task EmptyTailTest()
     {
         var queue = HoodMelvilleQueue<string>.Empty;
-        Assert.Throws<ArgumentNullException>(() => HoodMelvilleQueue<string>.Tail(queue));
+        await Assert.That(() => HoodMelvilleQueue<string>.Tail(queue)).Throws<ArgumentNullException>();
     }
 
-    [Fact]
-    public void TailTest()
+    [Test]
+    public async Task TailTest()
     {
         const string data = "One Two Three One Three";
         var queue = data.Split().Aggregate(HoodMelvilleQueue<string>.Empty, HoodMelvilleQueue<string>.Snoc);
         var tail = HoodMelvilleQueue<string>.Tail(queue);
-        Assert.Equal("[2, [Two, Three], 2, [Three, One]]", DumpQueue(tail));
+        await Assert.That(DumpQueue(tail)).IsEqualTo("[2, [Two, Three], 2, [Three, One]]");
     }
 
-    [Fact]
-    public void PushPopTest()
+    [Test]
+    public async Task PushPopTest()
     {
         const string data = "One Two Three One Three";
         var queue = data.Split().Aggregate(HoodMelvilleQueue<string>.Empty, HoodMelvilleQueue<string>.Snoc);
-
         foreach (var expected in data.Split())
         {
             var actual = HoodMelvilleQueue<string>.Head(queue);
-            Assert.Equal(expected, actual);
+            await Assert.That(actual).IsEqualTo(expected);
             queue = HoodMelvilleQueue<string>.Tail(queue);
         }
 
-        Assert.True(HoodMelvilleQueue<string>.IsEmpty(queue));
+        await Assert.That(HoodMelvilleQueue<string>.IsEmpty(queue)).IsTrue();
     }
 }

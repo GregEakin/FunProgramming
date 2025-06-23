@@ -1,4 +1,4 @@
-// Copyright 2014 Gregory Eakin <greg@eakin.dev>
+// Copyright 2025 Gregory Eakin <greg@eakin.dev>
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -36,8 +36,8 @@ public class PhysicistQueueTests
 
     private static string DumpQueue<T>(PhysicistsQueue<T>.Queue queue, bool expandUnCreated)
     {
-        if (queue == null) return string.Empty;
-
+        if (queue == null)
+            return string.Empty;
         var builder = new StringBuilder();
         builder.Append('[');
         builder.Append(queue.W?.ToReadableString() ?? "null");
@@ -53,104 +53,98 @@ public class PhysicistQueueTests
         return builder.ToString();
     }
 
-    [Fact]
-    public void Test1()
+    [Test]
+    public async Task Test1()
     {
         // pre-create the null in the empty value, to get the unit tests working
         var empty = PhysicistsQueue<string>.Empty;
-        Assert.Null(empty.F.Value);
-
+        await Assert.That(empty.F.Value).IsNull();
         var queue = PhysicistsQueue<string>.Empty;
-        Assert.Equal("[null, 0, null, 0, null]", DumpQueue(queue, true));
+        await Assert.That(DumpQueue(queue, true)).IsEqualTo("[null, 0, null, 0, null]");
     }
 
-    [Fact]
-    public void Test2()
+    [Test]
+    public async Task Test2()
     {
         const string data = "One Two Three One Three";
         var queue = data.Split().Aggregate(PhysicistsQueue<string>.Empty, PhysicistsQueue<string>.Snoc);
-        Assert.Equal("[[One], 3, $[One, Two, Three], 2, [Three, One]]", DumpQueue(queue, true));
+        await Assert.That(DumpQueue(queue, true)).IsEqualTo("[[One], 3, $[One, Two, Three], 2, [Three, One]]");
     }
 
-    [Fact]
-    public void EmptyTest()
+    [Test]
+    public async Task EmptyTest()
     {
         var queue = PhysicistsQueue<string>.Empty;
-        Assert.True(PhysicistsQueue<string>.IsEmpty(queue));
-
+        await Assert.That(PhysicistsQueue<string>.IsEmpty(queue)).IsTrue();
         queue = PhysicistsQueue<string>.Snoc(queue, "Item");
-        Assert.False(PhysicistsQueue<string>.IsEmpty(queue));
-
+        await Assert.That(PhysicistsQueue<string>.IsEmpty(queue)).IsFalse();
         queue = PhysicistsQueue<string>.Tail(queue);
-        Assert.True(PhysicistsQueue<string>.IsEmpty(queue));
+        await Assert.That(PhysicistsQueue<string>.IsEmpty(queue)).IsTrue();
     }
 
-    [Fact]
-    public void EmptySnocTest()
+    [Test]
+    public async Task EmptySnocTest()
     {
-        var ex = Assert.Throws<NullReferenceException>(() => PhysicistsQueue<string>.Snoc(null, "Item"));
-        Assert.Equal("Object reference not set to an instance of an object.", ex.Message);
+        var ex = await Assert.That(() => PhysicistsQueue<string>.Snoc(null, "Item")).Throws<NullReferenceException>();
+        await Assert.That(ex.Message).IsEqualTo("Object reference not set to an instance of an object.");
     }
 
-    [Fact]
-    public void SnocTest()
+    [Test]
+    public async Task SnocTest()
     {
         var queue = PhysicistsQueue<string>.Empty;
         queue = PhysicistsQueue<string>.Snoc(queue, "One");
-        Assert.Equal("[[One], 1, [One], 0, null]", DumpQueue(queue, false));
-
+        await Assert.That(DumpQueue(queue, false)).IsEqualTo("[[One], 1, [One], 0, null]");
         queue = PhysicistsQueue<string>.Snoc(queue, "Two");
-        Assert.Equal("[[One], 1, [One], 1, [Two]]", DumpQueue(queue, false));
-
+        await Assert.That(DumpQueue(queue, false)).IsEqualTo("[[One], 1, [One], 1, [Two]]");
         queue = PhysicistsQueue<string>.Snoc(queue, "Three");
-        Assert.Equal("[[One], 3, $[One, Two, Three], 0, null]", DumpQueue(queue, true));
+        await Assert.That(DumpQueue(queue, true)).IsEqualTo("[[One], 3, $[One, Two, Three], 0, null]");
     }
 
-    [Fact]
-    public void EmptyHeadTest()
+    [Test]
+    public async Task EmptyHeadTest()
     {
         var queue = PhysicistsQueue<string>.Empty;
-        Assert.Throws<ArgumentNullException>(() => PhysicistsQueue<string>.Head(queue));
+        await Assert.That(() => PhysicistsQueue<string>.Head(queue)).Throws<ArgumentNullException>();
     }
 
-    [Fact]
-    public void HeadTest()
+    [Test]
+    public async Task HeadTest()
     {
         const string data = "One Two Three One Three";
         var queue = data.Split().Aggregate(PhysicistsQueue<string>.Empty, PhysicistsQueue<string>.Snoc);
         var head = PhysicistsQueue<string>.Head(queue);
-        Assert.Equal("One", head);
+        await Assert.That(head).IsEqualTo("One");
     }
 
-    [Fact]
-    public void EmptyTailTest()
+    [Test]
+    public async Task EmptyTailTest()
     {
         var queue = PhysicistsQueue<string>.Empty;
-        Assert.Throws<ArgumentNullException>(() => PhysicistsQueue<string>.Tail(queue));
+        await Assert.That(() => PhysicistsQueue<string>.Tail(queue)).Throws<ArgumentNullException>();
     }
 
-    [Fact]
-    public void TailTest()
+    [Test]
+    public async Task TailTest()
     {
         const string data = "One Two Three One Three";
         var queue = data.Split().Aggregate(PhysicistsQueue<string>.Empty, PhysicistsQueue<string>.Snoc);
         var tail = PhysicistsQueue<string>.Tail(queue);
-        Assert.Equal("[[Two, Three], 2, [Two, Three], 2, [Three, One]]", DumpQueue(tail, true));
+        await Assert.That(DumpQueue(tail, true)).IsEqualTo("[[Two, Three], 2, [Two, Three], 2, [Three, One]]");
     }
 
-    [Fact]
-    public void PushPopTest()
+    [Test]
+    public async Task PushPopTest()
     {
         const string data = "One Two Three One Three";
         var queue = data.Split().Aggregate(PhysicistsQueue<string>.Empty, PhysicistsQueue<string>.Snoc);
-
         foreach (var expected in data.Split())
         {
             var head = PhysicistsQueue<string>.Head(queue);
-            Assert.Equal(expected, head);
+            await Assert.That(head).IsEqualTo(expected);
             queue = PhysicistsQueue<string>.Tail(queue);
         }
 
-        Assert.True(PhysicistsQueue<string>.IsEmpty(queue));
+        await Assert.That(PhysicistsQueue<string>.IsEmpty(queue)).IsTrue();
     }
 }

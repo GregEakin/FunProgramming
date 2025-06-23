@@ -1,4 +1,4 @@
-// Copyright 2014 Gregory Eakin <greg@eakin.dev>
+// Copyright 2025 Gregory Eakin <greg@eakin.dev>
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -18,10 +18,11 @@ namespace FunProgTests.tree;
 
 public class UnbalancedSetTests
 {
-    private static string DumpTree<T>(UnbalancedSet<T>.Tree tree) where T : IComparable<T>
+    private static string DumpTree<T>(UnbalancedSet<T>.Tree tree)
+        where T : IComparable<T>
     {
-        if (tree == UnbalancedSet<T>.Empty) return "\u2205";
-
+        if (tree == UnbalancedSet<T>.Empty)
+            return "\u2205";
         var results = new StringBuilder();
 
         results.Append('[');
@@ -43,45 +44,45 @@ public class UnbalancedSetTests
         return results.ToString();
     }
 
-    [Fact]
-    public void EmptyTest()
+    [Test]
+    public async Task EmptyTest()
     {
         var tree = UnbalancedSet<string>.Empty;
-        Assert.Equal("\u2205", DumpTree(tree));
+        await Assert.That(DumpTree(tree)).IsEqualTo("\u2205");
     }
 
-    [Fact]
-    public void SingleElementTest()
-    {
-        var tree = UnbalancedSet<string>.Empty;
-        tree = UnbalancedSet<string>.Insert("a", tree);
-        Assert.Equal("[a]", DumpTree(tree));
-    }
-
-    [Fact]
-    public void DuplicateElementTest()
+    [Test]
+    public async Task SingleElementTest()
     {
         var tree = UnbalancedSet<string>.Empty;
         tree = UnbalancedSet<string>.Insert("a", tree);
-        tree = UnbalancedSet<string>.Insert("a", tree);
-        Assert.Equal("[a]", DumpTree(tree));
+        await Assert.That(DumpTree(tree)).IsEqualTo("[a]");
     }
 
-    [Fact]
-    public void DumpTreeTest()
+    [Test]
+    public async Task DuplicateElementTest()
+    {
+        var tree = UnbalancedSet<string>.Empty;
+        tree = UnbalancedSet<string>.Insert("a", tree);
+        tree = UnbalancedSet<string>.Insert("a", tree);
+        await Assert.That(DumpTree(tree)).IsEqualTo("[a]");
+    }
+
+    [Test]
+    public async Task DumpTreeTest()
     {
         const string data = "How now, brown cow?";
         var tree = data.Split().Aggregate(UnbalancedSet<string>.Empty, (current, word) => UnbalancedSet<string>.Insert(word, current));
-        Assert.Equal("[[brown,[cow?]],How,[now,]]", DumpTree(tree));
+        await Assert.That(DumpTree(tree)).IsEqualTo("[[brown,[cow?]],How,[now,]]");
     }
 
-    [Fact]
-    public void ElementTest()
+    [Test]
+    public async Task ElementTest()
     {
         const string data = "How now, brown cow?";
         var tree = data.Split().Aggregate(UnbalancedSet<string>.Empty, (current, word) => UnbalancedSet<string>.Insert(word, current));
         foreach (var word in data.Split())
-            Assert.True(UnbalancedSet<string>.Member(word, tree));
-        Assert.False(UnbalancedSet<string>.Member("wow", tree));
+            await Assert.That(UnbalancedSet<string>.Member(word, tree)).IsTrue();
+        await Assert.That(UnbalancedSet<string>.Member("wow", tree)).IsFalse();
     }
 }

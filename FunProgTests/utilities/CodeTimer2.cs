@@ -1,4 +1,4 @@
-// Copyright 2014 Gregory Eakin <greg@eakin.dev>
+// Copyright 2025 Gregory Eakin <greg@eakin.dev>
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -21,7 +21,7 @@ public sealed class CodeTimer2
 {
     private readonly Task _task;
     private readonly IModel _model;
-    private readonly Action<IModel> _method;
+    private readonly Func<IModel, Task> _method;
 
     private int _collectionCount0;
     private int _collectionCount1;
@@ -29,7 +29,7 @@ public sealed class CodeTimer2
     private ulong _cpuCycles;
 
 
-    public CodeTimer2(IModel model, Action<IModel> method)
+    public CodeTimer2(IModel model, Func<IModel, Task> method)
     {
         _model = model;
         _method = method;
@@ -53,7 +53,7 @@ public sealed class CodeTimer2
             PrepareForOperation();
             var thread = Kernel32.GetCurrentThread();
             var start = Kernel32.QueryThreadCycleTime(thread);
-            _method(_model);
+            _method(_model).GetAwaiter().GetResult(); // Await the async method synchronously
             _cpuCycles = Kernel32.QueryThreadCycleTime(thread) - start;
         }
         catch (Exception e)

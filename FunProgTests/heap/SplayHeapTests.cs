@@ -1,4 +1,4 @@
-// Copyright 2014 Gregory Eakin <greg@eakin.dev>
+// Copyright 2025 Gregory Eakin <greg@eakin.dev>
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -18,10 +18,11 @@ namespace FunProgTests.heap;
 
 public class SplayHeapTests
 {
-    private static string DumpHeap<T>(SplayHeap<T>.Heap heap) where T : IComparable<T>
+    private static string DumpHeap<T>(SplayHeap<T>.Heap heap)
+        where T : IComparable<T>
     {
-        if (SplayHeap<T>.IsEmpty(heap)) return "\u2205";
-
+        if (SplayHeap<T>.IsEmpty(heap))
+            return "\u2205";
         var result = new StringBuilder();
         result.Append('[');
 
@@ -43,163 +44,159 @@ public class SplayHeapTests
         return result.ToString();
     }
 
-    [Fact]
-    public void EmptyTest()
+    [Test]
+    public async Task EmptyTest()
     {
         var t = SplayHeap<string>.Empty;
-        Assert.True(SplayHeap<string>.IsEmpty(t));
-        Assert.Equal("\u2205", DumpHeap(t));
-
+        await Assert.That(SplayHeap<string>.IsEmpty(t)).IsTrue();
+        await Assert.That(DumpHeap(t)).IsEqualTo("\u2205");
         var t1 = SplayHeap<string>.Insert("C", t);
-        Assert.False(SplayHeap<string>.IsEmpty(t1));
+        await Assert.That(SplayHeap<string>.IsEmpty(t1)).IsFalse();
     }
 
-    [Fact]
-    public void Test1()
+    [Test]
+    public async Task Test1()
     {
         var t = SplayHeap<string>.Empty;
         var x1 = SplayHeap<string>.Insert("C", t);
         var x2 = SplayHeap<string>.Insert("B", x1);
-        Assert.Equal("[B, [C]]", DumpHeap(x2));
+        await Assert.That(DumpHeap(x2)).IsEqualTo("[B, [C]]");
     }
 
-    [Fact]
-    public void Test2()
+    [Test]
+    public async Task Test2()
     {
         const string words = "What's in a name? That which we call a rose by any other name would smell as sweet";
         var ts = words.Split().Aggregate(SplayHeap<string>.Empty, (current, word) => SplayHeap<string>.Insert(word, current));
-        Assert.Equal("[[[[[[a], a], any], as, [by, [[call, [in]], name, [name?]]]], other, [[rose], smell]], sweet, [[That, [[we], What's, [which]]], would]]", DumpHeap(ts));
+        await Assert.That(DumpHeap(ts)).IsEqualTo("[[[[[[a], a], any], as, [by, [[call, [in]], name, [name?]]]], other, [[rose], smell]], sweet, [[That, [[we], What's, [which]]], would]]");
     }
 
-    [Fact]
-    public void MergeTest()
+    [Test]
+    public async Task MergeTest()
     {
         const string data1 = "What's in a name?";
         var ts1 = data1.Split().Aggregate(SplayHeap<string>.Empty, (current, word) => SplayHeap<string>.Insert(word, current));
-
         const string data2 = "That which we call a rose by any other name would smell as sweet";
         var ts2 = data2.Split().Aggregate(SplayHeap<string>.Empty, (current, word) => SplayHeap<string>.Insert(word, current));
-
         var t = SplayHeap<string>.Merge(ts1, ts2);
-        Assert.Equal("[[[[a], a, [any, [as]]], by, [[call], in, [name]]], name?, [other, [[[[rose], smell], sweet, [That, [we]]], What's, [[which], would]]]]", DumpHeap(t));
+        await Assert.That(DumpHeap(t)).IsEqualTo("[[[[a], a, [any, [as]]], by, [[call], in, [name]]], name?, [other, [[[[rose], smell], sweet, [That, [we]]], What's, [[which], would]]]]");
     }
 
-    [Fact]
-    public void FindMinTest1()
+    [Test]
+    public async Task FindMinTest1()
     {
         var t = SplayHeap<int>.Empty;
-        Assert.Throws<ArgumentNullException>(() => SplayHeap<int>.FindMin(t));
+        await Assert.That(() => SplayHeap<int>.FindMin(t)).Throws<ArgumentNullException>();
     }
 
-    [Fact]
-    public void FindMinTest2()
+    [Test]
+    public async Task FindMinTest2()
     {
         var t0 = SplayHeap<int>.Empty;
         var t1 = SplayHeap<int>.Insert(5, t0);
         var result = SplayHeap<int>.FindMin(t1);
-        Assert.Equal(5, result);
+        await Assert.That(result).IsEqualTo(5);
     }
 
-    [Fact]
-    public void FindMinTest3()
+    [Test]
+    public async Task FindMinTest3()
     {
         var t0 = SplayHeap<int>.Empty;
         var t1 = SplayHeap<int>.Insert(5, t0);
         var t2 = SplayHeap<int>.Insert(3, t1);
         var result = SplayHeap<int>.FindMin(t2);
-        Assert.Equal(3, result);
+        await Assert.That(result).IsEqualTo(3);
     }
 
-    [Fact]
-    public void FindMinTest4()
+    [Test]
+    public async Task FindMinTest4()
     {
         var t0 = SplayHeap<int>.Empty;
         var t1 = SplayHeap<int>.Insert(3, t0);
         var t2 = SplayHeap<int>.Insert(5, t1);
         var result = SplayHeap<int>.FindMin(t2);
-        Assert.Equal(3, result);
+        await Assert.That(result).IsEqualTo(3);
     }
 
-    [Fact]
-    public void DeleteMinTest1()
+    [Test]
+    public async Task DeleteMinTest1()
     {
         var t = SplayHeap<int>.Empty;
-        Assert.Throws<ArgumentNullException>(() => SplayHeap<int>.DeleteMin(t));
+        await Assert.That(() => SplayHeap<int>.DeleteMin(t)).Throws<ArgumentNullException>();
     }
 
-    [Fact]
-    public void DeleteMinTest2()
+    [Test]
+    public async Task DeleteMinTest2()
     {
         var t0 = SplayHeap<int>.Empty;
         var t1 = SplayHeap<int>.Insert(5, t0);
         var result = SplayHeap<int>.DeleteMin(t1);
-        Assert.Equal("\u2205", DumpHeap(result));
+        await Assert.That(DumpHeap(result)).IsEqualTo("\u2205");
     }
 
-    [Fact]
-    public void DeleteMinTest3()
+    [Test]
+    public async Task DeleteMinTest3()
     {
         var t0 = SplayHeap<int>.Empty;
         var t1 = SplayHeap<int>.Insert(5, t0);
         var t2 = SplayHeap<int>.Insert(3, t1);
         var result = SplayHeap<int>.DeleteMin(t2);
-        Assert.Equal("[5]", DumpHeap(result));
+        await Assert.That(DumpHeap(result)).IsEqualTo("[5]");
     }
 
-    [Fact]
-    public void DeleteMinTest4()
+    [Test]
+    public async Task DeleteMinTest4()
     {
         var t0 = SplayHeap<int>.Empty;
         var t1 = SplayHeap<int>.Insert(3, t0);
         var t2 = SplayHeap<int>.Insert(5, t1);
         var result = SplayHeap<int>.DeleteMin(t2);
-        Assert.Equal("[5]", DumpHeap(result));
+        await Assert.That(DumpHeap(result)).IsEqualTo("[5]");
     }
 
-    [Fact]
-    public void DeleteMinTest5()
+    [Test]
+    public async Task DeleteMinTest5()
     {
         var t0 = SplayHeap<int>.Empty;
         var t1 = SplayHeap<int>.Insert(3, t0);
         var t2 = SplayHeap<int>.Insert(5, t1);
         var t3 = SplayHeap<int>.Insert(6, t2);
         var result = SplayHeap<int>.DeleteMin(t3);
-        Assert.Equal("[5, [6]]", DumpHeap(result));
+        await Assert.That(DumpHeap(result)).IsEqualTo("[5, [6]]");
     }
 
-    [Fact]
-    public void DeleteLotsOfMinsTest()
+    [Test]
+    public async Task DeleteLotsOfMinsTest()
     {
         const int size = 1000;
         var random = new Random(3456);
         var heap = SplayHeap<int>.Empty;
-        for (var i = 0; i < size; i++) heap = SplayHeap<int>.Insert(random.Next(size), heap);
-
+        for (var i = 0; i < size; i++)
+            heap = SplayHeap<int>.Insert(random.Next(size), heap);
         var last = 0;
         var count = 0;
         while (!SplayHeap<int>.IsEmpty(heap))
         {
             var next = SplayHeap<int>.FindMin(heap);
             heap = SplayHeap<int>.DeleteMin(heap);
-            Assert.True(last <= next);
+            await Assert.That(last <= next).IsTrue();
             last = next;
             count++;
         }
-        Assert.Equal(size, count);
+
+        await Assert.That(count).IsEqualTo(size);
     }
 
-    [Fact]
-    public void Test3()
+    [Test]
+    public async Task Test3()
     {
         var heap = SplayHeap<int>.Empty;
         for (var i = 1; i < 8; i++)
             heap = SplayHeap<int>.Insert(i, heap);
-        Assert.Equal("[[[[[[[1], 2], 3], 4], 5], 6], 7]", DumpHeap(heap));
-
+        await Assert.That(DumpHeap(heap)).IsEqualTo("[[[[[[[1], 2], 3], 4], 5], 6], 7]");
         var x = SplayHeap<int>.Insert(0, heap);
-        Assert.Equal("[0, [[[[1], 2, [3]], 4, [5]], 6, [7]]]", DumpHeap(x));
-
+        await Assert.That(DumpHeap(x)).IsEqualTo("[0, [[[[1], 2, [3]], 4, [5]], 6, [7]]]");
         var y = SplayHeap<int>.DeleteMin(x);
-        Assert.Equal("[[[[1], 2, [3]], 4, [5]], 6, [7]]", DumpHeap(y));
+        await Assert.That(DumpHeap(y)).IsEqualTo("[[[[1], 2, [3]], 4, [5]], 6, [7]]");
     }
 }

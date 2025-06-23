@@ -1,4 +1,4 @@
-// Copyright 2014 Gregory Eakin <greg@eakin.dev>
+// Copyright 2025 Gregory Eakin <greg@eakin.dev>
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -18,10 +18,11 @@ namespace FunProgTests.heap;
 
 public class LeftistHeapTests
 {
-    private static string DumpHeap<T>(LeftistHeap<T>.Heap heap) where T : IComparable<T>
+    private static string DumpHeap<T>(LeftistHeap<T>.Heap heap)
+        where T : IComparable<T>
     {
-        if (LeftistHeap<T>.IsEmpty(heap)) return "\u2205";
-
+        if (LeftistHeap<T>.IsEmpty(heap))
+            return "\u2205";
         var results = new StringBuilder();
 
         if (!LeftistHeap<T>.IsEmpty(heap.A))
@@ -43,145 +44,191 @@ public class LeftistHeapTests
         return results.ToString();
     }
 
-    [Fact]
-    public void EmptyTest()
+    [Test]
+    public async Task EmptyTest()
     {
         var heap = LeftistHeap<int>.Empty;
-        Assert.Equal("\u2205", DumpHeap(heap));
+        await Assert.That(DumpHeap(heap)).IsEqualTo("\u2205");
     }
 
-    [Fact]
-    public void EmptyIsEmptyTest()
+    [Test]
+    public async Task EmptyIsEmptyTest()
     {
         var heap = LeftistHeap<int>.Empty;
-        Assert.True(LeftistHeap<int>.IsEmpty(heap));
+        await Assert.That(LeftistHeap<int>.IsEmpty(heap)).IsTrue();
     }
 
-    [Fact]
-    public void EmptyMinTest()
+    [Test]
+    public async Task EmptyMinTest()
     {
         var heap = LeftistHeap<int>.Empty;
-        Assert.Throws<ArgumentNullException>(() => LeftistHeap<int>.FindMin(heap));
+        await Assert.That(() => LeftistHeap<int>.FindMin(heap)).Throws<ArgumentNullException>();
     }
 
-    [Fact]
-    public void EmptyDeleteMinTest()
+    [Test]
+    public async Task EmptyDeleteMinTest()
     {
         var heap = LeftistHeap<int>.Empty;
-        Assert.Throws<ArgumentNullException>(() => LeftistHeap<int>.DeleteMin(heap));
+        await Assert.That(() => LeftistHeap<int>.DeleteMin(heap)).Throws<ArgumentNullException>();
     }
 
-    [Fact]
-    public void SingleElement()
-    {
-        var heap = LeftistHeap<int>.Empty;
-        heap = LeftistHeap<int>.Insert(2, heap);
-        Assert.Equal("2, ", DumpHeap(heap));
-    }
-
-    [Fact]
-    public void SingleIsEmptyTest()
+    [Test]
+    public async Task SingleElement()
     {
         var heap = LeftistHeap<int>.Empty;
         heap = LeftistHeap<int>.Insert(2, heap);
-        Assert.False(LeftistHeap<int>.IsEmpty(heap));
+        await Assert.That(DumpHeap(heap)).IsEqualTo("2, ");
     }
 
-    [Fact]
-    public void SingleMinTest()
+    [Test]
+    public async Task SingleIsEmptyTest()
+    {
+        var heap = LeftistHeap<int>.Empty;
+        heap = LeftistHeap<int>.Insert(2, heap);
+        await Assert.That(LeftistHeap<int>.IsEmpty(heap)).IsFalse();
+    }
+
+    [Test]
+    public async Task SingleMinTest()
     {
         var heap = LeftistHeap<int>.Empty;
         heap = LeftistHeap<int>.Insert(2, heap);
         var x = LeftistHeap<int>.FindMin(heap);
-        Assert.Equal(2, x);
+        await Assert.That(x).IsEqualTo(2);
     }
 
-    [Fact]
-    public void SingleDeleteMinTest()
+    [Test]
+    public async Task SingleDeleteMinTest()
     {
         var heap = LeftistHeap<int>.Empty;
         heap = LeftistHeap<int>.Insert(2, heap);
         heap = LeftistHeap<int>.DeleteMin(heap);
-        Assert.True(LeftistHeap<int>.IsEmpty(heap));
+        await Assert.That(LeftistHeap<int>.IsEmpty(heap)).IsTrue();
     }
 
-    [Fact]
-    public void DumpTreeTest()
+    [Test]
+    public async Task DumpTreeTest()
     {
-        var heap = new[] { 3, 2, 5, 1 }.Aggregate(LeftistHeap<int>.Empty, (h, x) => LeftistHeap<int>.Insert(x, h));
-        Assert.Equal("3, 2, 5, 1, ", DumpHeap(heap));
+        var heap = new[]
+        {
+            3,
+            2,
+            5,
+            1
+        }.Aggregate(LeftistHeap<int>.Empty, (h, x) => LeftistHeap<int>.Insert(x, h));
+        await Assert.That(DumpHeap(heap)).IsEqualTo("3, 2, 5, 1, ");
     }
 
-    [Fact]
-    public void InsertFourTest()
+    [Test]
+    public async Task InsertFourTest()
     {
-        var heap = new[] { 3, 2, 5, 1 }.Aggregate(LeftistHeap<int>.Empty, (h, x) => LeftistHeap<int>.Insert(x, h));
+        var heap = new[]
+        {
+            3,
+            2,
+            5,
+            1
+        }.Aggregate(LeftistHeap<int>.Empty, (h, x) => LeftistHeap<int>.Insert(x, h));
         heap = LeftistHeap<int>.Insert(4, heap);
-        Assert.Equal("3, 2, 5, 1, 4, ", DumpHeap(heap));
-        Assert.Equal(1, LeftistHeap<int>.FindMin(heap));
+        await Assert.That(DumpHeap(heap)).IsEqualTo("3, 2, 5, 1, 4, ");
+        await Assert.That(LeftistHeap<int>.FindMin(heap)).IsEqualTo(1);
     }
 
-    [Fact]
-    public void InsertZeroTest()
+    [Test]
+    public async Task InsertZeroTest()
     {
-        var heap = new[] { 3, 2, 5, 1 }.Aggregate(LeftistHeap<int>.Empty, (h, x) => LeftistHeap<int>.Insert(x, h));
+        var heap = new[]
+        {
+            3,
+            2,
+            5,
+            1
+        }.Aggregate(LeftistHeap<int>.Empty, (h, x) => LeftistHeap<int>.Insert(x, h));
         heap = LeftistHeap<int>.Insert(0, heap);
-        Assert.Equal("3, 2, 5, 1, 0, ", DumpHeap(heap));
-        Assert.Equal(0, LeftistHeap<int>.FindMin(heap));
+        await Assert.That(DumpHeap(heap)).IsEqualTo("3, 2, 5, 1, 0, ");
+        await Assert.That(LeftistHeap<int>.FindMin(heap)).IsEqualTo(0);
     }
 
-    [Fact]
-    public void MinTreeTest()
+    [Test]
+    public async Task MinTreeTest()
     {
-        var heap = new[] { 3, 2, 5, 1 }.Aggregate(LeftistHeap<int>.Empty, (h, x) => LeftistHeap<int>.Insert(x, h));
-        Assert.Equal(1, LeftistHeap<int>.FindMin(heap));
+        var heap = new[]
+        {
+            3,
+            2,
+            5,
+            1
+        }.Aggregate(LeftistHeap<int>.Empty, (h, x) => LeftistHeap<int>.Insert(x, h));
+        await Assert.That(LeftistHeap<int>.FindMin(heap)).IsEqualTo(1);
     }
 
-    [Fact]
-    public void DelMinTest()
+    [Test]
+    public async Task DelMinTest()
     {
-        var heap = new[] { 3, 2, 5, 1 }.Aggregate(LeftistHeap<int>.Empty, (h, x) => LeftistHeap<int>.Insert(x, h));
+        var heap = new[]
+        {
+            3,
+            2,
+            5,
+            1
+        }.Aggregate(LeftistHeap<int>.Empty, (h, x) => LeftistHeap<int>.Insert(x, h));
         heap = LeftistHeap<int>.DeleteMin(heap);
-        Assert.Equal("3, 2, 5, ", DumpHeap(heap));
-        Assert.Equal(2, LeftistHeap<int>.FindMin(heap));
+        await Assert.That(DumpHeap(heap)).IsEqualTo("3, 2, 5, ");
+        await Assert.That(LeftistHeap<int>.FindMin(heap)).IsEqualTo(2);
     }
 
-    [Fact]
-    public void DelSecondMinTest()
+    [Test]
+    public async Task DelSecondMinTest()
     {
-        var heap = new[] { 3, 2, 5, 1 }.Aggregate(LeftistHeap<int>.Empty, (h, x) => LeftistHeap<int>.Insert(x, h));
+        var heap = new[]
+        {
+            3,
+            2,
+            5,
+            1
+        }.Aggregate(LeftistHeap<int>.Empty, (h, x) => LeftistHeap<int>.Insert(x, h));
         heap = LeftistHeap<int>.DeleteMin(heap);
         heap = LeftistHeap<int>.DeleteMin(heap);
-        Assert.Equal("5, 3, ", DumpHeap(heap));
-        Assert.Equal(3, LeftistHeap<int>.FindMin(heap));
+        await Assert.That(DumpHeap(heap)).IsEqualTo("5, 3, ");
+        await Assert.That(LeftistHeap<int>.FindMin(heap)).IsEqualTo(3);
     }
 
-    [Fact]
-    public void MergeTest()
+    [Test]
+    public async Task MergeTest()
     {
-        var heap1 = new[] { "How", "now," }.Aggregate(LeftistHeap<string>.Empty, (h, x) => LeftistHeap<string>.Insert(x, h));
-        var heap2 = new[] { "brown", "cow?" }.Aggregate(LeftistHeap<string>.Empty, (h, x) => LeftistHeap<string>.Insert(x, h));
+        var heap1 = new[]
+        {
+            "How",
+            "now,"
+        }.Aggregate(LeftistHeap<string>.Empty, (h, x) => LeftistHeap<string>.Insert(x, h));
+        var heap2 = new[]
+        {
+            "brown",
+            "cow?"
+        }.Aggregate(LeftistHeap<string>.Empty, (h, x) => LeftistHeap<string>.Insert(x, h));
         var heap = LeftistHeap<string>.Merge(heap1, heap2);
-        Assert.Equal("cow?, brown, now,, How, ", DumpHeap(heap));
-        Assert.Equal("brown", LeftistHeap<string>.FindMin(heap));
+        await Assert.That(DumpHeap(heap)).IsEqualTo("cow?, brown, now,, How, ");
+        await Assert.That(LeftistHeap<string>.FindMin(heap)).IsEqualTo("brown");
     }
 
-    [Fact]
-    public void DeleteLotsOfMinsTest()
+    [Test]
+    public async Task DeleteLotsOfMinsTest()
     {
         var random = new Random(3456);
         var heap = LeftistHeap<int>.Empty;
-        for (var i = 0; i < 100; i++) heap = LeftistHeap<int>.Insert(random.Next(100), heap);
+        for (var i = 0; i < 100; i++)
+            heap = LeftistHeap<int>.Insert(random.Next(100), heap);
         var last = 0;
         var count = 0;
         while (!LeftistHeap<int>.IsEmpty(heap))
         {
             var next = LeftistHeap<int>.FindMin(heap);
             heap = LeftistHeap<int>.DeleteMin(heap);
-            Assert.True(last <= next);
+            await Assert.That(last <= next).IsTrue();
             last = next;
             count++;
         }
-        Assert.Equal(100, count);
+
+        await Assert.That(count).IsEqualTo(100);
     }
 }

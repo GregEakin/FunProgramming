@@ -1,4 +1,4 @@
-// Copyright 2014 Gregory Eakin <greg@eakin.dev>
+// Copyright 2025 Gregory Eakin <greg@eakin.dev>
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -16,16 +16,10 @@ using FunProgLib.tree;
 
 namespace FunProgTests.ephemeral;
 
-public class MultiRwLockMapTests : DictionaryTests, IDisposable
+public class MultiRwLockMapTests : DictionaryTests
 {
-    private readonly ITestOutputHelper _testOutputHelper;
     private readonly ReaderWriterLockSlim _lockObject = new();
     private RedBlackSet<string>.Tree _set = RedBlackSet<string>.EmptyTree;
-
-    public MultiRwLockMapTests(ITestOutputHelper testOutputHelper)
-    {
-        _testOutputHelper = testOutputHelper;
-    }
 
     private void WriteAction()
     {
@@ -44,7 +38,7 @@ public class MultiRwLockMapTests : DictionaryTests, IDisposable
         }
     }
 
-    private void ReadAction(ITestOutputHelper testOutputHelper)
+    private void ReadAction()
     {
         var hits = 0;
         for (var i = 0; i < Count; i++)
@@ -53,7 +47,8 @@ public class MultiRwLockMapTests : DictionaryTests, IDisposable
             _lockObject.EnterReadLock();
             try
             {
-                if (RedBlackSet<string>.Member(word, _set)) hits++;
+                if (RedBlackSet<string>.Member(word, _set))
+                    hits++;
             }
             finally
             {
@@ -61,24 +56,25 @@ public class MultiRwLockMapTests : DictionaryTests, IDisposable
             }
         }
 
-        testOutputHelper.WriteLine("Task={0}, Thread={1} : {2} words found",
-            Task.CurrentId ?? -1, Environment.CurrentManagedThreadId, hits);
+        Console.WriteLine("Task={0}, Thread={1} : {2} words found", Task.CurrentId ?? -1, Environment.CurrentManagedThreadId, hits);
     }
 
-    [Fact]
+    [Test]
     public async Task Test1()
     {
         var taskList = new ConcurrentBag<Task>();
         for (var i = 0; i < Threads; i += 3)
         {
             taskList.Add(Task.Factory.StartNew(_ => WriteAction(), this, TestContext.Current.CancellationToken));
-            taskList.Add(Task.Factory.StartNew(_ => ReadAction(_testOutputHelper), this, TestContext.Current.CancellationToken));
-            taskList.Add(Task.Factory.StartNew(_ => ReadAction(_testOutputHelper), this, TestContext.Current.CancellationToken));
+            taskList.Add(Task.Factory.StartNew(_ => ReadAction(), this, TestContext.Current.CancellationToken));
+            taskList.Add(Task.Factory.StartNew(_ => ReadAction(), this, TestContext.Current.CancellationToken));
         }
+
         await Task.WhenAll(taskList.ToArray());
-        _testOutputHelper.WriteLine("Done....");
+        Console.WriteLine("Done....");
     }
 
+    [After(Test)]
     public void Dispose()
     {
         _lockObject.Dispose();
