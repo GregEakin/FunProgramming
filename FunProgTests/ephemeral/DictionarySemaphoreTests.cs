@@ -92,7 +92,7 @@ public sealed class DictionarySemaphoreTests : DictionaryTests
         }
 
         await Task.WhenAll(taskList.ToArray());
-        await Assert.That(_set).IsNull().IsNull();
+        await Assert.That(_set).IsNull();
     }
 
     [After(Test)]

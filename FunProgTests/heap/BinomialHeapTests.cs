@@ -97,7 +97,7 @@ public class BinomialHeapTests
         var empty = BinomialHeap<int>.Empty;
         await Assert.That(BinomialHeap<int>.IsEmpty(empty)).IsTrue();
         var heap = BinomialHeap<int>.Insert(0, empty);
-        await Assert.That(BinomialHeap<int>.IsEmpty(heap)).IsFalse().IsFalse();
+        await Assert.That(BinomialHeap<int>.IsEmpty(heap)).IsFalse();
     }
 
     [Test]
