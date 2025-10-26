@@ -59,8 +59,8 @@ public class StreamTests
     [Test]
     public async Task DollarNilTest()
     {
-        // var ex = await Assert.That(() => new Stream<int>.StreamCell(3, null)).Throws<ArgumentException>();
-        // await Assert.That(ex.Message).IsEqualTo("Can't be null, use Stream<T>.DollarNil instead. (Parameter 'next')");
+        var ex = await Assert.That(() => new Stream<int>.StreamCell(3, null)).Throws<ArgumentException>();
+        await Assert.That(ex.Message).IsEqualTo("Can't be null, use Stream<T>.DollarNil instead. (Parameter 'next')");
     }
 
     [Test]
