@@ -22,27 +22,7 @@ namespace FunProgLib.queue;
 // assumes polymorphic recursion!
 public static class BootstrappedQueue<T>
 {
-    public sealed class Queue
-    {
-        public Queue(int lenfm, FunList<T>.Node f, BootstrappedQueue<Lazy<FunList<T>.Node>>.Queue m, int lenr, FunList<T>.Node r)
-        {
-            LenFM = lenfm;
-            F = f;
-            M = m;
-            LenR = lenr;
-            R = r;
-        }
-
-        public int LenFM { get; }
-
-        public FunList<T>.Node F { get; }
-
-        public BootstrappedQueue<Lazy<FunList<T>.Node>>.Queue M { get; }
-
-        public int LenR { get; }
-
-        public FunList<T>.Node R { get; }
-    }
+    public sealed record Queue(int LenFM, FunList<T>.Node F, BootstrappedQueue<Lazy<FunList<T>.Node>>.Queue M, int LenR, FunList<T>.Node R);
 
     public static Queue Empty => null;
 

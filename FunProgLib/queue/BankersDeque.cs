@@ -23,21 +23,7 @@ public static class BankersDeque<T> // : IDeque<T>
 {
     private const int C = 2; // C > 1
 
-    public sealed class Queue
-    {
-        public Queue(int lenF, Lazy<Stream<T>.StreamCell> f, int lenR, Lazy<Stream<T>.StreamCell> r)
-        {
-            LenF = lenF;
-            F = f;
-            LenR = lenR;
-            R = r;
-        }
-
-        public int LenF { get; }
-        public Lazy<Stream<T>.StreamCell> F { get; }
-        public int LenR { get; }
-        public Lazy<Stream<T>.StreamCell> R { get; }
-    }
+    public sealed record Queue(int LenF, Lazy<Stream<T>.StreamCell> F, int LenR, Lazy<Stream<T>.StreamCell> R);
 
     public static Queue Empty { get; } = new(0, Stream<T>.DollarNil, 0, Stream<T>.DollarNil);
 

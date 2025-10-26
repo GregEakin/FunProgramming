@@ -22,31 +22,9 @@ namespace FunProgLib.sort;
 
 public static class ScheduledBottomUpMergeSort<T> where T : IComparable<T>
 {
-    public sealed class Schedule
-    {
-        public Schedule(Lazy<Stream<T>.StreamCell> stream, FunList<Lazy<Stream<T>.StreamCell>>.Node scheduleList)
-        {
-            Stream = stream;
-            ScheduleList = scheduleList;
-        }
+    public sealed record Schedule(Lazy<Stream<T>.StreamCell> Stream, FunList<Lazy<Stream<T>.StreamCell>>.Node ScheduleList);
 
-        public Lazy<Stream<T>.StreamCell> Stream { get; }
-
-        public FunList<Lazy<Stream<T>.StreamCell>>.Node ScheduleList { get; }
-    }
-
-    public sealed class Sortable
-    {
-        public Sortable(int size, FunList<Schedule>.Node segs)
-        {
-            Size = size;
-            Segs = segs;
-        }
-
-        public int Size { get; }
-
-        public FunList<Schedule>.Node Segs { get; }
-    }
+    public sealed record Sortable(int Size, FunList<Schedule>.Node Segs);
 
     private static Lazy<Stream<T>.StreamCell> Mrg(Lazy<Stream<T>.StreamCell> xs, Lazy<Stream<T>.StreamCell> ys)
     {

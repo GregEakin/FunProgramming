@@ -21,17 +21,7 @@ namespace FunProgLib.lists;
 
 public static class CatenableList<T>
 {
-    public sealed class C
-    {
-        public C(T x, BootstrappedQueue<Lazy<C>>.Queue xs)
-        {
-            X = x;
-            Q = xs;
-        }
-
-        public T X { get; }
-        public BootstrappedQueue<Lazy<C>>.Queue Q { get; }
-    }
+    public sealed record C(T X, BootstrappedQueue<Lazy<C>>.Queue Q);
 
     public static C Empty => null;
 

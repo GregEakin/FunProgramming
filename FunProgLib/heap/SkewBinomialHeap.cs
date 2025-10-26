@@ -22,24 +22,7 @@ namespace FunProgLib.heap;
 public static class SkewBinomialHeap<T>
     where T : IComparable<T> // : IHeap<T>
 {
-    public sealed class Tree
-    {
-        public Tree(int rank, T root, FunList<T>.Node list, FunList<Tree>.Node treeList)
-        {
-            Rank = rank;
-            Root = root;
-            FunList = list;
-            TreeList = treeList;
-        }
-
-        public int Rank { get; }
-
-        public T Root { get; }
-
-        public FunList<T>.Node FunList { get; }
-
-        public FunList<Tree>.Node TreeList { get; }
-    }
+    public sealed record Tree(int Rank, T Root, FunList<T>.Node FunList, FunList<Tree>.Node TreeList);
 
     public static FunList<Tree>.Node Empty => FunList<Tree>.Empty;
 

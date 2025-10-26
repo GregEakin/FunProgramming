@@ -21,29 +21,15 @@ namespace FunProgLib.heap;
 
 public static class BinomialHeap<T> where T : IComparable<T>
 {
-    public sealed class Tree
-    {
-        public Tree(int rank, T root, FunList<Tree>.Node list)
-        {
-            Rank = rank;
-            Root = root;
-            FunList = list;
-        }
-
-        public int Rank { get; }
-
-        public T Root { get; }
-
-        public FunList<Tree>.Node FunList { get; }
-    }
+    public sealed record Tree(int Rank, T Root, FunList<Tree>.Node FunList);
 
     public static FunList<Tree>.Node Empty => FunList<Tree>.Empty;
 
     public static bool IsEmpty(FunList<Tree>.Node list) => FunList<Tree>.IsEmpty(list);
 
-    public static int Rank(Tree t1) => t1.Rank;
+    // public static int Rank(Tree t1) => t1.Rank;
 
-    public static T Root(Tree t1) => t1.Root;
+    // public static T Root(Tree t1) => t1.Root;
 
     private static Tree Link(Tree t1, Tree t2)
     {

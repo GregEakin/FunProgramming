@@ -19,18 +19,8 @@ namespace FunProgLib.lists;
 
 public static class RList<T> // : IStack<T>
 {
-    public sealed class Node : IEnumerable<T>
+    public sealed record Node(T Element, Node Next) : IEnumerable<T>
     {
-        public Node(T element, Node next)
-        {
-            Element = element;
-            Next = next;
-        }
-
-        public T Element { get; }
-
-        public Node Next { get; }
-
         public IEnumerator<T> GetEnumerator() => new ListEnum(this);
 
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
@@ -112,14 +102,14 @@ public static class RList<T> // : IStack<T>
             : Lookup(i - 1, Tail(list));
     }
 
-    //public static Node Update(int i, T item, Node list)
-    //{
-    //    if (IsEmpty(list)) throw new ArgumentNullException(nameof(list));
-    //    if (i < 0) throw new ArgumentException("neg", nameof(i));
-    //    return i == 0
-    //        ? Cons(item, Tail(list))
-    //        : Cons(Head(list), Update(i - 1, item, Tail(list)));
-    //}
+    public static Node Update(int i, T item, Node list)
+    {
+        if (IsEmpty(list)) throw new ArgumentNullException(nameof(list));
+        if (i < 0) throw new ArgumentException("neg", nameof(i));
+        return i == 0
+            ? Cons(item, Tail(list))
+            : Cons(Head(list), Update(i - 1, item, Tail(list)));
+    }
 
     public delegate T Del(T value);
 

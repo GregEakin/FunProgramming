@@ -19,12 +19,10 @@ using FunProgLib.lists;
 
 namespace FunProgLib.tree;
 
-public class NotFound : Exception { }
-
 public static class Trie<TKey, TValue>
     where TKey : IComparable<TKey>
 {
-    public sealed class Map
+    public sealed record Map
     {
         public Map(TValue v, Map m)
         {
@@ -52,7 +50,7 @@ public static class Trie<TKey, TValue>
 
         public static Map Lookup(TKey item, Map sibling)
         {
-            if (sibling == null) throw new NotFound();
+            if (sibling == null) throw new KeyNotFoundException();
             if (item.CompareTo(sibling.Option) == 0) return sibling;
             return Lookup(item, sibling.Sibling);
         }
@@ -64,7 +62,7 @@ public static class Trie<TKey, TValue>
 
     public static TValue Lookup(FunList<TKey>.Node mKey, Map trie)
     {
-        if (FunList<TKey>.IsEmpty(mKey) && trie.V == null) throw new NotFound();
+        if (FunList<TKey>.IsEmpty(mKey) && trie.V == null) throw new KeyNotFoundException();
         if (FunList<TKey>.IsEmpty(mKey)) return trie.V;
         return Lookup(FunList<TKey>.Tail(mKey), Map.Lookup(FunList<TKey>.Head(mKey), trie.M));
     }
@@ -73,7 +71,7 @@ public static class Trie<TKey, TValue>
     {
         if (FunList<TKey>.IsEmpty(mKey)) return new Map(x, trie.M);
         Map t;
-        try { t = Map.Lookup(FunList<TKey>.Head(mKey), trie.M); } catch (NotFound) { t = Empty; }
+        try { t = Map.Lookup(FunList<TKey>.Head(mKey), trie.M); } catch (KeyNotFoundException) { t = Empty; }
         var tp = Bind(FunList<TKey>.Tail(mKey), x, t);
         return new Map(trie.V, Map.Bind(FunList<TKey>.Head(mKey), tp, trie.M));
     }

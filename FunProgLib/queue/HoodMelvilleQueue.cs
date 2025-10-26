@@ -69,23 +69,7 @@ public static class HoodMelvilleQueue<T>
         public FunList<T>.Node F { get; }
     }
 
-    public sealed class Queue
-    {
-        public Queue(int lenF, FunList<T>.Node f, RotationState state, int lenR, FunList<T>.Node r)
-        {
-            LenF = lenF;
-            F = f;
-            State = state;
-            LenR = lenR;
-            R = r;
-        }
-
-        public int LenF { get; }
-        public FunList<T>.Node F { get; }
-        public RotationState State { get; }
-        public int LenR { get; }
-        public FunList<T>.Node R { get; }
-    }
+    public sealed record Queue(int LenF, FunList<T>.Node F, RotationState State, int LenR, FunList<T>.Node R);
 
     private static RotationState Exec(RotationState state)
     {

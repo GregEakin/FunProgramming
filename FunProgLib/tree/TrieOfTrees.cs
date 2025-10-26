@@ -20,14 +20,14 @@ namespace FunProgLib.tree;
 public static class TrieOfTree<TKey, TValue> where TKey : IComparable<TKey>
 {
     // assumes polymorphic recursion!
-    public sealed class Tree
+    public sealed record Tree
     {
         // alpha
         // albha tree
         // alpha tree
     }
 
-    public sealed class Map
+    public sealed record Map
     {
         // alpha option
         // alpha map map M.map

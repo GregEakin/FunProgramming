@@ -19,24 +19,7 @@ namespace FunProgLib.heap;
 
 public static class LeftistHeap<T> where T : IComparable<T>
 {
-    public sealed class Heap
-    {
-        public Heap(int r, T x, Heap a, Heap b)
-        {
-            R = r;
-            X = x;
-            A = a;
-            B = b;
-        }
-
-        public int R { get; }
-
-        public T X { get; }
-
-        public Heap A { get; }
-
-        public Heap B { get; }
-    }
+    public sealed record Heap(int R, T X, Heap A, Heap B);
 
     private static int Rank(Heap h)
     {

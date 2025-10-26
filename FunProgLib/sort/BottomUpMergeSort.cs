@@ -21,18 +21,7 @@ namespace FunProgLib.sort;
 
 public static class BottomUpMergeSort<T> where T : IComparable<T>
 {
-    public sealed class Sortable
-    {
-        public Sortable(int size, Lazy<FunList<FunList<T>.Node>.Node> segs)
-        {
-            Size = size;
-            Segs = segs;
-        }
-
-        public int Size { get; }
-
-        public Lazy<FunList<FunList<T>.Node>.Node> Segs { get; }
-    }
+    public sealed record Sortable(int Size, Lazy<FunList<FunList<T>.Node>.Node> Segs);
 
     private static FunList<T>.Node Mrg(FunList<T>.Node xs, FunList<T>.Node ys)
     {

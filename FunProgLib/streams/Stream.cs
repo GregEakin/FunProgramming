@@ -19,17 +19,7 @@ namespace FunProgLib.streams;
 
 public static class Stream<T>
 {
-    public sealed class StreamCell
-    {
-        public StreamCell(T element, Lazy<StreamCell> next)
-        {
-            Element = element;
-            Next = next ?? throw new ArgumentException("Can't be null, use Stream<T>.DollarNil instead.", nameof(next));
-        }
-
-        public T Element { get; }
-        public Lazy<StreamCell> Next { get; }
-    }
+    public sealed record StreamCell(T Element, Lazy<StreamCell> Next);
 
     // public static Lazy<StreamCell> DollarCons(T x, Lazy<StreamCell> r) => new Lazy<StreamCell>(() => new StreamCell(x, r));
 

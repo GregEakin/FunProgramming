@@ -51,18 +51,7 @@ public static class SkewBinaryRandomAccessList<T> // : IRandomAccessList<T>
         public Tree Tree2 { get; }
     }
 
-    public sealed class Stuff
-    {
-        public Stuff(int weight, Tree tree)
-        {
-            Weight = weight;
-            Tree = tree;
-        }
-
-        public int Weight { get; }
-
-        public Tree Tree { get; }
-    }
+    public sealed record Stuff(int Weight, Tree Tree);
 
     public static FunList<Stuff>.Node Empty => FunList<Stuff>.Empty;
 

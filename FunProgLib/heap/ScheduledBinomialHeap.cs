@@ -22,53 +22,15 @@ namespace FunProgLib.heap;
 
 public static class ScheduledBinomialHeap<T> where T : IComparable<T>
 {
-    public sealed class Tree
-    {
-        public Tree(T node, FunList<Tree>.Node treeList)
-        {
-            Node = node;
-            TreeList = treeList;
-        }
+    public sealed record Tree(T Node, FunList<Tree>.Node TreeList);
 
-        public T Node { get; }
-
-        public FunList<Tree>.Node TreeList { get; }
-    }
-
-    public sealed class Digit
-    {
-        public Digit(Tree tree)
-        {
-            One = tree;
-        }
-
-        public Tree One { get; }
-    }
+    public sealed record Digit(Tree One);
 
     private static readonly Digit Zero = new(null);
 
-    public sealed class Schedule
-    {
-        public Schedule(FunList<Lazy<Stream<Digit>.StreamCell>>.Node digitStreamList)
-        {
-            DigitStreamList = digitStreamList;
-        }
+    public sealed record Schedule(FunList<Lazy<Stream<Digit>.StreamCell>>.Node DigitStreamList);
 
-        public FunList<Lazy<Stream<Digit>.StreamCell>>.Node DigitStreamList { get; }
-    }
-
-    public sealed class Heap
-    {
-        public Heap(Lazy<Stream<Digit>.StreamCell> ds, Schedule schedule)
-        {
-            DigitStream = ds;
-            Schedule = schedule;
-        }
-
-        public Lazy<Stream<Digit>.StreamCell> DigitStream { get; }
-
-        public Schedule Schedule { get; }
-    }
+    public sealed record Heap(Lazy<Stream<Digit>.StreamCell> DigitStream, Schedule Schedule);
 
     private static readonly Schedule EmptySchedule = new(null);
 
@@ -128,18 +90,7 @@ public static class ScheduledBinomialHeap<T> where T : IComparable<T>
         return new Heap(ds, null);
     }
 
-    private sealed class Stuff
-    {
-        public Stuff(Tree tree, Lazy<Stream<Digit>.StreamCell> stream)
-        {
-            Tree = tree;
-            Stream = stream;
-        }
-
-        public Tree Tree { get; }
-
-        public Lazy<Stream<Digit>.StreamCell> Stream { get; }
-    }
+    private sealed record Stuff(Tree Tree, Lazy<Stream<Digit>.StreamCell> Stream);
 
     private static Stuff RemoveMinTree(Lazy<Stream<Digit>.StreamCell> dsc)
     {

@@ -19,21 +19,7 @@ namespace FunProgLib.tree;
 
 public static class UnbalancedSet<T> where T : IComparable<T> // ISet
 {
-    public sealed class Tree // : IOrdered<T>
-    {
-        public Tree(Tree a, T y, Tree b)
-        {
-            A = a;
-            Y = y;
-            B = b;
-        }
-
-        public Tree A { get; }
-
-        public T Y { get; }
-
-        public Tree B { get; }
-    }
+    public sealed record Tree(Tree A, T Y, Tree B); // : IOrdered<T>
 
     // type Set = Tree
 

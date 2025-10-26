@@ -19,34 +19,12 @@ namespace FunProgLib.heap;
 
 public static class BootstrappedHeap<T> where T : IComparable<T>
 {
-    public sealed class Heap
-    {
-        public Heap(T x, PrimH.Element p)
-        {
-            X = x;
-            P = p;
-        }
-
-        public T X { get; }
-
-        public PrimH.Element P { get; }
-    }
+    public sealed record Heap(T X, PrimH.Element P);
 
     // recursive structures not supported in C#
     public static class PrimH
     {
-        public sealed class Element
-        {
-            public Element(Heap h1, Element h2)
-            {
-                H1 = h1;
-                H2 = h2;
-            }
-
-            public Heap H1 { get; }
-
-            public Element H2 { get; }
-        }
+        public sealed record Element(Heap H1, Element H2);
 
         public static Element EmptyElement => null;
 

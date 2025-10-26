@@ -22,30 +22,16 @@ namespace FunProgLib.heap;
 
 public static class LazyBinomialHeap<T> where T : IComparable<T>
 {
-    public sealed class Tree
-    {
-        public Tree(int rank, T x, FunList<Tree>.Node list)
-        {
-            Rank = rank;
-            Root = x;
-            FunList = list;
-        }
-
-        public int Rank { get; }
-
-        public T Root { get; }
-
-        public FunList<Tree>.Node FunList { get; }
-    }
+    public sealed record Tree(int Rank, T Root, FunList<Tree>.Node FunList);
 
     public static Lazy<FunList<Tree>.Node> Empty { get; } = new(() => FunList<Tree>.Empty);
 
     public static bool IsEmpty(Lazy<FunList<Tree>.Node> heap) => 
         heap == null || ReferenceEquals(Empty, heap) || FunList<Tree>.IsEmpty(heap.Value);
 
-    public static int Rank(Tree t) => t.Rank;
+    // public static int Rank(Tree t) => t.Rank;
 
-    public static T Root(Tree t) => t.Root;
+    // public static T Root(Tree t) => t.Root;
 
     private static Tree Link(Tree t1, Tree t2)
     {

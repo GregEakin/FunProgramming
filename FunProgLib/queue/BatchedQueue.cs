@@ -21,17 +21,7 @@ namespace FunProgLib.queue;
 
 public static class BatchedQueue<T>
 {
-    public sealed class Queue
-    {
-        public Queue(FunList<T>.Node f, FunList<T>.Node r)
-        {
-            F = f;
-            R = r;
-        }
-
-        public FunList<T>.Node F { get; }
-        public FunList<T>.Node R { get; }
-    }
+    public sealed record Queue(FunList<T>.Node F, FunList<T>.Node R);
 
     public static Queue Empty { get; } = new(FunList<T>.Empty, FunList<T>.Empty);
 

@@ -23,31 +23,13 @@ public static class RealTimeDeque<T> // : IDeque<T>
 {
     private const int C = 2; // C == 2 || C == 3
 
-    public sealed class Queue
-    {
-        public Queue(
-            int lenF,
-            Lazy<Stream<T>.StreamCell> f,
-            Lazy<Stream<T>.StreamCell> sf,
-            int lenR,
-            Lazy<Stream<T>.StreamCell> r,
-            Lazy<Stream<T>.StreamCell> sr)
-        {
-            LenF = lenF;
-            F = f;
-            Sf = sf;
-            LenR = lenR;
-            Sr = sr;
-            R = r;
-        }
-
-        public int LenF { get; }
-        public Lazy<Stream<T>.StreamCell> F { get; }
-        public Lazy<Stream<T>.StreamCell> Sf { get; }
-        public int LenR { get; }
-        public Lazy<Stream<T>.StreamCell> R { get; }
-        public Lazy<Stream<T>.StreamCell> Sr { get; }
-    }
+    public sealed record Queue(
+            int LenF,
+            Lazy<Stream<T>.StreamCell> F,
+            Lazy<Stream<T>.StreamCell> Sf,
+            int LenR,
+            Lazy<Stream<T>.StreamCell> R,
+            Lazy<Stream<T>.StreamCell> Sr);
 
     public static Queue Empty { get; } = new(0, Stream<T>.DollarNil, Stream<T>.DollarNil, 0, Stream<T>.DollarNil, Stream<T>.DollarNil);
 

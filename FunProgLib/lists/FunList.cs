@@ -19,18 +19,8 @@ namespace FunProgLib.lists;
 
 public static class FunList<T> // : IStack<T>
 {
-    public sealed class Node : IEnumerable<T>
+    public sealed record Node(T Element, Node Next) : IEnumerable<T>
     {
-        public Node(T element, Node next)
-        {
-            Element = element;
-            Next = next;
-        }
-
-        public T Element { get; }
-
-        public Node Next { get; }
-
         public IEnumerator<T> GetEnumerator() => new ListEnum(this);
 
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
@@ -87,7 +77,7 @@ public static class FunList<T> // : IStack<T>
     {
         if (IsEmpty(list1)) return list2;
         if (IsEmpty(list2)) return list1;
-        return new Node(list1.Element, Cat(list1.Next, list2));
+        return list1 with { Next = Cat(list1.Next, list2) };
     }
 
     public static Node Reverse(Node list)
@@ -107,7 +97,7 @@ public static class FunList<T> // : IStack<T>
     public static TB FoldRight<TB>(Node xs, TB z, Func<T, TB, TB> f)
     {
         if (IsEmpty(xs)) return z;
-        return f(xs.Element, FoldRight<TB>(xs.Next, z, f));
+        return f(xs.Element, FoldRight(xs.Next, z, f));
     }
 
     public static TB FoldLeftR<TB>(Node xs, TB z, Func<TB, T, TB> f)
@@ -130,7 +120,7 @@ public static class FunList<T> // : IStack<T>
         // }
 
         if (IsEmpty(xs)) return z;
-        return FoldLeft<TB>(xs.Next, f(z, xs.Element), f);
+        return FoldLeft(xs.Next, f(z, xs.Element), f);
     }
 
     public static TB FoldRightL<TB>(Node xs, TB z, Func<T, TB, TB> f) => 

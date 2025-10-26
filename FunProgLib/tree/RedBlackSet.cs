@@ -21,24 +21,7 @@ public static class RedBlackSet<T> where T : IComparable<T>
 {
     public enum Color { R, B };
 
-    public sealed class Tree
-    {
-        public Tree(Color color, Tree tree1, T elem, Tree tree2)
-        {
-            Color = color;
-            Tree1 = tree1;
-            Elem = elem;
-            Tree2 = tree2;
-        }
-
-        public Color Color { get; }
-
-        public Tree Tree1 { get; }
-
-        public T Elem { get; }
-
-        public Tree Tree2 { get; }
-    }
+    public sealed record Tree(Color Color, Tree Tree1, T Elem, Tree Tree2);
 
     public static Tree EmptyTree => null;
 

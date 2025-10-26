@@ -21,18 +21,7 @@ namespace FunProgLib.heap;
 
 public static class ParingHeap<T> where T : IComparable<T>
 {
-    public sealed class Heap
-    {
-        public Heap(T root, FunList<Heap>.Node list)
-        {
-            Root = root;
-            FunList = list;
-        }
-
-        public T Root { get; }
-
-        public FunList<Heap>.Node FunList { get; }
-    }
+    public sealed record Heap(T Root, FunList<Heap>.Node FunList);
 
     public static Heap Empty => null;
 

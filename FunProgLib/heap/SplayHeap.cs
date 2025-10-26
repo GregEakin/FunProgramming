@@ -19,21 +19,7 @@ namespace FunProgLib.heap;
 
 public static class SplayHeap<T> where T : IComparable<T>
 {
-    public sealed class Heap
-    {
-        public Heap(Heap a, T x, Heap b)
-        {
-            A = a;
-            X = x;
-            B = b;
-        }
-
-        public Heap A { get; }
-
-        public T X { get; }
-
-        public Heap B { get; }
-    }
+    public sealed record Heap(Heap A, T X, Heap B);
 
     public static Heap Empty => null;
 

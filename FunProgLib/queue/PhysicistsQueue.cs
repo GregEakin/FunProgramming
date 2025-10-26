@@ -21,42 +21,26 @@ namespace FunProgLib.queue;
 
 public static class PhysicistsQueue<T>
 {
-    public sealed class Queue
-    {
-        public Queue(FunList<T>.Node w, int lenf, Lazy<FunList<T>.Node> f, int lenr, FunList<T>.Node r)
-        {
-            W = w;
-            Lenf = lenf;
-            F = f;
-            Lenr = lenr;
-            R = r;
-        }
-
-        public FunList<T>.Node W { get; }
-        public int Lenf { get; }
-        public Lazy<FunList<T>.Node> F { get; }
-        public int Lenr { get; }
-        public FunList<T>.Node R { get; }
-    }
+    public sealed record Queue(FunList<T>.Node W, int LenF, Lazy<FunList<T>.Node> F, int LenR, FunList<T>.Node R);
 
     public static Queue Empty { get; } = new(FunList<T>.Empty, 0, new Lazy<FunList<T>.Node>(() => FunList<T>.Empty), 0, FunList<T>.Empty);
 
-    public static bool IsEmpty(Queue queue) => queue.Lenf == 0;
+    public static bool IsEmpty(Queue queue) => queue.LenF == 0;
 
-    private static Queue CheckW(FunList<T>.Node w, int lenf, Lazy<FunList<T>.Node> f, int lenr, FunList<T>.Node r)
+    private static Queue CheckW(FunList<T>.Node w, int LenF, Lazy<FunList<T>.Node> f, int LenR, FunList<T>.Node r)
     {
-        if (FunList<T>.IsEmpty(w)) return new Queue(f.Value, lenf, f, lenr, r);
-        return new Queue(w, lenf, f, lenr, r);
+        if (FunList<T>.IsEmpty(w)) return new Queue(f.Value, LenF, f, LenR, r);
+        return new Queue(w, LenF, f, LenR, r);
     }
 
-    private static Queue Check(FunList<T>.Node w, int lenf, Lazy<FunList<T>.Node> f, int lenr, FunList<T>.Node r)
+    private static Queue Check(FunList<T>.Node w, int LenF, Lazy<FunList<T>.Node> f, int LenR, FunList<T>.Node r)
     {
-        if (lenr <= lenf) return CheckW(w, lenf, f, lenr, r);
-        return CheckW(f.Value, lenf + lenr, new Lazy<FunList<T>.Node>(() => FunList<T>.Cat(f.Value, FunList<T>.Reverse(r))), 0, FunList<T>.Empty);
+        if (LenR <= LenF) return CheckW(w, LenF, f, LenR, r);
+        return CheckW(f.Value, LenF + LenR, new Lazy<FunList<T>.Node>(() => FunList<T>.Cat(f.Value, FunList<T>.Reverse(r))), 0, FunList<T>.Empty);
     }
 
     public static Queue Snoc(Queue queue, T element) => 
-        Check(queue.W, queue.Lenf, queue.F, queue.Lenr + 1, FunList<T>.Cons(element, queue.R));
+        Check(queue.W, queue.LenF, queue.F, queue.LenR + 1, FunList<T>.Cons(element, queue.R));
 
     public static T Head(Queue queue)
     {
@@ -67,6 +51,6 @@ public static class PhysicistsQueue<T>
     public static Queue Tail(Queue queue)
     {
         if (FunList<T>.IsEmpty(queue.W)) throw new ArgumentNullException(nameof(queue));
-        return Check(queue.W.Next, queue.Lenf - 1, new Lazy<FunList<T>.Node>(() => queue.F.Value.Next), queue.Lenr, queue.R);
+        return Check(queue.W.Next, queue.LenF - 1, new Lazy<FunList<T>.Node>(() => queue.F.Value.Next), queue.LenR, queue.R);
     }
 }

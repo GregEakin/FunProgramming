@@ -35,7 +35,7 @@ public class TrieTests
     [Test]
     public async Task MapLookupNullTest()
     {
-        await Assert.That(() => Trie<char, string>.Map.Lookup('A', null)).Throws<NotFound>();
+        await Assert.That(() => Trie<char, string>.Map.Lookup('A', null)).Throws<KeyNotFoundException>();
     }
 
     [Test]
@@ -54,7 +54,7 @@ public class TrieTests
     {
         var list1 = new Trie<char, string>.Map("BA", null, 'A', null);
         var list2 = new Trie<char, string>.Map("B", list1, 'B', null);
-        await Assert.That(() => Trie<char, string>.Map.Lookup('A', list2)).Throws<NotFound>();
+        await Assert.That(() => Trie<char, string>.Map.Lookup('A', list2)).Throws<KeyNotFoundException>();
         var bb = Trie<char, string>.Map.Lookup('B', list2);
         await Assert.That(bb).IsSameReferenceAs(list2);
     }
@@ -89,7 +89,7 @@ public class TrieTests
         var list2 = Trie<char, string>.Map.Bind('B', mapB, null);
         await Assert.That(list2.V).IsEqualTo("B");
         await Assert.That(list2.Option).IsEqualTo('B');
-        await Assert.That(() => Trie<char, string>.Map.Lookup('A', list2)).Throws<NotFound>();
+        await Assert.That(() => Trie<char, string>.Map.Lookup('A', list2)).Throws<KeyNotFoundException>();
         var bb = Trie<char, string>.Map.Lookup('B', list2);
         await Assert.That(bb).IsSameReferenceAs(list2);
     }
@@ -109,14 +109,14 @@ public class TrieTests
     public async Task TrieLookupNullTest()
     {
         var trie = new Trie<char, string>.Map(null, null);
-        await Assert.That(() => Trie<char, string>.Lookup(null, trie)).Throws<NotFound>();
+        await Assert.That(() => Trie<char, string>.Lookup(null, trie)).Throws<KeyNotFoundException>();
     }
 
     [Test]
     public async Task TrieLookupEmptyTest()
     {
         var trie = Trie<char, string>.Empty;
-        await Assert.That(() => Trie<char, string>.Lookup(FunList<char>.Empty, trie)).Throws<NotFound>();
+        await Assert.That(() => Trie<char, string>.Lookup(FunList<char>.Empty, trie)).Throws<KeyNotFoundException>();
     }
 
     [Test]
@@ -215,7 +215,7 @@ public class TrieTests
         }
 
         var b = ToList("B".ToCharArray());
-        await Assert.That(() => Trie<char, string>.Lookup(b, list01)).Throws<NotFound>();
+        await Assert.That(() => Trie<char, string>.Lookup(b, list01)).Throws<KeyNotFoundException>();
         var ab = Trie<char, string>.Lookup(a, list01);
         await Assert.That(ab).IsEqualTo("BA");
     }

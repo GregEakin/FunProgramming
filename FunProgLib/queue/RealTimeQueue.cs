@@ -22,19 +22,7 @@ namespace FunProgLib.queue;
 
 public static class RealTimeQueue<T>
 {
-    public sealed class Queue
-    {
-        public Queue(Lazy<Stream<T>.StreamCell> f, FunList<T>.Node r, Lazy<Stream<T>.StreamCell> s)
-        {
-            F = f;
-            R = r;
-            S = s;
-        }
-
-        public Lazy<Stream<T>.StreamCell> F { get; }
-        public FunList<T>.Node R { get; }
-        public Lazy<Stream<T>.StreamCell> S { get; }
-    }
+    public sealed record Queue(Lazy<Stream<T>.StreamCell> F, FunList<T>.Node R, Lazy<Stream<T>.StreamCell> S);
 
     public static Queue Empty { get; } = new(Stream<T>.DollarNil, FunList<T>.Empty, Stream<T>.DollarNil);
 

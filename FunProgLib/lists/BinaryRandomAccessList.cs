@@ -48,30 +48,11 @@ public static class BinaryRandomAccessList<T> // : IRandomAccessList<T>
         public Tree Tree2 { get; }
     }
 
-    public sealed class Digit
-    {
-        public Digit(Tree tree)
-        {
-            One = tree;
-        }
-
-        public Tree One { get; }
-    }
+    public sealed record Digit(Tree One);
 
     private static readonly Digit Zero = new(null);
 
-    private sealed class Stuff
-    {
-        public Stuff(Tree tree, FunList<Digit>.Node list)
-        {
-            Tree = tree;
-            FunList = list;
-        }
-
-        public Tree Tree { get; }
-
-        public FunList<Digit>.Node FunList { get; }
-    }
+    private sealed record Stuff(Tree Tree, FunList<Digit>.Node FunList);
 
     public static FunList<Digit>.Node Empty => FunList<Digit>.Empty;
 

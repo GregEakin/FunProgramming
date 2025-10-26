@@ -21,21 +21,7 @@ namespace FunProgLib.queue;
 
 public static class BankersQueue<T>
 {
-    public sealed class Queue
-    {
-        public Queue(int lenf, Lazy<Stream<T>.StreamCell> f, int lenr, Lazy<Stream<T>.StreamCell> r)
-        {
-            LenF = lenf;
-            F = f;
-            LenR = lenr;
-            R = r;
-        }
-
-        public int LenF { get; }
-        public Lazy<Stream<T>.StreamCell> F { get; }
-        public int LenR { get; }
-        public Lazy<Stream<T>.StreamCell> R { get; }
-    }
+    public sealed record Queue(int LenF, Lazy<Stream<T>.StreamCell> F, int LenR, Lazy<Stream<T>.StreamCell> R);
 
     public static Queue Empty { get; } = new(0, Stream<T>.DollarNil, 0, Stream<T>.DollarNil);
 

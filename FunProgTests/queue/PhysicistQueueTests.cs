@@ -42,11 +42,11 @@ public class PhysicistQueueTests
         builder.Append('[');
         builder.Append(queue.W?.ToReadableString() ?? "null");
         builder.Append(", ");
-        builder.Append(queue.Lenf);
+        builder.Append(queue.LenF);
         builder.Append(", ");
         builder.Append(DumpLazyList(queue.F, expandUnCreated));
         builder.Append(", ");
-        builder.Append(queue.Lenr);
+        builder.Append(queue.LenR);
         builder.Append(", ");
         builder.Append(queue.R?.ToReadableString() ?? "null");
         builder.Append(']');

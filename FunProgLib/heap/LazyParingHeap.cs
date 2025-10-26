@@ -19,21 +19,7 @@ namespace FunProgLib.heap;
 
 public static class LazyParingHeap<T> where T : IComparable<T>
 {
-    public sealed class Heap
-    {
-        public Heap(T root, Heap list, Lazy<Heap> lazyList)
-        {
-            Root = root;
-            FunList = list;
-            LazyList = lazyList;
-        }
-
-        public T Root { get; }
-
-        public Heap FunList { get; }
-
-        public Lazy<Heap> LazyList { get; }
-    }
+    public sealed record Heap(T Root, Heap FunList, Lazy<Heap> LazyList);
 
     private static readonly Lazy<Heap> EmptyHeapSusp = new(() => null);
 
