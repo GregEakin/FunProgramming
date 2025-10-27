@@ -21,53 +21,15 @@ namespace FunProgLib.queue;
 
 public static class HoodMelvilleQueue<T>
 {
-    public abstract class RotationState
-    { }
+    public abstract record RotationState;
 
-    private sealed class Idle : RotationState
-    { }
+    private sealed record Idle : RotationState;
 
-    private sealed class Reversing : RotationState
-    {
-        public Reversing(int ok, FunList<T>.Node f, FunList<T>.Node fp, FunList<T>.Node r, FunList<T>.Node rp)
-        {
-            Ok = ok;
-            F = f;
-            Fp = fp;
-            R = r;
-            Rp = rp;
-        }
+    private sealed record Reversing(int Ok, FunList<T>.Node F, FunList<T>.Node Fp, FunList<T>.Node R, FunList<T>.Node Rp) : RotationState;
 
-        public int Ok { get; }
-        public FunList<T>.Node F { get; }
-        public FunList<T>.Node Fp { get; }
-        public FunList<T>.Node R { get; }
-        public FunList<T>.Node Rp { get; }
-    }
+    private sealed record Appending(int Ok, FunList<T>.Node Fp, FunList<T>.Node Rp) : RotationState;
 
-    private sealed class Appending : RotationState
-    {
-        public Appending(int ok, FunList<T>.Node fp, FunList<T>.Node rp)
-        {
-            Ok = ok;
-            Fp = fp;
-            Rp = rp;
-        }
-
-        public int Ok { get; }
-        public FunList<T>.Node Fp { get; }
-        public FunList<T>.Node Rp { get; }
-    }
-
-    private sealed class Done : RotationState
-    {
-        public Done(FunList<T>.Node f)
-        {
-            F = f;
-        }
-
-        public FunList<T>.Node F { get; }
-    }
+    private sealed record Done(FunList<T>.Node F) : RotationState;
 
     public sealed record Queue(int LenF, FunList<T>.Node F, RotationState State, int LenR, FunList<T>.Node R);
 

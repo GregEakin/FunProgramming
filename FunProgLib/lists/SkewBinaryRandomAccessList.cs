@@ -19,37 +19,11 @@ namespace FunProgLib.lists;
 
 public static class SkewBinaryRandomAccessList<T> // : IRandomAccessList<T>
 {
-    public abstract class Tree
-    {
-        protected Tree(T alpha)
-        {
-            Alpha = alpha;
-        }
+    public abstract record Tree(T Alpha);
 
-        public T Alpha { get; }
-    }
+    private sealed record Leaf(T Alpha) : Tree(Alpha);
 
-    private sealed class Leaf : Tree
-    {
-        public Leaf(T alpha)
-            : base(alpha)
-        {
-        }
-    }
-
-    private sealed class Node : Tree
-    {
-        public Node(T alpha, Tree tree1, Tree tree2)
-            : base(alpha)
-        {
-            Tree1 = tree1;
-            Tree2 = tree2;
-        }
-
-        public Tree Tree1 { get; }
-
-        public Tree Tree2 { get; }
-    }
+    private sealed record Node(T Alpha, Tree Tree1, Tree Tree2) : Tree(Alpha);
 
     public sealed record Stuff(int Weight, Tree Tree);
 

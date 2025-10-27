@@ -19,34 +19,11 @@ namespace FunProgLib.lists;
 
 public static class BinaryRandomAccessList<T> // : IRandomAccessList<T>
 {
-    public abstract class Tree
-    {}
+    public abstract record Tree();
 
-    private sealed class Leaf : Tree
-    {
-        public Leaf(T alpha)
-        {
-            Alpha = alpha;
-        }
+    private sealed record Leaf(T Alpha) : Tree;
 
-        public T Alpha { get; }
-    }
-
-    private sealed class Node : Tree
-    {
-        public Node(int index, Tree tree1, Tree tree2)
-        {
-            Index = index;
-            Tree1 = tree1;
-            Tree2 = tree2;
-        }
-
-        public int Index { get; }
-
-        public Tree Tree1 { get; }
-
-        public Tree Tree2 { get; }
-    }
+    private sealed record Node(int Index, Tree Tree1, Tree Tree2) : Tree;
 
     public sealed record Digit(Tree One);
 

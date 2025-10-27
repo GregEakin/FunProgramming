@@ -20,33 +20,11 @@ namespace FunProgLib.lists;
 // assumes polymorphic recursion!
 public static class AltBinaryRandomAccessList<T>
 {
-    public abstract class DataType
-    {
-        protected DataType(RList<Tuple<T, T>>.Node list)
-        {
-            RList = list;
-        }
+    public abstract record DataType(RList<Tuple<T, T>>.Node RList);
 
-        public RList<Tuple<T, T>>.Node RList { get; }
-    }
+    public sealed record Zero(RList<Tuple<T, T>>.Node RList) : DataType(RList);
 
-    public sealed class Zero : DataType
-    {
-        public Zero(RList<Tuple<T, T>>.Node list)
-            : base(list)
-        { }
-    }
-
-    public sealed class One : DataType
-    {
-        public One(T alpha, RList<Tuple<T, T>>.Node list)
-            : base(list)
-        {
-            Alpha = alpha;
-        }
-
-        public T Alpha { get; }
-    }
+    public sealed record One(T Alpha, RList<Tuple<T, T>>.Node RList) : DataType(RList);
 
     public static DataType Empty => null;
 
