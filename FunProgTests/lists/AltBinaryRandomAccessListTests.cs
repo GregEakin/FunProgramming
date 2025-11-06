@@ -24,8 +24,8 @@ public class AltBinaryRandomAccessListTests
         return tree switch
         {
             null => "null",
-            AltBinaryRandomAccessList<T>.Zero zero => $"[Zero: {DumpList(zero.RList)}]",
-            AltBinaryRandomAccessList<T>.One one => $"[One: {one.Alpha}, {DumpList(one.RList)}]",
+            AltBinaryRandomAccessList<T>.Zero zero => $"[Zero: {DumpList(zero.Node)}]",
+            AltBinaryRandomAccessList<T>.One one => $"[One: {one.Alpha}, {DumpList(one.Node)}]",
             _ => throw new ArgumentException("Unknown tree type element.", nameof(tree))};
     }
 

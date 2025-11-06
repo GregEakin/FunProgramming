@@ -20,11 +20,11 @@ namespace FunProgLib.lists;
 // assumes polymorphic recursion!
 public static class AltBinaryRandomAccessList<T>
 {
-    public abstract record DataType(RList<Tuple<T, T>>.Node RList);
+    public abstract record DataType(RList<Tuple<T, T>>.Node Node);
 
-    public sealed record Zero(RList<Tuple<T, T>>.Node RList) : DataType(RList);
+    public sealed record Zero(RList<Tuple<T, T>>.Node Node) : DataType(Node);
 
-    public sealed record One(T Alpha, RList<Tuple<T, T>>.Node RList) : DataType(RList);
+    public sealed record One(T Alpha, RList<Tuple<T, T>>.Node Node) : DataType(Node);
 
     public static DataType Empty => null;
 
@@ -33,8 +33,8 @@ public static class AltBinaryRandomAccessList<T>
     public static DataType Cons(T x, DataType ts)
     {
         if (IsEmpty(ts)) return new One(x, RList<Tuple<T, T>>.Empty);
-        if (ts is Zero zero) return new One(x, zero.RList);
-        if (ts is One one) return new Zero(RList<Tuple<T, T>>.Cons(new Tuple<T, T>(x, one.Alpha), one.RList));
+        if (ts is Zero zero) return new One(x, zero.Node);
+        if (ts is One one) return new Zero(RList<Tuple<T, T>>.Cons(new Tuple<T, T>(x, one.Alpha), one.Node));
         throw new ArgumentException("must be null, Zero or One", nameof(ts));
     }
 
@@ -42,14 +42,14 @@ public static class AltBinaryRandomAccessList<T>
     {
         if (dataType is One one)
         {
-            if (RList<Tuple<T, T>>.IsEmpty(one.RList)) return new Tuple<T, DataType>(one.Alpha, Empty);
-            return new Tuple<T, DataType>(one.Alpha, new Zero(one.RList));
+            if (RList<Tuple<T, T>>.IsEmpty(one.Node)) return new Tuple<T, DataType>(one.Alpha, Empty);
+            return new Tuple<T, DataType>(one.Alpha, new Zero(one.Node));
         }
 
         if (dataType is Zero zero)
         {
-            var xy = RList<Tuple<T, T>>.Head(zero.RList);
-            var psp = RList<Tuple<T, T>>.Tail(zero.RList);
+            var xy = RList<Tuple<T, T>>.Head(zero.Node);
+            var psp = RList<Tuple<T, T>>.Tail(zero.Node);
             return new Tuple<T, DataType>(xy.Item1, new One(xy.Item2, psp));
         }
 
@@ -65,12 +65,12 @@ public static class AltBinaryRandomAccessList<T>
         if (ts is One one)
         {
             if (i == 0) return one.Alpha;
-            return Lookup(i - 1, new Zero(one.RList));
+            return Lookup(i - 1, new Zero(one.Node));
         }
 
         if (ts is Zero zero)
         {
-            var node = RList<Tuple<T, T>>.Lookup(i / 2, zero.RList);
+            var node = RList<Tuple<T, T>>.Lookup(i / 2, zero.Node);
             if (i % 2 == 0) return node.Item1;
             return node.Item2;
         }
@@ -84,8 +84,8 @@ public static class AltBinaryRandomAccessList<T>
     {
         if (ts is One one)
         {
-            if (i == 0) return new One(f(one.Alpha), one.RList);
-            return Cons(one.Alpha, Fupdate(f, i - 1, new Zero(one.RList)));
+            if (i == 0) return new One(f(one.Alpha), one.Node);
+            return Cons(one.Alpha, Fupdate(f, i - 1, new Zero(one.Node)));
         }
 
         if (ts is Zero zero)
@@ -93,7 +93,7 @@ public static class AltBinaryRandomAccessList<T>
             RList<Tuple<T, T>>.Del fp0 = value => new Tuple<T, T>(f(value.Item1), value.Item2);
             RList<Tuple<T, T>>.Del fp1 = value => new Tuple<T, T>(value.Item1, f(value.Item2));
             var fp = i % 2 == 0 ? fp0 : fp1;
-            return new Zero(RList<Tuple<T, T>>.Fupdate(fp, i / 2, zero.RList));
+            return new Zero(RList<Tuple<T, T>>.Fupdate(fp, i / 2, zero.Node));
         }
 
         throw new ArgumentException("must be Zero or One", nameof(ts));
