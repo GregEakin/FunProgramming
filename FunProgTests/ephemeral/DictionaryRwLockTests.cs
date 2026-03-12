@@ -68,13 +68,13 @@ public class DictionaryRwLockTests : DictionaryTests
     }
 
     [Test]
-    public async Task Test1()
+    public async Task Test1(CancellationToken token)
     {
         var taskList = new ConcurrentBag<Task>();
         for (var i = 0; i < Threads; i += 2)
         {
-            taskList.Add(Task.Factory.StartNew(_ => InsertAction(), this, TestContext.Current.CancellationToken));
-            taskList.Add(Task.Factory.StartNew(_ => RemoveAction(), this, TestContext.Current.CancellationToken));
+            taskList.Add(Task.Factory.StartNew(_ => InsertAction(), this, token));
+            taskList.Add(Task.Factory.StartNew(_ => RemoveAction(), this, token));
         }
 
         await Task.WhenAll(taskList.ToArray());

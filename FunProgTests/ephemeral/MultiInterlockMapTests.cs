@@ -55,14 +55,14 @@ public class MultiInterlockMapTests : DictionaryTests
     }
 
     [Test]
-    public async Task Test1()
+    public async Task Test1(CancellationToken token)
     {
         var taskList = new ConcurrentBag<Task>();
         for (var i = 0; i < Threads; i += 3)
         {
-            taskList.Add(Task.Factory.StartNew(_ => WriteAction(), this, TestContext.Current.CancellationToken));
-            taskList.Add(Task.Factory.StartNew(_ => ReadAction(), this, TestContext.Current.CancellationToken));
-            taskList.Add(Task.Factory.StartNew(_ => ReadAction(), this, TestContext.Current.CancellationToken));
+            taskList.Add(Task.Factory.StartNew(_ => WriteAction(), this, token));
+            taskList.Add(Task.Factory.StartNew(_ => ReadAction(), this, token));
+            taskList.Add(Task.Factory.StartNew(_ => ReadAction(), this, token));
         }
 
         await Task.WhenAll(taskList.ToArray());

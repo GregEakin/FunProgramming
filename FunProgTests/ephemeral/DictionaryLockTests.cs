@@ -121,9 +121,8 @@ public class DictionaryLockTests : DictionaryTests
     }
 
     [Test]
-    public async Task Test1()
+    public async Task Test1(CancellationToken token)
     {
-        var token = TestContext.Current.CancellationToken;
         var taskList = new ConcurrentBag<Task>();
         var dictionary = new DictionaryLock<string>(token);
 
