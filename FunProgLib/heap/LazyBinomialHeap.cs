@@ -29,9 +29,9 @@ public static class LazyBinomialHeap<T> where T : IComparable<T>
     public static bool IsEmpty(Lazy<FunList<Tree>.Node> heap) => 
         heap == null || ReferenceEquals(Empty, heap) || FunList<Tree>.IsEmpty(heap.Value);
 
-    // public static int Rank(Tree t) => t.Rank;
+    public static int Rank(Tree t) => t.Rank;
 
-    // public static T Root(Tree t) => t.Root;
+    public static T Root(Tree t) => t.Root;
 
     private static Tree Link(Tree t1, Tree t2)
     {

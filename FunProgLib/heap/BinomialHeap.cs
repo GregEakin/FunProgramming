@@ -27,9 +27,9 @@ public static class BinomialHeap<T> where T : IComparable<T>
 
     public static bool IsEmpty(FunList<Tree>.Node list) => FunList<Tree>.IsEmpty(list);
 
-    // public static int Rank(Tree t1) => t1.Rank;
+    public static int Rank(Tree t1) => t1.Rank;
 
-    // public static T Root(Tree t1) => t1.Root;
+    public static T Root(Tree t1) => t1.Root;
 
     private static Tree Link(Tree t1, Tree t2)
     {

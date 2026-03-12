@@ -115,8 +115,8 @@ public static class SkewBinomialHeap<T>
     public static FunList<Tree>.Node DeleteMin(FunList<Tree>.Node ts)
     {
         var (tree, ts2) = RemoveMinTree(ts);
-        //var _ = tree.Rank;
-        //var x = tree.Root;
+        var _ = tree.Rank;
+        var x = tree.Root;
         var xs = tree.FunList;
         var ts1 = tree.TreeList;
         return InsertAll(xs, Merge(FunList<Tree>.Reverse(ts1), ts2));

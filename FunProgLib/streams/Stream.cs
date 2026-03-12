@@ -31,7 +31,7 @@ public static class Stream<T>
         public Lazy<StreamCell> Next { get; }
     }
 
-    // public static Lazy<StreamCell> DollarCons(T x, Lazy<StreamCell> r) => new Lazy<StreamCell>(() => new StreamCell(x, r));
+    public static Lazy<StreamCell> DollarCons(T x, Lazy<StreamCell> r) => new Lazy<StreamCell>(() => new StreamCell(x, r));
 
     public static Lazy<StreamCell> DollarNil { get; } = new(() => null);
 
