@@ -93,7 +93,7 @@ public class RealTimeDequeTests
     {
         const string data = "One Two Three One Three";
         var queue = data.Split().Aggregate(RealTimeDeque<string>.Empty, (queue1, s) => RealTimeDeque<string>.Cons(s, queue1));
-        foreach (var expected in data.Split().Reverse())
+        foreach (var expected in Enumerable.Reverse(data.Split()))
         {
             var actual = RealTimeDeque<string>.Head(queue);
             await Assert.That(actual).IsEqualTo(expected);
@@ -168,7 +168,7 @@ public class RealTimeDequeTests
     {
         const string data = "One Two Three One Three";
         var queue = data.Split().Aggregate(RealTimeDeque<string>.Empty, RealTimeDeque<string>.Snoc);
-        var dat = data.Split().Reverse();
+        var dat = Enumerable.Reverse(data.Split());
         foreach (var expected in dat)
         {
             var actual = RealTimeDeque<string>.Last(queue);

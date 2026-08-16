@@ -96,6 +96,6 @@ public class ScheduledBottomUpMergeSortTests
         const string data = "Zulu Yankee X-ray Whiskey Victor Uniform Tango Sierra Romeo Quebec Papa Oscar November Mike Lima Kilo Juliet India Hotel Golf Foxtrot Echo Delta Charlie Bravo Alpha";
         var list = data.Split().Aggregate(ScheduledBottomUpMergeSort<string>.Empty, (ts, x) => ScheduledBottomUpMergeSort<string>.Add(x, ts));
         var xs = ScheduledBottomUpMergeSort<string>.Sort(list);
-        await Assert.That(xs.ToReadableString()).IsEqualTo(data.Split().Reverse().ToReadableString());
+        await Assert.That(xs.ToReadableString()).IsEqualTo(Enumerable.Reverse(data.Split()).ToReadableString());
     }
 }

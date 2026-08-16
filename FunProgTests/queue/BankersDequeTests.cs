@@ -53,7 +53,7 @@ public class BankersDequeTests
     {
         const string data = "One Two Three One Three";
         var queue = data.Split().Aggregate(BankersDeque<string>.Empty, (queue1, s) => BankersDeque<string>.Cons(s, queue1));
-        foreach (var expected in data.Split().Reverse())
+        foreach (var expected in Enumerable.Reverse(data.Split()))
         {
             var actual = BankersDeque<string>.Head(queue);
             await Assert.That(actual).IsEqualTo(expected);
@@ -77,7 +77,7 @@ public class BankersDequeTests
     {
         const string data = "One Two Three One Three";
         var queue = data.Split().Aggregate(BankersDeque<string>.Empty, BankersDeque<string>.Snoc);
-        var dat = data.Split().Reverse();
+        var dat = Enumerable.Reverse(data.Split());
         foreach (var expected in dat)
         {
             var actual = BankersDeque<string>.Last(queue);

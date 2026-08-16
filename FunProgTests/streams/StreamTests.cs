@@ -42,7 +42,7 @@ public class StreamTests
     public async Task Test1()
     {
         const string data = "One Two Three One Three";
-        var stream = data.Split().Reverse().Aggregate(Stream<string>.DollarNil, (s1, t) => new Lazy<Stream<string>.StreamCell>(() => new Stream<string>.StreamCell(t, s1)));
+        var stream = Enumerable.Reverse(data.Split()).Aggregate(Stream<string>.DollarNil, (s1, t) => new Lazy<Stream<string>.StreamCell>(() => new Stream<string>.StreamCell(t, s1)));
         await Assert.That(DumpStream(stream, true)).IsEqualTo("$One, $Two, $Three, $One, $Three");
     }
 
@@ -50,7 +50,7 @@ public class StreamTests
     public async Task Test2()
     {
         const string data = "One Two Three One Three";
-        var stream = data.Split().Reverse().Aggregate(Stream<string>.DollarNil, (s1, t) => new Lazy<Stream<string>.StreamCell>(() => new Stream<string>.StreamCell(t, s1)));
+        var stream = Enumerable.Reverse(data.Split()).Aggregate(Stream<string>.DollarNil, (s1, t) => new Lazy<Stream<string>.StreamCell>(() => new Stream<string>.StreamCell(t, s1)));
         await Assert.That(stream.Value).IsNotNull();
         await Assert.That(stream.Value.Next.Value).IsNotNull();
         await Assert.That(DumpStream(stream, true)).IsEqualTo("One, Two, $Three, $One, $Three");
@@ -153,7 +153,7 @@ public class StreamTests
             "C",
             "D"
         };
-        var stream = data.Reverse().Aggregate(Stream<string>.DollarNil, (s1, t1) => new Lazy<Stream<string>.StreamCell>(() => new Stream<string>.StreamCell(t1, s1)));
+        var stream = Enumerable.Reverse(data).Aggregate(Stream<string>.DollarNil, (s1, t1) => new Lazy<Stream<string>.StreamCell>(() => new Stream<string>.StreamCell(t1, s1)));
         for (var i = 0; i <= data.Length + 1; i++)
         {
             var j = 0;
@@ -195,7 +195,7 @@ public class StreamTests
             "C",
             "D"
         };
-        var stream = data.Reverse().Aggregate(Stream<string>.DollarNil, (s1, t1) => new Lazy<Stream<string>.StreamCell>(() => new Stream<string>.StreamCell(t1, s1)));
+        var stream = Enumerable.Reverse(data).Aggregate(Stream<string>.DollarNil, (s1, t1) => new Lazy<Stream<string>.StreamCell>(() => new Stream<string>.StreamCell(t1, s1)));
         for (var i = 0; i < data.Length; i++)
         {
             var j = 0;
