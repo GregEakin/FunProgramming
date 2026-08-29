@@ -1,0 +1,7 @@
+<Solution>
+  <Folder Name="/Solution Items/">
+    <File Path="README.md" />
+  </Folder>
+  <Project Path="FunProgLib/FunProgLib.csproj" />
+  <Project Path="FunProgTests/FunProgTests.csproj" />
+</Solution>
